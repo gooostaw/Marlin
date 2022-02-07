@@ -2289,7 +2289,7 @@
 // Dump an error to the serial port if the serial receive buffer overflows.
 // If you see these errors, increase the RX_BUFFER_SIZE value.
 // Not supported on all platforms.
-//#define RX_BUFFER_MONITOR
+#define RX_BUFFER_MONITOR
 
 /**
  * Emergency Command Parser
@@ -2311,7 +2311,7 @@
  *
  * - During Hold all Emergency Parser commands are available, as usual.
  */
-#define REALTIME_COMMANDS
+// #define REALTIME_COMMANDS
 
   /**
    * Send machine status updates to host (Useful for CNC/Laser)
@@ -2374,7 +2374,7 @@
 
 // Space-separated list of g-code commands which will bypass the queue and execute immediately
 // Example: "M220 M290" (feed rate % and babystepping)
-#define PRIORITY_COMMANDS "M220 M290"
+// #define PRIORITY_COMMANDS "M220 M290"
 
 // Bad serial connections can cause a sent command to be missed, therefore some clients will abort after 30 seconds in a timeout.
 // Supporting clients will resume sending commands if they receive a "wait" (waiting for command) message.
