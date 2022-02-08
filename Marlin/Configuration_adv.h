@@ -2369,12 +2369,12 @@
  * These settings respect the M400 (finish move) command, so if they proceed immediately after an M400, they'll
  * be added to the end of the queue as usual.
  */
-// #define PRIORITY_FEEDRATE_CHANGES  // M220 feed rate adjustments are processed immediately instead of queued.
-// #define PRIORITY_BABYSTEPPING      // M290 babystepping is processed immediately instead of queued.
+#define PRIORITY_FEEDRATE_CHANGES  // M220 feed rate adjustments are processed immediately instead of queued.
+#define PRIORITY_BABYSTEPPING      // M290 babystepping is processed immediately instead of queued.
 
 // Space-separated list of g-code commands which will bypass the queue and execute immediately
-// Example: "M220 M290" (feed rate % and babystepping)
-// #define PRIORITY_COMMANDS "M220 M290"
+// Example: "M500 M25 M125"
+// #define PRIORITY_COMMANDS "" // Case sensitive, even if GCODE_CASE_INSENSITIVE is set
 
 // Bad serial connections can cause a sent command to be missed, therefore some clients will abort after 30 seconds in a timeout.
 // Supporting clients will resume sending commands if they receive a "wait" (waiting for command) message.
