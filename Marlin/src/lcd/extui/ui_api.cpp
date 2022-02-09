@@ -94,10 +94,6 @@
   #include "../../feature/caselight.h"
 #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../feature/powerloss.h"
-#endif
-
 #if ENABLED(BABYSTEPPING)
   #include "../../feature/babystep.h"
 #endif
@@ -676,11 +672,6 @@ namespace ExtUI {
          caselight.update_brightness();
       }
     #endif
-  #endif
-
-  #if ENABLED(POWER_LOSS_RECOVERY)
-    bool getPowerLossRecoveryEnabled()                 { return recovery.enabled; }
-    void setPowerLossRecoveryEnabled(const bool value) {  recovery.enable(value); }
   #endif
 
   #if ENABLED(LIN_ADVANCE)
