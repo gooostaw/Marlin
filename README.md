@@ -3,10 +3,9 @@
 
 <img align="right" width=175 src="https://github.com/Domush/Webber-Ranch-CNC-Firmware/raw/Webber-Ranch-CNC/Logo.bmp" />
 
-Additional documentation can be found at the [Marlin Home Page](https://marlinfw.org/).
-Please test this firmware and let us know if it misbehaves in any way. Volunteers are standing by!
-
 WRCNC is based on the popular Marlin 3D printer framework, but changes the focus specifically to CNC spindled and laser machines. 
+
+Until the feayture set is stabilized and officially documented, you can reference the documentation at the [Marlin Home Page](https://marlinfw.org/) for common gCode commands and CNC features.
 
 The base branch is for production machines and will be the most stable of the branches.
 
