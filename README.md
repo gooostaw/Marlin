@@ -3,9 +3,9 @@
 
 <img align="right" width=175 src="https://github.com/Domush/Webber-Ranch-CNC-Firmware/raw/Webber-Ranch-CNC/Logo.bmp" />
 
-WRCNC is based on the popular Marlin 3D printer framework, but changes the focus specifically to CNC spindled and laser machines. 
+WRCNC is based on the popular Marlin 3D printer framework, but changes the focus specifically to CNC spindled and laser machines and their unique demands, such as Automatic Tool Changer support, dynamic stepper configuration, multiple coordinate systems, and Real-Time commands. 
 
-Until the feayture set is stabilized and officially documented, you can reference the documentation at the [Marlin Home Page](https://marlinfw.org/) for common gCode commands and CNC features.
+Until the feature set is stabilized and officially documented, you can reference the documentation at the [Marlin Home Page](https://marlinfw.org/) for common gCode commands and CNC features. Just note, WRCNC will not have 3D printing support, so Marlin's extruder and heater support will not apply.
 
 The base branch is for production machines and will be the most stable of the branches.
 
