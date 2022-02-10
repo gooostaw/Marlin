@@ -31,7 +31,7 @@ ChironTFT Chiron;
   panel_type_t   ChironTFT::panel_type = AC_panel_unknown;
 #endif
 last_error_t     ChironTFT::last_error;
-printer_state_t  ChironTFT::printer_state;
+cnc_state_t  ChironTFT::cnc_state;
 paused_state_t   ChironTFT::pause_state;
 heater_state_t   ChironTFT::hotend_state;
 heater_state_t   ChironTFT::hotbed_state;
@@ -47,7 +47,7 @@ void ChironTFT::Startup() {
   panel_command[0]  = '\0';
   command_len       = 0;
   last_error        = AC_error_none;
-  printer_state     = AC_printer_idle;
+  cnc_state     = AC_cnc_idle;
   pause_state       = AC_paused_idle;
   hotend_state      = AC_heater_off;
   hotbed_state      = AC_heater_off;
@@ -108,10 +108,10 @@ void ChironTFT::IdleLoop()  {
   CheckHeaters();
 }
 
-void ChironTFT::PrinterKilled(FSTR_P const error, FSTR_P const component)  {
+void ChironTFT::CNCKilled(FSTR_P const error, FSTR_P const component)  {
   SendtoTFTLN(AC_msg_kill_lcd);
   #if ACDEBUG(AC_WRCNC)
-    SERIAL_ECHOLNPGM("PrinterKilled()\nerror: ", error , "\ncomponent: ", component);
+    SERIAL_ECHOLNPGM("CNCKilled()\nerror: ", error , "\ncomponent: ", component);
   #endif
 }
 
@@ -138,26 +138,26 @@ void ChironTFT::MediaEvent(media_event_t event)  {
 void ChironTFT::TimerEvent(timer_event_t event)  {
   #if ACDEBUG(AC_WRCNC)
     SERIAL_ECHOLNPGM("TimerEvent() ", event);
-    SERIAL_ECHOLNPGM("Printer State: ", printer_state);
+    SERIAL_ECHOLNPGM("CNC State: ", cnc_state);
   #endif
 
   switch (event) {
     case AC_timer_started: {
       live_Zoffset = 0.0; // reset print offset
       setSoftEndstopState(false);  // disable endstops to print
-      printer_state = AC_printer_printing;
+      cnc_state = AC_cnc_printing;
       SendtoTFTLN(AC_msg_print_from_sd_card);
     } break;
 
     case AC_timer_paused: {
-      printer_state = AC_printer_paused;
+      cnc_state = AC_cnc_paused;
       pause_state   = AC_paused_idle;
       SendtoTFTLN(AC_msg_paused);
     } break;
 
     case AC_timer_stopped: {
-      if (printer_state != AC_printer_idle) {
-        printer_state = AC_printer_stopping;
+      if (cnc_state != AC_cnc_idle) {
+        cnc_state = AC_cnc_stopping;
         SendtoTFTLN(AC_msg_print_complete);
       }
       setSoftEndstopState(true); // enable endstops
@@ -167,7 +167,7 @@ void ChironTFT::TimerEvent(timer_event_t event)  {
 
 void ChironTFT::FilamentRunout()  {
   #if ACDEBUG(AC_WRCNC)
-    SERIAL_ECHOLNPGM("FilamentRunout() printer_state ", printer_state);
+    SERIAL_ECHOLNPGM("FilamentRunout() cnc_state ", cnc_state);
   #endif
   // 1 Signal filament out
   last_error = AC_error_filament_runout;
@@ -178,19 +178,19 @@ void ChironTFT::FilamentRunout()  {
 void ChironTFT::ConfirmationRequest(const char * const msg)  {
   // M108 continue
   #if ACDEBUG(AC_WRCNC)
-    SERIAL_ECHOLNPGM("ConfirmationRequest() ", msg, " printer_state:", printer_state);
+    SERIAL_ECHOLNPGM("ConfirmationRequest() ", msg, " cnc_state:", cnc_state);
   #endif
-  switch (printer_state) {
-    case AC_printer_pausing: {
+  switch (cnc_state) {
+    case AC_cnc_pausing: {
       if (strcmp_P(msg, WRCNC_msg_print_paused) == 0 || strcmp_P(msg, WRCNC_msg_nozzle_parked) == 0) {
         SendtoTFTLN(AC_msg_paused); // enable continue button
-        printer_state = AC_printer_paused;
+        cnc_state = AC_cnc_paused;
       }
     } break;
 
-    case AC_printer_resuming_from_power_outage:
-    case AC_printer_printing:
-    case AC_printer_paused: {
+    case AC_cnc_resuming_from_power_outage:
+    case AC_cnc_printing:
+    case AC_cnc_paused: {
       // Heater timeout, send acknowledgement
       if (strcmp_P(msg, WRCNC_msg_heater_timeout) == 0) {
         pause_state = AC_paused_heater_timed_out;
@@ -216,19 +216,19 @@ void ChironTFT::ConfirmationRequest(const char * const msg)  {
 void ChironTFT::StatusChange(const char * const msg)  {
   #if ACDEBUG(AC_WRCNC)
     SERIAL_ECHOLNPGM("StatusChange() ", msg);
-    SERIAL_ECHOLNPGM("printer_state:", printer_state);
+    SERIAL_ECHOLNPGM("cnc_state:", cnc_state);
   #endif
   bool msg_matched = false;
-  // The only way to get printer status is to parse messages
+  // The only way to get cnc status is to parse messages
   // Use the state to minimise the work we do here.
-  switch (printer_state) {
-    case AC_printer_probing: {
+  switch (cnc_state) {
+    case AC_cnc_probing: {
       // If probing completes ok save the mesh and park
       // Ignore the custom machine name
       if (strcmp_P(msg + strlen(MACHINE_NAME), WRCNC_msg_ready) == 0) {
         injectCommands(F("M500\nG27"));
         SendtoTFTLN(AC_msg_probing_complete);
-        printer_state = AC_printer_idle;
+        cnc_state = AC_cnc_idle;
         msg_matched = true;
       }
       // If probing fails don't save the mesh raise the probe above the bad point
@@ -236,31 +236,31 @@ void ChironTFT::StatusChange(const char * const msg)  {
         PlayTune(BEEPER_PIN, BeepBeepBeeep, 1);
         injectCommands(F("G1 Z50 F500"));
         SendtoTFTLN(AC_msg_probing_complete);
-        printer_state = AC_printer_idle;
+        cnc_state = AC_cnc_idle;
         msg_matched = true;
       }
     } break;
 
-    case AC_printer_printing: {
+    case AC_cnc_printing: {
       if (strcmp_P(msg, WRCNC_msg_reheating) == 0) {
         SendtoTFTLN(AC_msg_paused); // enable continue button
         msg_matched = true;
        }
     } break;
 
-    case AC_printer_pausing: {
+    case AC_cnc_pausing: {
       if (strcmp_P(msg, WRCNC_msg_print_paused) == 0) {
         SendtoTFTLN(AC_msg_paused);
-        printer_state = AC_printer_paused;
+        cnc_state = AC_cnc_paused;
         pause_state = AC_paused_idle;
         msg_matched = true;
        }
     } break;
 
-    case AC_printer_stopping: {
+    case AC_cnc_stopping: {
       if (strcmp_P(msg, WRCNC_msg_print_aborted) == 0) {
         SendtoTFTLN(AC_msg_stop);
-        printer_state = AC_printer_idle;
+        cnc_state = AC_cnc_idle;
         msg_matched = true;
       }
     } break;
@@ -285,15 +285,15 @@ void ChironTFT::StatusChange(const char * const msg)  {
 }
 
 void ChironTFT::PowerLossRecovery()  {
-  printer_state = AC_printer_resuming_from_power_outage; // Play tune to notify user we can recover.
+  cnc_state = AC_cnc_resuming_from_power_outage; // Play tune to notify user we can recover.
   last_error = AC_error_powerloss;
   PlayTune(BEEPER_PIN, SOS, 1);
   SERIAL_ECHOLNF(AC_msg_powerloss_recovery);
 }
 
-void ChironTFT::PrintComplete() {
+void ChironTFT::CNCComplete() {
   SendtoTFT(AC_msg_print_complete);
-  printer_state = AC_printer_idle;
+  cnc_state = AC_cnc_idle;
   setSoftEndstopState(true); // enable endstops
 }
 
@@ -537,7 +537,7 @@ void ChironTFT::PanelInfo(uint8_t req) {
         SendtoTFTLN(F("A6V ---"));
       break;
 
-    case 7: { // A7 Get Printing Time
+    case 7: { // A7 Get CNCing Time
       uint32_t time = getProgress_seconds_elapsed() / 60;
       SendtoTFT(F("A7V "));
       TFTSer.print(ui8tostr2(time / 60));
@@ -571,14 +571,14 @@ void ChironTFT::PanelAction(uint8_t req) {
       if (isPrintingFromMedia()) {
         SendtoTFTLN(AC_msg_pause);
         pausePrint();
-        printer_state = AC_printer_pausing;
+        cnc_state = AC_cnc_pausing;
       }
       else
         SendtoTFTLN(AC_msg_stop);
       break;
 
     case 10: // A10 Resume SD Print
-      if (pause_state == AC_paused_idle || printer_state == AC_printer_resuming_from_power_outage)
+      if (pause_state == AC_paused_idle || cnc_state == AC_cnc_resuming_from_power_outage)
         resumePrint();
       else
         setUserConfirmed();
@@ -586,18 +586,18 @@ void ChironTFT::PanelAction(uint8_t req) {
 
     case 11:   // A11 Stop SD print
       if (isPrintingFromMedia()) {
-        printer_state = AC_printer_stopping;
+        cnc_state = AC_cnc_stopping;
         stopPrint();
       }
       else {
-        if (printer_state == AC_printer_resuming_from_power_outage)
+        if (cnc_state == AC_cnc_resuming_from_power_outage)
           injectCommands(F("M1000 C")); // Cancel recovery
         SendtoTFTLN(AC_msg_stop);
-        printer_state = AC_printer_idle;
+        cnc_state = AC_cnc_idle;
       }
       break;
 
-    case 12:   // A12 Kill printer
+    case 12:   // A12 Kill cnc
       kill();  // from wrcnccore.h
       break;
 
@@ -605,21 +605,21 @@ void ChironTFT::PanelAction(uint8_t req) {
       SelectFile();
       break;
 
-    case 14: { // A14 Start Printing
-      // Allows printer to restart the job if we don't want to recover
-      if (printer_state == AC_printer_resuming_from_power_outage) {
+    case 14: { // A14 Start CNCing
+      // Allows cnc to restart the job if we don't want to recover
+      if (cnc_state == AC_cnc_resuming_from_power_outage) {
         injectCommands(F("M1000 C")); // Cancel recovery
-        printer_state = AC_printer_idle;
+        cnc_state = AC_cnc_idle;
       }
       #if ACDebugLevel >= 1
-        SERIAL_ECHOLNPAIR_F("Print: ", selectedfile);
+        SERIAL_ECHOLNPAIR_F("CNC: ", selectedfile);
       #endif
       printFile(selectedfile);
       SendtoTFTLN(AC_msg_print_from_sd_card);
     } break;
 
     case 15:   // A15 Resuming from outage
-      if (printer_state == AC_printer_resuming_from_power_outage) {
+      if (cnc_state == AC_cnc_resuming_from_power_outage) {
         // Need to home here to restore the Z position
         injectCommands(AC_cmnd_power_loss_recovery);
         injectCommands(F("M1000"));  // home and start recovery
@@ -793,7 +793,7 @@ void ChironTFT::PanelProcess(uint8_t req) {
 
           SendtoTFTLN(AC_msg_start_probing);
           injectCommands(F("G28\nG29"));
-          printer_state = AC_printer_probing;
+          cnc_state = AC_cnc_probing;
         }
       }
       else {
@@ -904,7 +904,7 @@ void ChironTFT::PanelProcess(uint8_t req) {
       if (panel_command[3] == 'C') { // Restore original offsets
         injectCommands(F("M501\nM420 S1"));
         selectedmeshpoint.x = selectedmeshpoint.y = 99;
-        //printer_state = AC_printer_idle;
+        //cnc_state = AC_cnc_idle;
       }
       else {
         xy_uint8_t pos;
@@ -919,7 +919,7 @@ void ChironTFT::PanelProcess(uint8_t req) {
         #endif
         // Update Meshpoint
         setMeshPoint(pos,newval);
-        if (printer_state == AC_printer_idle || printer_state == AC_printer_probing /*!isPrinting()*/) {
+        if (cnc_state == AC_cnc_idle || cnc_state == AC_cnc_probing /*!isPrinting()*/) {
           // if we are at the current mesh point indicated on the panel Move Z pos +/- 0.05mm
           // (The panel changes the mesh value by +/- 0.05mm on each button press)
           if (selectedmeshpoint.x == pos.x && selectedmeshpoint.y == pos.y) {

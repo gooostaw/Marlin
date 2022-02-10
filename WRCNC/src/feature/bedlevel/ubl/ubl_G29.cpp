@@ -88,7 +88,7 @@
  *   E     Stow_probe Stow the probe after each sampled point.
  *
  *   F #   Fade       Fade the amount of Mesh Based Compensation over a specified height. At the
- *                    specified height, no correction is applied and natural printer kenimatics take over. If no
+ *                    specified height, no correction is applied and natural cnc kenimatics take over. If no
  *                    number is specified for the command, 10mm is assumed to be reasonable.
  *
  *   H #   Height     With P2, 'H' specifies the Height to raise the nozzle after each manual probe of the bed.
@@ -124,7 +124,7 @@
  *
  *   P1    Phase 1    Invalidate entire Mesh and continue with automatic generation of the Mesh data using
  *                    the Z-Probe. Usually the probe can't reach all areas that the nozzle can reach. For delta
- *                    printers only the areas where the probe and nozzle can both reach will be automatically probed.
+ *                    cncs only the areas where the probe and nozzle can both reach will be automatically probed.
  *
  *                    Unreachable points will be handled in Phase 2 and Phase 3.
  *
@@ -143,7 +143,7 @@
  *
  *                    Use 'H' to set the height between Mesh points. If omitted, Z_CLEARANCE_BETWEEN_PROBES is used.
  *                    Smaller values will be quicker. Move the nozzle down till it barely touches the bed. Make sure the
- *                    nozzle is clean and unobstructed. Use caution and move slowly. This can damage your printer!
+ *                    nozzle is clean and unobstructed. Use caution and move slowly. This can damage your cnc!
  *                    (Uses SIZE_OF_LITTLE_RAISE mm if the nozzle is moving less than BIG_RAISE_NOT_NEEDED mm.)
  *
  *                    The 'H' value can be negative if the Mesh dips in a large area. Press and hold the
@@ -265,7 +265,7 @@
  *   When you do a G28 and G29 P1 to automatically build your first mesh, you are going to notice that
  *   UBL probes points increasingly further from the starting location. (The starting location defaults
  *   to the center of the bed.) In contrast, ABL and MBL follow a zigzag pattern. The spiral pattern is
- *   especially better for Delta printers, since it populates the center of the mesh first, allowing for
+ *   especially better for Delta cncs, since it populates the center of the mesh first, allowing for
  *   a quicker test print to verify settings. You don't need to populate the entire mesh to use it.
  *   After all, you don't want to spend a lot of time generating a mesh only to realize the resolution
  *   or probe offsets are incorrect. Mesh-generation gathers points starting closest to the nozzle unless
@@ -293,7 +293,7 @@ void unified_bed_leveling::G29() {
     const uint8_t old_tool_index = active_extruder;
   #endif
 
-  // Check for commands that require the printer to be homed
+  // Check for commands that require the cnc to be homed
   if (may_move) {
     planner.synchronize();
     // Send 'N' to force homing before G29 (internal only)
@@ -437,8 +437,8 @@ void unified_bed_leveling::G29() {
             /**
              * Use a good default location for the path.
              * The flipped > and < operators in these comparisons is intentional.
-             * It should cause the probed points to follow a nice path on Cartesian printers.
-             * It may make sense to have Delta printers default to the center of the bed.
+             * It should cause the probed points to follow a nice path on Cartesian cncs.
+             * It may make sense to have Delta cncs default to the center of the bed.
              * Until that is decided, this can be forced with the X and Y parameters.
              */
             param.XY_pos.set(

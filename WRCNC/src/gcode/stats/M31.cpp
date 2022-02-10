@@ -9,7 +9,7 @@
 #include "../../lcd/wrcncui.h"
 
 /**
- * M31: Get the time since the start of SD Print (or last M109)
+ * M31: Get the time since the start of SD CNC (or last M109)
  */
 void GcodeSuite::M31() {
   char buffer[22];

@@ -109,7 +109,7 @@ typedef struct machine_common_disp {
   const char *LevelingSubDeltaConfTitle;
   const char *MachineRadius;
   const char *DiagonalRod;
-  const char *PrintableRadius;
+  const char *CNCableRadius;
   const char *DeltaHeight;
   const char *SmoothRodOffset;
   const char *EffectorOffset;
@@ -155,7 +155,7 @@ typedef struct machine_common_disp {
   const char *E1MaxFeedRate;
 
   const char *AccelerationConfTitle;
-  const char *PrintAcceleration;
+  const char *CNCAcceleration;
   const char *RetractAcceleration;
   const char *TravelAcceleration;
   const char *X_Acceleration;
@@ -281,7 +281,7 @@ typedef struct common_menu_disp {
   const char *text_save;
   const char *dialog_confirm_title;
   const char *close_machine_tips;
-  const char *unbind_printer_tips;
+  const char *unbind_cnc_tips;
   const char *print_special_title;
   const char *pause_special_title;
   const char *operate_special_title;
@@ -485,7 +485,7 @@ typedef struct cloud_menu_disp {
   const char *disable;
   const char *disconnected;
   const char *back;
-  const char *unbind_printer_tips;
+  const char *unbind_cnc_tips;
 } cloud_menu_def;
 
 extern cloud_menu_def cloud_menu;

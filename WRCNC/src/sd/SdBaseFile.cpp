@@ -292,13 +292,13 @@ void SdBaseFile::getpos(filepos_t *pos) {
 /**
  * List directory contents.
  *
- * \param[in] pr Print stream for list.
+ * \param[in] pr CNC stream for list.
  *
  * \param[in] flags The inclusive OR of
  *
- * LS_DATE - %Print file modification date
+ * LS_DATE - %CNC file modification date
  *
- * LS_SIZE - %Print file size.
+ * LS_SIZE - %CNC file size.
  *
  * LS_R - Recursive list of subdirectories.
  *

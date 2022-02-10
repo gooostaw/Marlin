@@ -124,8 +124,8 @@ void AnycubicTFTClass::OnCommandScan() {
       mediaPauseState = AMPAUSESTATE_NOT_PAUSED;
       injectCommands(F("M84\nM27")); // disable stepper motors and force report of SD status
       delay_ms(200);
-      // tell printer to release resources of print to indicate it is done
-      SENDLINE_DBG_PGM("J14", "TFT Serial Debug: SD Print Stopped... J14");
+      // tell cnc to release resources of print to indicate it is done
+      SENDLINE_DBG_PGM("J14", "TFT Serial Debug: SD CNC Stopped... J14");
     }
   }
 
@@ -510,7 +510,7 @@ void AnycubicTFTClass::RenderCurrentFolder(uint16_t selectedNumber) {
 void AnycubicTFTClass::OnPrintTimerStarted() {
   #if ENABLED(SDSUPPORT)
     if (mediaPrintingState == AMPRINTSTATE_PRINTING)
-      SENDLINE_DBG_PGM("J04", "TFT Serial Debug: Starting SD Print... J04"); // J04 Starting Print
+      SENDLINE_DBG_PGM("J04", "TFT Serial Debug: Starting SD CNC... J04"); // J04 Starting Print
 
   #endif
 }
@@ -529,9 +529,9 @@ void AnycubicTFTClass::OnPrintTimerStopped() {
     if (mediaPrintingState == AMPRINTSTATE_PRINTING) {
       mediaPrintingState = AMPRINTSTATE_NOT_PRINTING;
       mediaPauseState    = AMPAUSESTATE_NOT_PAUSED;
-      SENDLINE_DBG_PGM("J14", "TFT Serial Debug: SD Print Completed... J14");
+      SENDLINE_DBG_PGM("J14", "TFT Serial Debug: SD CNC Completed... J14");
     }
-    // otherwise it was stopped by the printer so don't send print completed signal to TFT
+    // otherwise it was stopped by the cnc so don't send print completed signal to TFT
   #endif
 }
 
@@ -980,14 +980,14 @@ void AnycubicTFTClass::ResumePrint() {
     #if ENABLED(FILAMENT_RUNOUT_SENSOR)
       if (READ(FIL_RUNOUT1_PIN)) {
         #if ENABLED(ANYCUBIC_LCD_DEBUG)
-          SERIAL_ECHOLNPGM("TFT Serial Debug: Resume Print with filament sensor still tripped... ");
+          SERIAL_ECHOLNPGM("TFT Serial Debug: Resume CNC with filament sensor still tripped... ");
         #endif
 
         // trigger the user message box
         DoFilamentRunoutCheck();
 
         // re-enable the continue button
-        SENDLINE_DBG_PGM("J18", "TFT Serial Debug: Resume Print with filament sensor still tripped... J18");
+        SENDLINE_DBG_PGM("J18", "TFT Serial Debug: Resume CNC with filament sensor still tripped... J18");
         return;
       }
     #endif

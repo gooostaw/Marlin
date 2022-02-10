@@ -109,10 +109,10 @@ namespace Language_nl {
   LSTR MSG_INFO_SCREEN                    = _UxGT("Info scherm");
   LSTR MSG_PREPARE                        = _UxGT("Voorbereiden");
   LSTR MSG_TUNE                           = _UxGT("Afstellen");
-  LSTR MSG_PAUSE_PRINT                    = _UxGT("Print pauzeren");
-  LSTR MSG_RESUME_PRINT                   = _UxGT("Print hervatten");
-  LSTR MSG_STOP_PRINT                     = _UxGT("Print stoppen");
-  LSTR MSG_MEDIA_MENU                     = _UxGT("Print van SD");
+  LSTR MSG_PAUSE_PRINT                    = _UxGT("CNC pauzeren");
+  LSTR MSG_RESUME_PRINT                   = _UxGT("CNC hervatten");
+  LSTR MSG_STOP_PRINT                     = _UxGT("CNC stoppen");
+  LSTR MSG_MEDIA_MENU                     = _UxGT("CNC van SD");
   LSTR MSG_NO_MEDIA                       = _UxGT("Geen SD kaart");
   LSTR MSG_DWELL                          = _UxGT("Slapen...");
   LSTR MSG_USERWAIT                       = _UxGT("Wachten...");
@@ -160,18 +160,18 @@ namespace Language_nl {
 
   LSTR MSG_CASE_LIGHT                     = _UxGT("Case licht");
 
-  LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("Onjuiste printer");
+  LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("Onjuiste cnc");
 
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Printed Aantal");
+    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("CNCed Aantal");
     LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Totaal Voltooid");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Totale Printtijd");
-    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Langste Printtijd");
+    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Totale CNCtijd");
+    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Langste CNCtijd");
     LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Totaal Extrudeert");
   #else
     LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Aantal");
     LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Voltooid");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Printtijd ");
+    LSTR MSG_INFO_PRINT_TIME              = _UxGT("CNCtijd ");
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Langste");
     LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Extrud.");
   #endif

@@ -90,7 +90,7 @@ struct scsi_inquiry_data {
 #define  SCSI_INQ_PQ_NOT_SUPP    0x60   //!< Peripheral not supported
 #define  SCSI_INQ_DT_DIR_ACCESS  0x00   //!< Direct Access (SBC)
 #define  SCSI_INQ_DT_SEQ_ACCESS  0x01   //!< Sequential Access
-#define  SCSI_INQ_DT_PRINTER     0x02   //!< Printer
+#define  SCSI_INQ_DT_PRINTER     0x02   //!< CNC
 #define  SCSI_INQ_DT_PROCESSOR   0x03   //!< Processor device
 #define  SCSI_INQ_DT_WRITE_ONCE  0x04   //!< Write-once device
 #define  SCSI_INQ_DT_CD_DVD      0x05   //!< CD/DVD device

@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,12 +31,12 @@ namespace DGUSRxHandler {
   #if ENABLED(SDSUPPORT)
     void Scroll(DGUS_VP &, void *);
     void SelectFile(DGUS_VP &, void *);
-    void PrintFile(DGUS_VP &, void *);
+    void CNCFile(DGUS_VP &, void *);
   #endif
 
-  void PrintAbort(DGUS_VP &, void *);
+  void CNCAbort(DGUS_VP &, void *);
   void PrintPause(DGUS_VP &, void *);
-  void PrintResume(DGUS_VP &, void *);
+  void CNCResume(DGUS_VP &, void *);
 
   void Feedrate(DGUS_VP &, void *);
   void Flowrate(DGUS_VP &, void *);

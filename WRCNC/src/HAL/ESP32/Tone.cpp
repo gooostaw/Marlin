@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2020 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * Copypaste of SAMD51 HAL developed by Giuliano Zaro (AKA GMagician)

@@ -49,7 +49,7 @@ namespace ExtUI {
 
   void onIdle() {
     /**
-     * - from printer on startup:
+     * - from cnc on startup:
      * {SYS:STARTED}{VER:29}{SYS:STARTED}{R:UD}
      */
 
@@ -80,7 +80,7 @@ namespace ExtUI {
     #endif
   }
 
-  void onPrinterKilled(FSTR_P const error, FSTR_P const component) {
+  void onCNCKilled(FSTR_P const error, FSTR_P const component) {
     set_lcd_error(error, component);
   }
 

@@ -144,7 +144,7 @@ void MenuEditItemBase::goto_edit_screen(
 
 #include "../../WRCNCCore.h"
 
-bool printer_busy() {
+bool cnc_busy() {
   return planner.movesplanned() || printingIsActive();
 }
 

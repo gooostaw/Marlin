@@ -97,7 +97,7 @@ namespace Language_da {
   LSTR MSG_PAUSE_PRINT                    = _UxGT("Pause printet");
   LSTR MSG_RESUME_PRINT                   = _UxGT("Forsæt printet");
   LSTR MSG_STOP_PRINT                     = _UxGT("Stop printet");
-  LSTR MSG_MEDIA_MENU                     = _UxGT("Print fra SD");
+  LSTR MSG_MEDIA_MENU                     = _UxGT("CNC fra SD");
   LSTR MSG_NO_MEDIA                       = _UxGT("Intet SD kort");
   LSTR MSG_DWELL                          = _UxGT("Dvale...");
   LSTR MSG_USERWAIT                       = _UxGT("Venter på bruger...");
@@ -134,18 +134,18 @@ namespace Language_da {
   LSTR MSG_DELTA_CALIBRATE_Z              = _UxGT("Kalibrer Z");
   LSTR MSG_DELTA_CALIBRATE_CENTER         = _UxGT("Kalibrerings Center");
 
-  LSTR MSG_INFO_MENU                      = _UxGT("Om Printer");
+  LSTR MSG_INFO_MENU                      = _UxGT("Om CNC");
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Kort Info");
   LSTR MSG_INFO_THERMISTOR_MENU           = _UxGT("Thermistors");
 
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Ant. Prints");
+    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Ant. CNCs");
     LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Færdige");
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Total print tid");
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Længste print");
     LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Total Extruderet");
   #else
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Prints");
+    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("CNCs");
     LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Færdige");
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Total");
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Længste");
@@ -167,7 +167,7 @@ namespace Language_da {
 
   LSTR MSG_FILAMENT_CHANGE_OPTION_RESUME  = _UxGT("Forsæt print");
 
-  LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("Forkert printer");
+  LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("Forkert cnc");
 
   #if LCD_HEIGHT >= 4
     LSTR MSG_FILAMENT_CHANGE_INIT         = _UxGT(MSG_3_LINE("Vent på start", "af filament", "skift"));

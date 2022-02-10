@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,10 +36,10 @@
 
 const struct DGUS_ScreenSetup screen_setup_list[] PROGMEM = {
   #if ENABLED(SDSUPPORT)
-    SETUP_HELPER(DGUS_Screen::PRINT,            &DGUSSetupHandler::Print),
+    SETUP_HELPER(DGUS_Screen::PRINT,            &DGUSSetupHandler::CNC),
   #endif
-  SETUP_HELPER(DGUS_Screen::PRINT_STATUS,       &DGUSSetupHandler::PrintStatus),
-  SETUP_HELPER(DGUS_Screen::PRINT_ADJUST,       &DGUSSetupHandler::PrintAdjust),
+  SETUP_HELPER(DGUS_Screen::PRINT_STATUS,       &DGUSSetupHandler::CNCStatus),
+  SETUP_HELPER(DGUS_Screen::PRINT_ADJUST,       &DGUSSetupHandler::CNCAdjust),
   SETUP_HELPER(DGUS_Screen::LEVELING_MENU,      &DGUSSetupHandler::LevelingMenu),
   SETUP_HELPER(DGUS_Screen::LEVELING_OFFSET,    &DGUSSetupHandler::LevelingOffset),
   SETUP_HELPER(DGUS_Screen::LEVELING_MANUAL,    &DGUSSetupHandler::LevelingManual),

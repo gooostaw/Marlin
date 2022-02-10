@@ -835,8 +835,8 @@ void CardReader::closefile(const bool store_location/*=false*/) {
   TERN_(EMERGENCY_PARSER, emergency_parser.enable());
 
   if (store_location) {
-    //future: store printer state, filename and position for continuing a stopped print
-    // so one can unplug the printer and continue printing the next day.
+    //future: store cnc state, filename and position for continuing a stopped print
+    // so one can unplug the cnc and continue printing the next day.
   }
 }
 
@@ -1257,7 +1257,7 @@ uint16_t CardReader::get_num_Files() {
 }
 
 //
-// Return from procedure or close out the Print Job
+// Return from procedure or close out the CNC Job
 //
 void CardReader::fileHasFinished() {
   file.close();

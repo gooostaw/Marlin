@@ -93,7 +93,7 @@ bool DeveloperMenu::onTouchEnd(uint8_t tag) {
     case 2: GOTO_SCREEN(WidgetsScreen);                 break;
     case 3:
       PUSH_SCREEN(StressTestScreen);
-      AlertDialogBox::show(F("Please do not run this test unattended as it may cause your printer to malfunction."));
+      AlertDialogBox::show(F("Please do not run this test unattended as it may cause your cnc to malfunction."));
       current_screen.forget();
       break;
     case 4: GOTO_SCREEN(TouchRegistersScreen);          break;

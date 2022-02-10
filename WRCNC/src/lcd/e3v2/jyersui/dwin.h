@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@
 //#define DWIN_CREALITY_LCD_CUSTOM_ICONS
 
 enum processID : uint8_t {
-  Main, Print, Menu, Value, Option, File, Popup, Confirm, Wait
+  Main, CNC, Menu, Value, Option, File, Popup, Confirm, Wait
 };
 
 enum PopupID : uint8_t {
@@ -184,7 +184,7 @@ public:
 
   static void Main_Menu_Icons();
   static void Draw_Main_Menu(uint8_t select=0);
-  static void Print_Screen_Icons();
+  static void CNC_Screen_Icons();
   static void Draw_Print_Screen();
   static void Draw_Print_Filename(const bool reset=false);
   static void Draw_Print_ProgressBar();
@@ -217,7 +217,7 @@ public:
   static void Value_Control();
   static void Option_Control();
   static void File_Control();
-  static void Print_Screen_Control();
+  static void CNC_Screen_Control();
   static void Popup_Control();
   static void Confirm_Control();
 

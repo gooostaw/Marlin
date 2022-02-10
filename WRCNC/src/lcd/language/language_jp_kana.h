@@ -139,7 +139,7 @@ namespace Language_jp_kana {
   LSTR MSG_PAUSE_PRINT                    = _UxGT("イチジテイシ");                  // "Pause print"
   LSTR MSG_RESUME_PRINT                   = _UxGT("プリントサイカイ");                // "Resume print"
   LSTR MSG_STOP_PRINT                     = _UxGT("プリントテイシ");                 // "Stop print"
-  LSTR MSG_MEDIA_MENU                     = _UxGT("メディアカラプリント");            // "Print from SD"
+  LSTR MSG_MEDIA_MENU                     = _UxGT("メディアカラプリント");            // "CNC from SD"
   LSTR MSG_NO_MEDIA                       = _UxGT("メディアガアリマセン");               // "Card removed"
   LSTR MSG_DWELL                          = _UxGT("キュウシ");                     // "Sleep..."
   LSTR MSG_USERWAIT                       = _UxGT("ツヅケルニハクリックシテクダサイ");  // "Wait for user..."
@@ -181,16 +181,16 @@ namespace Language_jp_kana {
   LSTR MSG_DELTA_CALIBRATE_Y              = _UxGT("Yジク コウセイ");                 // "Calibrate Y"
   LSTR MSG_DELTA_CALIBRATE_Z              = _UxGT("Zジク コウセイ");                 // "Calibrate Z"
   LSTR MSG_DELTA_CALIBRATE_CENTER         = _UxGT("チュウシン コウセイ");              // "Calibrate Center"
-  LSTR MSG_INFO_MENU                      = _UxGT("コノプリンターニツイテ");             // "About Printer"
-  LSTR MSG_INFO_PRINTER_MENU              = _UxGT("プリンタージョウホウ");              // "Printer Info"
-  LSTR MSG_INFO_STATS_MENU                = _UxGT("プリントジョウキョウ");              // "Printer Stats"
+  LSTR MSG_INFO_MENU                      = _UxGT("コノプリンターニツイテ");             // "About CNC"
+  LSTR MSG_INFO_PRINTER_MENU              = _UxGT("プリンタージョウホウ");              // "CNC Info"
+  LSTR MSG_INFO_STATS_MENU                = _UxGT("プリントジョウキョウ");              // "CNC Stats"
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("セイギョケイジョウホウ");            // "Board Info"
   LSTR MSG_INFO_THERMISTOR_MENU           = _UxGT("サーミスター");                   // "Thermistors"
   LSTR MSG_INFO_EXTRUDERS                 = _UxGT("エクストルーダースウ");             // "Extruders"
   LSTR MSG_INFO_BAUDRATE                  = _UxGT("ボーレート");                    // "Baud"
   LSTR MSG_INFO_PROTOCOL                  = _UxGT("プロトコル");                    // "Protocol"
   LSTR MSG_CASE_LIGHT                     = _UxGT("キョウタイナイショウメイ");       // "Case light"
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("プリントスウ ");                  // "Print Count"
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("プリントスウ ");                  // "CNC Count"
   LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("カンリョウスウ");                  // "Completed"
   LSTR MSG_INFO_PRINT_TIME                = _UxGT("プリントジカンルイケイ");            // "Total print time"
   LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("サイチョウプリントジカン");           // "Longest job time"
@@ -215,7 +215,7 @@ namespace Language_jp_kana {
   LSTR MSG_FILAMENT_CHANGE_LOAD           = _UxGT(MSG_2_LINE("フィラメントソウテンチュウ", "シバラクオマチクダサイ"));   // "Wait for filament load"
   LSTR MSG_FILAMENT_CHANGE_RESUME         = _UxGT(MSG_2_LINE("プリントヲサイカイシマス", "シバラクオマチクダサイ"));   // "Wait for print to resume"
 
-  LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("マチガッタプリンター");               // "Wrong printer"
+  LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("マチガッタプリンター");               // "Wrong cnc"
 
   LSTR MSG_CONFIGURATION                  = _UxGT("セッテイカンリ");
   LSTR MSG_ADVANCED_SETTINGS              = _UxGT("ショウサイセッテイ");

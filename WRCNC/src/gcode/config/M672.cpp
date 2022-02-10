@@ -12,7 +12,7 @@
 
 /**
  * The WRCNC format for the M672 command is different than shown in the Duet Smart Effector
- * documentation https://duet3d.dozuki.com/Wiki/Smart_effector_and_carriage_adapters_for_delta_printer
+ * documentation https://duet3d.dozuki.com/Wiki/Smart_effector_and_carriage_adapters_for_delta_cnc
  *
  * To set custom sensitivity:
  *   Duet:   M672 S105:aaa:bbb

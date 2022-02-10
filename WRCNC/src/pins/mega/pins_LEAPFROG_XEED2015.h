@@ -8,7 +8,7 @@
  *
  * This board is used by other Leapfrog printers in addition to the Xeed,
  * such as the Creatr HS and Bolt. The pin assignments vary wildly between
- * printer models. As such this file is currently specific to the Xeed.
+ * cnc models. As such this file is currently specific to the Xeed.
  */
 
 #include "env_validate.h"

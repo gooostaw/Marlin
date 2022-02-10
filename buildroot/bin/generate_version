@@ -80,7 +80,7 @@ cat > "${WRITE_FILE}" <<EOF
 #endif
 
 /**
-  * Defines a generic printer name to be output to the LCD after booting WRCNC.
+  * Defines a generic cnc name to be output to the LCD after booting WRCNC.
   */
 #ifndef MACHINE_NAME
   #define MACHINE_NAME "${MACHINE_NAME}"
@@ -97,7 +97,7 @@ cat > "${WRITE_FILE}" <<EOF
 #endif
 
 /**
-  * Default generic printer UUID.
+  * Default generic cnc UUID.
   */
 #ifndef DEFAULT_MACHINE_UUID
   #define DEFAULT_MACHINE_UUID "${DEFAULT_MACHINE_UUID}"

@@ -150,7 +150,7 @@ namespace Language_zh_CN {
   LSTR MSG_UBL_OUTPUT_MAP                 = _UxGT("输出网格图");     // "Output Mesh Map"
   LSTR MSG_UBL_OUTPUT_MAP_HOST            = _UxGT("输出到主机");     // "Output for Host"
   LSTR MSG_UBL_OUTPUT_MAP_CSV             = _UxGT("输出到CSV");     // "Output for CSV"
-  LSTR MSG_UBL_OUTPUT_MAP_BACKUP          = _UxGT("输出到备份");     // "Off Printer Backup"
+  LSTR MSG_UBL_OUTPUT_MAP_BACKUP          = _UxGT("输出到备份");     // "Off CNC Backup"
   LSTR MSG_UBL_INFO_UBL                   = _UxGT("输出UBL信息");     // "Output UBL Info"
   LSTR MSG_UBL_FILLIN_AMOUNT              = _UxGT("填充合计");     // "Fill-in Amount"
   LSTR MSG_UBL_MANUAL_FILLIN              = _UxGT("手工填充");     // "Manual Fill-in"
@@ -340,11 +340,11 @@ namespace Language_zh_CN {
   LSTR MSG_CANCEL_OBJECT                  = _UxGT("取消物体");
   LSTR MSG_CANCEL_OBJECT_N                = _UxGT("取消物体 =");
   LSTR MSG_OUTAGE_RECOVERY                = _UxGT("中断恢复");
-  LSTR MSG_MEDIA_MENU                     = _UxGT("从存储卡上打印");     // "Print from SD"
+  LSTR MSG_MEDIA_MENU                     = _UxGT("从存储卡上打印");     // "CNC from SD"
   LSTR MSG_NO_MEDIA                       = _UxGT("无存储卡");     // "No SD card"
   LSTR MSG_DWELL                          = _UxGT("休眠中 ...");     // "Sleep..."
   LSTR MSG_USERWAIT                       = _UxGT("点击继续 ...");     // "Click to resume..."
-  LSTR MSG_PRINT_PAUSED                   = _UxGT("暫停打印");     // "Print paused"
+  LSTR MSG_PRINT_PAUSED                   = _UxGT("暫停打印");     // "CNC paused"
   LSTR MSG_PRINTING                       = _UxGT("打印中...");
   LSTR MSG_PRINT_ABORTED                  = _UxGT("已取消打印");     // "Print aborted"
   LSTR MSG_PRINT_DONE                     = _UxGT("打印已完成");
@@ -449,14 +449,14 @@ namespace Language_zh_CN {
   LSTR MSG_DELTA_DIAG_ROD                 = _UxGT("⊿斜柱");     // "Diag Rod"
   LSTR MSG_DELTA_HEIGHT                   = _UxGT("⊿高度");     // "Height"
   LSTR MSG_DELTA_RADIUS                   = _UxGT("⊿半径");     // "Radius"
-  LSTR MSG_INFO_MENU                      = _UxGT("关于打印机");     // "About Printer"
-  LSTR MSG_INFO_PRINTER_MENU              = _UxGT("打印机信息");     // "Printer Info"
+  LSTR MSG_INFO_MENU                      = _UxGT("关于打印机");     // "About CNC"
+  LSTR MSG_INFO_PRINTER_MENU              = _UxGT("打印机信息");     // "CNC Info"
   LSTR MSG_3POINT_LEVELING                = _UxGT("三点调平");     // "3-Point Leveling"
   LSTR MSG_LINEAR_LEVELING                = _UxGT("线性调平");     // "Linear Leveling"
   LSTR MSG_BILINEAR_LEVELING              = _UxGT("双线性调平");     // "Bilinear Leveling"
   LSTR MSG_UBL_LEVELING                   = _UxGT("统一热床调平(UBL)");     // "Unified Bed Leveling"
   LSTR MSG_MESH_LEVELING                  = _UxGT("网格调平");     // "Mesh Leveling"
-  LSTR MSG_INFO_STATS_MENU                = _UxGT("打印机统计");     // "Printer Stats"
+  LSTR MSG_INFO_STATS_MENU                = _UxGT("打印机统计");     // "CNC Stats"
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("主板信息");     // "Board Info"
   LSTR MSG_INFO_THERMISTOR_MENU           = _UxGT("温度计");     // "Thermistors"
   LSTR MSG_INFO_EXTRUDERS                 = _UxGT("挤出机");     // "Extruders"
@@ -469,16 +469,16 @@ namespace Language_zh_CN {
   LSTR MSG_CASE_LIGHT                     = _UxGT("外壳灯");     // "Case light"
   LSTR MSG_CASE_LIGHT_BRIGHTNESS          = _UxGT("灯亮度");     // "Light BRIGHTNESS"
 
-  LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("打印机不正确");     // "The printer is incorrect"
+  LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("打印机不正确");     // "The cnc is incorrect"
 
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("打印计数");     // "Print Count"
+    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("打印计数");     // "CNC Count"
     LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("完成了");     // "Completed"
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("总打印时间");     // "Total print time"
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("最长工作时间");     // "Longest job time"
     LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("总计挤出");     // "Extruded total"
   #else
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("打印数");     // "Prints"
+    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("打印数");     // "CNCs"
     LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("完成");     // "Completed"
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("总共");     // "Total"
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("最长");     // "Longest"

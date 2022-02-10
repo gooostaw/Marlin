@@ -397,7 +397,7 @@ void _lcd_ubl_map_edit_cmd() {
 void ubl_map_move_to_xy() {
   const xy_pos_t xy = { ubl.mesh_index_to_xpos(x_plot), ubl.mesh_index_to_ypos(y_plot) };
 
-  // Some printers have unreachable areas in the mesh. Skip the move if unreachable.
+  // Some cncs have unreachable areas in the mesh. Skip the move if unreachable.
   if (!position_is_reachable(xy)) return;
 
   #if ENABLED(DELTA)
@@ -521,7 +521,7 @@ void _ubl_goto_map_screen() {
  * << Unified Bed Leveling
  *  Output for Host
  *  Output for CSV
- *  Off Printer Backup
+ *  Off CNC Backup
  */
 void _lcd_ubl_output_map() {
   START_MENU();

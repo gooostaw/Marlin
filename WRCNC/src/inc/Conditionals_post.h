@@ -192,7 +192,7 @@
 
 /**
  * SCARA cannot use SLOWDOWN and requires QUICKHOME
- * Printable radius assumes joints can fully extend
+ * CNCable radius assumes joints can fully extend
  */
 #if IS_SCARA
   #undef SLOWDOWN
@@ -2640,7 +2640,7 @@
   #undef AUTO_POWER_CHAMBER_FAN
 #endif
 
-// Print Cooling fans (limit)
+// CNC Cooling fans (limit)
 #ifdef NUM_M106_FANS
   #define MAX_FANS NUM_M106_FANS
 #else

@@ -38,7 +38,7 @@
 extern tiny_timer_t refresh_timer;
 
 #if ENABLED(TOUCH_UI_LULZBOT_BIO)
-  #include "bioprinter/screens.h"
+  #include "biocnc/screens.h"
 #elif ENABLED(TOUCH_UI_COCOA_PRESS)
   #include "cocoa_press/screens.h"
 #elif ENABLED(TOUCH_UI_SYNDAVER_LEVEL)

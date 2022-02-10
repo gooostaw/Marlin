@@ -540,7 +540,7 @@
 #elif defined(POWER_LOSS_PULL)
   #error "POWER_LOSS_PULL is now specifically POWER_LOSS_PULL(UP|DOWN)."
 #elif defined(SHORT_MANUAL_Z_MOVE)
-  #error "SHORT_MANUAL_Z_MOVE is now FINE_MANUAL_MOVE, applying to Z on most printers."
+  #error "SHORT_MANUAL_Z_MOVE is now FINE_MANUAL_MOVE, applying to Z on most cncs."
 #elif defined(FIL_RUNOUT_INVERTING)
   #if FIL_RUNOUT_INVERTING
     #error "FIL_RUNOUT_INVERTING true is now FIL_RUNOUT_STATE HIGH."
@@ -1484,7 +1484,7 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
 #endif
 
 /**
- * Some things should not be used on Belt Printers
+ * Some things should not be used on Belt CNCs
  */
 #if BOTH(BELTPRINTER, HAS_LEVELING)
   #error "Bed Leveling is not compatible with BELTPRINTER."
@@ -1741,7 +1741,7 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
    */
 
   #if IS_SCARA
-    #error "AUTO_BED_LEVELING_UBL does not yet support SCARA printers."
+    #error "AUTO_BED_LEVELING_UBL does not yet support SCARA cncs."
   #elif DISABLED(EEPROM_SETTINGS)
     #error "AUTO_BED_LEVELING_UBL requires EEPROM_SETTINGS."
   #elif !WITHIN(GRID_MAX_POINTS_X, 3, 15) || !WITHIN(GRID_MAX_POINTS_Y, 3, 15)
@@ -1765,7 +1765,7 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
 
   // Mesh Bed Leveling
   #if ENABLED(DELTA)
-    #error "MESH_BED_LEVELING is not compatible with DELTA printers."
+    #error "MESH_BED_LEVELING is not compatible with DELTA cncs."
   #elif (GRID_MAX_POINTS_X) > 9 || (GRID_MAX_POINTS_Y) > 9
     #error "GRID_MAX_POINTS_X and GRID_MAX_POINTS_Y must be less than 10 for MBL."
   #endif
@@ -2516,7 +2516,7 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
   #error "EMERGENCY_PARSER is required to activate SOFT_RESET_VIA_SERIAL."
 #endif
 #if ENABLED(SOFT_RESET_ON_KILL) && !BUTTON_EXISTS(ENC)
-  #error "An encoder button is required or SOFT_RESET_ON_KILL will reset the printer without notice!"
+  #error "An encoder button is required or SOFT_RESET_ON_KILL will reset the cnc without notice!"
 #endif
 
 // Reset reason for AVR
@@ -3737,7 +3737,7 @@ static_assert(_PLUS_TEST(4), "HOMING_FEEDRATE_MM_M values must be positive.");
  */
 #if ENABLED(PASSWORD_FEATURE)
   #if NONE(HAS_WRCNCUI_MENU, PASSWORD_UNLOCK_GCODE, PASSWORD_CHANGE_GCODE)
-    #error "Without PASSWORD_UNLOCK_GCODE, PASSWORD_CHANGE_GCODE, or a supported LCD there's no way to unlock the printer or set a password."
+    #error "Without PASSWORD_UNLOCK_GCODE, PASSWORD_CHANGE_GCODE, or a supported LCD there's no way to unlock the cnc or set a password."
   #elif DISABLED(EEPROM_SETTINGS)
     #warning "PASSWORD_FEATURE settings will be lost on power-off without EEPROM_SETTINGS."
   #endif

@@ -447,7 +447,7 @@ void GcodeSuite::G28() {
   #endif
 
   /**
-   * Preserve DXC mode across a G28 for IDEX printers in DXC_DUPLICATION_MODE.
+   * Preserve DXC mode across a G28 for IDEX cncs in DXC_DUPLICATION_MODE.
    * This is important because it lets a user use the LCD Panel to set an IDEX Duplication mode, and
    * then print a standard GCode file that contains a single print that does a G28 and has no other
    * IDEX specific commands in it.

@@ -24,7 +24,7 @@
 extern uint32_t To_pre_view;
 extern bool flash_preview_begin, default_preview_flg, gcode_preview_over;
 
-void printer_state_polling() {
+void cnc_state_polling() {
   char str_1[16];
   if (uiCfg.print_state == PAUSING) {
     #if ENABLED(SDSUPPORT)

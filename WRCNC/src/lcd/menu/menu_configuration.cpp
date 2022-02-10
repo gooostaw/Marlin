@@ -448,7 +448,7 @@ void menu_advanced_settings();
 #endif // CUSTOM_MENU_CONFIG
 
 void menu_configuration() {
-  const bool busy = printer_busy();
+  const bool busy = cnc_busy();
 
   START_MENU();
   BACK_ITEM(MSG_MAIN);

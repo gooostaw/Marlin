@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  */
 
 /**
- * DWIN Print Stats page
+ * DWIN CNC Stats page
  * Author: Miguel A. Risco-Castillo (MRISCOC)
  * Version: 1.1
  * Date: 2022/01/09
@@ -43,9 +43,9 @@
 #include "dwin_popup.h"
 #include "dwin.h"
 
-PrintStatsClass PrintStats;
+CNCStatsClass CNCStats;
 
-void PrintStatsClass::Draw() {
+void CNCStatsClass::Draw() {
   char buf[50] = "";
   char str[30] = "";
   constexpr int8_t MRG = 30;
@@ -70,7 +70,7 @@ void PrintStatsClass::Draw() {
   DWINUI::Draw_String(MRG, 160, buf);
 }
 
-void PrintStatsClass::Reset() {
+void CNCStatsClass::Reset() {
   print_job_timer.initStats();
   HMI_AudioFeedback();
 }

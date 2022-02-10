@@ -438,7 +438,7 @@ void lv_draw_dialog(uint8_t type) {
   }
   #if ENABLED(MKS_WIFI_MODULE)
     else if (DIALOG_IS(TYPE_UNBIND)) {
-      lv_label_set_text(labelDialog, common_menu.unbind_printer_tips);
+      lv_label_set_text(labelDialog, common_menu.unbind_cnc_tips);
       lv_obj_align(labelDialog, nullptr, LV_ALIGN_CENTER, 0, -70);
     }
   #endif

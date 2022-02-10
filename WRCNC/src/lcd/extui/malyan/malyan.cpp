@@ -64,7 +64,7 @@ void write_to_lcd(FSTR_P const fmsg) {
   LOOP_L_N(i, message_length)
     encoded_message[i] = pgm_read_byte(&pmsg[i]) | 0x80;
 
-  LCD_SERIAL.Print::write(encoded_message, message_length);
+  LCD_SERIAL.CNC::write(encoded_message, message_length);
 }
 
 void write_to_lcd(const char * const cmsg) {
@@ -74,7 +74,7 @@ void write_to_lcd(const char * const cmsg) {
   LOOP_L_N(i, message_length)
     encoded_message[i] = cmsg[i] | 0x80;
 
-  LCD_SERIAL.Print::write(encoded_message, message_length);
+  LCD_SERIAL.CNC::write(encoded_message, message_length);
 }
 
 // {E:<msg>} is for error states.
@@ -210,7 +210,7 @@ void process_lcd_j_command(const char *command) {
  * Print a file:
  * {P:000}
  * The File number is specified as a three digit value.
- * Printer responds with:
+ * CNC responds with:
  * {PRINTFILE:Mini_SNES_Bottom.gcode}
  * {SYS:BUILD}echo:Now fresh file: Mini_SNES_Bottom.gcode
  * File opened: Mini_SNES_Bottom.gcode Size: 5805813
@@ -240,7 +240,7 @@ void process_lcd_p_command(const char *command) {
     case 'H': queue.enqueue_now_P(G28_STR); break; // Home all axes
     default: {
       #if ENABLED(SDSUPPORT)
-        // Print file 000 - a three digit number indicating which
+        // CNC file 000 - a three digit number indicating which
         // file to print in the SD card. If it's a directory,
         // then switch to the directory.
 
@@ -274,7 +274,7 @@ void process_lcd_p_command(const char *command) {
  * {T0:999/000}{T1:000/000}{TP:004/000}
  *
  * {S:L} - File Listing request
- * Printer Response:
+ * CNC Response:
  * {FILE:buttons.gcode}
  * {FILE:update.bin}
  * {FILE:nupdate.bin}

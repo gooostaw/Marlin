@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -144,7 +144,7 @@ void FanCheck::compute_speed(uint16_t elapsedTime) {
   if (!fan_error_msk && error == TachoError::REPORTED) error = TachoError::FIXED;
 
   if (error == TachoError::FIXED && !printJobOngoing() && !printingIsPaused()) {
-    error = TachoError::NONE; // if the issue has been fixed while the printer is idle, reenable immediately
+    error = TachoError::NONE; // if the issue has been fixed while the cnc is idle, reenable immediately
     ui.reset_alert_level();
   }
 

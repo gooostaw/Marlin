@@ -491,7 +491,7 @@ protected:
   uint16_t CurrentSectorSize[MASS_MAX_SUPPORTED_LUN]; // Sector size, clipped to 16 bits
   bool LUNOk[MASS_MAX_SUPPORTED_LUN]; // use this to check for media changes.
   bool WriteOk[MASS_MAX_SUPPORTED_LUN];
-  void PrintEndpointDescriptor(const USB_FD_ENDPOINT_DESCRIPTOR* ep_ptr);
+  void CNCEndpointDescriptor(const USB_FD_ENDPOINT_DESCRIPTOR* ep_ptr);
 
   // Additional Initialization Method for Subclasses
 

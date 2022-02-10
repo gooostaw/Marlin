@@ -22,14 +22,14 @@ We follow with
 - MMU <= 'P0\n'
 - MMU => '*FINDA status*\n'
 
-Now we are sure MMU is available and ready. If there was a timeout or other communication problem somewhere, printer will be killed.
+Now we are sure MMU is available and ready. If there was a timeout or other communication problem somewhere, cnc will be killed.
 
 - *Firmware version* is an integer value, but we don't care about it
 - *Build number* is an integer value and has to be >=126, or =>132 if 12V mode is enabled
 - *FINDA status* is 1 if the filament is loaded to the extruder, 0 otherwise
 
 
-*Build number* is checked against the required value, if it does not match, printer is halted.
+*Build number* is checked against the required value, if it does not match, cnc is halted.
 
 
 
@@ -91,4 +91,3 @@ Eject filament
 
 - MMU <= 'E*Filament index*\n'
 - MMU => 'ok\n'
-

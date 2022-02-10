@@ -10,7 +10,7 @@
 #include "../../WRCNCCore.h"
 
 /**
- * M16: Expected Printer Check
+ * M16: Expected CNC Check
  */
 void GcodeSuite::M16() {
 

@@ -63,10 +63,10 @@
 //
 // AnyCubic standard pin mappings
 //
-//  On most printers, endstops are NOT all wired to the appropriate pins on the Trigorilla board.
+//  On most cncs, endstops are NOT all wired to the appropriate pins on the Trigorilla board.
 //  For instance, on a Chiron, Y axis goes to an aux connector.
 //  There are also other things that have been wired in creative ways.
-//  To enable PIN definitions for a specific printer model, #define the appropriate symbol after
+//  To enable PIN definitions for a specific cnc model, #define the appropriate symbol after
 //  MOTHERBOARD in Configuration.h
 
 //

@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,8 +46,8 @@ namespace ExtUI {
     }
   }
 
-  void onPrinterKilled(FSTR_P const error, FSTR_P const component) {
-    dgus_screen_handler.PrinterKilled(error, component);
+  void onCNCKilled(FSTR_P const error, FSTR_P const component) {
+    dgus_screen_handler.CNCKilled(error, component);
   }
 
   void onMediaInserted() { TERN_(SDSUPPORT, dgus_screen_handler.SDCardInserted()); }
@@ -59,15 +59,15 @@ namespace ExtUI {
   }
 
   void onPrintTimerStarted() {
-    dgus_screen_handler.PrintTimerStarted();
+    dgus_screen_handler.CNCTimerStarted();
   }
 
   void onPrintTimerPaused() {
-    dgus_screen_handler.PrintTimerPaused();
+    dgus_screen_handler.CNCTimerPaused();
   }
 
   void onPrintTimerStopped() {
-    dgus_screen_handler.PrintTimerStopped();
+    dgus_screen_handler.CNCTimerStopped();
   }
 
   void onFilamentRunout(const extruder_t extruder) {

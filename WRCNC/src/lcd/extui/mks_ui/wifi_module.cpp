@@ -841,7 +841,7 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
 
       switch (cmd_value) {
 
-        case 20: // M20: Print SD / µdisk file
+        case 20: // M20: CNC SD / µdisk file
           file_writer.fileTransfer = 0;
           if (uiCfg.print_state == IDLE) {
             int index = 0;

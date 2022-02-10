@@ -145,7 +145,7 @@ void HostUI::action(FSTR_P const fstr, const bool eol) {
   // Handle responses from the host, such as:
   //  - Filament runout responses: Purge More, Continue
   //  - General "Continue" response
-  //  - Resume Print response
+  //  - Resume CNC response
   //  - Dismissal of info
   //
   void HostUI::handle_response(const uint8_t response) {

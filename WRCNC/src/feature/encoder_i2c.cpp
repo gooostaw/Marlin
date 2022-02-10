@@ -61,7 +61,7 @@ void I2CPositionEncoder::update() {
      *
      * This code is intended to manage situations where the encoder has reported bad magnetic strength.
      * This indicates that the magnetic strip was too far away from the sensor to reliably track position.
-     * When this happens, this code resets the offset based on where the printer thinks it is. This has been
+     * When this happens, this code resets the offset based on where the cnc thinks it is. This has been
      * shown to introduce errors in actual position which result in drifting prints and poor print quality.
      * Perhaps a better method would be to disable correction on the axis with a problem, report it to the
      * user via the status leds on the encoder module and prompt the user to re-home the axis at which point
@@ -76,7 +76,7 @@ void I2CPositionEncoder::update() {
 
         SERIAL_ECHOLNPGM("Untrusted encoder module on ", AS_CHAR(axis_codes[encoderAxis]), " axis has been fault-free for set duration, reinstating error correction.");
 
-        //the encoder likely lost its place when the error occurred, so we'll reset and use the printer's
+        //the encoder likely lost its place when the error occurred, so we'll reset and use the cnc's
         //idea of where it the axis is to re-initialize
         const float pos = planner.get_axis_position_mm(encoderAxis);
         int32_t positionInTicks = pos * get_ticks_unit();
@@ -695,7 +695,7 @@ void I2CPositionEncodersMgr::change_module_address(const uint8_t oldaddr, const 
   const int8_t idx = idx_from_addr(newaddr);
   if (idx >= 0 && !encoders[idx].get_active()) {
     SERIAL_CHAR(axis_codes[encoders[idx].get_axis()]);
-    SERIAL_ECHOLNPGM(" axis encoder was not detected on printer startup. Trying again.");
+    SERIAL_ECHOLNPGM(" axis encoder was not detected on cnc startup. Trying again.");
     encoders[idx].set_active(encoders[idx].passes_test(true));
   }
 }

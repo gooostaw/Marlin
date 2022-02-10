@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -134,7 +134,7 @@ void DGUSRxHandler::ScreenChange(DGUS_VP &vp, void *data_ptr) {
     dgus_screen_handler.TriggerFullUpdate();
   }
 
-  void DGUSRxHandler::PrintFile(DGUS_VP &vp, void *data_ptr) {
+  void DGUSRxHandler::CNCFile(DGUS_VP &vp, void *data_ptr) {
     UNUSED(vp);
     UNUSED(data_ptr);
 
@@ -148,7 +148,7 @@ void DGUSRxHandler::ScreenChange(DGUS_VP &vp, void *data_ptr) {
       return;
     }
 
-    if (!dgus_screen_handler.IsPrinterIdle()) {
+    if (!dgus_screen_handler.IsCNCIdle()) {
       dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
       return;
     }
@@ -158,7 +158,7 @@ void DGUSRxHandler::ScreenChange(DGUS_VP &vp, void *data_ptr) {
   }
 #endif // SDSUPPORT
 
-void DGUSRxHandler::PrintAbort(DGUS_VP &vp, void *data_ptr) {
+void DGUSRxHandler::CNCAbort(DGUS_VP &vp, void *data_ptr) {
   UNUSED(vp);
 
   const DGUS_Data::Popup result = (DGUS_Data::Popup)((uint8_t*)data_ptr)[1];
@@ -192,7 +192,7 @@ void DGUSRxHandler::PrintPause(DGUS_VP &vp, void *data_ptr) {
   ExtUI::pausePrint();
 }
 
-void DGUSRxHandler::PrintResume(DGUS_VP &vp, void *data_ptr) {
+void DGUSRxHandler::CNCResume(DGUS_VP &vp, void *data_ptr) {
   UNUSED(vp);
 
   const DGUS_Data::Popup result = (DGUS_Data::Popup)((uint8_t*)data_ptr)[1];
@@ -206,7 +206,7 @@ void DGUSRxHandler::PrintResume(DGUS_VP &vp, void *data_ptr) {
     return;
   }
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -394,7 +394,7 @@ void DGUSRxHandler::ZOffset(DGUS_VP &vp, void *data_ptr) {
     return;
   }
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -418,7 +418,7 @@ void DGUSRxHandler::ZOffsetStep(DGUS_VP &vp, void *data_ptr) {
     return;
   }
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -460,7 +460,7 @@ void DGUSRxHandler::MoveToPoint(DGUS_VP &vp, void *data_ptr) {
     return;
   }
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -515,7 +515,7 @@ void DGUSRxHandler::Probe(DGUS_VP &vp, void *data_ptr) {
     return;
   }
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -534,7 +534,7 @@ void DGUSRxHandler::DisableABL(DGUS_VP &vp, void *data_ptr) {
   UNUSED(vp);
   UNUSED(data_ptr);
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -575,7 +575,7 @@ void DGUSRxHandler::FilamentLength(DGUS_VP &vp, void *data_ptr) {
 void DGUSRxHandler::FilamentMove(DGUS_VP &vp, void *data_ptr) {
   UNUSED(vp);
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -619,7 +619,7 @@ void DGUSRxHandler::FilamentMove(DGUS_VP &vp, void *data_ptr) {
 void DGUSRxHandler::Home(DGUS_VP &vp, void *data_ptr) {
   UNUSED(vp);
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -756,7 +756,7 @@ void DGUSRxHandler::GcodeExecute(DGUS_VP &vp, void *data_ptr) {
     return;
   }
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -779,7 +779,7 @@ void DGUSRxHandler::ResetEEPROM(DGUS_VP &vp, void *data_ptr) {
     return;
   }
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -797,7 +797,7 @@ void DGUSRxHandler::SettingsExtra(DGUS_VP &vp, void *data_ptr) {
     default: return;
     case DGUS_Data::Extra::BUTTON1:
       #if ENABLED(BLTOUCH)
-        if (!dgus_screen_handler.IsPrinterIdle()) {
+        if (!dgus_screen_handler.IsCNCIdle()) {
           dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
           return;
         }
@@ -843,7 +843,7 @@ void DGUSRxHandler::PIDSelect(DGUS_VP &vp, void *data_ptr) {
 void DGUSRxHandler::PIDSetTemp(DGUS_VP &vp, void *data_ptr) {
   UNUSED(vp);
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -874,7 +874,7 @@ void DGUSRxHandler::PIDRun(DGUS_VP &vp, void *data_ptr) {
   UNUSED(vp);
   UNUSED(data_ptr);
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return;
   }
@@ -935,7 +935,7 @@ void DGUSRxHandler::PIDRun(DGUS_VP &vp, void *data_ptr) {
       return;
     }
 
-    if (!dgus_screen_handler.IsPrinterIdle()) {
+    if (!dgus_screen_handler.IsCNCIdle()) {
       dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
       return;
     }
@@ -954,7 +954,7 @@ void DGUSRxHandler::PIDRun(DGUS_VP &vp, void *data_ptr) {
       return;
     }
 
-    if (!dgus_screen_handler.IsPrinterIdle()) {
+    if (!dgus_screen_handler.IsCNCIdle()) {
       dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
       return;
     }

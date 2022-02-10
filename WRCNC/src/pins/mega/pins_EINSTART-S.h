@@ -5,7 +5,7 @@
 
 /**
  * Einstart-S pin assignments
- * PCB Silkscreen: 3DPrinterCon_v3.5
+ * PCB Silkscreen: 3DCNCCon_v3.5
  */
 
 #define ALLOW_MEGA1280

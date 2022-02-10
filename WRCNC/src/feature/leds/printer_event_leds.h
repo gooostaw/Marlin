@@ -4,13 +4,13 @@
 #pragma once
 
 /**
- * feature/leds/printer_event_leds.h - LED color changing based on printer status
+ * feature/leds/cnc_event_leds.h - LED color changing based on cnc status
  */
 
 #include "leds.h"
 #include "../../inc/WRCNCConfig.h"
 
-class PrinterEventLEDs {
+class CNCEventLEDs {
 private:
   static uint8_t old_intensity;
 
@@ -65,4 +65,4 @@ public:
   #endif // SDSUPPORT
 };
 
-extern PrinterEventLEDs printerEventLEDs;
+extern CNCEventLEDs cncEventLEDs;

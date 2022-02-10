@@ -83,8 +83,8 @@
 #define WRCNC_msg_start_probing       PSTR("Probing Point 1/25")
 #define WRCNC_msg_probing_failed      PSTR("Probing Failed")
 #define WRCNC_msg_ready               PSTR(" Ready.")
-#define WRCNC_msg_print_paused        PSTR("Print Paused")
-#define WRCNC_msg_print_aborted       PSTR("Print Aborted")
+#define WRCNC_msg_print_paused        PSTR("CNC Paused")
+#define WRCNC_msg_print_aborted       PSTR("CNC Aborted")
 #define WRCNC_msg_extruder_heating    PSTR("E Heating...")
 #define WRCNC_msg_bed_heating         PSTR("Bed Heating...")
 #define WRCNC_msg_EEPROM_version      PSTR("EEPROM Version Error")
@@ -117,15 +117,15 @@ namespace Anycubic {
     AC_paused_purging_filament,
     AC_paused_idle
   };
-  enum printer_state_t : uint8_t {
-    AC_printer_booting,
-    AC_printer_idle,
-    AC_printer_probing,
-    AC_printer_printing,
-    AC_printer_pausing,
-    AC_printer_paused,
-    AC_printer_stopping,
-    AC_printer_resuming_from_power_outage
+  enum cnc_state_t : uint8_t {
+    AC_cnc_booting,
+    AC_cnc_idle,
+    AC_cnc_probing,
+    AC_cnc_printing,
+    AC_cnc_pausing,
+    AC_cnc_paused,
+    AC_cnc_stopping,
+    AC_cnc_resuming_from_power_outage
   };
   enum timer_event_t : uint8_t {
     AC_timer_started,

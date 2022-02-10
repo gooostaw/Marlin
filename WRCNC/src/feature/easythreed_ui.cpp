@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -154,21 +154,21 @@ void EasythreedUI::loadButton() {
 #endif
 
 //
-// Print Start/Pause/Resume Button
+// CNC Start/Pause/Resume Button
 //
 void EasythreedUI::printButton() {
   enum KeyStatus : uint8_t { KS_IDLE, KS_PRESS, KS_PROCEED };
   static uint8_t key_status = KS_IDLE;
   static millis_t key_time = 0;
 
-  enum PrintFlag : uint8_t { PF_START, PF_PAUSE, PF_RESUME };
-  static PrintFlag print_key_flag = PF_START;
+  enum CNCFlag : uint8_t { PF_START, PF_PAUSE, PF_RESUME };
+  static CNCFlag print_key_flag = PF_START;
 
   const millis_t ms = millis();
 
   switch (key_status) {
     case KS_IDLE:
-      if (!READ(BTN_PRINT)) {                                       // Print/Pause/Resume button pressed?
+      if (!READ(BTN_PRINT)) {                                       // CNC/Pause/Resume button pressed?
         key_time = ms;                                              // Save start time
         key_status++;                                               // Go to debounce test
       }
@@ -184,10 +184,10 @@ void EasythreedUI::printButton() {
       key_status = KS_IDLE;                                         // Ready for the next press
       if (PENDING(ms, key_time + 1200 - BTN_DEBOUNCE_MS)) {         // Register a press < 1.2 seconds
         switch (print_key_flag) {
-          case PF_START: {                                          // The "Print" button starts an SD card print
+          case PF_START: {                                          // The "CNC" button starts an SD card print
             if (printingIsActive()) break;                          // Already printing? (find another line that checks for 'is planner doing anything else right now?')
             blink_interval_ms = LED_BLINK_2;                        // Blink the indicator LED at 1 second intervals
-            print_key_flag = PF_PAUSE;                              // The "Print" button now pauses the print
+            print_key_flag = PF_PAUSE;                              // The "CNC" button now pauses the print
             card.mount();                                           // Force SD card to mount - now!
             if (!card.isMounted) {                                  // Failed to mount?
                 blink_interval_ms = LED_OFF;                        // Turn off LED
@@ -205,14 +205,14 @@ void EasythreedUI::printButton() {
             if (!printingIsActive()) break;
             blink_interval_ms = LED_ON;                             // Set indicator to steady ON
             queue.inject(F("M25"));                                 // Queue Pause
-            print_key_flag = PF_RESUME;                             // The "Print" button now resumes the print
+            print_key_flag = PF_RESUME;                             // The "CNC" button now resumes the print
             break;
             }
           case PF_RESUME: {                                         // Resume printing
             if (printingIsActive()) break;
             blink_interval_ms = LED_BLINK_2;                        // Blink the indicator LED at 1 second intervals
             queue.inject(F("M24"));                                 // Queue resume
-            print_key_flag = PF_PAUSE;                              // The "Print" button now pauses the print
+            print_key_flag = PF_PAUSE;                              // The "CNC" button now pauses the print
             break;
           }
         }
@@ -228,7 +228,7 @@ void EasythreedUI::printButton() {
         }
         planner.synchronize();                                      // Wait for commands already in the planner to finish
         TERN_(HAS_STEPPER_RESET, disableStepperDrivers());          // Disable all steppers - now!
-        print_key_flag = PF_START;                                  // The "Print" button now starts a new print
+        print_key_flag = PF_START;                                  // The "CNC" button now starts a new print
       }
       break;
   }

@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -83,12 +83,12 @@ const struct DGUS_VP vp_list[] PROGMEM = {
   #if ENABLED(SDSUPPORT)
     VP_HELPER_RX(DGUS_Addr::SD_SelectFile,   &DGUSRxHandler::SelectFile),
     VP_HELPER_RX(DGUS_Addr::SD_Scroll,       &DGUSRxHandler::Scroll),
-    VP_HELPER_RX_NODATA(DGUS_Addr::SD_Print, &DGUSRxHandler::PrintFile),
+    VP_HELPER_RX_NODATA(DGUS_Addr::SD_Print, &DGUSRxHandler::CNCFile),
   #endif
 
-  VP_HELPER_RX(DGUS_Addr::STATUS_Abort,  &DGUSRxHandler::PrintAbort),
+  VP_HELPER_RX(DGUS_Addr::STATUS_Abort,  &DGUSRxHandler::CNCAbort),
   VP_HELPER_RX(DGUS_Addr::STATUS_Pause,  &DGUSRxHandler::PrintPause),
-  VP_HELPER_RX(DGUS_Addr::STATUS_Resume, &DGUSRxHandler::PrintResume),
+  VP_HELPER_RX(DGUS_Addr::STATUS_Resume, &DGUSRxHandler::CNCResume),
 
   VP_HELPER_RX(DGUS_Addr::ADJUST_SetFeedrate,     &DGUSRxHandler::Feedrate),
   VP_HELPER_RX(DGUS_Addr::ADJUST_SetFlowrate_CUR, &DGUSRxHandler::Flowrate),
@@ -309,7 +309,7 @@ const struct DGUS_VP vp_list[] PROGMEM = {
   VP_HELPER_TX(DGUS_Addr::INFOS_FinishedPrints, &DGUSTxHandler::FinishedPrints),
   VP_HELPER_TX_SIZE(DGUS_Addr::INFOS_PrintTime,
                     DGUS_PRINTTIME_LEN,
-                    &DGUSTxHandler::PrintTime),
+                    &DGUSTxHandler::CNCTime),
   VP_HELPER_TX_SIZE(DGUS_Addr::INFOS_LongestPrint,
                     DGUS_LONGESTPRINT_LEN,
                     &DGUSTxHandler::LongestPrint),

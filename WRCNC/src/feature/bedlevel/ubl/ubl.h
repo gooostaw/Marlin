@@ -183,7 +183,7 @@ public:
 
   /**
    * z_correction_for_x_on_horizontal_mesh_line is an optimization for
-   * the case where the printer is making a vertical line that only crosses horizontal mesh lines.
+   * the case where the cnc is making a vertical line that only crosses horizontal mesh lines.
    */
   static float z_correction_for_x_on_horizontal_mesh_line(const_float_t rx0, const int x1_i, const int yi) {
     if (!WITHIN(x1_i, 0, (GRID_MAX_POINTS_X) - 1) || !WITHIN(yi, 0, (GRID_MAX_POINTS_Y) - 1)) {

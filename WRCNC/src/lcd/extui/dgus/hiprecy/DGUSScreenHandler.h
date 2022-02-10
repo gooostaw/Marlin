@@ -33,7 +33,7 @@ public:
   static void setstatusmessage(const char *msg);
   // The same for messages from Flash
   static void setstatusmessagePGM(PGM_P const msg);
-  // Callback for VP "Display wants to change screen on idle printer"
+  // Callback for VP "Display wants to change screen on idle cnc"
   static void ScreenChangeHookIfIdle(DGUS_VP_Variable &var, void *val_ptr);
   // Callback for VP "Screen has been changed"
   static void ScreenChangeHook(DGUS_VP_Variable &var, void *val_ptr);

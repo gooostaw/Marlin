@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,8 +59,8 @@ enum processID : uint8_t {
   SetFloat,
   SetPFloat,
   SelectFile,
-  PrintProcess,
-  PrintDone,
+  CNCProcess,
+  CNCDone,
   PwrlossRec,
   Reboot,
   Info,
@@ -71,7 +71,7 @@ enum processID : uint8_t {
   Leveling,
   PidProcess,
   ESDiagProcess,
-  PrintStatsProcess,
+  CNCStatsProcess,
   PauseOrStop,
   FilamentPurge,
   WaitResponse,
@@ -149,7 +149,7 @@ void DWIN_Redraw_screen();  // Redraw all screen elements
 void HMI_StartFrame(const bool with_update);   // Prepare the menu view
 void HMI_MainMenu();        // Main process screen
 void HMI_SelectFile();      // File page
-void HMI_Printing();        // Print page
+void HMI_Printing();        // CNC page
 void HMI_ReturnScreen();    // Return to previous screen before popups
 void ApplyExtMinT();
 void HMI_SetLanguageCache(); // Set the languaje image cache

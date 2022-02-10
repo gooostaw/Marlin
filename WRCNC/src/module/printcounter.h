@@ -7,7 +7,7 @@
 #include "../libs/duration_t.h"
 #include "../inc/WRCNCConfig.h"
 
-// Print debug messages with M111 S2
+// CNC debug messages with M111 S2
 //#define DEBUG_PRINTCOUNTER
 
 // Round up I2C / SPI address to next page boundary (assuming 32 byte pages)
@@ -31,7 +31,7 @@ struct printStatistics {    // 16 bytes
   #endif
 };
 
-class PrintCounter: public Stopwatch {
+class CNCCounter: public Stopwatch {
   private:
     typedef Stopwatch super;
 
@@ -100,7 +100,7 @@ class PrintCounter: public Stopwatch {
     }
 
     /**
-     * @brief Check if Print Statistics has been loaded
+     * @brief Check if CNC Statistics has been loaded
      * @details Return true if the statistical data has been loaded.
      * @return bool
      */
@@ -115,26 +115,26 @@ class PrintCounter: public Stopwatch {
     static void incFilamentUsed(float const &amount);
 
     /**
-     * @brief Reset the Print Statistics
+     * @brief Reset the CNC Statistics
      * @details Reset the statistics to zero and saves them to EEPROM creating
      * also the magic header.
      */
     static void initStats();
 
     /**
-     * @brief Load the Print Statistics
+     * @brief Load the CNC Statistics
      * @details Load the statistics from EEPROM
      */
     static void loadStats();
 
     /**
-     * @brief Save the Print Statistics
+     * @brief Save the CNC Statistics
      * @details Save the statistics to EEPROM
      */
     static void saveStats();
 
     /**
-     * @brief Serial output the Print Statistics
+     * @brief Serial output the CNC Statistics
      * @details This function may change in the future, for now it directly
      * prints the statistical data to serial.
      */
@@ -179,9 +179,9 @@ class PrintCounter: public Stopwatch {
     #endif
 };
 
-// Global Print Job Timer instance
+// Global CNC Job Timer instance
 #if ENABLED(PRINTCOUNTER)
-  extern PrintCounter print_job_timer;
+  extern CNCCounter print_job_timer;
 #else
   extern Stopwatch print_job_timer;
 #endif

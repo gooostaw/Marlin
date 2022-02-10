@@ -25,7 +25,7 @@ Webber Ranch CNC Firmware Official Website
 Configuration
 
   - https://github.com/WRCNCFirmware/Configurations
-    Example configurations for several printer models.
+    Example configurations for several cnc models.
 
   - https://www.youtube.com/watch?v=3gwWVFtdg-4
     A good 20-minute overview of WRCNC configuration by Tom Sanladerer.

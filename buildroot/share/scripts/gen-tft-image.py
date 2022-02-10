@@ -3,7 +3,7 @@
 # Webber Ranch CNC Firmware
 # Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
 #
-# Based on Sprinter and grbl.
+# Based on Marlin and grbl.
 # Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
 #
 # This program is free software: you can redistribute it and/or modify

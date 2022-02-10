@@ -45,7 +45,7 @@ void BioPrintingDialogBox::draw_progress(draw_mode_t what) {
   if (what & FOREGROUND) {
     CommandProcessor cmd;
     cmd.font(font_large)
-       .text(BTN_POS(1,1), BTN_SIZE(2,2), isPrinting() ? F("Printing...") : F("Finished."))
+       .text(BTN_POS(1,1), BTN_SIZE(2,2), isPrinting() ? F("CNCing...") : F("Finished."))
        .tag(1)
        .font(font_xlarge);
 

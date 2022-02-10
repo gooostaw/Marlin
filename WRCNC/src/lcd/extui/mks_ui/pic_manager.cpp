@@ -101,7 +101,7 @@ static FSTR_P const assets[] = {
   F("bmp_mov_sel.bin"),
   F("bmp_speed_extruct.bin"),
 
-  // Printing screen
+  // CNCing screen
   F("bmp_pause.bin"),
   F("bmp_resume.bin"),
   F("bmp_stop.bin"),

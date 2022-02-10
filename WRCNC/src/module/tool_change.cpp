@@ -996,7 +996,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
     planner.synchronize();
 
-    #if ENABLED(DUAL_X_CARRIAGE)  // Only T0 allowed if the Printer is in DXC_DUPLICATION_MODE or DXC_MIRRORED_MODE
+    #if ENABLED(DUAL_X_CARRIAGE)  // Only T0 allowed if the CNC is in DXC_DUPLICATION_MODE or DXC_MIRRORED_MODE
       if (new_tool != 0 && idex_is_duplicating())
          return invalid_extruder_error(new_tool);
     #endif

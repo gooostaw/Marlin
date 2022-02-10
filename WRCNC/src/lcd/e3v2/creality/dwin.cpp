@@ -281,7 +281,7 @@ void ICON_Leveling() {
 }
 
 //
-// Printing: "Tune"
+// CNCing: "Tune"
 //
 void ICON_Tune() {
   constexpr icon_info_t ico = { 8, 232, 80, 100 };
@@ -293,7 +293,7 @@ void ICON_Tune() {
 }
 
 //
-// Printing: "Pause"
+// CNCing: "Pause"
 //
 void ICON_Pause() {
   constexpr icon_info_t ico = { 96, 232, 80, 100 };
@@ -305,7 +305,7 @@ void ICON_Pause() {
 }
 
 //
-// Printing: "Resume"
+// CNCing: "Resume"
 //
 void ICON_Resume() {
   constexpr icon_info_t ico = { 96, 232, 80, 100 };
@@ -324,7 +324,7 @@ void ICON_ResumeOrPause() {
 }
 
 //
-// Printing: "Stop"
+// CNCing: "Stop"
 //
 void ICON_Stop() {
   constexpr icon_info_t ico = { 184, 232, 80, 100 };
@@ -1125,7 +1125,7 @@ void Popup_Window_Resume() {
     DWIN_ICON_Show(ICON, ICON_Continue_C, 146, 307);
   }
   else {
-    DWIN_Draw_String(true, font8x16, Popup_Text_Color, Color_Bg_Window, (272 - 8 * 14) / 2, 115, F("Continue Print"));
+    DWIN_Draw_String(true, font8x16, Popup_Text_Color, Color_Bg_Window, (272 - 8 * 14) / 2, 115, F("Continue CNC"));
     DWIN_Draw_String(true, font8x16, Popup_Text_Color, Color_Bg_Window, (272 - 8 * 22) / 2, 192, F("It looks like the last"));
     DWIN_Draw_String(true, font8x16, Popup_Text_Color, Color_Bg_Window, (272 - 8 * 22) / 2, 212, F("file was interrupted."));
     DWIN_ICON_Show(ICON, ICON_Cancel_E,    26, 307);
@@ -1198,13 +1198,13 @@ void Popup_window_PauseOrStop() {
 void Draw_Printing_Screen() {
   const uint16_t y = 168;
   if (HMI_IsChinese()) {
-    DWIN_Frame_TitleCopy(30, 1, 42, 14);              // "Printing"
-    DWIN_Frame_AreaCopy(1,  0, 72,  63, 86,  43, y);  // "Printing Time"
+    DWIN_Frame_TitleCopy(30, 1, 42, 14);              // "CNCing"
+    DWIN_Frame_AreaCopy(1,  0, 72,  63, 86,  43, y);  // "CNCing Time"
     DWIN_Frame_AreaCopy(1, 65, 72, 128, 86, 178, y);  // "Remain"
   }
   else {
-    DWIN_Frame_TitleCopy(42, 0, 47, 14);              // "Printing"
-    DWIN_Frame_AreaCopy(1,   1, 43,  97, 59,  43, y); // "Printing Time"
+    DWIN_Frame_TitleCopy(42, 0, 47, 14);              // "CNCing"
+    DWIN_Frame_AreaCopy(1,   1, 43,  97, 59,  43, y); // "CNCing Time"
     DWIN_Frame_AreaCopy(1, 100, 43, 152, 56, 178, y); // "Remain"
   }
 }
@@ -1233,7 +1233,7 @@ void Draw_Print_ProgressRemain() {
 }
 
 void Goto_PrintProcess() {
-  checkkey = PrintProcess;
+  checkkey = CNCProcess;
 
   Clear_Main_Window();
   Draw_Printing_Screen();
@@ -1366,7 +1366,7 @@ void HMI_Move_Z() {
 
 #if HAS_ZOFFSET_ITEM
 
-  bool printer_busy() { return planner.movesplanned() || printingIsActive(); }
+  bool cnc_busy() { return planner.movesplanned() || printingIsActive(); }
 
   void HMI_Zoffset() {
     EncoderState encoder_diffState = Encoder_ReceiveAnalyze();
@@ -1952,7 +1952,7 @@ void HMI_SDCardUpdate() {
       if (checkkey == SelectFile) {
         Redraw_SD_List();
       }
-      else if (checkkey == PrintProcess || checkkey == Tune || printingIsActive()) {
+      else if (checkkey == CNCProcess || checkkey == Tune || printingIsActive()) {
         // TODO: Move card removed abort handling
         //       to CardReader::manage_media.
         card.abortFilePrintSoon();
@@ -2067,12 +2067,12 @@ void Draw_Print_File_Menu() {
   Clear_Title_Bar();
 
   if (HMI_IsChinese())
-    DWIN_Frame_TitleCopy(0, 31, 56, 14);  // "Print file"
+    DWIN_Frame_TitleCopy(0, 31, 56, 14);  // "CNC file"
   else {
     #ifdef USE_STRING_HEADINGS
       Draw_Title(GET_TEXT_F(MSG_MEDIA_MENU));
     #else
-      DWIN_Frame_TitleCopy(52, 31, 86, 11); // "Print file"
+      DWIN_Frame_TitleCopy(52, 31, 86, 11); // "CNC file"
     #endif
   }
 
@@ -2139,7 +2139,7 @@ void HMI_MainMenu() {
   DWIN_UpdateLCD();
 }
 
-// Select (and Print) File
+// Select (and CNC) File
 void HMI_SelectFile() {
   EncoderState encoder_diffState = get_encoder_state();
 
@@ -2261,7 +2261,7 @@ void HMI_SelectFile() {
     DWIN_UpdateLCD();
 }
 
-// Printing
+// CNCing
 void HMI_Printing() {
   EncoderState encoder_diffState = get_encoder_state();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
@@ -2322,14 +2322,14 @@ void HMI_Printing() {
         }
         else {
           HMI_flag.select_flag = true;
-          checkkey = Print_window;
+          checkkey = CNC_window;
           Popup_window_PauseOrStop();
         }
         break;
 
       case PRINT_STOP:
         HMI_flag.select_flag = true;
-        checkkey = Print_window;
+        checkkey = CNC_window;
         Popup_window_PauseOrStop();
         break;
 
@@ -3770,7 +3770,7 @@ void HMI_Tune() {
       }
       break;
       case TUNE_CASE_SPEED: // Print speed
-        checkkey = PrintSpeed;
+        checkkey = CNCSpeed;
         HMI_ValueStruct.print_speed = feedrate_percentage;
         Draw_Edit_Integer3(TUNE_CASE_SPEED + MROWS - index_tune, HMI_ValueStruct.print_speed, true);
         EncoderRate.enabled = true;
@@ -4086,7 +4086,7 @@ void EachMomentUpdate() {
   if (PENDING(ms, next_rts_update_ms)) return;
   next_rts_update_ms = ms + DWIN_SCROLL_UPDATE_INTERVAL;
 
-  if (checkkey == PrintProcess) {
+  if (checkkey == CNCProcess) {
     // if print done
     if (HMI_flag.print_finish && !HMI_flag.done_confirm_flag) {
       HMI_flag.print_finish = false;
@@ -4122,7 +4122,7 @@ void EachMomentUpdate() {
     queue.inject(F("G1 F1200 X0 Y0"));
   }
 
-  if (card.isPrinting() && checkkey == PrintProcess) { // print process
+  if (card.isPrinting() && checkkey == CNCProcess) { // print process
     const uint8_t card_pct = card.percentDone();
     static uint8_t last_cardpercentValue = 101;
     if (last_cardpercentValue != card_pct) { // print percent
@@ -4151,7 +4151,7 @@ void EachMomentUpdate() {
       Draw_Print_ProgressRemain();
     }
   }
-  else if (dwin_abort_flag && !HMI_flag.home_flag) { // Print Stop
+  else if (dwin_abort_flag && !HMI_flag.home_flag) { // CNC Stop
     dwin_abort_flag = false;
     HMI_ValueStruct.print_speed = feedrate_percentage = 100;
     dwin_zoffset = BABY_Z_VAR;
@@ -4216,8 +4216,8 @@ void DWIN_HandleScreen() {
     case Prepare:         HMI_Prepare(); break;
     case Control:         HMI_Control(); break;
     case Leveling:        break;
-    case PrintProcess:    HMI_Printing(); break;
-    case Print_window:    HMI_PauseOrStop(); break;
+    case CNCProcess:    HMI_Printing(); break;
+    case CNC_window:    HMI_PauseOrStop(); break;
     case AxisMove:        HMI_AxisMove(); break;
     case TemperatureID:   HMI_Temperature(); break;
     case Motion:          HMI_Motion(); break;
@@ -4263,7 +4263,7 @@ void DWIN_HandleScreen() {
     #if HAS_PREHEAT && HAS_FAN
       case FanSpeed:      HMI_FanSpeed(); break;
     #endif
-    case PrintSpeed:      HMI_PrintSpeed(); break;
+    case CNCSpeed:      HMI_PrintSpeed(); break;
     case MaxSpeed_value:  HMI_MaxFeedspeedXYZE(); break;
     case MaxAcceleration_value: HMI_MaxAccelerationXYZE(); break;
     #if HAS_CLASSIC_JERK

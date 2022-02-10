@@ -24,7 +24,7 @@ namespace ExtUI {
 
   void onIdle() { ScreenHandler.loop(); }
 
-  void onPrinterKilled(FSTR_P const error, FSTR_P const) {
+  void onCNCKilled(FSTR_P const error, FSTR_P const) {
     ScreenHandler.sendinfoscreen(GET_TEXT_F(MSG_HALTED), error, FPSTR(NUL_STR), GET_TEXT_F(MSG_PLEASE_RESET), true, true, true, true);
     ScreenHandler.GotoScreen(DGUSLCD_SCREEN_KILL);
     while (!ScreenHandler.loop());  // Wait while anything is left to be sent

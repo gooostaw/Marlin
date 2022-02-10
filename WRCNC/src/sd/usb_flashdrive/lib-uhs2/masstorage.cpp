@@ -549,7 +549,7 @@ void BulkOnly::EndpointXtract(uint8_t conf, uint8_t iface, uint8_t alt, uint8_t 
 
       bNumEP++;
 
-      PrintEndpointDescriptor(pep);
+      CNCEndpointDescriptor(pep);
     }
   #else
     if ((pep->bmAttributes & bmUSB_TRANSFER_TYPE) == USB_TRANSFER_TYPE_INTERRUPT && (pep->bEndpointAddress & 0x80) == 0x80)
@@ -567,7 +567,7 @@ void BulkOnly::EndpointXtract(uint8_t conf, uint8_t iface, uint8_t alt, uint8_t 
 
     bNumEP++;
 
-    PrintEndpointDescriptor(pep);
+    CNCEndpointDescriptor(pep);
   #endif
 }
 
@@ -1156,7 +1156,7 @@ uint8_t BulkOnly::HandleSCSIError(uint8_t status) {
 /**
  * @param ep_ptr
  */
-void BulkOnly::PrintEndpointDescriptor(const USB_FD_ENDPOINT_DESCRIPTOR * ep_ptr) {
+void BulkOnly::CNCEndpointDescriptor(const USB_FD_ENDPOINT_DESCRIPTOR * ep_ptr) {
   Notify(PSTR("Endpoint descriptor:"), 0x80);
   Notify(PSTR("\r\nLength:\t\t"), 0x80);
   D_PrintHex<uint8_t> (ep_ptr->bLength, 0x80);

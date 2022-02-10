@@ -144,7 +144,7 @@
 #endif
 
 #if ENABLED(PRINTER_EVENT_LEDS)
-  #include "../feature/leds/printer_event_leds.h"
+  #include "../feature/leds/cnc_event_leds.h"
 #endif
 
 #if ENABLED(JOYSTICK)
@@ -577,8 +577,8 @@ volatile bool Temperature::raw_temps_ready = false;
     #endif
     #define GHV(C,B,H) C_TERN(ischamber, C, B_TERN(isbed, B, H))
     #define SHV(V) C_TERN(ischamber, temp_chamber.soft_pwm_amount = V, B_TERN(isbed, temp_bed.soft_pwm_amount = V, temp_hotend[heater_id].soft_pwm_amount = V))
-    #define ONHEATINGSTART() C_TERN(ischamber, printerEventLEDs.onChamberHeatingStart(), B_TERN(isbed, printerEventLEDs.onBedHeatingStart(), printerEventLEDs.onHotendHeatingStart()))
-    #define ONHEATING(S,C,T) C_TERN(ischamber, printerEventLEDs.onChamberHeating(S,C,T), B_TERN(isbed, printerEventLEDs.onBedHeating(S,C,T), printerEventLEDs.onHotendHeating(S,C,T)))
+    #define ONHEATINGSTART() C_TERN(ischamber, cncEventLEDs.onChamberHeatingStart(), B_TERN(isbed, cncEventLEDs.onBedHeatingStart(), cncEventLEDs.onHotendHeatingStart()))
+    #define ONHEATING(S,C,T) C_TERN(ischamber, cncEventLEDs.onChamberHeating(S,C,T), B_TERN(isbed, cncEventLEDs.onBedHeating(S,C,T), cncEventLEDs.onHotendHeating(S,C,T)))
 
     #define WATCH_PID DISABLED(NO_WATCH_PID_TUNING) && (BOTH(WATCH_CHAMBER, PIDTEMPCHAMBER) || BOTH(WATCH_BED, PIDTEMPBED) || BOTH(WATCH_HOTENDS, PIDTEMP))
 
@@ -787,7 +787,7 @@ volatile bool Temperature::raw_temps_ready = false;
         if (set_result)
           GHV(_set_chamber_pid(tune_pid), _set_bed_pid(tune_pid), _set_hotend_pid(heater_id, tune_pid));
 
-        TERN_(PRINTER_EVENT_LEDS, printerEventLEDs.onPidTuningDone(color));
+        TERN_(PRINTER_EVENT_LEDS, cncEventLEDs.onPidTuningDone(color));
 
         TERN_(EXTENSIBLE_UI, ExtUI::onPidTuning(ExtUI::result_t::PID_DONE));
         TERN_(DWIN_CREALITY_LCD_ENHANCED, DWIN_PidTuning(PID_DONE));
@@ -805,7 +805,7 @@ volatile bool Temperature::raw_temps_ready = false;
 
     disable_all_heaters();
 
-    TERN_(PRINTER_EVENT_LEDS, printerEventLEDs.onPidTuningDone(color));
+    TERN_(PRINTER_EVENT_LEDS, cncEventLEDs.onPidTuningDone(color));
 
     TERN_(EXTENSIBLE_UI, ExtUI::onPidTuning(ExtUI::result_t::PID_DONE));
     TERN_(DWIN_CREALITY_LCD_ENHANCED, DWIN_PidTuning(PID_DONE));
@@ -3695,7 +3695,7 @@ void Temperature::isr() {
 
       #if ENABLED(PRINTER_EVENT_LEDS)
         const celsius_float_t start_temp = degHotend(target_extruder);
-        printerEventLEDs.onHotendHeatingStart();
+        cncEventLEDs.onHotendHeatingStart();
       #endif
 
       bool wants_to_cool = false;
@@ -3733,7 +3733,7 @@ void Temperature::isr() {
 
         #if ENABLED(PRINTER_EVENT_LEDS)
           // Gradually change LED strip from violet to red as nozzle heats up
-          if (!wants_to_cool) printerEventLEDs.onHotendHeating(start_temp, temp, target_temp);
+          if (!wants_to_cool) cncEventLEDs.onHotendHeating(start_temp, temp, target_temp);
         #endif
 
         #if TEMP_RESIDENCY_TIME > 0
@@ -3783,7 +3783,7 @@ void Temperature::isr() {
         #else
           ui.reset_status();
         #endif
-        TERN_(PRINTER_EVENT_LEDS, printerEventLEDs.onHeatingDone());
+        TERN_(PRINTER_EVENT_LEDS, cncEventLEDs.onHeatingDone());
         return true;
       }
 
@@ -3831,7 +3831,7 @@ void Temperature::isr() {
 
       #if ENABLED(PRINTER_EVENT_LEDS)
         const celsius_float_t start_temp = degBed();
-        printerEventLEDs.onBedHeatingStart();
+        cncEventLEDs.onBedHeatingStart();
       #endif
 
       bool wants_to_cool = false;
@@ -3849,7 +3849,7 @@ void Temperature::isr() {
         }
 
         now = millis();
-        if (ELAPSED(now, next_temp_ms)) { //Print Temp Reading every 1 second while heating up.
+        if (ELAPSED(now, next_temp_ms)) { //CNC Temp Reading every 1 second while heating up.
           next_temp_ms = now + 1000UL;
           print_heater_states(active_extruder);
           #if TEMP_BED_RESIDENCY_TIME > 0
@@ -3869,7 +3869,7 @@ void Temperature::isr() {
 
         #if ENABLED(PRINTER_EVENT_LEDS)
           // Gradually change LED strip from blue to violet as bed heats up
-          if (!wants_to_cool) printerEventLEDs.onBedHeating(start_temp, temp, target_temp);
+          if (!wants_to_cool) cncEventLEDs.onBedHeating(start_temp, temp, target_temp);
         #endif
 
         #if TEMP_BED_RESIDENCY_TIME > 0
@@ -3957,7 +3957,7 @@ void Temperature::isr() {
       wait_for_heatup = true;
       while (will_wait && wait_for_heatup) {
 
-        // Print Temp Reading every 10 seconds while heating up.
+        // CNC Temp Reading every 10 seconds while heating up.
         millis_t now = millis();
         if (!next_temp_ms || ELAPSED(now, next_temp_ms)) {
           next_temp_ms = now + 10000UL;
@@ -4042,7 +4042,7 @@ void Temperature::isr() {
         }
 
         now = millis();
-        if (ELAPSED(now, next_temp_ms)) { // Print Temp Reading every 1 second while heating up.
+        if (ELAPSED(now, next_temp_ms)) { // CNC Temp Reading every 1 second while heating up.
           next_temp_ms = now + 1000UL;
           print_heater_states(active_extruder);
           #if TEMP_CHAMBER_RESIDENCY_TIME > 0
@@ -4140,7 +4140,7 @@ void Temperature::isr() {
         }
 
         now = millis();
-        if (ELAPSED(now, next_temp_ms)) { // Print Temp Reading every 1 second while heating up.
+        if (ELAPSED(now, next_temp_ms)) { // CNC Temp Reading every 1 second while heating up.
           next_temp_ms = now + 1000UL;
           print_heater_states(active_extruder);
           #if TEMP_COOLER_RESIDENCY_TIME > 0

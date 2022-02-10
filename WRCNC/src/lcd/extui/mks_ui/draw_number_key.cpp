@@ -59,7 +59,7 @@ static void disp_key_value() {
   TERN_(HAS_TRINAMIC_CONFIG, float milliamps);
 
   switch (value) {
-    case PrintAcceleration:
+    case CNCAcceleration:
       dtostrf(planner.settings.acceleration, 1, 1, public_buf_m);
       break;
     case RetractAcceleration:
@@ -276,7 +276,7 @@ static void disp_key_value() {
 
 static void set_value_confirm() {
   switch (value) {
-    case PrintAcceleration:   planner.settings.acceleration = atof(key_value); break;
+    case CNCAcceleration:   planner.settings.acceleration = atof(key_value); break;
     case RetractAcceleration: planner.settings.retract_acceleration = atof(key_value); break;
     case TravelAcceleration:  planner.settings.travel_acceleration = atof(key_value); break;
     case XAcceleration:  planner.settings.max_acceleration_mm_per_s2[X_AXIS] = atof(key_value); break;

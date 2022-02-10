@@ -411,7 +411,7 @@ void home_if_needed(const bool keeplev=false);
   #define MOTION_CONDITIONS IsRunning()
 #endif
 
-#define BABYSTEP_ALLOWED() ((ENABLED(BABYSTEP_WITHOUT_HOMING) || all_axes_trusted()) && (ENABLED(BABYSTEP_ALWAYS_AVAILABLE) || printer_busy()))
+#define BABYSTEP_ALLOWED() ((ENABLED(BABYSTEP_WITHOUT_HOMING) || all_axes_trusted()) && (ENABLED(BABYSTEP_ALWAYS_AVAILABLE) || cnc_busy()))
 
 /**
  * Workspace offsets

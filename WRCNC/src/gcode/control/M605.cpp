@@ -68,7 +68,7 @@
 
         case DXC_MIRRORED_MODE: {
           if (previous_mode != DXC_DUPLICATION_MODE) {
-            SERIAL_ECHOLNPGM("Printer must be in DXC_DUPLICATION_MODE prior to ");
+            SERIAL_ECHOLNPGM("CNC must be in DXC_DUPLICATION_MODE prior to ");
             SERIAL_ECHOLNPGM("specifying DXC_MIRRORED_MODE.");
             dual_x_carriage_mode = DEFAULT_DUAL_X_CARRIAGE_MODE;
             return;

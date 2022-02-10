@@ -3,24 +3,24 @@
 */
 
 /**
- * feature/leds/printer_event_leds.cpp - LED color changing based on printer status
+ * feature/leds/cnc_event_leds.cpp - LED color changing based on cnc status
  */
 
 #include "../../inc/WRCNCConfigPre.h"
 
 #if ENABLED(PRINTER_EVENT_LEDS)
 
-#include "printer_event_leds.h"
+#include "cnc_event_leds.h"
 
-PrinterEventLEDs printerEventLEDs;
+CNCEventLEDs cncEventLEDs;
 
 #if HAS_LEDS_OFF_FLAG
-  bool PrinterEventLEDs::leds_off_after_print; // = false
+  bool CNCEventLEDs::leds_off_after_print; // = false
 #endif
 
 #if HAS_TEMP_HOTEND || HAS_HEATED_BED
 
-  uint8_t PrinterEventLEDs::old_intensity = 0;
+  uint8_t CNCEventLEDs::old_intensity = 0;
 
   inline uint8_t pel_intensity(const celsius_t start, const celsius_t current, const celsius_t target) {
     if (start == target) return 255;
@@ -38,7 +38,7 @@ PrinterEventLEDs printerEventLEDs;
 
 #if HAS_TEMP_HOTEND
 
-  void PrinterEventLEDs::onHotendHeating(const celsius_t start, const celsius_t current, const celsius_t target) {
+  void CNCEventLEDs::onHotendHeating(const celsius_t start, const celsius_t current, const celsius_t target) {
     const uint8_t blue = pel_intensity(start, current, target);
     if (blue != old_intensity) {
       old_intensity = blue;
@@ -50,7 +50,7 @@ PrinterEventLEDs printerEventLEDs;
 
 #if HAS_HEATED_BED
 
-  void PrinterEventLEDs::onBedHeating(const celsius_t start, const celsius_t current, const celsius_t target) {
+  void CNCEventLEDs::onBedHeating(const celsius_t start, const celsius_t current, const celsius_t target) {
     const uint8_t red = pel_intensity(start, current, target);
     if (red != old_intensity) {
       old_intensity = red;
@@ -62,7 +62,7 @@ PrinterEventLEDs printerEventLEDs;
 
 #if HAS_HEATED_CHAMBER
 
-  void PrinterEventLEDs::onChamberHeating(const celsius_t start, const celsius_t current, const celsius_t target) {
+  void CNCEventLEDs::onChamberHeating(const celsius_t start, const celsius_t current, const celsius_t target) {
     const uint8_t green = pel_intensity(start, current, target);
     if (green != old_intensity) {
       old_intensity = green;

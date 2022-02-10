@@ -36,7 +36,7 @@
 #include "draw_change_speed.h"
 #include "draw_manuaLevel.h"
 #include "draw_error_message.h"
-#include "printer_operation.h"
+#include "cnc_operation.h"
 #include "draw_machine_para.h"
 #include "draw_machine_settings.h"
 #include "draw_motor_settings.h"
@@ -338,7 +338,7 @@ typedef struct {
 extern PRINT_TIME print_time;
 
 typedef enum {
-  PrintAcceleration,
+  CNCAcceleration,
   RetractAcceleration,
   TravelAcceleration,
   XAcceleration,

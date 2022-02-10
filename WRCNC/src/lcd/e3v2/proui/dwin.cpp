@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -127,7 +127,7 @@
 #define MIN_PRINT_SPEED  10
 #define MAX_PRINT_SPEED 999
 
-// Print flow limit
+// CNC flow limit
 #define MIN_PRINT_FLOW   10
 #define MAX_PRINT_FLOW   299
 
@@ -376,7 +376,7 @@ void ICON_AdvSettings() {
 }
 
 //
-// Printing: "Tune"
+// CNCing: "Tune"
 //
 void ICON_Tune() {
   constexpr frame_rect_t ico = { 8, 232, 80, 100 };
@@ -385,7 +385,7 @@ void ICON_Tune() {
 }
 
 //
-// Printing: "Pause"
+// CNCing: "Pause"
 //
 void ICON_Pause() {
   constexpr frame_rect_t ico = { 96, 232, 80, 100 };
@@ -394,7 +394,7 @@ void ICON_Pause() {
 }
 
 //
-// Printing: "Resume"
+// CNCing: "Resume"
 //
 void ICON_Resume() {
   constexpr frame_rect_t ico = { 96, 232, 80, 100 };
@@ -403,7 +403,7 @@ void ICON_Resume() {
 }
 
 //
-// Printing: "Stop"
+// CNCing: "Stop"
 //
 void ICON_Stop() {
   constexpr frame_rect_t ico = { 184, 232, 80, 100 };
@@ -633,7 +633,7 @@ void DWIN_DrawStatusMessage() {
 
 void Draw_Print_Labels() {
   if (HMI_IsChinese()) {
-    DWIN_Frame_AreaCopy(1,  0, 72,  63, 86,  41, 173);  // Printing Time
+    DWIN_Frame_AreaCopy(1,  0, 72,  63, 86,  41, 173);  // CNCing Time
     DWIN_Frame_AreaCopy(1, 65, 72, 128, 86, 176, 173);  // Remain
   }
   else {
@@ -671,7 +671,7 @@ void ICON_ResumeOrPause() {
 
 void Draw_PrintProcess() {
   if (HMI_IsChinese())
-    Title.FrameCopy(30, 1, 42, 14);                     // "Printing"
+    Title.FrameCopy(30, 1, 42, 14);                     // "CNCing"
   else
     Title.ShowCaption(GET_TEXT_F(MSG_PRINTING));
   DWINUI::ClearMenuArea();
@@ -689,12 +689,12 @@ void Draw_PrintProcess() {
 }
 
 void Goto_PrintProcess() {
-  if (checkkey == PrintProcess) {
+  if (checkkey == CNCProcess) {
     ICON_ResumeOrPause();
     DWIN_UpdateLCD();
     return;
   }
-  checkkey = PrintProcess;
+  checkkey = CNCProcess;
   Draw_PrintProcess();
 }
 
@@ -1149,7 +1149,7 @@ void Draw_Info_Menu() {
 
 void Draw_Print_File_Menu() {
   if (HMI_IsChinese())
-    Title.FrameCopy(0, 31, 56, 14);    // "Print file"
+    Title.FrameCopy(0, 31, 56, 14);    // "CNC file"
   else
     Title.ShowCaption(GET_TEXT_F(MSG_MEDIA_MENU));
   Redraw_SD_List();
@@ -1198,7 +1198,7 @@ void HMI_MainMenu() {
   DWIN_UpdateLCD();
 }
 
-// Select (and Print) File
+// Select (and CNC) File
 void HMI_SelectFile() {
   EncoderState encoder_diffState = get_encoder_state();
 
@@ -1318,7 +1318,7 @@ void HMI_SelectFile() {
   DWIN_UpdateLCD();
 }
 
-// Printing
+// CNCing
 void HMI_Printing() {
   EncoderState encoder_diffState = get_encoder_state();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
@@ -1382,7 +1382,7 @@ void HMI_Printing() {
   DWIN_UpdateLCD();
 }
 
-// Print done
+// CNC done
 void HMI_PrintDone() {
   EncoderState encoder_diffState = get_encoder_state();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
@@ -1450,14 +1450,14 @@ void Draw_Main_Area() {
   switch (checkkey) {
     case MainMenu:               Draw_Main_Menu(); break;
     case SelectFile:             Draw_Print_File_Menu(); break;
-    case PrintProcess:           Draw_PrintProcess(); break;
-    case PrintDone:              Draw_PrintDone(); break;
+    case CNCProcess:           Draw_PrintProcess(); break;
+    case CNCDone:              Draw_PrintDone(); break;
     case Info:                   Draw_Info_Menu(); break;
     #if HAS_ESDIAG
       case ESDiagProcess:        Draw_EndStopDiag(); break;
     #endif
     #if ENABLED(PRINTCOUNTER)
-      case PrintStatsProcess:    Draw_PrintStats(); break;
+      case CNCStatsProcess:    Draw_PrintStats(); break;
     #endif
     case PauseOrStop:            Popup_window_PauseOrStop(); break;
     #if ENABLED(POWER_LOSS_RECOVERY)
@@ -1538,13 +1538,13 @@ void EachMomentUpdate() {
   if (PENDING(ms, next_rts_update_ms)) return;
   next_rts_update_ms = ms + DWIN_SCROLL_UPDATE_INTERVAL;
 
-  if (checkkey == PrintProcess) {
+  if (checkkey == CNCProcess) {
     // if print done
     if (HMI_flag.print_finish) {
       HMI_flag.print_finish = false;
       TERN_(POWER_LOSS_RECOVERY, recovery.cancel());
       planner.finish_and_disable();
-      checkkey = PrintDone;
+      checkkey = CNCDone;
       Draw_PrintDone();
     }
     else if (HMI_flag.pause_flag != printingIsPaused()) {
@@ -1566,7 +1566,7 @@ void EachMomentUpdate() {
     IF_DISABLED(PARK_HEAD_ON_PAUSE, queue.inject(F("G1 F1200 X0 Y0")));
   }
 
-  if (checkkey == PrintProcess) { // print process
+  if (checkkey == CNCProcess) { // print process
 
     duration_t elapsed = print_job_timer.duration(); // print timer
 
@@ -1599,7 +1599,7 @@ void EachMomentUpdate() {
     }
 
   }
-  else if (dwin_abort_flag && !HMI_flag.home_flag) { // Print Stop
+  else if (dwin_abort_flag && !HMI_flag.home_flag) { // CNC Stop
     dwin_abort_flag = false;
     dwin_zoffset = BABY_Z_VAR;
     select_page.set(PAGE_PRINT);
@@ -1684,8 +1684,8 @@ void DWIN_HandleScreen() {
     case SelectFile:      HMI_SelectFile(); break;
     case Homing:          break;
     case Leveling:        break;
-    case PrintProcess:    HMI_Printing(); break;
-    case PrintDone:       HMI_PrintDone(); break;
+    case CNCProcess:    HMI_Printing(); break;
+    case CNCDone:       HMI_PrintDone(); break;
     case PauseOrStop:     HMI_PauseOrStop(); break;
     case Info:            HMI_Popup(); break;
     case WaitResponse:    HMI_Popup(); break;
@@ -1704,7 +1704,7 @@ void DWIN_HandleScreen() {
       case ESDiagProcess: HMI_Popup(); break;
     #endif
     #if ENABLED(PRINTCOUNTER)
-      case PrintStatsProcess: HMI_Popup(); break;
+      case CNCStatsProcess: HMI_Popup(); break;
     #endif
     default: break;
   }
@@ -1717,7 +1717,7 @@ bool IDisPopUp() {    // If ID is popup...
           (checkkey == Homing) ||
           (checkkey == Leveling) ||
           TERN_(HAS_ESDIAG, (checkkey == ESDiagProcess) ||)
-          TERN_(PRINTCOUNTER, (checkkey == PrintStatsProcess) ||)
+          TERN_(PRINTCOUNTER, (checkkey == CNCStatsProcess) ||)
           (checkkey == PauseOrStop) ||
           (checkkey == FilamentPurge);
 }
@@ -1802,14 +1802,14 @@ void DWIN_PidTuning(pidresult_t result) {
 
 // Update filename on print
 void DWIN_Print_Header(const char *text = nullptr) {
-  static char headertxt[31] = "";  // Print header text
+  static char headertxt[31] = "";  // CNC header text
 
   if (text) {
     const int8_t size = _MIN((unsigned) 30, strlen_P(text));
     LOOP_L_N(i, size) headertxt[i] = text[i];
     headertxt[size] = '\0';
   }
-  if (checkkey == PrintProcess || checkkey == PrintDone) {
+  if (checkkey == CNCProcess || checkkey == CNCDone) {
     DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 0, 60, DWIN_WIDTH, 60+16);
     DWINUI::Draw_CenteredString(60, headertxt);
   }
@@ -1839,7 +1839,7 @@ void DWIN_Startup() {
   HMI_SetLanguage();
 }
 
-// Started a Print Job
+// Started a CNC Job
 void DWIN_Print_Started(const bool sd) {
   sdprint = card.isPrinting() || sd;
   _percent_done = 0;
@@ -1850,7 +1850,7 @@ void DWIN_Print_Started(const bool sd) {
 
 // Ended print job
 void DWIN_Print_Finished() {
-  if (checkkey == PrintProcess || printingIsActive()) {
+  if (checkkey == CNCProcess || printingIsActive()) {
     thermalManager.cooldown();
     HMI_flag.print_finish = true;
   }
@@ -1860,7 +1860,7 @@ void DWIN_Print_Finished() {
 void DWIN_Progress_Update() {
   if (parser.seenval('P')) _percent_done = parser.byteval('P');
   if (parser.seenval('R')) _remain_time = parser.ulongval('R') * 60;
-  if (checkkey == PrintProcess) {
+  if (checkkey == CNCProcess) {
     Draw_Print_ProgressBar();
     Draw_Print_ProgressRemain();
     Draw_Print_ProgressElapsed();
@@ -1926,8 +1926,8 @@ void DWIN_LoadSettings(const char *buff) {
 }
 
 void WRCNCUI::kill_screen(FSTR_P const lcd_error, FSTR_P const lcd_component) {
-  DWIN_Draw_Popup(ICON_BLTouch, F("Printer killed:"), lcd_error);
-  DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 270, F("Turn off the printer"));
+  DWIN_Draw_Popup(ICON_BLTouch, F("CNC killed:"), lcd_error);
+  DWINUI::Draw_CenteredString(HMI_data.PopupTxt_Color, 270, F("Turn off the cnc"));
   DWIN_UpdateLCD();
 }
 
@@ -2084,8 +2084,8 @@ void Goto_ConfirmToPrint() {
 
 #if ENABLED(PRINTCOUNTER)
   void Draw_PrintStats() {
-    HMI_SaveProcessID(PrintStatsProcess);
-    PrintStats.Draw();
+    HMI_SaveProcessID(CNCStatsProcess);
+    CNCStats.Draw();
   }
 #endif
 
@@ -2199,8 +2199,8 @@ void SetPFloatOnClick(const float lo, const float hi, uint8_t dp, void (*Apply)(
   }
 #endif
 
-// Reset Printer
-void RebootPrinter() {
+// Reset CNC
+void RebootCNC() {
   dwin_abort_flag = true;
   wait_for_heatup = wait_for_user = false;    // Stop waiting for heating/user
   thermalManager.disable_all_heaters();
@@ -2241,7 +2241,7 @@ void SetHome() {
 }
 
 #if HAS_ZOFFSET_ITEM
-  bool printer_busy() { return planner.movesplanned() || printingIsActive(); }
+  bool cnc_busy() { return planner.movesplanned() || printingIsActive(); }
   void ApplyZOffset() { TERN_(EEPROM_SETTINGS, settings.save()); }
   void LiveZOffset() {
     last_zoffset = dwin_zoffset;
@@ -3403,7 +3403,7 @@ void Draw_Control_Menu() {
       MENU_ITEM(ICON_ReadEEPROM, GET_TEXT_F(MSG_LOAD_EEPROM), onDrawReadEeprom, ReadEeprom);
       MENU_ITEM(ICON_ResumeEEPROM, GET_TEXT_F(MSG_RESTORE_DEFAULTS), onDrawResetEeprom, ResetEeprom);
     #endif
-    MENU_ITEM(ICON_Reboot, GET_TEXT_F(MSG_RESET_PRINTER), onDrawMenuItem, RebootPrinter);
+    MENU_ITEM(ICON_Reboot, GET_TEXT_F(MSG_RESET_PRINTER), onDrawMenuItem, RebootCNC);
     MENU_ITEM(ICON_Info, GET_TEXT_F(MSG_INFO_SCREEN), onDrawInfoSubMenu, Goto_Info_Menu);
   }
   CurrentMenu->draw();
@@ -3450,7 +3450,7 @@ void Draw_AdvancedSettings_Menu() {
     #endif
     #if ENABLED(PRINTCOUNTER)
       MENU_ITEM(ICON_PrintStats, GET_TEXT_F(MSG_INFO_STATS_MENU), onDrawSubMenu, Draw_PrintStats);
-      MENU_ITEM(ICON_PrintStatsReset, GET_TEXT_F(MSG_INFO_PRINT_COUNT_RESET), onDrawSubMenu, PrintStats.Reset);
+      MENU_ITEM(ICON_PrintStatsReset, GET_TEXT_F(MSG_INFO_PRINT_COUNT_RESET), onDrawSubMenu, CNCStats.Reset);
     #endif
     MENU_ITEM(ICON_Lock, GET_TEXT_F(MSG_LOCKSCREEN), onDrawMenuItem, DWIN_LockScreen);
   }

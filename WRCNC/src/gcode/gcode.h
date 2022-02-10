@@ -67,11 +67,11 @@
  * M10  - Turn Vacuum or Blower motor ON (Requires AIR_EVACUATION)
  * M11  - Turn Vacuum or Blower motor OFF (Requires AIR_EVACUATION)
  * M12  - Set up closed loop control system. (Requires EXTERNAL_CLOSED_LOOP_CONTROLLER)
- * M16  - Expected printer check. (Requires EXPECTED_PRINTER_CHECK)
+ * M16  - Expected cnc check. (Requires EXPECTED_PRINTER_CHECK)
  * M17  - Enable/Power all stepper motors
  * M18  - Disable all stepper motors; same as M84
  *
- *** Print from Media (SDSUPPORT) ***
+ *** CNC from Media (SDSUPPORT) ***
  * M20  - List SD card. (Requires SDSUPPORT)
  * M21  - Init SD card. (Requires SDSUPPORT)
  * M22  - Release SD card. (Requires SDSUPPORT)
@@ -117,7 +117,7 @@
  * M104 - Set extruder target temp.
  * M105 - Report current temperatures.
  * M106 - Set print fan speed.
- * M107 - Print fan off.
+ * M107 - CNC fan off.
  * M108 - Break out of heating loops (M109, M190, M303). With no controller, breaks out of M0/M1. (Requires EMERGENCY_PARSER)
  * M109 - S<temp> Wait for extruder current temp to reach target temp. ** Wait only when heating! **
  *        R<temp> Wait for extruder current temp to reach target temp. ** Wait for heating or cooling. **
@@ -227,8 +227,8 @@
  * M502 - Revert to the default "factory settings". ** Does not write them to EEPROM! **
  * M503 - Print the current settings (in memory): "M503 S<verbose>". S0 specifies compact output.
  * M504 - Validate EEPROM contents. (Requires EEPROM_SETTINGS)
- * M510 - Lock Printer (Requires PASSWORD_FEATURE)
- * M511 - Unlock Printer (Requires PASSWORD_UNLOCK_GCODE)
+ * M510 - Lock CNC (Requires PASSWORD_FEATURE)
+ * M511 - Unlock CNC (Requires PASSWORD_UNLOCK_GCODE)
  * M512 - Set/Change/Remove Password (Requires PASSWORD_CHANGE_GCODE)
  * M524 - Abort the current SD print job started with M24. (Requires SDSUPPORT)
  * M540 - Enable/disable SD card abort on endstop hit: "M540 S<state>". (Requires SD_ABORT_ON_ENDSTOP_HIT)
@@ -263,7 +263,7 @@
  * M868 - Report or set position encoder module error correction threshold.
  * M869 - Report position encoder module error.
  *
- * M871 - Print/reset/clear first layer temperature offset values. (Requires PTC_PROBE, PTC_BED, or PTC_HOTEND)
+ * M871 - CNC/reset/clear first layer temperature offset values. (Requires PTC_PROBE, PTC_BED, or PTC_HOTEND)
  * M876 - Handle Prompt Response. (Requires HOST_PROMPT_SUPPORT and not EMERGENCY_PARSER)
  * M900 - Get or Set Linear Advance K-factor. (Requires LIN_ADVANCE)
  * M906 - Set or get motor current in milliamps using axis codes XYZE, etc. Report values if no axis codes given. (Requires at least one _DRIVER_TYPE defined as TMC2130/2160/5130/5160/2208/2209/2660 or L6470)
@@ -804,7 +804,7 @@ private:
   static void M201_report(const bool forReplay=true);
 
   #if 0
-    static void M202(); // Not used for Sprinter/grbl gen6
+    static void M202(); // Not used for Marlin/grbl gen6
   #endif
 
   static void M203();

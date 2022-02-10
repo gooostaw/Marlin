@@ -12,7 +12,7 @@
 extern int8_t encoderLine, encoderTopLine, screen_items;
 
 void scroll_screen(const uint8_t limit, const bool is_menu);
-bool printer_busy();
+bool cnc_busy();
 
 typedef void (*selectFunc_t)();
 

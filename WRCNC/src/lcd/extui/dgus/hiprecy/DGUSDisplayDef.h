@@ -64,13 +64,13 @@ constexpr uint8_t VP_MSGSTR3_LEN = 0x20;
 constexpr uint16_t VP_MSGSTR4 = 0x11C0;
 constexpr uint8_t VP_MSGSTR4_LEN = 0x20;
 
-// Screenchange request for screens that only make sense when printer is idle.
-// e.g movement is only allowed if printer is not printing.
+// Screenchange request for screens that only make sense when cnc is idle.
+// e.g movement is only allowed if cnc is not printing.
 // WRCNC must confirm by setting the screen manually.
 constexpr uint16_t VP_SCREENCHANGE_ASK = 0x2000;
 constexpr uint16_t VP_SCREENCHANGE = 0x2001;   // Key-Return button to new menu pressed. Data contains target screen in low byte and info in high byte.
 constexpr uint16_t VP_TEMP_ALL_OFF = 0x2002;   // Turn all heaters off. Value arbitrary ;)=
-constexpr uint16_t VP_SCREENCHANGE_WHENSD = 0x2003; // "Print" Button touched -- go only there if there is an SD Card.
+constexpr uint16_t VP_SCREENCHANGE_WHENSD = 0x2003; // "CNC" Button touched -- go only there if there is an SD Card.
 
 constexpr uint16_t VP_CONFIRMED = 0x2010; // OK on confirm screen.
 

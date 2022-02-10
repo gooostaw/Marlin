@@ -28,7 +28,7 @@ class ChironTFT {
     static constexpr panel_type_t panel_type = TERN(CHIRON_TFT_NEW, AC_panel_new, AC_panel_standard);
   #endif
   static last_error_t last_error;
-  static printer_state_t  printer_state;
+  static cnc_state_t  cnc_state;
   static paused_state_t   pause_state;
   static heater_state_t   hotend_state;
   static heater_state_t   hotbed_state;
@@ -41,14 +41,14 @@ class ChironTFT {
   public:
     static void Startup();
     static void IdleLoop();
-    static void PrinterKilled(FSTR_P, FSTR_P);
+    static void CNCKilled(FSTR_P, FSTR_P);
     static void MediaEvent(media_event_t);
     static void TimerEvent(timer_event_t);
     static void FilamentRunout();
     static void ConfirmationRequest(const char * const);
     static void StatusChange(const char * const);
     static void PowerLossRecovery();
-    static void PrintComplete();
+    static void CNCComplete();
     static void SendtoTFT(FSTR_P const=nullptr);
     static void SendtoTFTLN(FSTR_P const=nullptr);
   private:

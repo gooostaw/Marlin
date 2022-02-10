@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/WRCNCFirmware/WRCNC]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ enum class DGUS_Addr : uint16_t {
   SCREENCHANGE_Printing     = 0x2003, // Only change if printing.
   SD_SelectFile             = 0x2004, // Data: file index (0-4)
   SD_Scroll                 = 0x2005, // Data: DGUS_Data::Scroll
-  SD_Print                  = 0x2006,
+  SD_CNC                  = 0x2006,
   STATUS_Abort              = 0x2007, // Popup / Data: DGUS_Data::Popup
   STATUS_Pause              = 0x2008, // Popup / Data: DGUS_Data::Popup
   STATUS_Resume             = 0x2009, // Popup / Data: DGUS_Data::Popup
@@ -153,7 +153,7 @@ enum class DGUS_Addr : uint16_t {
   INFOS_TotalPrints         = 0x3173, // Type: Integer (16 bits unsigned)
   INFOS_FinishedPrints      = 0x3174, // Type: Integer (16 bits unsigned)
   INFOS_PrintTime           = 0x3175, // 0x3175 - 0x318C
-  INFOS_LongestPrint        = 0x318D, // 0x318D - 0x31A4
+  INFOS_LongestCNC        = 0x318D, // 0x318D - 0x31A4
   INFOS_FilamentUsed        = 0x31A5, // 0x31A5 - 0x31BC
   WAIT_Icons                = 0x31BD, // Bits: DGUS_Data::WaitIcon
 

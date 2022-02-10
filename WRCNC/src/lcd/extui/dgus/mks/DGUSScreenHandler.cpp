@@ -172,7 +172,7 @@ void DGUSScreenHandler::DGUSLCD_SendTMCStepValue(DGUS_VP_Variable &var) {
 
   void DGUSScreenHandler::DGUSLCD_SD_ResumePauseAbort(DGUS_VP_Variable &var, void *val_ptr) {
 
-    if (!ExtUI::isPrintingFromMedia()) return; // avoid race condition when user stays in this menu and printer finishes.
+    if (!ExtUI::isPrintingFromMedia()) return; // avoid race condition when user stays in this menu and cnc finishes.
     switch (swap16(*(uint16_t*)val_ptr)) {
       case 0: { // Resume
 
@@ -250,7 +250,7 @@ void DGUSScreenHandler::DGUSLCD_SendTMCStepValue(DGUS_VP_Variable &var) {
   }
 
 #else
-  void DGUSScreenHandler::PrintReturn(DGUS_VP_Variable& var, void *val_ptr) {
+  void DGUSScreenHandler::CNCReturn(DGUS_VP_Variable& var, void *val_ptr) {
     uint16_t value = swap16(*(uint16_t*)val_ptr);
     if (value == 0x0F) GotoScreen(DGUSLCD_SCREEN_MAIN);
   }
@@ -1507,8 +1507,8 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const char Tool_buf_en[] = "Tool";
     dgusdisplay.WriteVariable(VP_Tool_Dis, Tool_buf_en, 32, true);
 
-    const char Print_buf_en[] = "Print";
-    dgusdisplay.WriteVariable(VP_Print_Dis, Print_buf_en, 32, true);
+    const char CNC_buf_en[] = "CNC";
+    dgusdisplay.WriteVariable(VP_Print_Dis, CNC_buf_en, 32, true);
 
     const char Language_buf_en[] = "Language";
     dgusdisplay.WriteVariable(VP_Language_Dis, Language_buf_en, 32, true);
@@ -1662,8 +1662,8 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const char InOut_buf_en[] = "InOut";
     dgusdisplay.WriteVariable(VP_InOut_Dis, InOut_buf_en, 32, true);
 
-    const char PrintTimet_buf_en[] = "PrintTime";
-    dgusdisplay.WriteVariable(VP_PrintTime_Dis, PrintTimet_buf_en, 32, true);
+    const char CNCTimet_buf_en[] = "CNCTime";
+    dgusdisplay.WriteVariable(VP_PrintTime_Dis, CNCTimet_buf_en, 32, true);
 
     const char E0_Temp_buf_en[] = "E0_Temp";
     dgusdisplay.WriteVariable(VP_E0_Temp_Dis, E0_Temp_buf_en, 32, true);
@@ -1677,14 +1677,14 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const char Feedrate_buf_en[] = "Feedrate";
     dgusdisplay.WriteVariable(VP_Feedrate_Dis, Feedrate_buf_en, 32, true);
 
-    const char PrintAcc_buf_en[] = "PrintSpeed";
-    dgusdisplay.WriteVariable(VP_PrintAcc_Dis, PrintAcc_buf_en, 32, true);
+    const char CNCAcc_buf_en[] = "CNCSpeed";
+    dgusdisplay.WriteVariable(VP_PrintAcc_Dis, CNCAcc_buf_en, 32, true);
 
     const char FAN_Speed_buf_en[] = "FAN_Speed";
     dgusdisplay.WriteVariable(VP_Fan_Speed_Dis, FAN_Speed_buf_en, 32, true);
 
-    const char Printing_buf_en[] = "Printing";
-    dgusdisplay.WriteVariable(VP_Printing_Dis, Printing_buf_en, 32, true);
+    const char CNCing_buf_en[] = "CNCing";
+    dgusdisplay.WriteVariable(VP_Printing_Dis, CNCing_buf_en, 32, true);
 
     const char Info_EEPROM_1_buf_en[] = "Store setting?";
     dgusdisplay.WriteVariable(VP_Info_EEPROM_1_Dis, Info_EEPROM_1_buf_en, 32, true);
@@ -1692,7 +1692,7 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const char Info_EEPROM_2_buf_en[] = "Revert setting?";
     dgusdisplay.WriteVariable(VP_Info_EEPROM_2_Dis, Info_EEPROM_2_buf_en, 32, true);
 
-    const char Info_PrinfFinsh_1_buf_en[] = "Print Done";
+    const char Info_PrinfFinsh_1_buf_en[] = "CNC Done";
     dgusdisplay.WriteVariable(VP_Info_PrinfFinsh_1_Dis, Info_PrinfFinsh_1_buf_en, 32, true);
 
     const char TMC_X_Step_buf_en[] = "X_SenSitivity";
@@ -1740,14 +1740,14 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const char EX_TEMP_INFO3_buf_en[] = "Cancle";
     dgusdisplay.WriteVariable(VP_EX_TEMP_INFO3_Dis, EX_TEMP_INFO3_buf_en, 32, true);
 
-    const char PrintConfrim_Info_buf_en[] = "Start Print?";
-    dgusdisplay.WriteVariable(VP_PrintConfrim_Info_Dis, PrintConfrim_Info_buf_en, 32, true);
+    const char CNCConfrim_Info_buf_en[] = "Start CNC?";
+    dgusdisplay.WriteVariable(VP_PrintConfrim_Info_Dis, CNCConfrim_Info_buf_en, 32, true);
 
-    const char StopPrintConfrim_Info_buf_en[] = "Stop Print?";
+    const char StopPrintConfrim_Info_buf_en[] = "Stop CNC?";
     dgusdisplay.WriteVariable(VP_StopPrintConfrim_Info_Dis, StopPrintConfrim_Info_buf_en, 32, true);
 
-    const char Printting_buf_en[] = "Printing";
-    dgusdisplay.WriteVariable(VP_Printting_Dis, Printting_buf_en, 32, true);
+    const char CNCting_buf_en[] = "CNCing";
+    dgusdisplay.WriteVariable(VP_Printting_Dis, CNCting_buf_en, 32, true);
 
     const char LCD_BLK_buf_en[] = "Backlight";
     dgusdisplay.WriteVariable(VP_LCD_BLK_Dis, LCD_BLK_buf_en, 32, true);
@@ -1762,8 +1762,8 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const uint16_t Tool_Dis[] = { 0xA4B9, 0xDFBE };
     dgusdisplay.WriteVariable(VP_Tool_Dis, Tool_Dis, 4, true);
 
-    const uint16_t Print_buf_ch[] = { 0xF2B4, 0xA1D3, 0x2000 };
-    dgusdisplay.WriteVariable(VP_Print_Dis, Print_buf_ch, 6, true);
+    const uint16_t CNC_buf_ch[] = { 0xF2B4, 0xA1D3, 0x2000 };
+    dgusdisplay.WriteVariable(VP_Print_Dis, CNC_buf_ch, 6, true);
 
     const uint16_t Language_buf_ch[] = { 0xEFD3, 0xD4D1, 0x2000, 0x2000 };
     dgusdisplay.WriteVariable(VP_Language_Dis, Language_buf_ch, 8, true);
@@ -1917,8 +1917,8 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const uint16_t InOut_buf_ch[] = { 0xF8BD, 0xF6B3, 0x2000 };
     dgusdisplay.WriteVariable(VP_InOut_Dis, InOut_buf_ch, 8, true);
 
-    const uint16_t PrintTimet_buf_en[] = { 0xF2B4, 0xA1D3, 0xB1CA, 0xE4BC, 0x2000 };
-    dgusdisplay.WriteVariable(VP_PrintTime_Dis, PrintTimet_buf_en, 16, true);
+    const uint16_t CNCTimet_buf_en[] = { 0xF2B4, 0xA1D3, 0xB1CA, 0xE4BC, 0x2000 };
+    dgusdisplay.WriteVariable(VP_PrintTime_Dis, CNCTimet_buf_en, 16, true);
 
     const uint16_t E0_Temp_buf_ch[] = { 0x3045, 0xC2CE, 0xC8B6, 0x2000 };
     dgusdisplay.WriteVariable(VP_E0_Temp_Dis, E0_Temp_buf_ch, 16, true);
@@ -1932,14 +1932,14 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const uint16_t Feedrate_buf_ch[] = { 0xB7BC, 0xF6B3, 0xD9CB, 0xC8B6, 0x2000 };
     dgusdisplay.WriteVariable(VP_Feedrate_Dis, Feedrate_buf_ch, 16, true);
 
-    const uint16_t PrintAcc_buf_ch[] = { 0xF2B4, 0xA1D3, 0xD9CB, 0xC8B6, 0x2000 };
-    dgusdisplay.WriteVariable(VP_PrintAcc_Dis, PrintAcc_buf_ch, 16, true);
+    const uint16_t CNCAcc_buf_ch[] = { 0xF2B4, 0xA1D3, 0xD9CB, 0xC8B6, 0x2000 };
+    dgusdisplay.WriteVariable(VP_PrintAcc_Dis, CNCAcc_buf_ch, 16, true);
 
     const uint16_t FAN_Speed_buf_ch[] = { 0xE7B7, 0xC8C9, 0xD9CB, 0xC8B6, 0x2000 };
     dgusdisplay.WriteVariable(VP_Fan_Speed_Dis, FAN_Speed_buf_ch, 16, true);
 
-    const uint16_t Printing_buf_ch[] = { 0xF2B4, 0xA1D3, 0xD0D6, 0x2000 };
-    dgusdisplay.WriteVariable(VP_Printing_Dis, Printing_buf_ch, 16, true);
+    const uint16_t CNCing_buf_ch[] = { 0xF2B4, 0xA1D3, 0xD0D6, 0x2000 };
+    dgusdisplay.WriteVariable(VP_Printing_Dis, CNCing_buf_ch, 16, true);
 
     const uint16_t Info_EEPROM_1_buf_ch[] = { 0xC7CA, 0xF1B7, 0xA3B1, 0xE6B4, 0xE8C9, 0xC3D6, 0xBFA3, 0x2000 };
     dgusdisplay.WriteVariable(VP_Info_EEPROM_1_Dis, Info_EEPROM_1_buf_ch, 32, true);
@@ -1995,14 +1995,14 @@ void DGUSScreenHandler::DGUS_LanguageDisplay(uint8_t var) {
     const uint16_t EX_TEMP_INFO3_buf_ch[] = { 0xA1C8, 0xFBCF, 0xD3BC, 0xC8C8, 0x2000 };
     dgusdisplay.WriteVariable(VP_EX_TEMP_INFO3_Dis, EX_TEMP_INFO3_buf_ch, 32, true);
 
-    const uint16_t PrintConfrim_Info_buf_ch[] = { 0xC7CA, 0xF1B7, 0xAABF, 0xBCCA, 0xF2B4, 0xA1D3, 0x2000 };
-    dgusdisplay.WriteVariable(VP_PrintConfrim_Info_Dis, PrintConfrim_Info_buf_ch, 32, true);
+    const uint16_t CNCConfrim_Info_buf_ch[] = { 0xC7CA, 0xF1B7, 0xAABF, 0xBCCA, 0xF2B4, 0xA1D3, 0x2000 };
+    dgusdisplay.WriteVariable(VP_PrintConfrim_Info_Dis, CNCConfrim_Info_buf_ch, 32, true);
 
     const uint16_t StopPrintConfrim_Info_buf_ch[] = { 0xC7CA, 0xF1B7, 0xA3CD, 0xB9D6, 0xF2B4, 0xA1D3, 0x2000 };
     dgusdisplay.WriteVariable(VP_StopPrintConfrim_Info_Dis, StopPrintConfrim_Info_buf_ch, 32, true);
 
-    const uint16_t Printting_buf_ch[] = { 0xF2B4, 0xA1D3, 0xD0D6, 0x2000 };
-    dgusdisplay.WriteVariable(VP_Printting_Dis, Printting_buf_ch, 32, true);
+    const uint16_t CNCting_buf_ch[] = { 0xF2B4, 0xA1D3, 0xD0D6, 0x2000 };
+    dgusdisplay.WriteVariable(VP_Printting_Dis, CNCting_buf_ch, 32, true);
 
     const uint16_t LCD_BLK_buf_ch[] = { 0xB3B1, 0xE2B9, 0xE8C9, 0xC3D6, 0x2000 };
     dgusdisplay.WriteVariable(VP_LCD_BLK_Dis, LCD_BLK_buf_ch, 32, true);

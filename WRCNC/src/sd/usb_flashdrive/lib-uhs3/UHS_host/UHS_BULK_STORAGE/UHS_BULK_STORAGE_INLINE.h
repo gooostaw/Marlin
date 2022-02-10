@@ -1183,7 +1183,7 @@ uint8_t UHS_NI UHS_Bulk_Storage::HandleSCSIError(uint8_t status) {
 /**
  * @param ep_ptr
  */
-void UHS_NI UHS_Bulk_Storage::PrintEndpointDescriptor(const USB_FD_ENDPOINT_DESCRIPTOR * ep_ptr) {
+void UHS_NI UHS_Bulk_Storage::CNCEndpointDescriptor(const USB_FD_ENDPOINT_DESCRIPTOR * ep_ptr) {
         Notify(PSTR("Endpoint descriptor:"), 0x80);
         Notify(PSTR("\r\nLength:\t\t"), 0x80);
         D_PrintHex<uint8_t > (ep_ptr->bLength, 0x80);

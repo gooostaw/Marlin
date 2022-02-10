@@ -10,7 +10,7 @@
  *
  * - Type of electronics
  * - Type of temperature sensor
- * - Printer geometry
+ * - CNC geometry
  * - Endstop configuration
  * - LCD controller
  * - Extra features
@@ -127,7 +127,7 @@
 // Name displayed in the LCD "Ready" message and Info menu
 #define CUSTOM_MACHINE_NAME "Modern Vintage CNC"
 
-// Printer's unique ID, used by some programs to differentiate between machines.
+// CNC's unique ID, used by some programs to differentiate between machines.
 // Choose your own or use a service like https://www.uuidgenerator.net/version4
 //#define MACHINE_UUID "00000000-0000-0000-0000-000000000000"
 
@@ -673,7 +673,7 @@
   //#define PID_CHAMBER_DEBUG // Sends debug data to the serial port.
 
   // Lasko "MyHeat Personal Heater" (200w) modified with a Fotek SSR-10DA to control only the heating element
-  // and placed inside the small Creality printer enclosure tent.
+  // and placed inside the small Creality cnc enclosure tent.
   //
   #define DEFAULT_chamberKp 37.04
   #define DEFAULT_chamberKi 1.40
@@ -715,7 +715,7 @@
 //===========================================================================
 
 /**
- * Thermal Protection provides additional protection to your printer from damage
+ * Thermal Protection provides additional protection to your cnc from damage
  * and fire. WRCNC always includes safe min and max temperature ranges which
  * protect against a broken or disconnected thermistor wire.
  *
@@ -749,7 +749,7 @@
 //#define MARKFORGED_XY  // MarkForged. See https://reprap.org/forum/read.php?152,504042
 //#define MARKFORGED_YX
 
-// Enable for a belt style printer with endless "Z" motion
+// Enable for a belt style cnc with endless "Z" motion
 //#define BELTPRINTER
 
 // Enable for Polargraph Kinematics
@@ -766,7 +766,7 @@
 // @section homing
 
 // Specify here all the endstop connectors that are connected to any endstop or probe.
-// Almost all printers will be using one per axis. Probes will use one or more of the
+// Almost all cncs will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 #define USE_XMIN_PLUG
 #define USE_YMIN_PLUG
@@ -1122,7 +1122,7 @@
   #define Z_PROBE_RETRACT_X X_MAX_POS
 #endif
 
-// Duet Smart Effector (for delta printers) - https://bit.ly/2ul5U7J
+// Duet Smart Effector (for delta cncs) - https://bit.ly/2ul5U7J
 // When the pin is defined you can use M672 to set/reset the probe sensitivity.
 //#define DUET_SMART_EFFECTOR
 #if ENABLED(DUET_SMART_EFFECTOR)
@@ -1439,7 +1439,7 @@
  * IMPORTANT: Runout will only trigger if WRCNC is aware that a print job is running.
  * WRCNC knows a print job is running when:
  *  1. Running a print job from media started with M24.
- *  2. The Print Job Timer has been started with M75.
+ *  2. The CNC Job Timer has been started with M75.
  *  3. The heaters were turned on and PRINTJOB_TIMER_AUTOSTART is enabled.
  *
  * RAMPS-based boards use SERVO3_PIN for the first runout sensor.
@@ -1899,7 +1899,7 @@
   //#define NOZZLE_PARK_Y_ONLY          // Y move only is required to park
   #define NOZZLE_PARK_Z_RAISE_MIN 5   // (mm) Always raise Z by at least this distance
   #define NOZZLE_PARK_XY_FEEDRATE 180 // (mm/s) X and Y axes feedrate (also used for delta Z axis)
-  #define NOZZLE_PARK_Z_FEEDRATE  20  // (mm/s) Z axis feedrate (not used for delta printers)
+  #define NOZZLE_PARK_Z_FEEDRATE  20  // (mm/s) Z axis feedrate (not used for delta cncs)
 #endif
 
 /**
@@ -1979,7 +1979,7 @@
 #endif
 
 /**
- * Print Job Timer
+ * CNC Job Timer
  *
  * Automatically start and stop the print job timer on M104/M109/M140/M190/M141/M191.
  * The print job timer will only be stopped if the bed/chamber target temp is
@@ -2005,7 +2005,7 @@
 #define PRINTJOB_TIMER_AUTOSTART
 
 /**
- * Print Counter
+ * CNC Counter
  *
  * Track statistical data such as:
  *
@@ -2024,16 +2024,16 @@
 /**
  * Password
  *
- * Set a numerical password for the printer which can be requested:
+ * Set a numerical password for the cnc which can be requested:
  *
- *  - When the printer boots up
- *  - Upon opening the 'Print from Media' Menu
+ *  - When the cnc boots up
+ *  - Upon opening the 'CNC from Media' Menu
  *  - When SD printing is completed or aborted
  *
  * The following G-codes can be used:
  *
- *  M510 - Lock Printer. Blocks all commands except M511.
- *  M511 - Unlock Printer.
+ *  M510 - Lock CNC. Blocks all commands except M511.
+ *  M511 - Unlock CNC.
  *  M512 - Set, Change and Remove Password.
  *
  * If you forget the password and get locked out you'll need to re-flash
@@ -2389,7 +2389,7 @@
 //#define miniVIKI
 
 //
-// Alfawise Ex8 printer LCD marked as WYH L12864 COG
+// Alfawise Ex8 cnc LCD marked as WYH L12864 COG
 //
 //#define WYH_L12864
 
@@ -2429,7 +2429,7 @@
 //#define LCD_FOR_MELZI
 
 //
-// Original Ulticontroller from Ultimaker 2 printer with SSD1309 I2C display and encoder
+// Original Ulticontroller from Ultimaker 2 cnc with SSD1309 I2C display and encoder
 // https://github.com/Ultimaker/Ultimaker2/tree/master/1249_Ulticontroller_Board_(x1)
 //
 //#define ULTI_CONTROLLER
@@ -2608,7 +2608,7 @@
 #endif
 
 //
-// Touch-screen LCD for Malyan M200/M300 printers
+// Touch-screen LCD for Malyan M200/M300 cncs
 //
 //#define MALYAN_LCD
 #if ENABLED(MALYAN_LCD)
@@ -2939,9 +2939,9 @@
 #endif
 
 /**
- * Printer Event LEDs
+ * CNC Event LEDs
  *
- * During printing, the LEDs will reflect the printer status:
+ * During printing, the LEDs will reflect the cnc status:
  *
  *  - Gradually change from blue to violet as the heated bed gets to target temp
  *  - Gradually change from violet to red as the hotend gets to temperature

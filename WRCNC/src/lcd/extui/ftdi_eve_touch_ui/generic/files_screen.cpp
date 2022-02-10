@@ -218,7 +218,7 @@ bool FilesScreen::onTouchEnd(uint8_t tag) {
     case 240: // Done button
       GOTO_PREVIOUS();
       return true;
-    case 241: // Print highlighted file
+    case 241: // CNC highlighted file
       ConfirmStartPrintDialogBox::show(getSelectedFileIndex());
       return true;
     case 242: // Previous page

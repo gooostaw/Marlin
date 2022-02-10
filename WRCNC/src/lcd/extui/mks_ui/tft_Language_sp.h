@@ -213,7 +213,7 @@
 #define DIALOG_ERROR_TIPS2_SP         "error:transacción fallida, \nconfigurar  baudrate del \ndisplay para la placa base!"
 #define DIALOG_ERROR_TIPS3_SP         "Error : nombre de archivo o \nruta demasiado largo!"
 #define DIALOG_CLOSE_MACHINE_SP       "Closing machine......"
-#define DIALOG_UNBIND_PRINTER_SP      "Unbind the printer?"
+#define DIALOG_UNBIND_PRINTER_SP      "Unbind the cnc?"
 #define DIALOG_FILAMENT_NO_PRESS_SP   "Filament detection switch is not pressed"
 #define DIALOG_PRINT_FINISH_SP        "¡La impresión está completa!"
 #define DIALOG_PRINT_TIME_SP          "Tiempo de impresión: "

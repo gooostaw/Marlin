@@ -19,7 +19,7 @@ namespace ExtUI {
 
   void onStartup()        { AnycubicTFT.OnSetup(); }
   void onIdle()           { AnycubicTFT.OnCommandScan(); }
-  void onPrinterKilled(FSTR_P const error, FSTR_P const component) { AnycubicTFT.OnKillTFT(); }
+  void onCNCKilled(FSTR_P const error, FSTR_P const component) { AnycubicTFT.OnKillTFT(); }
   void onMediaInserted()  { AnycubicTFT.OnSDCardStateChange(true); }
   void onMediaError()     { AnycubicTFT.OnSDCardError(); }
   void onMediaRemoved()   { AnycubicTFT.OnSDCardStateChange(false); }

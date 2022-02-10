@@ -136,7 +136,7 @@ public:
   static void selectFileByIndex(const uint16_t nr);
   static void selectFileByName(const char * const match);  // (working directory only)
 
-  // Print job
+  // CNC job
   static void report_status();
   static void getAbsFilenameInCWD(char *dst);
   static void printSelectedFilename();
@@ -204,7 +204,7 @@ public:
   static char* getWorkDirName()  { workDir.getDosName(filename); return filename; }
   static SdFile& getWorkDir()    { return workDir.isOpen() ? workDir : root; }
 
-  // Print File stats
+  // CNC File stats
   static uint32_t getFileSize()  { return filesize; }
   static uint32_t getIndex()     { return sdpos; }
   static bool isFileOpen()       { return isMounted() && file.isOpen(); }

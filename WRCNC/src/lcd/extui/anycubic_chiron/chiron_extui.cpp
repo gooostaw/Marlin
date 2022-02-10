@@ -23,8 +23,8 @@ namespace ExtUI {
 
   void onIdle() { Chiron.IdleLoop(); }
 
-  void onPrinterKilled(FSTR_P const error, FSTR_P const component) {
-    Chiron.PrinterKilled(error, component);
+  void onCNCKilled(FSTR_P const error, FSTR_P const component) {
+    Chiron.CNCKilled(error, component);
   }
 
   void onMediaInserted() { Chiron.MediaEvent(AC_media_inserted); }

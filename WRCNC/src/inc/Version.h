@@ -52,7 +52,7 @@
 #endif
 
 /**
- * Define a generic printer name to be output to the LCD after booting WRCNC.
+ * Define a generic cnc name to be output to the LCD after booting WRCNC.
  */
 #ifndef MACHINE_NAME
   #define MACHINE_NAME "CNC"
@@ -68,7 +68,7 @@
 #endif
 
 /**
- * Default generic printer UUID.
+ * Default generic cnc UUID.
  */
 #ifndef DEFAULT_MACHINE_UUID
   #define DEFAULT_MACHINE_UUID "cede2a2f-41a2-4748-9b12-c55c62f367ff"

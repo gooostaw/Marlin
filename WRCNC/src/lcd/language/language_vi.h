@@ -127,7 +127,7 @@ namespace Language_vi {
   LSTR MSG_UBL_OUTPUT_MAP                 = _UxGT("Đầu ra bản đồ lưới");                   // Output Mesh Map
   LSTR MSG_UBL_OUTPUT_MAP_HOST            = _UxGT("Đầu ra cho máy chủ");                   // Output for Host
   LSTR MSG_UBL_OUTPUT_MAP_CSV             = _UxGT("Đầu ra cho CSV");                       // Output for CSV
-  LSTR MSG_UBL_OUTPUT_MAP_BACKUP          = _UxGT("Hỗ trợ lưới");                          // Off Printer Backup | backup mesh
+  LSTR MSG_UBL_OUTPUT_MAP_BACKUP          = _UxGT("Hỗ trợ lưới");                          // Off CNC Backup | backup mesh
   LSTR MSG_UBL_INFO_UBL                   = _UxGT("Đầu ra thông tin UBL");                 // Output UBL Info
   LSTR MSG_EDIT_MESH                      = _UxGT("Chỉnh sửa lưới");                       // Edit mesh
   LSTR MSG_UBL_FILLIN_AMOUNT              = _UxGT("Số lượng lấp đầy");                     // Fill-in Amount
@@ -274,7 +274,7 @@ namespace Language_vi {
   LSTR MSG_RESUME_PRINT                   = _UxGT("Tiếp tục in");                          // Resume print
   LSTR MSG_STOP_PRINT                     = _UxGT("Ngừng in");                             // Stop print
   LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Phục Hồi Mất Điện");                    // Outage Recovery
-  LSTR MSG_MEDIA_MENU                     = _UxGT("In từ phương tiện");                    // Print from media
+  LSTR MSG_MEDIA_MENU                     = _UxGT("In từ phương tiện");                    // CNC from media
   LSTR MSG_NO_MEDIA                       = _UxGT("Không có phương tiện");                 // No media
   LSTR MSG_DWELL                          = _UxGT("Ngủ...");                               // Sleep
   LSTR MSG_USERWAIT                       = _UxGT("Nhấn để tiếp tục...");                  // Click to resume (same as 'continue')
@@ -351,13 +351,13 @@ namespace Language_vi {
   LSTR MSG_DELTA_HEIGHT                   = _UxGT("Chiều Cao");                            // Height
   LSTR MSG_DELTA_RADIUS                   = _UxGT("Bán Kính");                             // Radius
   LSTR MSG_INFO_MENU                      = _UxGT("Về Máy In");
-  LSTR MSG_INFO_PRINTER_MENU              = _UxGT("Thông Tin Máy In");                     // Printer Info
+  LSTR MSG_INFO_PRINTER_MENU              = _UxGT("Thông Tin Máy In");                     // CNC Info
   LSTR MSG_3POINT_LEVELING                = _UxGT("San lấp 3-Điểm");                       // 3-Point Leveling
   LSTR MSG_LINEAR_LEVELING                = _UxGT("San Lấp Tuyến Tính");                   // Linear Leveling
   LSTR MSG_BILINEAR_LEVELING              = _UxGT("San Lấp Song Tuyến");                   // Bilinear Leveling
   LSTR MSG_UBL_LEVELING                   = _UxGT("San Lấp Bàn Thống Nhất");               // Unified Bed Leveling
   LSTR MSG_MESH_LEVELING                  = _UxGT("Lưới San Lấp");                         // Mesh Leveling
-  LSTR MSG_INFO_STATS_MENU                = _UxGT("Thống Kê Máy In");                      // Printer Stats
+  LSTR MSG_INFO_STATS_MENU                = _UxGT("Thống Kê Máy In");                      // CNC Stats
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Thông Tin Bo Mạch");                    // Board Info
   LSTR MSG_INFO_THERMISTOR_MENU           = _UxGT("Điện Trở Nhiệt");                       // Thermistors
   LSTR MSG_INFO_EXTRUDERS                 = _UxGT("Máy đùn");                              // Extruders
@@ -366,7 +366,7 @@ namespace Language_vi {
   LSTR MSG_CASE_LIGHT                     = _UxGT("Đèn Khuông");                           // Case light
   LSTR MSG_CASE_LIGHT_BRIGHTNESS          = _UxGT("Độ Sáng");                              // Light Brightness
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Số In");                                // Print Count
+    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Số In");                                // CNC Count
     LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Đã hoàn thành");
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Tổng số thời gian in");                // Total print time
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Thời gian việc lâu nhất");              // Longest job time

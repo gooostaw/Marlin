@@ -103,7 +103,7 @@ void menu_change_filament() {
     #endif
 
     #if ENABLED(FILAMENT_LOAD_UNLOAD_GCODES)
-      const bool is_busy = printer_busy();
+      const bool is_busy = cnc_busy();
     #endif
 
     START_MENU();
@@ -183,7 +183,7 @@ void menu_change_filament() {
             }
           }
         #endif
-      } // !printer_busy
+      } // !cnc_busy
     #endif
 
     END_MENU();

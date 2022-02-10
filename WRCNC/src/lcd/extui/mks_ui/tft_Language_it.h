@@ -210,7 +210,7 @@
 #define DIALOG_ERROR_TIPS2_IT             "Errore: operazione non riuscita, \nsi prega di controllare se il baudrate del \ndisplay è lo stesso scheda madre"
 #define DIALOG_ERROR_TIPS3_IT             "Errore: il nome del file o il \npercorso è troppo lungo!"
 #define DIALOG_CLOSE_MACHINE_IT           "Closing machine......"
-#define DIALOG_UNBIND_PRINTER_IT          "Unbind the printer?"
+#define DIALOG_UNBIND_PRINTER_IT          "Unbind the cnc?"
 #define DIALOG_FILAMENT_NO_PRESS_IT       "Filament detection switch is not pressed"
 #define DIALOG_PRINT_FINISH_IT            "La stampa è completa!"
 #define DIALOG_PRINT_TIME_IT              "Tempo di stampa: "

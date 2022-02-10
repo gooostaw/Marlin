@@ -285,7 +285,7 @@ constexpr uint16_t SP_T_Bed_Set   = 0x5040;
   constexpr uint16_t VP_SCREENCHANGE_ASK              = 0x1500;
   constexpr uint16_t VP_SCREENCHANGE                  = 0x1501;   // Key-Return button to new menu pressed. Data contains target screen in low byte and info in high byte.
   constexpr uint16_t VP_TEMP_ALL_OFF                  = 0x1502;   // Turn all heaters off. Value arbitrary ;)=
-  constexpr uint16_t VP_SCREENCHANGE_WHENSD           = 0x1503;   // "Print" Button touched -- go only there if there is an SD Card.
+  constexpr uint16_t VP_SCREENCHANGE_WHENSD           = 0x1503;   // "CNC" Button touched -- go only there if there is an SD Card.
   constexpr uint16_t VP_CONFIRMED                     = 0x1510;   // OK on confirm screen.
 
   constexpr uint16_t VP_BACK_PAGE                     = 0x1600;

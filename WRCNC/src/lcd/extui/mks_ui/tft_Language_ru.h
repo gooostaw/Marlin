@@ -211,7 +211,7 @@
 #define DIALOG_ERROR_TIPS2_RU               "ошибка:сбой передачи. установите скорость \nпередачи данных как на плате управления!"
 #define DIALOG_ERROR_TIPS3_RU               "ошибка: имя файла слишком длинное!"
 #define DIALOG_CLOSE_MACHINE_RU             "Closing machine......"
-#define DIALOG_UNBIND_PRINTER_RU            "Unbind the printer?"
+#define DIALOG_UNBIND_PRINTER_RU            "Unbind the cnc?"
 #define DIALOG_FILAMENT_NO_PRESS_RU         "Filament detection switch is not pressed"
 #define DIALOG_PRINT_FINISH_RU              "печать завершена!"
 #define DIALOG_PRINT_TIME_RU                "Время печати: "

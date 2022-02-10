@@ -38,7 +38,7 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
       draw_return_ui();
       break;
     case ID_ACCE_PRINT:
-      value = PrintAcceleration;
+      value = CNCAcceleration;
       lv_clear_acceleration_settings();
       lv_draw_number_key();
       break;
@@ -95,7 +95,7 @@ void lv_draw_acceleration_settings() {
   lv_coord_t y = PARA_UI_POS_Y;
   if (!uiCfg.para_ui_page) {
     dtostrf(planner.settings.acceleration, 1, 1, public_buf_l);
-    lv_screen_menu_item_1_edit(scr, machine_menu.PrintAcceleration, PARA_UI_POS_X, y, event_handler, ID_ACCE_PRINT, 0, public_buf_l);
+    lv_screen_menu_item_1_edit(scr, machine_menu.CNCAcceleration, PARA_UI_POS_X, y, event_handler, ID_ACCE_PRINT, 0, public_buf_l);
 
     y += PARA_UI_POS_Y;
     dtostrf(planner.settings.retract_acceleration, 1, 1, public_buf_l);

@@ -44,7 +44,7 @@ namespace Language_en {
   PROGMEM Language_Str MSG_VMAX_X                   = u8"Vmax X";
   PROGMEM Language_Str MSG_VMAX_Y                   = u8"Vmax Y";
   PROGMEM Language_Str MSG_VMAX_Z                   = u8"Vmax Z";
-  PROGMEM Language_Str MSG_ACCEL_PRINTING           = u8"Printing";
+  PROGMEM Language_Str MSG_ACCEL_PRINTING           = u8"CNCing";
   PROGMEM Language_Str MSG_ACCEL_TRAVEL             = u8"Travel";
   PROGMEM Language_Str MSG_ACCEL_RETRACT            = u8"Retraction";
   PROGMEM Language_Str MSG_AMAX_X                   = u8"Amax X";
@@ -63,9 +63,9 @@ namespace Language_en {
   PROGMEM Language_Str MSG_AXIS_E4                  = u8"E4";
   PROGMEM Language_Str MSG_AXIS_ALL                 = u8"All";
   PROGMEM Language_Str MSG_HOME                     = u8"Home";
-  PROGMEM Language_Str MSG_PRINT_STARTING           = u8"Print starting";
-  PROGMEM Language_Str MSG_PRINT_FINISHED           = u8"Print finished";
-  PROGMEM Language_Str MSG_PRINT_ERROR              = u8"Print error";
+  PROGMEM Language_Str MSG_PRINT_STARTING           = u8"CNC starting";
+  PROGMEM Language_Str MSG_PRINT_FINISHED           = u8"CNC finished";
+  PROGMEM Language_Str MSG_PRINT_ERROR              = u8"CNC error";
   PROGMEM Language_Str MSG_ABOUT_TOUCH_PANEL_1      = u8"Color Touch Panel";
   PROGMEM Language_Str MSG_ABOUT_TOUCH_PANEL_2      = WEBSITE_URL;
   PROGMEM Language_Str MSG_LICENSE                  = u8"This program is free software: you can redistribute it and/or modify it under the terms of "
@@ -116,7 +116,7 @@ namespace Language_en {
   PROGMEM Language_Str MSG_LOAD_FILAMENT            = u8"Load/Extrude";
   PROGMEM Language_Str MSG_MOMENTARY                = u8"Momentary";
   PROGMEM Language_Str MSG_CONTINUOUS               = u8"Continuous";
-  PROGMEM Language_Str MSG_PRINT_MENU               = u8"Print Menu";
+  PROGMEM Language_Str MSG_PRINT_MENU               = u8"CNC Menu";
   PROGMEM Language_Str MSG_FINE_MOTION              = u8"Fine motion";
   PROGMEM Language_Str MSG_ENABLE_MEDIA             = u8"Enable Media";
   PROGMEM Language_Str MSG_INSERT_MEDIA             = u8"Insert Media...";
@@ -144,7 +144,7 @@ namespace Language_en {
   PROGMEM Language_Str MSG_LEVELING                 = u8"Leveling";
   PROGMEM Language_Str MSG_AXIS_LEVELING            = u8"Axis Leveling";
   PROGMEM Language_Str MSG_PROBE_BED                = u8"Probe Mesh";
-  PROGMEM Language_Str MSG_PRINT_TEST               = u8"Print Test (PLA)";
+  PROGMEM Language_Str MSG_PRINT_TEST               = u8"CNC Test (PLA)";
   PROGMEM Language_Str MSG_MOVE_Z_TO_TOP            = u8"Raise Z to Top";
 
   #if ENABLED(TOUCH_UI_LULZBOT_BIO)
@@ -152,7 +152,7 @@ namespace Language_en {
     PROGMEM Language_Str MSG_RAISE_PLUNGER          = u8"Raise Plunger";
     PROGMEM Language_Str MSG_RELEASE_XY_AXIS        = u8"Release X and Y Axis";
     PROGMEM Language_Str MSG_BED_TEMPERATURE        = u8"Bed Temperature";
-    PROGMEM Language_Str MSG_HOME_XYZ_WARNING       = u8"About to move to home position. Ensure the top and the bed of the printer are clear.\n\nContinue?";
+    PROGMEM Language_Str MSG_HOME_XYZ_WARNING       = u8"About to move to home position. Ensure the top and the bed of the cnc are clear.\n\nContinue?";
     PROGMEM Language_Str MSG_HOME_E_WARNING         = u8"About to re-home plunger and auto-level. Remove syringe prior to proceeding.\n\nContinue?";
   #endif
 
@@ -170,7 +170,7 @@ namespace Language_en {
     PROGMEM Language_Str MSG_PREHEAT                = u8"Preheat";
     PROGMEM Language_Str MSG_BUTTON_PAUSE           = u8"Pause";
     PROGMEM Language_Str MSG_BUTTON_RESUME          = u8"Resume";
-    PROGMEM Language_Str MSG_ELAPSED_PRINT          = u8"Elapsed Print";
+    PROGMEM Language_Str MSG_ELAPSED_PRINT          = u8"Elapsed CNC";
     PROGMEM Language_Str MSG_XYZ_MOVE               = u8"XYZ Move";
     PROGMEM Language_Str MSG_E_MOVE                 = u8"Extrusion Move";
   #endif

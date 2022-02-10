@@ -127,7 +127,7 @@ void machine_setting_disp() {
     machine_menu.LevelingSubDeltaConfTitle = DELTA_LEVEL_CONF_TITLE_CN;
     machine_menu.MachineRadius             = DELTA_MACHINE_RADIUS_CN;
     machine_menu.DiagonalRod               = DELTA_DIAGONAL_ROD_CN;
-    machine_menu.PrintableRadius           = DELTA_PRINT_RADIUS_CN;
+    machine_menu.CNCableRadius           = DELTA_PRINT_RADIUS_CN;
     machine_menu.DeltaHeight               = DELTA_HEIGHT_CN;
     machine_menu.SmoothRodOffset           = SMOOTH_ROD_OFFSET_CN;
     machine_menu.EffectorOffset            = EFFECTOR_OFFSET_CN;
@@ -175,7 +175,7 @@ void machine_setting_disp() {
     machine_menu.E1MaxFeedRate        = E1_MAXFEEDRATE_CN;
 
     machine_menu.AccelerationConfTitle = ACCELERATION_CONF_TITLE_CN;
-    machine_menu.PrintAcceleration     = PRINT_ACCELERATION_CN;
+    machine_menu.CNCAcceleration     = PRINT_ACCELERATION_CN;
     machine_menu.RetractAcceleration   = RETRACT_ACCELERATION_CN;
     machine_menu.TravelAcceleration    = TRAVEL_ACCELERATION_CN;
     machine_menu.X_Acceleration        = X_ACCELERATION_CN;
@@ -226,7 +226,7 @@ void machine_setting_disp() {
 
     machine_menu.AdvancedConfTitle = ADVANCED_CONF_TITLE_CN;
     machine_menu.PwrOffDection     = PWROFF_DECTION_CN;
-    machine_menu.PwrOffAfterPrint  = PWROFF_AFTER_PRINT_CN;
+    machine_menu.PwrOffAfterCNC  = PWROFF_AFTER_PRINT_CN;
     machine_menu.HaveUps           = HAVE_UPS_CN;
     machine_menu.Z2andZ2Endstop    = Z2_AND_Z2ENDSTOP_CONF_CN;
     machine_menu.EnablePinsInvert  = ENABLE_PINS_CONF_CN;
@@ -355,7 +355,7 @@ void machine_setting_disp() {
     machine_menu.LevelingSubDeltaConfTitle = DELTA_LEVEL_CONF_TITLE_T_CN;
     machine_menu.MachineRadius             = DELTA_MACHINE_RADIUS_T_CN;
     machine_menu.DiagonalRod               = DELTA_DIAGONAL_ROD_T_CN;
-    machine_menu.PrintableRadius           = DELTA_PRINT_RADIUS_T_CN;
+    machine_menu.CNCableRadius           = DELTA_PRINT_RADIUS_T_CN;
     machine_menu.DeltaHeight               = DELTA_HEIGHT_T_CN;
     machine_menu.SmoothRodOffset           = SMOOTH_ROD_OFFSET_T_CN;
     machine_menu.EffectorOffset            = EFFECTOR_OFFSET_T_CN;
@@ -403,7 +403,7 @@ void machine_setting_disp() {
     machine_menu.E1MaxFeedRate        = E1_MAXFEEDRATE_T_CN;
 
     machine_menu.AccelerationConfTitle = ACCELERATION_CONF_TITLE_T_CN;
-    machine_menu.PrintAcceleration     = PRINT_ACCELERATION_T_CN;
+    machine_menu.CNCAcceleration     = PRINT_ACCELERATION_T_CN;
     machine_menu.RetractAcceleration   = RETRACT_ACCELERATION_T_CN;
     machine_menu.TravelAcceleration    = TRAVEL_ACCELERATION_T_CN;
     machine_menu.X_Acceleration        = X_ACCELERATION_T_CN;
@@ -454,7 +454,7 @@ void machine_setting_disp() {
 
     machine_menu.AdvancedConfTitle = ADVANCED_CONF_TITLE_T_CN;
     machine_menu.PwrOffDection     = PWROFF_DECTION_T_CN;
-    machine_menu.PwrOffAfterPrint  = PWROFF_AFTER_PRINT_T_CN;
+    machine_menu.PwrOffAfterCNC  = PWROFF_AFTER_PRINT_T_CN;
     machine_menu.HaveUps           = HAVE_UPS_T_CN;
     machine_menu.Z2andZ2Endstop    = Z2_AND_Z2ENDSTOP_CONF_T_CN;
     machine_menu.EnablePinsInvert  = ENABLE_PINS_CONF_T_CN;
@@ -586,7 +586,7 @@ void machine_setting_disp() {
     machine_menu.LevelingSubDeltaConfTitle = DELTA_LEVEL_CONF_TITLE_EN;
     machine_menu.MachineRadius             = DELTA_MACHINE_RADIUS_EN;
     machine_menu.DiagonalRod               = DELTA_DIAGONAL_ROD_EN;
-    machine_menu.PrintableRadius           = DELTA_PRINT_RADIUS_EN;
+    machine_menu.CNCableRadius           = DELTA_PRINT_RADIUS_EN;
     machine_menu.DeltaHeight               = DELTA_HEIGHT_EN;
     machine_menu.SmoothRodOffset           = SMOOTH_ROD_OFFSET_EN;
     machine_menu.EffectorOffset            = EFFECTOR_OFFSET_EN;
@@ -635,7 +635,7 @@ void machine_setting_disp() {
     machine_menu.E1MaxFeedRate        = E1_MAXFEEDRATE_EN;
 
     machine_menu.AccelerationConfTitle = ACCELERATION_CONF_TITLE_EN;
-    machine_menu.PrintAcceleration     = PRINT_ACCELERATION_EN;
+    machine_menu.CNCAcceleration     = PRINT_ACCELERATION_EN;
     machine_menu.RetractAcceleration   = RETRACT_ACCELERATION_EN;
     machine_menu.TravelAcceleration    = TRAVEL_ACCELERATION_EN;
     machine_menu.X_Acceleration        = X_ACCELERATION_EN;
@@ -686,7 +686,7 @@ void machine_setting_disp() {
 
     machine_menu.AdvancedConfTitle = ADVANCED_CONF_TITLE_EN;
     machine_menu.PwrOffDection     = PWROFF_DECTION_EN;
-    machine_menu.PwrOffAfterPrint  = PWROFF_AFTER_PRINT_EN;
+    machine_menu.PwrOffAfterCNC  = PWROFF_AFTER_PRINT_EN;
     machine_menu.HaveUps           = HAVE_UPS_EN;
     machine_menu.Z2andZ2Endstop    = Z2_AND_Z2ENDSTOP_CONF_EN;
     machine_menu.EnablePinsInvert  = ENABLE_PINS_CONF_EN;
@@ -845,7 +845,7 @@ void disp_language_init() {
       common_menu.dialog_confirm_title  = TITLE_DIALOG_CONFIRM_CN;
       common_menu.text_back             = BACK_TEXT_CN;
       common_menu.close_machine_tips    = DIALOG_CLOSE_MACHINE_CN;
-      common_menu.unbind_printer_tips   = DIALOG_UNBIND_PRINTER_CN;
+      common_menu.unbind_cnc_tips   = DIALOG_UNBIND_PRINTER_CN;
       common_menu.print_special_title   = PRINTING_GBK;
       common_menu.pause_special_title   = PRINTING_PAUSE_GBK;
       common_menu.operate_special_title = PRINTING_OPERATION_GBK;
@@ -1075,7 +1075,7 @@ void disp_language_init() {
       pause_msg_menu.heating       = MESSAGE_HEATING_CN;
       pause_msg_menu.option        = MESSAGE_OPTION_CN;
       pause_msg_menu.purgeMore     = MESSAGE_PURGE_MORE_CN;
-      pause_msg_menu.continuePrint = MESSAGE_CONTINUE_PRINT_CN;
+      pause_msg_menu.continueCNC = MESSAGE_CONTINUE_PRINT_CN;
       eeprom_menu.title            = EEPROM_SETTINGS_TITLE_CN;
       eeprom_menu.store            = EEPROM_SETTINGS_STORE_CN;
       eeprom_menu.read             = EEPROM_SETTINGS_READ_CN;
@@ -1092,7 +1092,7 @@ void disp_language_init() {
             common_menu.dialog_confirm_title  = TITLE_DIALOG_CONFIRM_T_CN;
             common_menu.text_back             = BACK_TEXT_T_CN;
             common_menu.close_machine_tips    = DIALOG_CLOSE_MACHINE_T_CN;
-            common_menu.unbind_printer_tips   = DIALOG_UNBIND_PRINTER_T_CN;
+            common_menu.unbind_cnc_tips   = DIALOG_UNBIND_PRINTER_T_CN;
             common_menu.print_special_title   = PRINTING_GBK;
             common_menu.pause_special_title   = PRINTING_PAUSE_GBK;
             common_menu.operate_special_title = PRINTING_OPERATION_GBK;
@@ -1319,7 +1319,7 @@ void disp_language_init() {
             pause_msg_menu.heating       = MESSAGE_HEATING_T_CN;
             pause_msg_menu.option        = MESSAGE_OPTION_T_CN;
             pause_msg_menu.purgeMore     = MESSAGE_PURGE_MORE_T_CN;
-            pause_msg_menu.continuePrint = MESSAGE_CONTINUE_PRINT_T_CN;
+            pause_msg_menu.continueCNC = MESSAGE_CONTINUE_PRINT_T_CN;
             eeprom_menu.title            = EEPROM_SETTINGS_TITLE_T_CN;
             eeprom_menu.store            = EEPROM_SETTINGS_STORE_T_CN;
             eeprom_menu.read             = EEPROM_SETTINGS_READ_T_CN;
@@ -1333,7 +1333,7 @@ void disp_language_init() {
             common_menu.text_back             = BACK_TEXT_EN;
             common_menu.text_save             = SAVE_TEXT_EN;
             common_menu.close_machine_tips    = DIALOG_CLOSE_MACHINE_EN;
-            common_menu.unbind_printer_tips   = DIALOG_UNBIND_PRINTER_EN;
+            common_menu.unbind_cnc_tips   = DIALOG_UNBIND_PRINTER_EN;
             common_menu.print_special_title   = PRINTING_OTHER_LANGUGE;
             common_menu.pause_special_title   = PRINTING_PAUSE_OTHER_LANGUGE;
             common_menu.operate_special_title = PRINTING_OPERATION_OTHER_LANGUGE;
@@ -1554,7 +1554,7 @@ void disp_language_init() {
             pause_msg_menu.heating       = MESSAGE_HEATING_EN;
             pause_msg_menu.option        = MESSAGE_OPTION_EN;
             pause_msg_menu.purgeMore     = MESSAGE_PURGE_MORE_EN;
-            pause_msg_menu.continuePrint = MESSAGE_CONTINUE_PRINT_EN;
+            pause_msg_menu.continueCNC = MESSAGE_CONTINUE_PRINT_EN;
             eeprom_menu.title            = EEPROM_SETTINGS_TITLE_EN;
             eeprom_menu.store            = EEPROM_SETTINGS_STORE_EN;
             eeprom_menu.read             = EEPROM_SETTINGS_READ_EN;
@@ -1567,7 +1567,7 @@ void disp_language_init() {
             common_menu.dialog_confirm_title  = TITLE_DIALOG_CONFIRM_RU;
             common_menu.text_back             = BACK_TEXT_RU;
             common_menu.close_machine_tips    = DIALOG_CLOSE_MACHINE_RU;
-            common_menu.unbind_printer_tips   = DIALOG_UNBIND_PRINTER_RU;
+            common_menu.unbind_cnc_tips   = DIALOG_UNBIND_PRINTER_RU;
             common_menu.print_special_title   = PRINTING_OTHER_LANGUGE;
             common_menu.pause_special_title   = PRINTING_PAUSE_OTHER_LANGUGE;
             common_menu.operate_special_title = PRINTING_OPERATION_OTHER_LANGUGE;
@@ -1707,7 +1707,7 @@ void disp_language_init() {
             machine_menu.LevelingAutoZoffsetConf = LEVELING_AUTO_ZOFFSET_RU;
 
             machine_menu.AccelerationConfTitle = ACCELERATION_CONF_TITLE_RU;
-            machine_menu.PrintAcceleration     = PRINT_ACCELERATION_RU;
+            machine_menu.CNCAcceleration     = PRINT_ACCELERATION_RU;
             machine_menu.RetractAcceleration   = RETRACT_ACCELERATION_RU;
             machine_menu.TravelAcceleration    = TRAVEL_ACCELERATION_RU;
             machine_menu.X_Acceleration        = X_ACCELERATION_RU;
@@ -1879,7 +1879,7 @@ void disp_language_init() {
             pause_msg_menu.heating       = MESSAGE_HEATING_RU;
             pause_msg_menu.option        = MESSAGE_OPTION_RU;
             pause_msg_menu.purgeMore     = MESSAGE_PURGE_MORE_RU;
-            pause_msg_menu.continuePrint = MESSAGE_CONTINUE_PRINT_RU;
+            pause_msg_menu.continueCNC = MESSAGE_CONTINUE_PRINT_RU;
             eeprom_menu.title            = EEPROM_SETTINGS_TITLE_RU;
             eeprom_menu.store            = EEPROM_SETTINGS_STORE_RU;
             eeprom_menu.read             = EEPROM_SETTINGS_READ_RU;
@@ -1892,7 +1892,7 @@ void disp_language_init() {
             common_menu.dialog_confirm_title  = TITLE_DIALOG_CONFIRM_SP;
             common_menu.text_back             = BACK_TEXT_SP;
             common_menu.close_machine_tips    = DIALOG_CLOSE_MACHINE_SP;
-            common_menu.unbind_printer_tips   = DIALOG_UNBIND_PRINTER_SP;
+            common_menu.unbind_cnc_tips   = DIALOG_UNBIND_PRINTER_SP;
             common_menu.print_special_title   = PRINTING_SP;
             common_menu.pause_special_title   = PRINTING_PAUSAR_SP;
             common_menu.operate_special_title = PRINTING_AJUSTES_SP;
@@ -2116,7 +2116,7 @@ void disp_language_init() {
             pause_msg_menu.heating       = MESSAGE_HEATING_SP;
             pause_msg_menu.option        = MESSAGE_OPTION_SP;
             pause_msg_menu.purgeMore     = MESSAGE_PURGE_MORE_SP;
-            pause_msg_menu.continuePrint = MESSAGE_CONTINUE_PRINT_SP;
+            pause_msg_menu.continueCNC = MESSAGE_CONTINUE_PRINT_SP;
             eeprom_menu.title            = EEPROM_SETTINGS_TITLE_SP;
             eeprom_menu.store            = EEPROM_SETTINGS_STORE_SP;
             eeprom_menu.read             = EEPROM_SETTINGS_READ_SP;
@@ -2132,7 +2132,7 @@ void disp_language_init() {
           common_menu.dialog_confirm_title  = TITLE_DIALOG_CONFIRM_FR;
           common_menu.text_back             = BACK_TEXT_FR;
           common_menu.close_machine_tips    = DIALOG_CLOSE_MACHINE_FR;
-          common_menu.unbind_printer_tips   = DIALOG_UNBIND_PRINTER_FR;
+          common_menu.unbind_cnc_tips   = DIALOG_UNBIND_PRINTER_FR;
           common_menu.print_special_title   = PRINTING_OTHER_LANGUGE;
           common_menu.pause_special_title   = PRINTING_PAUSE_OTHER_LANGUGE;
           common_menu.operate_special_title = PRINTING_OPERATION_OTHER_LANGUGE;
@@ -2350,7 +2350,7 @@ void disp_language_init() {
           pause_msg_menu.heating       = MESSAGE_HEATING_FR;
           pause_msg_menu.option        = MESSAGE_OPTION_FR;
           pause_msg_menu.purgeMore     = MESSAGE_PURGE_MORE_FR;
-          pause_msg_menu.continuePrint = MESSAGE_CONTINUE_PRINT_FR;
+          pause_msg_menu.continueCNC = MESSAGE_CONTINUE_PRINT_FR;
           eeprom_menu.title            = EEPROM_SETTINGS_TITLE_FR;
           eeprom_menu.store            = EEPROM_SETTINGS_STORE_FR;
           eeprom_menu.read             = EEPROM_SETTINGS_READ_FR;
@@ -2364,7 +2364,7 @@ void disp_language_init() {
           common_menu.dialog_confirm_title  = TITLE_DIALOG_CONFIRM_IT;
           common_menu.text_back             = BACK_TEXT_IT;
           common_menu.close_machine_tips    = DIALOG_CLOSE_MACHINE_IT;
-          common_menu.unbind_printer_tips   = DIALOG_UNBIND_PRINTER_IT;
+          common_menu.unbind_cnc_tips   = DIALOG_UNBIND_PRINTER_IT;
           common_menu.print_special_title   = PRINTING_OTHER_LANGUGE;
           common_menu.pause_special_title   = PRINTING_PAUSE_OTHER_LANGUGE;
           common_menu.operate_special_title = PRINTING_OPERATION_OTHER_LANGUGE;
@@ -2583,7 +2583,7 @@ void disp_language_init() {
           pause_msg_menu.heating       = MESSAGE_HEATING_IT;
           pause_msg_menu.option        = MESSAGE_OPTION_IT;
           pause_msg_menu.purgeMore     = MESSAGE_PURGE_MORE_IT;
-          pause_msg_menu.continuePrint = MESSAGE_CONTINUE_PRINT_IT;
+          pause_msg_menu.continueCNC = MESSAGE_CONTINUE_PRINT_IT;
           eeprom_menu.title            = EEPROM_SETTINGS_TITLE_IT;
           eeprom_menu.store            = EEPROM_SETTINGS_STORE_IT;
           eeprom_menu.read             = EEPROM_SETTINGS_READ_IT;
@@ -2599,7 +2599,7 @@ void disp_language_init() {
       common_menu.dialog_confirm_title  = TITLE_DIALOG_CONFIRM_EN;
       common_menu.text_back             = BACK_TEXT_EN;
       common_menu.close_machine_tips    = DIALOG_CLOSE_MACHINE_EN;
-      common_menu.unbind_printer_tips   = DIALOG_UNBIND_PRINTER_EN;
+      common_menu.unbind_cnc_tips   = DIALOG_UNBIND_PRINTER_EN;
       common_menu.print_special_title   = PRINTING_OTHER_LANGUGE;
       common_menu.pause_special_title   = PRINTING_PAUSE_OTHER_LANGUGE;
       common_menu.operate_special_title = PRINTING_OPERATION_OTHER_LANGUGE;
@@ -2819,7 +2819,7 @@ void disp_language_init() {
       pause_msg_menu.heating       = MESSAGE_HEATING_EN;
       pause_msg_menu.option        = MESSAGE_OPTION_EN;
       pause_msg_menu.purgeMore     = MESSAGE_PURGE_MORE_EN;
-      pause_msg_menu.continuePrint = MESSAGE_CONTINUE_PRINT_EN;
+      pause_msg_menu.continueCNC = MESSAGE_CONTINUE_PRINT_EN;
       eeprom_menu.title            = EEPROM_SETTINGS_TITLE_EN;
       eeprom_menu.store            = EEPROM_SETTINGS_STORE_EN;
       eeprom_menu.read             = EEPROM_SETTINGS_READ_EN;

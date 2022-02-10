@@ -50,7 +50,7 @@ void GcodeSuite::M360() {
   //
   config_line(F("Baudrate"),                    BAUDRATE);
   config_line(F("InputBuffer"),                 MAX_CMD_SIZE);
-  config_line(F("PrintlineCache"),              BUFSIZE);
+  config_line(F("CNClineCache"),              BUFSIZE);
   config_line(F("MixingExtruder"),              ENABLED(MIXING_EXTRUDER));
   config_line(F("SDCard"),                      ENABLED(SDSUPPORT));
   config_line(F("Fan"),                         ENABLED(HAS_FAN));
@@ -130,7 +130,7 @@ void GcodeSuite::M360() {
   // Print and Travel Acceleration
   //
   #define _ACCEL(A,B) _MIN(planner.settings.max_acceleration_mm_per_s2[A##_AXIS], planner.settings.B)
-  PGMSTR(P_ACC_STR, "PrintAccel");
+  PGMSTR(P_ACC_STR, "CNCAccel");
   PGMSTR(T_ACC_STR, "TravelAccel");
   config_line(P_ACC_STR, _ACCEL(X, acceleration), X_STR);
   config_line(P_ACC_STR, _ACCEL(Y, acceleration), Y_STR);
@@ -139,7 +139,7 @@ void GcodeSuite::M360() {
   config_line(T_ACC_STR, _ACCEL(Y, travel_acceleration), Y_STR);
   config_line(T_ACC_STR, _ACCEL(Z, travel_acceleration), Z_STR);
 
-  config_prefix(PSTR("PrinterType"));
+  config_prefix(PSTR("CNCType"));
   SERIAL_ECHOLNPGM(
     TERN_(DELTA,         "Delta")
     TERN_(IS_SCARA,      "SCARA")

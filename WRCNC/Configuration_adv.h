@@ -8,7 +8,7 @@
  *
  * Advanced settings.
  * Only change these if you know exactly what you're doing.
- * Some of these settings can damage your printer if improperly set!
+ * Some of these settings can damage your cnc if improperly set!
  *
  * Basic settings can be found in Configuration.h
  */
@@ -223,7 +223,7 @@
 // Motherboard Sensor options
 //
 #if TEMP_SENSOR_BOARD
-  #define THERMAL_PROTECTION_BOARD   // Halt the printer if the board sensor leaves the temp range below.
+  #define THERMAL_PROTECTION_BOARD   // Halt the cnc if the board sensor leaves the temp range below.
   #define BOARD_MINTEMP           8  // (°C)
   #define BOARD_MAXTEMP          70  // (°C)
   #ifndef TEMP_BOARD_PIN
@@ -246,7 +246,7 @@
 #endif
 
 /**
- * Thermal Protection provides additional protection to your printer from damage
+ * Thermal Protection provides additional protection to your cnc from damage
  * and fire. WRCNC always includes safe min and max temperature ranges which
  * protect against a broken or disconnected thermistor wire.
  *
@@ -1291,10 +1291,10 @@
     #endif
   #endif
 
-  // Include a page of printer information in the LCD Main Menu
+  // Include a page of cnc information in the LCD Main Menu
   #define LCD_INFO_MENU
   #if ENABLED(LCD_INFO_MENU)
-    //#define LCD_PRINTER_INFO_IS_BOOTSCREEN // Show bootscreen(s) instead of Printer Info pages
+    //#define LCD_PRINTER_INFO_IS_BOOTSCREEN // Show bootscreen(s) instead of CNC Info pages
   #endif
 
   // BACK menu items keep the highlight at the top
@@ -1346,7 +1346,7 @@
       #define LED_USER_PRESET_BLUE         0  // User defined BLUE value
       #define LED_USER_PRESET_WHITE      255  // User defined WHITE value
       #define LED_USER_PRESET_BRIGHTNESS 255  // User defined intensity
-      //#define LED_USER_PRESET_STARTUP       // Have the printer display the user preset color on startup
+      //#define LED_USER_PRESET_STARTUP       // Have the cnc display the user preset color on startup
     #endif
     #if ENABLED(NEO2_COLOR_PRESETS)
       #define NEO2_USER_PRESET_RED        255  // User defined RED value
@@ -1354,13 +1354,13 @@
       #define NEO2_USER_PRESET_BLUE         0  // User defined BLUE value
       #define NEO2_USER_PRESET_WHITE      255  // User defined WHITE value
       #define NEO2_USER_PRESET_BRIGHTNESS 255  // User defined intensity
-      //#define NEO2_USER_PRESET_STARTUP       // Have the printer display the user preset color on startup for the second strip
+      //#define NEO2_USER_PRESET_STARTUP       // Have the cnc display the user preset color on startup for the second strip
     #endif
   #endif
 
 #endif
 
-// LCD Print Progress options
+// LCD CNC Progress options
 #if EITHER(SDSUPPORT, LCD_SET_PROGRESS_MANUALLY)
   #if CAN_SHOW_REMAINING_TIME
     //#define SHOW_REMAINING_TIME         // Display estimated time to completion
@@ -1409,7 +1409,7 @@
 
   #define SD_PROCEDURE_DEPTH 1              // Increase if you need more nested M32 calls
 
-  #define SD_FINISHED_STEPPERRELEASE true   // Disable steppers when SD Print is finished
+  #define SD_FINISHED_STEPPERRELEASE true   // Disable steppers when SD CNC is finished
   #define SD_FINISHED_RELEASECOMMAND "M84"  // Use "M84XYE" to keep Z enabled so your bed stays in place
 
   // Reverse SD sort to show "more recent" files first, according to the card's FAT.
@@ -1425,7 +1425,7 @@
 
   //#define MEDIA_MENU_AT_TOP               // Force the media menu to be listed on the top of the main menu
 
-  #define EVENT_GCODE_SD_ABORT "G27" // G-code to run on SD Abort Print (e.g., "G28XY" or "G27")
+  #define EVENT_GCODE_SD_ABORT "G27" // G-code to run on SD Abort CNC (e.g., "G28XY" or "G27")
 
   #if ENABLED(PRINTER_EVENT_LEDS)
     #define PE_LEDS_COMPLETED_TIME  (30*60) // (seconds) Time to keep the LED "done" color before restoring normal illumination
@@ -1871,7 +1871,7 @@
   // Output extra debug info for Touch UI events
   //#define TOUCH_UI_DEBUG
 
-  // Developer menu (accessed by touching "About Printer" copyright text)
+  // Developer menu (accessed by touching "About CNC" copyright text)
   //#define TOUCH_UI_DEVELOPER_MENU
 #endif
 
@@ -1934,7 +1934,7 @@
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
     #define DOUBLECLICK_MAX_INTERVAL 1750   // Maximum interval between clicks, in milliseconds.
                                             // Note: Extra time may be added to mitigate controller latency.
-    #define MOVE_Z_WHEN_IDLE              // Jump to the move Z menu on doubleclick when printer is idle.
+    #define MOVE_Z_WHEN_IDLE              // Jump to the move Z menu on doubleclick when cnc is idle.
     #if ENABLED(MOVE_Z_WHEN_IDLE)
       #define MOVE_Z_IDLE_MULTIPLICATOR 1   // Multiply 1mm by this factor for the move step size.
     #endif
@@ -3745,9 +3745,9 @@
 #endif
 
 /**
- * Expected Printer Check
+ * Expected CNC Check
  * Add the M16 G-code to compare a string to the MACHINE_NAME.
- * M16 with a non-matching string causes the printer to halt.
+ * M16 with a non-matching string causes the cnc to halt.
  */
 //#define EXPECTED_PRINTER_CHECK
 
@@ -4043,7 +4043,7 @@
   //#define I2CPE_ENC_1_INVERT                              // Invert the direction of axis travel.
   #define I2CPE_ENC_1_EC_METHOD     I2CPE_ECM_MICROSTEP     // Type of error error correction.
   #define I2CPE_ENC_1_EC_THRESH     0.10                    // Threshold size for error (in mm) above which the
-                                                            // printer will attempt to correct the error; errors
+                                                            // cnc will attempt to correct the error; errors
                                                             // smaller than this are ignored to minimize effects of
                                                             // measurement noise / latency (filter).
 
@@ -4073,7 +4073,7 @@
   #define I2CPE_DEF_EC_THRESH       0.1
 
   //#define I2CPE_ERR_THRESH_ABORT  100.0                   // Threshold size for error (in mm) error on any given
-                                                            // axis after which the printer will abort. Comment out to
+                                                            // axis after which the cnc will abort. Comment out to
                                                             // disable abort behavior.
 
   #define I2CPE_TIME_TRUSTED        10000                   // After an encoder fault, there must be no further fault
@@ -4172,7 +4172,7 @@
 
   #define MAX7219_DEBUG_PLANNER_QUEUE 0  // Show the current planner queue depth on this and the next LED matrix row
                                          // If you experience stuttering, reboots, etc. this option can reveal how
-                                         // tweaks made to the configuration are affecting the printer in real-time.
+                                         // tweaks made to the configuration are affecting the cnc in real-time.
 #endif
 
 /**
@@ -4320,7 +4320,7 @@
 #endif // HAS_PRUSA_MMU2
 
 /**
- * Advanced Print Counter settings
+ * Advanced CNC Counter settings
  */
 #if ENABLED(PRINTCOUNTER)
   #define SERVICE_WARNING_BUZZES  3

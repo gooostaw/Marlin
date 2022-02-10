@@ -91,7 +91,7 @@
 #define BOARD_MKS_GEN_L_V21           1153  // MKS GEN L V2.1
 #define BOARD_COPYMASTER_3D           1154  // Copymaster 3D
 #define BOARD_ORTUR_4                 1155  // Ortur 4
-#define BOARD_TENLOG_D3_HERO          1156  // Tenlog D3 Hero IDEX printer
+#define BOARD_TENLOG_D3_HERO          1156  // Tenlog D3 Hero IDEX cnc
 #define BOARD_RAMPS_S_12_EEFB         1157  // Ramps S 1.2 by Sakul.cz (Power outputs: Hotend0, Hotend1, Fan, Bed)
 #define BOARD_RAMPS_S_12_EEEB         1158  // Ramps S 1.2 by Sakul.cz (Power outputs: Hotend0, Hotend1, Hotend2, Bed)
 #define BOARD_RAMPS_S_12_EFFB         1159  // Ramps S 1.2 by Sakul.cz (Power outputs: Hotend, Fan0, Fan1, Bed)

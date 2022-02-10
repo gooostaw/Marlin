@@ -46,7 +46,7 @@
     // Setup Confirmation screen
     file_to_print = touched_nr;
 
-    HandleUserConfirmationPopUp(VP_SD_FileSelectConfirm, nullptr, PSTR("Print file"), filelist.filename(), PSTR("from SD Card?"), true, true, false, true);
+    HandleUserConfirmationPopUp(VP_SD_FileSelectConfirm, nullptr, PSTR("CNC file"), filelist.filename(), PSTR("from SD Card?"), true, true, false, true);
   }
 
   void DGUSScreenHandler::DGUSLCD_SD_StartPrint(DGUS_VP_Variable &var, void *val_ptr) {
@@ -57,7 +57,7 @@
 
   void DGUSScreenHandler::DGUSLCD_SD_ResumePauseAbort(DGUS_VP_Variable &var, void *val_ptr) {
 
-    if (!ExtUI::isPrintingFromMedia()) return; // avoid race condition when user stays in this menu and printer finishes.
+    if (!ExtUI::isPrintingFromMedia()) return; // avoid race condition when user stays in this menu and cnc finishes.
     switch (swap16(*(uint16_t*)val_ptr)) {
       case 0: { // Resume
         if (ExtUI::isPrintingFromMediaPaused()) {

@@ -1443,7 +1443,7 @@ void WRCNCUI::draw_status_screen() {
       #endif
 
       /**
-       * Print plot position
+       * CNC plot position
        */
       lcd_put_wchar(_LCD_W_POS, 0, '(');
       lcd_put_u8str(ui8tostr3rj(x_plot));
@@ -1454,7 +1454,7 @@ void WRCNCUI::draw_status_screen() {
       #if LCD_HEIGHT <= 3   // 16x2 or 20x2 display
 
         /**
-         * Print Z values
+         * CNC Z values
          */
         _ZLABEL(_LCD_W_POS, 1);
         if (!isnan(ubl.z_values[x_plot][y_plot]))

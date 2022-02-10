@@ -26,7 +26,7 @@
 
 #if HAS_LEDS_OFF_FLAG
   #include "../../WRCNCCore.h" // for wait_for_user_response()
-  #include "../../feature/leds/printer_event_leds.h"
+  #include "../../feature/leds/cnc_event_leds.h"
 #endif
 
 #if ENABLED(EXTENSIBLE_UI)
@@ -49,7 +49,7 @@
 void GcodeSuite::M1001() {
   planner.synchronize();
 
-  // SD Printing is finished when the queue reaches M1001
+  // SD CNCing is finished when the queue reaches M1001
   card.flag.sdprinting = card.flag.sdprintdone = false;
 
   // If there's another auto#.g file to run...
@@ -77,11 +77,11 @@ void GcodeSuite::M1001() {
   // Update the status LED color
   #if HAS_LEDS_OFF_FLAG
     if (long_print) {
-      printerEventLEDs.onPrintCompleted();
+      cncEventLEDs.onPrintCompleted();
       TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(GET_TEXT_F(MSG_PRINT_DONE)));
       TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_do(PROMPT_USER_CONTINUE, GET_TEXT_F(MSG_PRINT_DONE), FPSTR(CONTINUE_STR)));
       TERN_(HAS_RESUME_CONTINUE, wait_for_user_response(SEC_TO_MS(TERN(HAS_WRCNCUI_MENU, PE_LEDS_COMPLETED_TIME, 30))));
-      printerEventLEDs.onResumeAfterWait();
+      cncEventLEDs.onResumeAfterWait();
     }
   #endif
 

@@ -45,7 +45,7 @@ SdFile::SdFile(const char *path, uint8_t oflag) : SdBaseFile(path, oflag) { }
 int16_t SdFile::write(const void *buf, uint16_t nbyte) { return SdBaseFile::write(buf, nbyte); }
 
 /**
- * Write a byte to a file. Required by the Arduino Print class.
+ * Write a byte to a file. Required by the Arduino CNC class.
  * \param[in] b the byte to be written.
  * Use writeError to check for errors.
  */
@@ -56,7 +56,7 @@ int16_t SdFile::write(const void *buf, uint16_t nbyte) { return SdBaseFile::writ
 #endif
 
 /**
- * Write a string to a file. Used by the Arduino Print class.
+ * Write a string to a file. Used by the Arduino CNC class.
  * \param[in] str Pointer to the string.
  * Use writeError to check for errors.
  */

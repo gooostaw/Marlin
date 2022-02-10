@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,7 +66,7 @@ void NextionTFT::Startup() {
   SEND_VALasTXT("tmppage.wrcnc", SHORT_BUILD_VERSION);
   SEND_VALasTXT("tmppage.compiled", __DATE__ " / " __TIME__);
   SEND_VALasTXT("tmppage.extruder", EXTRUDERS);
-  SEND_VALasTXT("tmppage.printer", MACHINE_NAME);
+  SEND_VALasTXT("tmppage.cnc", MACHINE_NAME);
   SEND_VALasTXT("tmppage.author", STRING_CONFIG_H_AUTHOR);
   SEND_VALasTXT("tmppage.released", STRING_DISTRIBUTION_DATE);
   SEND_VALasTXT("tmppage.bedx", X_BED_SIZE);
@@ -84,7 +84,7 @@ void NextionTFT::IdleLoop() {
   UpdateOnChange();
 }
 
-void NextionTFT::PrinterKilled(FSTR_P const error, FSTR_P const component) {
+void NextionTFT::CNCKilled(FSTR_P const error, FSTR_P const component) {
   SEND_TXT_END("page error");
   SEND_TXT_F("t3", F("Error"));
   SEND_TXT_F("t4", component);
@@ -92,20 +92,20 @@ void NextionTFT::PrinterKilled(FSTR_P const error, FSTR_P const component) {
   SEND_TXT_F("t6", F("Need reset"));
 }
 
-void NextionTFT::PrintFinished() {
+void NextionTFT::CNCFinished() {
   SEND_TXT_END("page printfinished");
 }
 
 void NextionTFT::ConfirmationRequest(const char * const msg) {
   SEND_VALasTXT("tmppage.M117", msg);
   #if NEXDEBUG(N_WRCNC)
-    DEBUG_ECHOLNPGM("ConfirmationRequest() ", msg, " printer_state:", printer_state);
+    DEBUG_ECHOLNPGM("ConfirmationRequest() ", msg, " cnc_state:", cnc_state);
   #endif
 }
 
 void NextionTFT::StatusChange(const char * const msg) {
   #if NEXDEBUG(N_WRCNC)
-    DEBUG_ECHOLNPGM("StatusChange() ", msg, "\nprinter_state:", printer_state);
+    DEBUG_ECHOLNPGM("StatusChange() ", msg, "\ncnc_state:", cnc_state);
   #endif
   SEND_VALasTXT("tmppage.M117", msg);
 }
@@ -143,7 +143,7 @@ bool NextionTFT::ReadTFTCommand() {
                          "\n> ", AS_CHAR(nextion_command[1]),
                          "\n> ", AS_CHAR(nextion_command[2]),
                          "\n> ", AS_CHAR(nextion_command[3]),
-                         "\nprinter_state:", printer_state);
+                         "\ncnc_state:", cnc_state);
     #endif
   }
   return command_ready;
@@ -220,13 +220,13 @@ void NextionTFT::PanelInfo(uint8_t req) {
     }
     break;
 
-  case 2: // Printer Info
+  case 2: // CNC Info
     if (!isPrinting()) {
       SEND_VAL("tmppage.connected", 1);
       SEND_VALasTXT("tmppage.wrcnc", SHORT_BUILD_VERSION);
       SEND_VALasTXT("tmppage.compiled", __DATE__ " / " __TIME__);
       SEND_VALasTXT("tmppage.extruder", EXTRUDERS);
-      SEND_VALasTXT("tmppage.printer", MACHINE_NAME);
+      SEND_VALasTXT("tmppage.cnc", MACHINE_NAME);
       SEND_VALasTXT("tmppage.author", STRING_CONFIG_H_AUTHOR);
       SEND_VALasTXT("tmppage.released", STRING_DISTRIBUTION_DATE);
       SEND_VALasTXT("tmppage.bedx", X_BED_SIZE);
@@ -309,7 +309,7 @@ void NextionTFT::PanelInfo(uint8_t req) {
     SEND_TRINAMIC_THRS("e1", E1);
     break;
 
-  case 27: // Printcounter
+  case 27: // CNCcounter
     #if ENABLED(PRINTCOUNTER)
       char buffer[21];
       #define SEND_PRINT_INFO(A, B) SEND_VALasTXT(A, B(buffer))

@@ -24,7 +24,7 @@
   #include "../../module/printcounter.h"
 
   //
-  // About Printer > Printer Stats
+  // About CNC > CNC Stats
   //
   void menu_info_stats() {
     if (ui.use_click()) return ui.go_back();
@@ -34,7 +34,7 @@
     char buffer[21];
 
     START_SCREEN();                                                                         // 12345678901234567890
-    VALUE_ITEM(MSG_INFO_PRINT_COUNT, i16tostr3left(stats.totalPrints), SS_LEFT);            // Print Count: 999
+    VALUE_ITEM(MSG_INFO_PRINT_COUNT, i16tostr3left(stats.totalPrints), SS_LEFT);            // CNC Count: 999
     VALUE_ITEM(MSG_INFO_COMPLETED_PRINTS, i16tostr3left(stats.finishedPrints), SS_LEFT);    // Completed  : 666
 
     STATIC_ITEM(MSG_INFO_PRINT_TIME, SS_LEFT);                                              // Total print Time:
@@ -76,7 +76,7 @@
 
 #if HAS_EXTRUDERS
   //
-  // About Printer > Thermistors
+  // About CNC > Thermistors
   //
   void menu_info_thermistors() {
     if (ui.use_click()) return ui.go_back();
@@ -195,13 +195,13 @@
 #endif
 
 //
-// About Printer > Board Info
+// About CNC > Board Info
 //
 void menu_info_board() {
   if (ui.use_click()) return ui.go_back();
 
   START_SCREEN();
-  STATIC_ITEM_P(PSTR(BOARD_INFO_NAME), SS_DEFAULT|SS_INVERT);      // MyPrinterController
+  STATIC_ITEM_P(PSTR(BOARD_INFO_NAME), SS_DEFAULT|SS_INVERT);      // MyCNCController
   #ifdef BOARD_WEBSITE_URL
     STATIC_ITEM_P(PSTR(BOARD_WEBSITE_URL), SS_LEFT);               // www.my3dprinter.com
   #endif
@@ -212,7 +212,7 @@ void menu_info_board() {
 }
 
 //
-// About Printer > Printer Info
+// About CNC > CNC Info
 //
 #if ENABLED(LCD_PRINTER_INFO_IS_BOOTSCREEN)
 
@@ -230,13 +230,13 @@ void menu_info_board() {
 
 #else
 
-  void menu_info_printer() {
+  void menu_info_cnc() {
     if (ui.use_click()) return ui.go_back();
     START_SCREEN();
     STATIC_ITEM(MSG_WRCNC, SS_DEFAULT|SS_INVERT);              // WRCNC
     STATIC_ITEM_P(PSTR(SHORT_BUILD_VERSION));                   // x.x.x-Branch
     STATIC_ITEM_P(PSTR(STRING_DISTRIBUTION_DATE));              // YYYY-MM-DD HH:MM
-    STATIC_ITEM_P(PSTR(MACHINE_NAME), SS_DEFAULT|SS_INVERT);    // My3DPrinter
+    STATIC_ITEM_P(PSTR(MACHINE_NAME), SS_DEFAULT|SS_INVERT);    // My3DCNC
     STATIC_ITEM_P(PSTR(WEBSITE_URL));                           // www.my3dprinter.com
     PSTRING_ITEM(MSG_INFO_EXTRUDERS, STRINGIFY(EXTRUDERS), SS_CENTER); // Extruders: 2
     #if HAS_LEVELING
@@ -254,7 +254,7 @@ void menu_info_board() {
 #endif
 
 //
-// "About Printer" submenu
+// "About CNC" submenu
 //
 void menu_info() {
   START_MENU();
@@ -262,7 +262,7 @@ void menu_info() {
   #if ENABLED(LCD_PRINTER_INFO_IS_BOOTSCREEN)
     SUBMENU(MSG_INFO_PRINTER_MENU, TERN(SHOW_CUSTOM_BOOTSCREEN, menu_show_custom_bootscreen, menu_show_wrcnc_bootscreen));
   #else
-    SUBMENU(MSG_INFO_PRINTER_MENU, menu_info_printer);           // Printer Info >
+    SUBMENU(MSG_INFO_PRINTER_MENU, menu_info_cnc);           // CNC Info >
     SUBMENU(MSG_INFO_BOARD_MENU, menu_info_board);               // Board Info >
     #if HAS_EXTRUDERS
       SUBMENU(MSG_INFO_THERMISTOR_MENU, menu_info_thermistors);  // Thermistors >
@@ -270,7 +270,7 @@ void menu_info() {
   #endif
 
   #if ENABLED(PRINTCOUNTER)
-    SUBMENU(MSG_INFO_STATS_MENU, menu_info_stats);               // Printer Stats >
+    SUBMENU(MSG_INFO_STATS_MENU, menu_info_stats);               // CNC Stats >
   #endif
 
   #if HAS_GAMES

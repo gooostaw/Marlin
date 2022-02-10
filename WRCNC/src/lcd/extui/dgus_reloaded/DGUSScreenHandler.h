@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ public:
   static void Ready();
   static void Loop();
 
-  static void PrinterKilled(FSTR_P const error, FSTR_P const component);
+  static void CNCKilled(FSTR_P const error, FSTR_P const component);
   static void UserConfirmRequired(const char * const msg);
   static void SettingsReset();
   static void StoreSettings(char *buff);
@@ -47,9 +47,9 @@ public:
 
   static void PlayTone(const uint16_t frequency, const uint16_t duration);
   static void MeshUpdate(const int8_t xpos, const int8_t ypos);
-  static void PrintTimerStarted();
-  static void PrintTimerPaused();
-  static void PrintTimerStopped();
+  static void CNCTimerStarted();
+  static void CNCTimerPaused();
+  static void CNCTimerStopped();
   static void FilamentRunout(const ExtUI::extruder_t extruder);
 
   #if ENABLED(SDSUPPORT)
@@ -83,7 +83,7 @@ public:
 
   static void TriggerEEPROMSave();
 
-  static bool IsPrinterIdle();
+  static bool IsCNCIdle();
 
   static uint8_t debug_count;
 

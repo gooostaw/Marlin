@@ -528,7 +528,7 @@ void menu_advanced_steps_per_mm() {
 }
 
 void menu_advanced_settings() {
-  const bool is_busy = printer_busy();
+  const bool is_busy = cnc_busy();
 
   #if ENABLED(SD_FIRMWARE_UPDATE)
     bool sd_update_state = settings.sd_update_status();

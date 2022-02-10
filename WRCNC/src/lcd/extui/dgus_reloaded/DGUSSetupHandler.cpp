@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@
 #include "../../../gcode/queue.h"
 
 #if ENABLED(SDSUPPORT)
-  bool DGUSSetupHandler::Print() {
+  bool DGUSSetupHandler::CNC() {
     dgus_screen_handler.filelist.refresh();
 
     while (!dgus_screen_handler.filelist.isAtRootDir()) {
@@ -46,7 +46,7 @@
   }
 #endif
 
-bool DGUSSetupHandler::PrintStatus() {
+bool DGUSSetupHandler::CNCStatus() {
   if (ExtUI::isPrinting() || ExtUI::isPrintingPaused()) {
     return true;
   }
@@ -55,7 +55,7 @@ bool DGUSSetupHandler::PrintStatus() {
   return false;
 }
 
-bool DGUSSetupHandler::PrintAdjust() {
+bool DGUSSetupHandler::CNCAdjust() {
   if (ExtUI::isPrinting() || ExtUI::isPrintingPaused()) {
     return true;
   }
@@ -67,7 +67,7 @@ bool DGUSSetupHandler::PrintAdjust() {
 bool DGUSSetupHandler::LevelingMenu() {
   ExtUI::setLevelingActive(dgus_screen_handler.leveling_active);
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return false;
   }
@@ -98,7 +98,7 @@ bool DGUSSetupHandler::LevelingManual() {
     return true;
   }
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return false;
   }
@@ -117,7 +117,7 @@ bool DGUSSetupHandler::LevelingManual() {
 bool DGUSSetupHandler::LevelingOffset() {
   dgus_screen_handler.offset_steps = DGUS_Data::StepSize::MMP1;
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return false;
   }
@@ -174,7 +174,7 @@ bool DGUSSetupHandler::Filament() {
 bool DGUSSetupHandler::Move() {
   dgus_screen_handler.move_steps = DGUS_Data::StepSize::MM10;
 
-  if (!dgus_screen_handler.IsPrinterIdle()) {
+  if (!dgus_screen_handler.IsCNCIdle()) {
     dgus_screen_handler.SetStatusMessage(FPSTR(DGUS_MSG_BUSY));
     return false;
   }

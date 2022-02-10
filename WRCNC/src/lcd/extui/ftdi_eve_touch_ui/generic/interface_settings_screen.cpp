@@ -179,7 +179,7 @@ void InterfaceSettingsScreen::onIdle() {
 }
 
 void InterfaceSettingsScreen::failSafeSettings() {
-  // Reset settings that may make the printer interface unusable.
+  // Reset settings that may make the cnc interface unusable.
   CLCD::mem_write_32(CLCD::REG::ROTATE, 0);
   CLCD::default_touch_transform();
   CLCD::default_display_orientation();

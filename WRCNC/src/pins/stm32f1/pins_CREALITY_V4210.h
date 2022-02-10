@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (C) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -154,7 +154,7 @@
 #define ONBOARD_SPI_DEVICE                     1
 #define ONBOARD_SD_CS_PIN                   PA4   // SDSS
 #define SDIO_SUPPORT
-#define NO_SD_HOST_DRIVE                          // This board's SD is only seen by the printer
+#define NO_SD_HOST_DRIVE                          // This board's SD is only seen by the cnc
 
 #if ENABLED(CR10_STOCKDISPLAY)
 

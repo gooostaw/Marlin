@@ -32,7 +32,7 @@ e-mail   :  support@circuitsathome.com
 void E_Notifyc(char c, int lvl);
 
 template <class T>
-void PrintHex(T val, int lvl) {
+void CNCHex(T val, int lvl) {
         int num_nybbles = sizeof (T) * 2;
 
         do {
@@ -43,7 +43,7 @@ void PrintHex(T val, int lvl) {
 }
 
 template <class T>
-void PrintBin(T val, int lvl) {
+void CNCBin(T val, int lvl) {
         for(T mask = (((T)1) << ((sizeof (T) << 3) - 1)); mask; mask >>= 1)
                 if(val & mask)
                         E_Notifyc('1', lvl);
@@ -63,7 +63,7 @@ void SerialPrintHex(T val) {
 }
 
 template <class T>
-void PrintHex2(Print *prn, T val) {
+void CNCHex2(CNC *prn, T val) {
         T mask = (((T)1) << (((sizeof (T) << 1) - 1) << 2));
 
         while(mask > 1) {
@@ -77,7 +77,7 @@ void PrintHex2(Print *prn, T val) {
 
 #ifdef DEBUG_USB_HOST
 template <class T> void D_PrintHex(T val, int lvl) {
-        PrintHex<T > (val, lvl);
+        CNCHex<T > (val, lvl);
 #else
 template <class T> void D_PrintHex(NOTUSED(T val), NOTUSED(int lvl)) {
 #endif
@@ -85,7 +85,7 @@ template <class T> void D_PrintHex(NOTUSED(T val), NOTUSED(int lvl)) {
 
 #ifdef DEBUG_USB_HOST
 template <class T> void D_PrintBin(T val, int lvl) {
-        PrintBin<T > (val, lvl);
+        CNCBin<T > (val, lvl);
 #else
 template <class T> void D_PrintBin(NOTUSED(T val), NOTUSED(int lvl)) {
 #endif

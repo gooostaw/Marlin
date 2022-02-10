@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -129,13 +129,13 @@ void DGUSScreenHandler::Loop() {
 
   if (current_screen == DGUS_Screen::WAIT
       && ((wait_continue && !wait_for_user)
-          || (!wait_continue && IsPrinterIdle()))
+          || (!wait_continue && IsCNCIdle()))
   ) {
     MoveToScreen(wait_return_screen, true);
     return;
   }
 
-  if (current_screen == DGUS_Screen::LEVELING_PROBING && IsPrinterIdle()) {
+  if (current_screen == DGUS_Screen::LEVELING_PROBING && IsCNCIdle()) {
     dgus_display.PlaySound(3);
 
     SetStatusMessage(ExtUI::getMeshValid() ? F("Probing successful") : F("Probing failed"));
@@ -149,7 +149,7 @@ void DGUSScreenHandler::Loop() {
     return;
   }
 
-  if (eeprom_save > 0 && ELAPSED(ms, eeprom_save) && IsPrinterIdle()) {
+  if (eeprom_save > 0 && ELAPSED(ms, eeprom_save) && IsCNCIdle()) {
     eeprom_save = 0;
     queue.enqueue_now_P(DGUS_CMD_EEPROM_SAVE);
     return;
@@ -158,7 +158,7 @@ void DGUSScreenHandler::Loop() {
   dgus_display.Loop();
 }
 
-void DGUSScreenHandler::PrinterKilled(FSTR_P const error, FSTR_P const component) {
+void DGUSScreenHandler::CNCKilled(FSTR_P const error, FSTR_P const component) {
   SetMessageLinePGM(FTOP(error), 1);
   SetMessageLinePGM(FTOP(component), 2);
   SetMessageLinePGM(NUL_STR, 3);
@@ -264,16 +264,16 @@ void DGUSScreenHandler::MeshUpdate(const int8_t xpos, const int8_t ypos) {
   TriggerFullUpdate();
 }
 
-void DGUSScreenHandler::PrintTimerStarted() {
+void DGUSScreenHandler::CNCTimerStarted() {
   TriggerScreenChange(DGUS_Screen::PRINT_STATUS);
 }
 
-void DGUSScreenHandler::PrintTimerPaused() {
+void DGUSScreenHandler::CNCTimerPaused() {
   dgus_display.PlaySound(3);
   TriggerFullUpdate();
 }
 
-void DGUSScreenHandler::PrintTimerStopped() {
+void DGUSScreenHandler::CNCTimerStopped() {
   if (current_screen != DGUS_Screen::PRINT_STATUS && current_screen != DGUS_Screen::PRINT_ADJUST)
     return;
 
@@ -420,7 +420,7 @@ void DGUSScreenHandler::TriggerEEPROMSave() {
   eeprom_save = ExtUI::safe_millis() + 500;
 }
 
-bool DGUSScreenHandler::IsPrinterIdle() {
+bool DGUSScreenHandler::IsCNCIdle() {
   return (!ExtUI::commandsInQueue()
           && !ExtUI::isMoving());
 }

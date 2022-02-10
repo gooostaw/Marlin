@@ -18,7 +18,7 @@
 #define X_MAX_PIN                             79
 
 // This board has headers for Z-min, Z-max and IND_S_5V *but* as the bq team
-// decided to ship the printer only with the probe and no additional Z-min
+// decided to ship the cnc only with the probe and no additional Z-min
 // endstop and the instruction manual advises the user to connect the probe to
 // IND_S_5V the option Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN will not work.
 #if ENABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)

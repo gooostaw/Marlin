@@ -288,8 +288,8 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
   KEEPALIVE_STATE(IN_HANDLER);
 
  /**
-  * Block all Gcodes except M511 Unlock Printer, if printer is locked
-  * Will still block Gcodes if M511 is disabled, in which case the printer should be unlocked via LCD Menu
+  * Block all Gcodes except M511 Unlock CNC, if cnc is locked
+  * Will still block Gcodes if M511 is disabled, in which case the cnc should be unlocked via LCD Menu
   */
   #if ENABLED(PASSWORD_FEATURE)
     if (password.is_locked && !parser.is_command('M', 511)) {
@@ -476,7 +476,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if ENABLED(EXPECTED_PRINTER_CHECK)
-        case 16: M16(); break;                                    // M16: Expected printer check
+        case 16: M16(); break;                                    // M16: Expected cnc check
       #endif
 
       case 17: M17(); break;                                      // M17: Enable all stepper motors
@@ -670,7 +670,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       case 201: M201(); break;                                    // M201: Set max acceleration for print moves (units/s^2)
 
       #if 0
-        case 202: M202(); break;                                  // M202: Not used for Sprinter/grbl gen6
+        case 202: M202(); break;                                  // M202: Not used for Marlin/grbl gen6
       #endif
 
       case 203: M203(); break;                                    // M203: Set max feedrate (units/sec)
@@ -850,9 +850,9 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if ENABLED(PASSWORD_FEATURE)
-        case 510: M510(); break;                                  // M510: Lock Printer
+        case 510: M510(); break;                                  // M510: Lock CNC
         #if ENABLED(PASSWORD_UNLOCK_GCODE)
-          case 511: M511(); break;                                // M511: Unlock Printer
+          case 511: M511(); break;                                // M511: Unlock CNC
         #endif
         #if ENABLED(PASSWORD_CHANGE_GCODE)
           case 512: M512(); break;                                // M512: Set/Change/Remove Password
@@ -922,7 +922,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if HAS_PTC
-        case 871: M871(); break;                                  // M871: Print/reset/clear first layer temperature offset values
+        case 871: M871(); break;                                  // M871: CNC/reset/clear first layer temperature offset values
       #endif
 
       #if ENABLED(LIN_ADVANCE)

@@ -586,7 +586,7 @@ void WRCNCUI::clear_lcd() { } // Automatically cleared by Picture Loop
         lcd_put_u8str(ftostr52(lpos.y));
       }
 
-      // Print plot position
+      // CNC plot position
       if (PAGE_CONTAINS(LCD_PIXEL_HEIGHT - (INFO_FONT_HEIGHT - 1), LCD_PIXEL_HEIGHT)) {
         lcd_put_wchar(5, LCD_PIXEL_HEIGHT, '(');
         u8g.print(x_plot);

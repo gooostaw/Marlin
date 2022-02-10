@@ -842,7 +842,7 @@ void WRCNCUI::draw_status_screen() {
   #endif
 
   //
-  // Line 6..8 Temperatures, FAN for printer or Cooler, Flowmetter, Ampermeter, Cutter for laser/spindle
+  // Line 6..8 Temperatures, FAN for cnc or Cooler, Flowmetter, Ampermeter, Cutter for laser/spindle
   //
 
   #if HAS_HOTEND
@@ -1044,7 +1044,7 @@ void WRCNCUI::draw_status_screen() {
       *fb++ = TLC;   //top left corner - marker for plot parameters
       *fb = (GRID_MAX_POINTS_X << 4) + GRID_MAX_POINTS_Y; //set mesh size
 
-      // Print plot position
+      // CNC plot position
       lcd.setCursor(_LCD_W_POS, 0);
       *fb++ = '(';  lcd.print(i16tostr3left(x_plot));
       *fb++ = ',';  lcd.print(i16tostr3left(y_plot)); *fb = ')';

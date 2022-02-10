@@ -11,7 +11,7 @@
  */
 
 /***********************************************************************
- * A Utility to play tunes using the buzzer in the printer controller. *
+ * A Utility to play tunes using the buzzer in the cnc controller. *
  * See Tunes.h for note and tune definitions.                          *
  ***********************************************************************/
 

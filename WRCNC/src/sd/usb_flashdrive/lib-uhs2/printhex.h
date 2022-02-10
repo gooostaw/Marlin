@@ -31,7 +31,7 @@
 void E_Notifyc(char c, int lvl);
 
 template <class T>
-void PrintHex(T val, int lvl) {
+void CNCHex(T val, int lvl) {
   int num_nybbles = sizeof (T) * 2;
   do {
     char v = 48 + (((val >> (num_nybbles - 1) * 4)) & 0x0F);
@@ -41,7 +41,7 @@ void PrintHex(T val, int lvl) {
 }
 
 template <class T>
-void PrintBin(T val, int lvl) {
+void CNCBin(T val, int lvl) {
   for (T mask = (((T)1) << ((sizeof (T) << 3) - 1)); mask; mask >>= 1)
     E_Notifyc(val & mask ? '1' : '0', lvl);
 }
@@ -57,7 +57,7 @@ void SerialPrintHex(T val) {
 }
 
 template <class T>
-void PrintHex2(Print *prn, T val) {
+void CNCHex2(CNC *prn, T val) {
   T mask = (((T)1) << (((sizeof (T) << 1) - 1) << 2));
   while (mask > 1) {
     if (val < mask) prn->print("0");
@@ -68,13 +68,13 @@ void PrintHex2(Print *prn, T val) {
 
 template <class T> void D_PrintHex(T val __attribute__((unused)), int lvl __attribute__((unused))) {
   #ifdef DEBUG_USB_HOST
-    PrintHex<T > (val, lvl);
+    CNCHex<T > (val, lvl);
   #endif
 }
 
 template <class T>
 void D_PrintBin(T val, int lvl) {
   #ifdef DEBUG_USB_HOST
-    PrintBin<T > (val, lvl);
+    CNCBin<T > (val, lvl);
   #endif
 }

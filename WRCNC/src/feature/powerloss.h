@@ -116,7 +116,7 @@ typedef struct {
 
 } job_recovery_info_t;
 
-class PrintJobRecovery {
+class CNCJobRecovery {
   public:
     static const char filename[5];
 
@@ -204,4 +204,4 @@ class PrintJobRecovery {
     #endif
 };
 
-extern PrintJobRecovery recovery;
+extern CNCJobRecovery recovery;

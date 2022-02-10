@@ -205,7 +205,7 @@ const uint16_t MKSList_Print[] PROGMEM = {
   VP_T_Bed_Is, VP_T_Bed_Set,
   // FAN
   VP_Fan0_Percentage,
-  // Print Percent
+  // CNC Percent
   VP_PrintProgress_Percentage,
 
   VP_PrintTime,
@@ -451,8 +451,8 @@ const struct VPMapping VPMap[] PROGMEM = {
   { MKSLCD_PAUSE_SETTING_EX2, MKSList_EXTRUE },               // Page 61
   { MKSLCD_SCREEN_LEVEL, MKSList_LEVEL },                     // Page 5
   { MKSLCD_SCREEN_MOVE, MKSList_MOVE },                       // Page 6
-  { MKSLCD_SCREEN_PRINT, MKSList_Print },                     // Page 7
-  { MKSLCD_SCREEN_PAUSE, MKSList_Print },                     // Page 26
+  { MKSLCD_SCREEN_PRINT, MKSList_CNC },                     // Page 7
+  { MKSLCD_SCREEN_PAUSE, MKSList_CNC },                     // Page 26
   { MKSLCD_SCREEN_CHOOSE_FILE, MKSList_SD_File },             // Page 15
   { MKSLCD_SCREEN_MOTOR_PLUSE, MKSList_Pluse },               // Page 51
   { MKSLCD_SCREEN_MOTOR_SPEED, MKSList_MaxSpeed },            // Page 55
@@ -611,7 +611,7 @@ const struct DGUS_VP_Variable ListOfVP[] PROGMEM = {
   VPHELPER(VP_Level_Point_Five_X, &mks_corner_offsets[4].x, ScreenHandler.HandleChangeLevelPoint_MKS, ScreenHandler.DGUSLCD_SendWordValueToDisplay),
   VPHELPER(VP_Level_Point_Five_Y, &mks_corner_offsets[4].y, ScreenHandler.HandleChangeLevelPoint_MKS, ScreenHandler.DGUSLCD_SendWordValueToDisplay),
 
-  // Print Progress
+  // CNC Progress
   VPHELPER(VP_PrintProgress_Percentage, nullptr, nullptr, ScreenHandler.DGUSLCD_SendPrintProgressToDisplay),
 
   // LCD Control
@@ -620,7 +620,7 @@ const struct DGUS_VP_Variable ListOfVP[] PROGMEM = {
   // SD File - Back
   VPHELPER(VP_SD_FileSelect_Back, nullptr, ScreenHandler.SD_FileBack, nullptr),
 
-  // Print Time
+  // CNC Time
   VPHELPER_STR(VP_PrintTime, nullptr, VP_PrintTime_LEN, nullptr, ScreenHandler.DGUSLCD_SendPrintTimeToDisplay_MKS),
 
   #if ENABLED(PRINTCOUNTER)
@@ -760,7 +760,7 @@ const struct DGUS_VP_Variable ListOfVP[] PROGMEM = {
       VPHELPER(VP_OFFSET_Z, &probe.offset.z, ScreenHandler.GetOffsetValue,ScreenHandler.DGUSLCD_SendFloatAsLongValueToDisplay<2>),
     #endif
   #else
-    VPHELPER(VP_SD_FileSelected, nullptr, ScreenHandler.PrintReturn, nullptr),
+    VPHELPER(VP_SD_FileSelected, nullptr, ScreenHandler.CNCReturn, nullptr),
   #endif
 
   #if ENABLED(DGUS_UI_WAITING)

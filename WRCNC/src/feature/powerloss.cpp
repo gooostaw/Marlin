@@ -13,17 +13,17 @@
 #include "powerloss.h"
 #include "../core/macros.h"
 
-bool PrintJobRecovery::enabled; // Initialized by settings.load()
+bool CNCJobRecovery::enabled; // Initialized by settings.load()
 
-SdFile PrintJobRecovery::file;
-job_recovery_info_t PrintJobRecovery::info;
-const char PrintJobRecovery::filename[5] = "/PLR";
-uint8_t PrintJobRecovery::queue_index_r;
-uint32_t PrintJobRecovery::cmd_sdpos, // = 0
-         PrintJobRecovery::sdpos[BUFSIZE];
+SdFile CNCJobRecovery::file;
+job_recovery_info_t CNCJobRecovery::info;
+const char CNCJobRecovery::filename[5] = "/PLR";
+uint8_t CNCJobRecovery::queue_index_r;
+uint32_t CNCJobRecovery::cmd_sdpos, // = 0
+         CNCJobRecovery::sdpos[BUFSIZE];
 
 #if HAS_DWIN_E3V2_BASIC
-  bool PrintJobRecovery::dwin_flag; // = false
+  bool CNCJobRecovery::dwin_flag; // = false
 #endif
 
 #include "../sd/cardreader.h"
@@ -43,7 +43,7 @@ uint32_t PrintJobRecovery::cmd_sdpos, // = 0
 #define DEBUG_OUT ENABLED(DEBUG_POWER_LOSS_RECOVERY)
 #include "../core/debug_out.h"
 
-PrintJobRecovery recovery;
+CNCJobRecovery recovery;
 
 #ifndef POWER_LOSS_PURGE_LEN
   #define POWER_LOSS_PURGE_LEN 0
@@ -59,12 +59,12 @@ PrintJobRecovery recovery;
 /**
  * Clear the recovery info
  */
-void PrintJobRecovery::init() { memset(&info, 0, sizeof(info)); }
+void CNCJobRecovery::init() { memset(&info, 0, sizeof(info)); }
 
 /**
  * Enable or disable then call changed()
  */
-void PrintJobRecovery::enable(const bool onoff) {
+void CNCJobRecovery::enable(const bool onoff) {
   enabled = onoff;
   changed();
 }
@@ -74,7 +74,7 @@ void PrintJobRecovery::enable(const bool onoff) {
  *  - Enabled: Purge the job recovery file
  *  - Disabled: Write the job recovery file
  */
-void PrintJobRecovery::changed() {
+void CNCJobRecovery::changed() {
   if (!enabled)
     purge();
   else if (IS_SD_PRINTING())
@@ -82,11 +82,11 @@ void PrintJobRecovery::changed() {
 }
 
 /**
- * Check for Print Job Recovery during setup()
+ * Check for CNC Job Recovery during setup()
  *
  * If a saved state exists send 'M1000 S' to initiate job recovery.
  */
-void PrintJobRecovery::check() {
+void CNCJobRecovery::check() {
   //if (!card.isMounted()) card.mount();
   if (card.isMounted()) {
     load();
@@ -98,7 +98,7 @@ void PrintJobRecovery::check() {
 /**
  * Delete the recovery file and clear the recovery data
  */
-void PrintJobRecovery::purge() {
+void CNCJobRecovery::purge() {
   init();
   card.removeJobRecoveryFile();
 }
@@ -106,7 +106,7 @@ void PrintJobRecovery::purge() {
 /**
  * Load the recovery data, if it exists
  */
-void PrintJobRecovery::load() {
+void CNCJobRecovery::load() {
   if (exists()) {
     open(true);
     (void)file.read(&info, sizeof(info));
@@ -118,7 +118,7 @@ void PrintJobRecovery::load() {
 /**
  * Set info fields that won't change
  */
-void PrintJobRecovery::prepare() {
+void CNCJobRecovery::prepare() {
   card.getAbsFilenameInCWD(info.sd_filename);  // SD filename
   cmd_sdpos = 0;
 }
@@ -126,7 +126,7 @@ void PrintJobRecovery::prepare() {
 /**
  * Save the current machine state to the power-loss recovery file
  */
-void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER_LOSS_ZRAISE*/, const bool raised/*=false*/) {
+void CNCJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER_LOSS_ZRAISE*/, const bool raised/*=false*/) {
 
   // We don't check IS_SD_PRINTING here so a save may occur during a pause
 
@@ -219,7 +219,7 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POW
 
   #if ENABLED(BACKUP_POWER_SUPPLY)
 
-    void PrintJobRecovery::retract_and_lift(const_float_t zraise) {
+    void CNCJobRecovery::retract_and_lift(const_float_t zraise) {
       #if POWER_LOSS_RETRACT_LEN || POWER_LOSS_ZRAISE
 
         gcode.set_relative_mode(true);  // Use relative coordinates
@@ -255,7 +255,7 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POW
    *  - If backup power is available Retract E and Raise Z
    *  - Go to the KILL screen
    */
-  void PrintJobRecovery::_outage() {
+  void CNCJobRecovery::_outage() {
     #if ENABLED(BACKUP_POWER_SUPPLY)
       static bool lock = false;
       if (lock) return; // No re-entrance from idle() during retract_and_lift()
@@ -291,7 +291,7 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POW
 /**
  * Save the recovery info the recovery file
  */
-void PrintJobRecovery::write() {
+void CNCJobRecovery::write() {
 
   debug(F("Write"));
 
@@ -305,7 +305,7 @@ void PrintJobRecovery::write() {
 /**
  * Resume the saved print job
  */
-void PrintJobRecovery::resume() {
+void CNCJobRecovery::resume() {
 
   char cmd[MAX_CMD_SIZE+16], str_1[16], str_2[16];
 
@@ -557,7 +557,7 @@ void PrintJobRecovery::resume() {
 
 #if ENABLED(DEBUG_POWER_LOSS_RECOVERY)
 
-  void PrintJobRecovery::debug(FSTR_P const prefix) {
+  void CNCJobRecovery::debug(FSTR_P const prefix) {
     DEBUG_ECHOF(prefix);
     DEBUG_ECHOLNPGM(" Job Recovery Info...\nvalid_head:", info.valid_head, " valid_foot:", info.valid_foot);
     if (info.valid_head) {

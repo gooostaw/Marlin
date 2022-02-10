@@ -305,7 +305,7 @@ else ifeq ($(HARDWARE_MOTHERBOARD),1153)
 else ifeq ($(HARDWARE_MOTHERBOARD),1154)
 # Ortur 4
 else ifeq ($(HARDWARE_MOTHERBOARD),1155)
-# Tenlog D3 Hero IDEX printer
+# Tenlog D3 Hero IDEX cnc
 else ifeq ($(HARDWARE_MOTHERBOARD),1156)
 # Ramps S 1.2 by Sakul.cz (Power outputs: Hotend0, Hotend1, Fan, Bed)
 else ifeq ($(HARDWARE_MOTHERBOARD),1157)
@@ -847,7 +847,7 @@ ifeq ($(HARDWARE_VARIANT), Teensy)
   VPATH += $(ARDUINO_INSTALL_DIR)/hardware/teensy/cores/teensy
 endif
 
-LIB_CXXSRC = WMath.cpp WString.cpp Print.cpp SPI.cpp
+LIB_CXXSRC = WMath.cpp WString.cpp CNC.cpp SPI.cpp
 
 ifeq ($(NEOPIXEL), 1)
   LIB_CXXSRC += Adafruit_NeoPixel.cpp

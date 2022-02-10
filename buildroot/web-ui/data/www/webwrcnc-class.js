@@ -97,7 +97,7 @@ class wmLogItem {
     else if (msg === "Not SD printing") {
       jsLog.Debug("WSMessage match: " + msg);
       li.Text = "Ack: "+msg;
-      WmControls.SetPrinterStatusInfo(false, msg);
+      WmControls.SetCNCStatusInfo(false, msg);
     }
     else if (msg.substring(0, 5) === "echo:") {
       if (msg.substring(5, 21) === "busy: processing") {
@@ -369,13 +369,13 @@ var wmGCommands = {
   SdInit        : new wmGCommandItem('M21',null,null,'Init SD card'),
   SdRelease     : new wmGCommandItem('M22',null,null,'Release SD card'),
   SdFileSel     : new wmGCommandItem('M23','{0}','','Select an SD file'),
-  SdFilePrint   : new wmGCommandItem('M24','{0}','','Start an SD print'),
+  SdFileCNC   : new wmGCommandItem('M24','{0}','','Start an SD print'),
   SdPrintStatus : new wmGCommandItem('M27',null,null,'SD print status'),
   SdPrintReport : new wmGCommandItem('M27','S{0}',5,'SD print status report'),
   SdFileStart   : new wmGCommandItem('M28','{0}','','Start SD write'),
   SdFileStop    : new wmGCommandItem('M29',null,null,'Stop SD write'),
   SdFileDel     : new wmGCommandItem('M30','{0}','','Delete an SD file'),
-  PrintTime     : new wmGCommandItem('M31',null,null,'Print time'),
+  CNCTime     : new wmGCommandItem('M31',null,null,'Print time'),
   FanOn         : new wmGCommandItem('M106','S{0}',128,'Set fan on with speed'),
   FanOff        : new wmGCommandItem('M107',null,null,'Set fan off'),
   GetPosition   : new wmGCommandItem('M114',null,null,'Get Current Position'),

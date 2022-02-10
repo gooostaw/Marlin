@@ -40,7 +40,7 @@ uint8_t _getc();
 
 //extern "C" volatile uint32_t _millis;
 
-//arduino: Print.h
+//arduino: CNC.h
 #define DEC 10
 #define HEX 16
 #define OCT  8

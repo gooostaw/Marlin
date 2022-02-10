@@ -11,14 +11,14 @@
 #include "../../gcode.h"
 
 //
-// M510: Lock Printer
+// M510: Lock CNC
 //
 void GcodeSuite::M510() {
   password.lock_machine();
 }
 
 //
-// M511: Unlock Printer
+// M511: Unlock CNC
 //
 #if ENABLED(PASSWORD_UNLOCK_GCODE)
 

@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -533,7 +533,7 @@ void CrealityDWINClass::Redraw_Menu(bool lastprocess/*=true*/, bool lastselectio
       Draw_Menu((lastmenu) ? last_menu : active_menu, (lastselection) ? last_selection : selection, (lastmenu) ? 0 : scrollpos);
       break;
     case Main:  Draw_Main_Menu((lastselection) ? last_selection : selection); break;
-    case Print: Draw_Print_Screen(); break;
+    case CNC: Draw_Print_Screen(); break;
     case File:  Draw_SD_List(); break;
     default: break;
   }
@@ -551,11 +551,11 @@ void CrealityDWINClass::Main_Menu_Icons() {
   if (selection == 0) {
     DWIN_ICON_Show(ICON, ICON_Print_1, 17, 130);
     DWIN_Draw_Rectangle(0, GetColor(eeprom_settings.highlight_box, Color_White), 17, 130, 126, 229);
-    DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Blue, 52, 200, F("Print"));
+    DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Blue, 52, 200, F("CNC"));
   }
   else {
     DWIN_ICON_Show(ICON, ICON_Print_0, 17, 130);
-    DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Blue, 52, 200, F("Print"));
+    DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Blue, 52, 200, F("CNC"));
   }
   if (selection == 1) {
     DWIN_ICON_Show(ICON, ICON_Prepare_1, 145, 130);
@@ -609,7 +609,7 @@ void CrealityDWINClass::Draw_Main_Menu(uint8_t select/*=0*/) {
   Main_Menu_Icons();
 }
 
-void CrealityDWINClass::Print_Screen_Icons() {
+void CrealityDWINClass::CNC_Screen_Icons() {
   if (selection == 0) {
     DWIN_ICON_Show(ICON, ICON_Setup_1, 8, 252);
     DWIN_Draw_Rectangle(0, GetColor(eeprom_settings.highlight_box, Color_White), 8, 252, 87, 351);
@@ -632,11 +632,11 @@ void CrealityDWINClass::Print_Screen_Icons() {
     if (selection == 1) {
       DWIN_ICON_Show(ICON, ICON_Continue_1, 96, 252);
       DWIN_Draw_Rectangle(0, GetColor(eeprom_settings.highlight_box, Color_White), 96, 252, 175, 351);
-      DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Blue, 114, 322, F("Print"));
+      DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Blue, 114, 322, F("CNC"));
     }
     else {
       DWIN_ICON_Show(ICON, ICON_Continue_0, 96, 252);
-      DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Blue, 114, 322, F("Print"));
+      DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Blue, 114, 322, F("CNC"));
     }
   }
   else {
@@ -657,8 +657,8 @@ void CrealityDWINClass::Draw_Print_Screen() {
   selection = 0;
   Clear_Screen();
   DWIN_Draw_Rectangle(1, Color_Bg_Black, 8, 352, DWIN_WIDTH - 8, 376);
-  Draw_Title("Printing...");
-  Print_Screen_Icons();
+  Draw_Title("CNCing...");
+  CNC_Screen_Icons();
   DWIN_ICON_Show(ICON, ICON_PrintTime, 14, 171);
   DWIN_ICON_Show(ICON, ICON_RemainTime, 147, 169);
   DWIN_Draw_String(false, DWIN_FONT_MENU, Color_White, Color_Bg_Black, 41, 163, F("Elapsed"));
@@ -673,7 +673,7 @@ void CrealityDWINClass::Draw_Print_Screen() {
 void CrealityDWINClass::Draw_Print_Filename(const bool reset/*=false*/) {
   static uint8_t namescrl = 0;
   if (reset) namescrl = 0;
-  if (process == Print) {
+  if (process == CNC) {
     constexpr int8_t maxlen = 30;
     char *outstr = filename;
     size_t slen = strlen(filename);
@@ -942,7 +942,7 @@ void CrealityDWINClass::Draw_Popup(FSTR_P const line1, FSTR_P const line2, FSTR_
 }
 
 void WRCNCUI::kill_screen(FSTR_P const error, FSTR_P const) {
-  CrealityDWIN.Draw_Popup(F("Printer Kill Reason:"), error, F("Restart Required"), Wait, ICON_BLTouch);
+  CrealityDWIN.Draw_Popup(F("CNC Kill Reason:"), error, F("Restart Required"), Wait, ICON_BLTouch);
 }
 
 void CrealityDWINClass::Popup_Select() {
@@ -979,7 +979,7 @@ void CrealityDWINClass::Update_Status_Bar(bool refresh/*=false*/) {
       LOOP_S_L_N(i, 30 + pos, 30) dispmsg[i] = statusmsg[i - (30 + pos)];
     }
     dispmsg[len] = '\0';
-    if (process == Print) {
+    if (process == CNC) {
       DWIN_Draw_Rectangle(1, Color_Grey, 8, 214, DWIN_WIDTH - 8, 238);
       const int8_t npos = (DWIN_WIDTH - 30 * MENU_CHR_W) / 2;
       DWIN_Draw_String(false, DWIN_FONT_MENU, GetColor(eeprom_settings.status_bar_text, Color_White), Color_Bg_Black, npos, 219, dispmsg);
@@ -995,7 +995,7 @@ void CrealityDWINClass::Update_Status_Bar(bool refresh/*=false*/) {
   else {
     if (new_msg) {
       new_msg = false;
-      if (process == Print) {
+      if (process == CNC) {
         DWIN_Draw_Rectangle(1, Color_Grey, 8, 214, DWIN_WIDTH - 8, 238);
         const int8_t npos = (DWIN_WIDTH - strlen(statusmsg) * MENU_CHR_W) / 2;
         DWIN_Draw_String(false, DWIN_FONT_MENU, GetColor(eeprom_settings.status_bar_text, Color_White), Color_Bg_Black, npos, 219, statusmsg);
@@ -3039,7 +3039,7 @@ void CrealityDWINClass::Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/
               Draw_Menu_Item(INFO_PRINTCOUNT, ICON_HotendTemp, row1, row2, false, true);
 
               duration_t(print_job_timer.getStats().printTime).toString(buf);
-              sprintf_P(row1, PSTR("Printed: %s"), buf);
+              sprintf_P(row1, PSTR("CNCed: %s"), buf);
               duration_t(print_job_timer.getStats().longestPrint).toString(buf);
               sprintf_P(row2, PSTR("Longest: %s"), buf);
               Draw_Menu_Item(INFO_PRINTTIME, ICON_PrintTime, row1, row2, false, true);
@@ -4129,9 +4129,9 @@ uint8_t CrealityDWINClass::Get_Menu_Size(uint8_t menu) {
 void CrealityDWINClass::Popup_Handler(PopupID popupid, bool option/*=false*/) {
   popup = last_popup = popupid;
   switch (popupid) {
-    case Pause:         Draw_Popup(F("Pause Print"), F(""), F(""), Popup); break;
-    case Stop:          Draw_Popup(F("Stop Print"), F(""), F(""), Popup); break;
-    case Resume:        Draw_Popup(F("Resume Print?"), F("Looks Like the last"), F("print was interrupted."), Popup); break;
+    case Pause:         Draw_Popup(F("Pause CNC"), F(""), F(""), Popup); break;
+    case Stop:          Draw_Popup(F("Stop CNC"), F(""), F(""), Popup); break;
+    case Resume:        Draw_Popup(F("Resume CNC?"), F("Looks Like the last"), F("print was interrupted."), Popup); break;
     case ConfFilChange: Draw_Popup(F("Confirm Filament Change"), F(""), F(""), Popup); break;
     case PurgeMore:     Draw_Popup(F("Purge more filament?"), F("(Cancel to finish process)"), F(""), Popup); break;
     case SaveLevel:     Draw_Popup(F("Leveling Complete"), F("Save to EEPROM?"), F(""), Popup); break;
@@ -4147,7 +4147,7 @@ void CrealityDWINClass::Popup_Handler(PopupID popupid, bool option/*=false*/) {
     case TempWarn:      Draw_Popup(option ? F("Nozzle temp too low!") : F("Nozzle temp too high!"), F(""), F(""), Wait, option ? ICON_TempTooLow : ICON_TempTooHigh); break;
     case Runout:        Draw_Popup(F("Filament Runout"), F(""), F(""), Wait, ICON_BLTouch); break;
     case PIDWait:       Draw_Popup(F("PID Autotune"), F("in process"), F("Please wait until done."), Wait, ICON_BLTouch); break;
-    case Resuming:      Draw_Popup(F("Resuming Print"), F("Please wait until done."), F(""), Wait, ICON_BLTouch); break;
+    case Resuming:      Draw_Popup(F("Resuming CNC"), F("Please wait until done."), F(""), Wait, ICON_BLTouch); break;
     default: break;
   }
 }
@@ -4407,16 +4407,16 @@ void CrealityDWINClass::File_Control() {
   DWIN_UpdateLCD();
 }
 
-void CrealityDWINClass::Print_Screen_Control() {
+void CrealityDWINClass::CNC_Screen_Control() {
   EncoderState encoder_diffState = Encoder_ReceiveAnalyze();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
   if (encoder_diffState == ENCODER_DIFF_CW && selection < PRINT_COUNT - 1) {
     selection++; // Select Down
-    Print_Screen_Icons();
+    CNC_Screen_Icons();
   }
   else if (encoder_diffState == ENCODER_DIFF_CCW && selection > 0) {
     selection--; // Select Up
-    Print_Screen_Icons();
+    CNC_Screen_Icons();
   }
   else if (encoder_diffState == ENCODER_DIFF_ENTER) {
     switch (selection) {
@@ -4725,7 +4725,7 @@ void CrealityDWINClass::Start_Print(bool sd) {
       strcpy_P(filename, card.longest_filename());
     }
     else
-      strcpy_P(filename, "Host Print");
+      strcpy_P(filename, "Host CNC");
     TERN_(LCD_SET_PROGRESS_MANUALLY, ui.set_progress(0));
     TERN_(USE_M73_REMAINING_TIME, ui.set_remaining_time(0));
     Draw_Print_Screen();
@@ -4750,7 +4750,7 @@ void CrealityDWINClass::Update() {
     case Value:   Value_Control();        break;
     case Option:  Option_Control();       break;
     case File:    File_Control();         break;
-    case Print:   Print_Screen_Control(); break;
+    case CNC:   CNC_Screen_Control(); break;
     case Popup:   Popup_Control();        break;
     case Confirm: Confirm_Control();      break;
   }
@@ -4769,7 +4769,7 @@ void CrealityDWINClass::State_Update() {
   }
   if (print_job_timer.isPaused() != paused) {
     paused = print_job_timer.isPaused();
-    if (process == Print) Print_Screen_Icons();
+    if (process == CNC) CNC_Screen_Icons();
     if (process == Wait && !paused) Redraw_Menu(true, true);
   }
   if (wait_for_user && !(process == Confirm) && !print_job_timer.isPaused())
@@ -4799,7 +4799,7 @@ void CrealityDWINClass::Screen_Update() {
   if (ELAPSED(ms, scrltime)) {
     scrltime = ms + 200;
     Update_Status_Bar();
-    if (process == Print) Draw_Print_Filename();
+    if (process == CNC) Draw_Print_Filename();
   }
 
   static millis_t statustime = 0;
@@ -4811,7 +4811,7 @@ void CrealityDWINClass::Screen_Update() {
   static millis_t printtime = 0;
   if (ELAPSED(ms, printtime)) {
     printtime = ms + 1000;
-    if (process == Print) {
+    if (process == CNC) {
       Draw_Print_ProgressBar();
       Draw_Print_ProgressElapsed();
       TERN_(USE_M73_REMAINING_TIME, Draw_Print_ProgressRemain());

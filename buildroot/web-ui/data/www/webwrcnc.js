@@ -307,11 +307,11 @@ var WmButtons = {
     WmControls.Disable(WmButtonGroups.FileManagement);
     wmWebSoket.Send(wmGCommands.SdGetList);
   },
-  PrintSdConfirm: function() {
+  CNCSdConfirm: function() {
     $('#div-sdfile-print-badge').html($('#txt-sdfile-selected').val());
   },
-  PrintSdSelected: function() {
-    jsLog.Debug("PrintSdSelected: Print file:"+$("#txt-sdfile-selected").val());
+  CNCSdSelected: function() {
+    jsLog.Debug("CNCSdSelected: CNC file:"+$("#txt-sdfile-selected").val());
     WmControls.Disable(WmButtonGroups.FileActions);
     $('#div-sdfile-print-rs').collapse('show');
     wmGCommands.SdFilePrint.GParams = $("#txt-sdfile-selected").val();
@@ -508,7 +508,7 @@ var WmControls = {
       $('#div-temp-bed-unit').text(wmSettings.TempUnit.LABEL);
     }
   },
-  SetPrinterStatusInfo: function(s, m) {
+  SetCNCStatusInfo: function(s, m) {
     if(!s) {
       $('#div-pstatus-sdprint').removeClass("badge-danger").addClass("badge-info");
       $('#div-pstatus-sdprint').html("Ready to print");
@@ -516,7 +516,7 @@ var WmControls = {
       $('#div-pstatus-progress').collapse('hide');
     } else {
       $('#div-pstatus-sdprint').removeClass("badge-danger badge-info").addClass("badge-success");
-      $('#div-pstatus-sdprint').html("Printing in progress");
+      $('#div-pstatus-sdprint').html("CNCing in progress");
       $('#div-pstatus-timer').collapse('show');
       $('#div-pstatus-progress').collapse('show');
     }
@@ -837,7 +837,7 @@ $(document).ready(function () {
   $('#btn-move-home-z').click(function() { WmButtons.SetPositionHome(this); });
   $('#btn-save-settings').click(function() { WmButtons.SaveSettings(); });
   $('#btn-sdfile-delete-modal').click(function() { WmButtons.DeleteSdSelected(); });
-  $('#btn-sdfile-print-modal').click(function() { WmButtons.PrintSdSelected(); });
+  $('#btn-sdfile-print-modal').click(function() { WmButtons.CNCSdSelected(); });
   $('#btn-set-sdinit').click(function() { WmButtons.SdInit(); });
   $('#btn-set-sdrelease').click(function() { WmButtons.SdRelease(); });
   $('#btn-wsconnect').click(function() { WmButtons.WsConnect(); });

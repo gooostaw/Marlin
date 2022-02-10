@@ -2,7 +2,7 @@
  * Webber Ranch CNC Firmware
  * Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
- * Based on Sprinter and grbl.
+ * Based on Marlin and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ void LockScreenClass::draw() {
   Title.SetCaption(PSTR("Lock Screen"));
   DWINUI::ClearMenuArea();
   DWINUI::Draw_Icon(ICON_LOGO, 71, 120);  // CREALITY logo
-  DWINUI::Draw_CenteredString(Color_White, 180, F("Printer is Locked,"));
+  DWINUI::Draw_CenteredString(Color_White, 180, F("CNC is Locked,"));
   DWINUI::Draw_CenteredString(Color_White, 200, F("Scroll to unlock."));
   DWINUI::Draw_CenteredString(Color_White, 240, F("-> | <-"));
   DWIN_Draw_Box(1, HMI_data.Barfill_Color, 0, 260, DWIN_WIDTH, 20);

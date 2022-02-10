@@ -334,21 +334,21 @@ namespace Language_ro {
   LSTR MSG_BUTTON_BACK                    = _UxGT("Inapoi");
   LSTR MSG_BUTTON_PROCEED                 = _UxGT("Proceed");
   LSTR MSG_PAUSING                        = _UxGT("Pausing...");
-  LSTR MSG_PAUSE_PRINT                    = _UxGT("Pause Print");
-  LSTR MSG_RESUME_PRINT                   = _UxGT("Resume Print");
-  LSTR MSG_STOP_PRINT                     = _UxGT("Stop Print");
-  LSTR MSG_PRINTING_OBJECT                = _UxGT("Printing Object");
+  LSTR MSG_PAUSE_PRINT                    = _UxGT("Pause CNC");
+  LSTR MSG_RESUME_PRINT                   = _UxGT("Resume CNC");
+  LSTR MSG_STOP_PRINT                     = _UxGT("Stop CNC");
+  LSTR MSG_PRINTING_OBJECT                = _UxGT("CNCing Object");
   LSTR MSG_CANCEL_OBJECT                  = _UxGT("Cancel Object");
   LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Cancel Object =");
   LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Outage Recovery");
-  LSTR MSG_MEDIA_MENU                     = _UxGT("Print from Media");
+  LSTR MSG_MEDIA_MENU                     = _UxGT("CNC from Media");
   LSTR MSG_NO_MEDIA                       = _UxGT("No Media");
   LSTR MSG_DWELL                          = _UxGT("Sleep...");
   LSTR MSG_USERWAIT                       = _UxGT("Click to Resume...");
-  LSTR MSG_PRINT_PAUSED                   = _UxGT("Print Paused");
-  LSTR MSG_PRINTING                       = _UxGT("Printing...");
-  LSTR MSG_PRINT_ABORTED                  = _UxGT("Print Aborted");
-  LSTR MSG_PRINT_DONE                     = _UxGT("Print Done");
+  LSTR MSG_PRINT_PAUSED                   = _UxGT("CNC Paused");
+  LSTR MSG_PRINTING                       = _UxGT("CNCing...");
+  LSTR MSG_PRINT_ABORTED                  = _UxGT("CNC Aborted");
+  LSTR MSG_PRINT_DONE                     = _UxGT("CNC Done");
   LSTR MSG_NO_MOVE                        = _UxGT("No Move.");
   LSTR MSG_KILLED                         = _UxGT("KILLED. ");
   LSTR MSG_STOPPED                        = _UxGT("STOPPED. ");
@@ -469,13 +469,13 @@ namespace Language_ro {
   LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("INCORRECT PRINTER");
 
 #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Total Printuri");
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Total CNCuri");
   LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Completat");
   LSTR MSG_INFO_PRINT_TIME                = _UxGT("Timp Imprimare Total");
   LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Longest Job Time");
   LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Total Extrudat");
 #else
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Prints");
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("CNCs");
   LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Completed");
   LSTR MSG_INFO_PRINT_TIME                = _UxGT("Total");
   LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Longest");

@@ -94,7 +94,7 @@
 
 namespace ExtUI {
   static struct {
-    uint8_t printer_killed : 1;
+    uint8_t cnc_killed : 1;
     #if ENABLED(JOYSTICK)
       uint8_t jogging : 1;
     #endif
@@ -103,13 +103,13 @@ namespace ExtUI {
   #ifdef __SAM3X8E__
     /**
      * Implement a special millis() to allow time measurement
-     * within an ISR (such as when the printer is killed).
+     * within an ISR (such as when the cnc is killed).
      *
      * To keep proper time, must be called at least every 1s.
      */
     uint32_t safe_millis() {
       // Not killed? Just call millis()
-      if (!flags.printer_killed) return millis();
+      if (!flags.cnc_killed) return millis();
 
       static uint32_t currTimeHI = 0; /* Current time */
 
@@ -144,14 +144,14 @@ namespace ExtUI {
   void delay_us(uint32_t us) { DELAY_US(us); }
 
   void delay_ms(uint32_t ms) {
-    if (flags.printer_killed)
+    if (flags.cnc_killed)
       DELAY_US(ms * 1000);
     else
       safe_delay(ms);
   }
 
   void yield() {
-    if (!flags.printer_killed) thermalManager.manage_heater();
+    if (!flags.cnc_killed) thermalManager.manage_heater();
   }
 
   void enableHeater(const extruder_t extruder) {
@@ -740,7 +740,7 @@ namespace ExtUI {
      * This function adjusts an axis during a print.
      *
      * When linked_nozzles is false, each nozzle in a multi-nozzle
-     * printer can be babystepped independently of the others. This
+     * cnc can be babystepped independently of the others. This
      * lets the user to fine tune the Z-offset and Nozzle Offsets
      * while observing the first layer of a print, regardless of
      * what nozzle is printing.
@@ -1141,9 +1141,9 @@ void WRCNCUI::update() { ExtUI::onIdle(); }
 
 void WRCNCUI::kill_screen(FSTR_P const error, FSTR_P const component) {
   using namespace ExtUI;
-  if (!flags.printer_killed) {
-    flags.printer_killed = true;
-    onPrinterKilled(error, component);
+  if (!flags.cnc_killed) {
+    flags.cnc_killed = true;
+    onCNCKilled(error, component);
   }
 }
 

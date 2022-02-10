@@ -188,7 +188,7 @@ void GcodeSuite::M203_report(const bool forReplay/*=true*/) {
 /**
  * M204: Set Accelerations in units/sec^2 (M204 P1200 R3000 T3000)
  *
- *    P = Printing moves
+ *    P = CNCing moves
  *    R = Retract only (no X, Y, Z) moves
  *    T = Travel (non printing) moves
  */

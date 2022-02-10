@@ -123,7 +123,7 @@ public:
 
 /**
  * G29: Detailed Z probe, probes the bed at 3 or more points.
- *      Will fail if the printer has not been homed with G28.
+ *      Will fail if the cnc has not been homed with G28.
  *
  * Enhanced G29 Auto Bed Leveling Probe Routine
  *
@@ -150,7 +150,7 @@ public:
  *  T  Generate a Bed Topology Report. Example: "G29 P5 T" for a detailed report.
  *     This is useful for manual bed leveling and finding flaws in the bed (to
  *     assist with part placement).
- *     Not supported by non-linear delta printer bed leveling.
+ *     Not supported by non-linear delta cnc bed leveling.
  *
  * Parameters With LINEAR and BILINEAR leveling only:
  *

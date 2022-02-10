@@ -7,7 +7,7 @@
 #if DISABLED(PRINTCOUNTER)
 
 #include "../libs/stopwatch.h"
-Stopwatch print_job_timer;      // Global Print Job Timer instance
+Stopwatch print_job_timer;      // Global CNC Job Timer instance
 
 #else // PRINTCOUNTER
 
@@ -47,23 +47,23 @@ Stopwatch print_job_timer;      // Global Print Job Timer instance
   #endif
 #endif
 
-PrintCounter print_job_timer;   // Global Print Job Timer instance
+CNCCounter print_job_timer;   // Global CNC Job Timer instance
 
-printStatistics PrintCounter::data;
+printStatistics CNCCounter::data;
 
-const PrintCounter::eeprom_address_t PrintCounter::address = STATS_EEPROM_ADDRESS;
+const CNCCounter::eeprom_address_t CNCCounter::address = STATS_EEPROM_ADDRESS;
 
-millis_t PrintCounter::lastDuration;
-bool PrintCounter::loaded = false;
+millis_t CNCCounter::lastDuration;
+bool CNCCounter::loaded = false;
 
-millis_t PrintCounter::deltaDuration() {
+millis_t CNCCounter::deltaDuration() {
   TERN_(DEBUG_PRINTCOUNTER, debug(PSTR("deltaDuration")));
   millis_t tmp = lastDuration;
   lastDuration = duration();
   return lastDuration - tmp;
 }
 
-void PrintCounter::incFilamentUsed(float const &amount) {
+void CNCCounter::incFilamentUsed(float const &amount) {
   TERN_(DEBUG_PRINTCOUNTER, debug(PSTR("incFilamentUsed")));
 
   // Refuses to update data if object is not loaded
@@ -72,7 +72,7 @@ void PrintCounter::incFilamentUsed(float const &amount) {
   data.filamentUsed += amount; // mm
 }
 
-void PrintCounter::initStats() {
+void CNCCounter::initStats() {
   TERN_(DEBUG_PRINTCOUNTER, debug(PSTR("initStats")));
 
   loaded = true;
@@ -108,7 +108,7 @@ void PrintCounter::initStats() {
   }
 #endif
 
-void PrintCounter::loadStats() {
+void CNCCounter::loadStats() {
   TERN_(DEBUG_PRINTCOUNTER, debug(PSTR("loadStats")));
 
   // Check if the EEPROM block is initialized
@@ -141,7 +141,7 @@ void PrintCounter::loadStats() {
   #endif // HAS_SERVICE_INTERVALS
 }
 
-void PrintCounter::saveStats() {
+void CNCCounter::saveStats() {
   TERN_(DEBUG_PRINTCOUNTER, debug(PSTR("saveStats")));
 
   // Refuses to save data if object is not loaded
@@ -165,12 +165,12 @@ void PrintCounter::saveStats() {
   }
 #endif
 
-void PrintCounter::showStats() {
+void CNCCounter::showStats() {
   char buffer[22];
 
   SERIAL_ECHOPGM(STR_STATS);
   SERIAL_ECHOLNPGM(
-    "Prints: ", data.totalPrints,
+    "CNCs: ", data.totalPrints,
     ", Finished: ", data.finishedPrints,
     ", Failed: ", data.totalPrints - data.finishedPrints
                     - ((isRunning() || isPaused()) ? 1 : 0) // Remove 1 from failures with an active counter
@@ -208,7 +208,7 @@ void PrintCounter::showStats() {
   #endif
 }
 
-void PrintCounter::tick() {
+void CNCCounter::tick() {
   if (!isRunning()) return;
 
   millis_t now = millis();
@@ -243,7 +243,7 @@ void PrintCounter::tick() {
 }
 
 // @Override
-bool PrintCounter::start() {
+bool CNCCounter::start() {
   TERN_(DEBUG_PRINTCOUNTER, debug(PSTR("start")));
 
   bool paused = isPaused();
@@ -259,7 +259,7 @@ bool PrintCounter::start() {
   return false;
 }
 
-bool PrintCounter::_stop(const bool completed) {
+bool CNCCounter::_stop(const bool completed) {
   TERN_(DEBUG_PRINTCOUNTER, debug(PSTR("stop")));
 
   const bool did_stop = super::stop();
@@ -268,7 +268,7 @@ bool PrintCounter::_stop(const bool completed) {
     if (completed) {
       data.finishedPrints++;
       if (duration() > data.longestPrint)
-        data.longestPrint = duration();
+        data.longestCNC = duration();
     }
   }
   saveStats();
@@ -276,7 +276,7 @@ bool PrintCounter::_stop(const bool completed) {
 }
 
 // @Override
-void PrintCounter::reset() {
+void CNCCounter::reset() {
   TERN_(DEBUG_PRINTCOUNTER, debug(PSTR("stop")));
 
   super::reset();
@@ -285,7 +285,7 @@ void PrintCounter::reset() {
 
 #if HAS_SERVICE_INTERVALS
 
-  void PrintCounter::resetServiceInterval(const int index) {
+  void CNCCounter::resetServiceInterval(const int index) {
     switch (index) {
       #if SERVICE_INTERVAL_1 > 0
         case 1: data.nextService1 = SERVICE_INTERVAL_SEC_1;
@@ -300,7 +300,7 @@ void PrintCounter::reset() {
     saveStats();
   }
 
-  bool PrintCounter::needsService(const int index) {
+  bool CNCCounter::needsService(const int index) {
     if (!loaded) loadStats();
     switch (index) {
       #if SERVICE_INTERVAL_1 > 0
@@ -320,9 +320,9 @@ void PrintCounter::reset() {
 
 #if ENABLED(DEBUG_PRINTCOUNTER)
 
-  void PrintCounter::debug(const char func[]) {
+  void CNCCounter::debug(const char func[]) {
     if (DEBUGGING(INFO)) {
-      SERIAL_ECHOPGM("PrintCounter::");
+      SERIAL_ECHOPGM("CNCCounter::");
       SERIAL_ECHOPGM_P(func);
       SERIAL_ECHOLNPGM("()");
     }

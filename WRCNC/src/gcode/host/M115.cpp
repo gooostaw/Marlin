@@ -85,7 +85,7 @@ void GcodeSuite::M115() {
     // PROGRESS (M530 S L, M531 <file>, M532 X L)
     cap_line(F("PROGRESS"));
 
-    // Print Job timer M75, M76, M77
+    // CNC Job timer M75, M76, M77
     cap_line(F("PRINT_JOB"), true);
 
     // AUTOLEVEL (G29)

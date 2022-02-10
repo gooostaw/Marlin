@@ -644,7 +644,7 @@
 #define UHS_VID_CYPRESS_SEMICONDUCTOR_1 0x0665U // Cypress Semiconductor
 #define UHS_VID_AIWA 0x0667U // Aiwa Co., Ltd
 #define UHS_VID_WORDWAND 0x0668U // WordWand
-#define UHS_VID_OCE_PRINTING_SYSTEMS 0x0669U // Oce' Printing Systems GmbH
+#define UHS_VID_OCE_PRINTING_SYSTEMS 0x0669U // Oce' CNCing Systems GmbH
 #define UHS_VID_TOTAL_TECHNOLOGIES 0x066aU // Total Technologies, Ltd
 #define UHS_VID_LINKSYS 0x066bU // Linksys, Inc.
 #define UHS_VID_ENTREGA 0x066dU // Entrega, Inc.
@@ -1461,7 +1461,7 @@
 #define UHS_VID_SILICON_MOTION 0x0c1aU // Silicon Motion, Inc.
 #define UHS_VID_MIPS_TECHNOLOGIES 0x0c1bU // MIPS Technologies
 #define UHS_VID_HANG_ZHOU_SILAN_ELECTRONICS 0x0c1cU // Hang Zhou Silan Electronics Co., Ltd
-#define UHS_VID_TALLY_PRINTER 0x0c22U // Tally Printer Corp.
+#define UHS_VID_TALLY_PRINTER 0x0c22U // Tally CNC Corp.
 #define UHS_VID_LERNOUT__HAUSPIE 0x0c23U // Lernout + Hauspie
 #define UHS_VID_TAIYO_YUDEN 0x0c24U // Taiyo Yuden
 #define UHS_VID_SAMPO 0x0c25U // Sampo Corp.
@@ -2238,7 +2238,7 @@
 #define UHS_VID_ALESIS 0x13b2U // Alesis
 #define UHS_VID_NIPPON_DICS 0x13b3U // Nippon Dics Co., Ltd.
 #define UHS_VID_PCPLAY 0x13baU // PCPlay
-#define UHS_VID_RICOH_PRINTING_SYSTEMS 0x13beU // Ricoh Printing Systems, Ltd.
+#define UHS_VID_RICOH_PRINTING_SYSTEMS 0x13beU // Ricoh CNCing Systems, Ltd.
 #define UHS_VID_JYETAI_PRECISION_INDUSTRIAL 0x13caU // JyeTai Precision Industrial Co., Ltd.
 #define UHS_VID_WISAIR 0x13cfU // Wisair Ltd.
 #define UHS_VID_TECHSAN_ELECTRONICS 0x13d0U // Techsan Electronics Co., Ltd.
@@ -2574,7 +2574,7 @@
 #define UHS_VID_MINDTRIBE 0x19caU // Mindtribe
 #define UHS_VID_PARROT 0x19cfU // Parrot SA
 #define UHS_VID_ZTE_WCDMA_TECHNOLOGIES_MSM 0x19d2U // ZTE WCDMA Technologies MSM
-#define UHS_VID_KFI_PRINTERS 0x19dbU // KFI Printers
+#define UHS_VID_KFI_PRINTERS 0x19dbU // KFI CNCs
 #define UHS_VID_WEIDUAN_ELECTRONIC_ACCESSORY_SZ 0x19e1U // WeiDuan Electronic Accessory (S.Z.) Co., Ltd.
 #define UHS_VID_INDUSTRIAL_TECHNOLOGY_RESEARCH_INSTITUTE 0x19e8U // Industrial Technology Research Institute
 #define UHS_VID_PAK_HENG_TECHNOLOGY_SHENZHEN 0x19efU // Pak Heng Technology (Shenzhen) Co., Ltd.

@@ -5,8 +5,8 @@
 /**
  * About WRCNC
  *
- * This firmware is a mashup between Sprinter and grbl.
- *  - https://github.com/kliment/Sprinter
+ * This firmware is a mashup between Marlin and grbl.
+ *  - https://github.com/kliment/Marlin
  *  - https://github.com/grbl/grbl
  */
 
@@ -28,7 +28,7 @@
 #include "module/endstops.h"
 #include "module/temperature.h"
 #include "module/settings.h"
-#include "module/printcounter.h" // PrintCounter or Stopwatch
+#include "module/printcounter.h" // CNCCounter or Stopwatch
 
 #include "module/stepper.h"
 #include "module/stepper/indirection.h"
@@ -303,17 +303,17 @@ bool pin_is_protected(const pin_t pin) {
 #pragma GCC diagnostic pop
 
 /**
- * A Print Job exists when the timer is running or SD is printing
+ * A CNC Job exists when the timer is running or SD is printing
  */
 bool printJobOngoing() { return print_job_timer.isRunning() || IS_SD_PRINTING(); }
 
 /**
- * Printing is active when a job is underway but not paused
+ * CNCing is active when a job is underway but not paused
  */
 bool printingIsActive() { return !did_pause_print && printJobOngoing(); }
 
 /**
- * Printing is paused according to SD or host indicators
+ * CNCing is paused according to SD or host indicators
  */
 bool printingIsPaused() {
   return did_pause_print || print_job_timer.isPaused() || IS_SD_PAUSED();
@@ -476,14 +476,14 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
 
   #if ENABLED(CUSTOM_USER_BUTTONS)
     // Handle a custom user button if defined
-    const bool printer_not_busy = !printingIsActive();
+    const bool cnc_not_busy = !printingIsActive();
     #define HAS_CUSTOM_USER_BUTTON(N) (PIN_EXISTS(BUTTON##N) && defined(BUTTON##N##_HIT_STATE) && defined(BUTTON##N##_GCODE))
     #define HAS_BETTER_USER_BUTTON(N) HAS_CUSTOM_USER_BUTTON(N) && defined(BUTTON##N##_DESC)
     #define _CHECK_CUSTOM_USER_BUTTON(N, CODE) do{                     \
       constexpr millis_t CUB_DEBOUNCE_DELAY_##N = 250UL;               \
       static millis_t next_cub_ms_##N;                                 \
       if (BUTTON##N##_HIT_STATE == READ(BUTTON##N##_PIN)               \
-        && (ENABLED(BUTTON##N##_WHEN_PRINTING) || printer_not_busy)) { \
+        && (ENABLED(BUTTON##N##_WHEN_PRINTING) || cnc_not_busy)) { \
         if (ELAPSED(ms, next_cub_ms_##N)) {                            \
           next_cub_ms_##N = ms + CUB_DEBOUNCE_DELAY_##N;               \
           CODE;                                                        \
@@ -736,7 +736,7 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
  *  - Handle SD Card insert / remove
  *  - Handle USB Flash Drive insert / remove
  *  - Announce Host Keepalive state (if any)
- *  - Update the Print Job Timer state
+ *  - Update the CNC Job Timer state
  *  - Update the Beeper queue
  *  - Read Buttons and Update the LCD
  *  - Run i2c Position Encoders
@@ -797,7 +797,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
   // Announce Host Keepalive state (if any)
   TERN_(HOST_KEEPALIVE_FEATURE, gcode.host_keepalive());
 
-  // Update the Print Job Timer state
+  // Update the CNC Job Timer state
   TERN_(PRINTCOUNTER, print_job_timer.tick());
 
   // Update the Beeper queue
@@ -868,7 +868,7 @@ void kill(FSTR_P const lcd_error/*=nullptr*/, FSTR_P const lcd_component/*=nullp
 
   TERN_(HAS_TFT_LVGL_UI, lv_draw_error_message(lcd_error));
 
-  // "Error:Printer halted. kill() called!"
+  // "Error:CNC halted. kill() called!"
   SERIAL_ERROR_MSG(STR_ERR_KILLED);
 
   #ifdef ACTION_ON_KILL
@@ -1026,7 +1026,7 @@ inline void tmc_standby_setup() {
  *    • Run BOARD_INIT if defined
  *    • ESP WiFi
  *  - Get the Reset Reason and report it
- *  - Print startup messages and diagnostics
+ *  - CNC startup messages and diagnostics
  *  - Calibrate the HAL DELAY for precise timing
  *  - Init the buzzer, possibly a custom timer
  *  - Init more optional hardware:
@@ -1043,7 +1043,7 @@ inline void tmc_standby_setup() {
  *  - Init the Planner::position (steps) based on current (native) position
  *  - Initialize more managers and peripherals:
  *    • Temperatures
- *    • Print Job Timer
+ *    • CNC Job Timer
  *    • Endstops and Endstop Interrupts
  *    • Stepper ISR - Kind of Important!
  *    • Servos
@@ -1640,7 +1640,7 @@ void loop() {
 
     endstops.event_handler();
 
-    TERN_(HAS_TFT_LVGL_UI, printer_state_polling());
+    TERN_(HAS_TFT_LVGL_UI, cnc_state_polling());
 
   } while (ENABLED(__AVR__)); // Loop forever on slower (AVR) boards
 }

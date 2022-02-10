@@ -26,7 +26,7 @@
 //#define STRING_DISTRIBUTION_DATE "2022-02-08"
 
 /**
- * Defines a generic printer name to be output to the LCD after booting WRCNC.
+ * Defines a generic cnc name to be output to the LCD after booting WRCNC.
  */
 #define MACHINE_NAME "Modern Vintage CNC"
 
@@ -39,7 +39,7 @@
 #define SOURCE_CODE_URL "https://github.com/Domush/WRCNC-for-SKR-based-CNC.git"
 
 /**
- * Default generic printer UUID.
+ * Default generic cnc UUID.
  */
 //#define DEFAULT_MACHINE_UUID "cede2a2f-41a2-4748-9b12-c55c62f367ff"
 

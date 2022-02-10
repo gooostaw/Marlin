@@ -90,10 +90,10 @@ namespace Language_hr {
   LSTR MSG_PAUSE_PRINT                    = _UxGT("Pauziraj print");
   LSTR MSG_RESUME_PRINT                   = _UxGT("Nastavi print");
   LSTR MSG_STOP_PRINT                     = _UxGT("Zaustavi print");
-  LSTR MSG_MEDIA_MENU                     = _UxGT("Printaj s SD kartice");
+  LSTR MSG_MEDIA_MENU                     = _UxGT("CNCaj s SD kartice");
   LSTR MSG_NO_MEDIA                       = _UxGT("Nema SD kartice");
   LSTR MSG_USERWAIT                       = _UxGT("Čekaj korisnika...");
-  LSTR MSG_PRINT_ABORTED                  = _UxGT("Print otkazan");
+  LSTR MSG_PRINT_ABORTED                  = _UxGT("CNC otkazan");
   LSTR MSG_STOPPED                        = _UxGT("ZAUSTAVLJEN. ");
   LSTR MSG_FILAMENTCHANGE                 = _UxGT("Promijeni filament");
   LSTR MSG_FILAMENTCHANGE_E               = _UxGT("Promijeni filament *");
@@ -107,9 +107,9 @@ namespace Language_hr {
   LSTR MSG_DELTA_CALIBRATE_Y              = _UxGT("Kalibriraj Y");
   LSTR MSG_DELTA_CALIBRATE_Z              = _UxGT("Kalibriraj Z");
   LSTR MSG_DELTA_CALIBRATE_CENTER         = _UxGT("Kalibriraj Središte");
-  LSTR MSG_INFO_MENU                      = _UxGT("O printeru");
-  LSTR MSG_INFO_PRINTER_MENU              = _UxGT("Podaci o printeru");
-  LSTR MSG_INFO_STATS_MENU                = _UxGT("Statistika printera");
+  LSTR MSG_INFO_MENU                      = _UxGT("O cncu");
+  LSTR MSG_INFO_PRINTER_MENU              = _UxGT("Podaci o cncu");
+  LSTR MSG_INFO_STATS_MENU                = _UxGT("Statistika cnca");
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Podaci o elektronici");
   LSTR MSG_INFO_THERMISTOR_MENU           = _UxGT("Termistori");
   LSTR MSG_INFO_EXTRUDERS                 = _UxGT("Extruderi");
@@ -126,7 +126,7 @@ namespace Language_hr {
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Najduži print");
     LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Extrudirano ukupno");
   #else
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Printovi");
+    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("CNCovi");
     LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Završeni");
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Ukupno");
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Najduži");

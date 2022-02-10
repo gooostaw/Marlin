@@ -75,7 +75,7 @@ typedef MAX3421e<P10, P9> MAX3421E; // Official Arduinos (UNO, Duemilanove, Mega
 #define USB_CLASS_HID                   0x03    // HID
 #define USB_CLASS_PHYSICAL              0x05    // Physical
 #define USB_CLASS_IMAGE                 0x06    // Image
-#define USB_CLASS_PRINTER               0x07    // Printer
+#define USB_CLASS_PRINTER               0x07    // CNC
 #define USB_CLASS_MASS_STORAGE          0x08    // Mass Storage
 #define USB_CLASS_HUB                   0x09    // Hub
 #define USB_CLASS_CDC_DATA              0x0A    // CDC-Data

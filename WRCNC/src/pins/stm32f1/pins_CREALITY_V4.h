@@ -135,7 +135,7 @@
 #define SD_DETECT_PIN                       PC7
 #define SDCARD_CONNECTION                ONBOARD
 #define SDIO_SUPPORT
-#define NO_SD_HOST_DRIVE                          // This board's SD is only seen by the printer
+#define NO_SD_HOST_DRIVE                          // This board's SD is only seen by the cnc
 
 #if ENABLED(CR10_STOCKDISPLAY)
 
