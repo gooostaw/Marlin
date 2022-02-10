@@ -1,6 +1,6 @@
 /*==============================================================================
 
-  Marlin Firmware
+  Webber Ranch CNC Firmware
 
   (c) 2011-2020 MarlinFirmware
   Portions of Marlin are (c) by their respective authors.
@@ -16,10 +16,10 @@ see if there's a more suitable starting-point for your specific hardware.
 
 Before diving in, we recommend the following essential links:
 
-Marlin Firmware Official Website
+Webber Ranch CNC Firmware Official Website
 
   - https://marlinfw.org/
-    The official Marlin Firmware website contains the most up-to-date
+    The official Webber Ranch CNC Firmware website contains the most up-to-date
     documentation. Contributions are always welcome!
 
 Configuration
@@ -41,7 +41,7 @@ Getting Help
     The Marlin Discussion Forum is a great place to get help from other Marlin
     users who may have experienced similar issues to your own.
 
-  - https://github.com/MarlinFirmware/Marlin/issues
+  - https://github.com/Domush/Webber-Ranch-CNC-Firmware/issues
     With a free GitHub account you can provide us with feedback, bug reports,
     and feature requests via the Marlin Issue Queue.
 

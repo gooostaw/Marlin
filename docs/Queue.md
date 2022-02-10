@@ -1,6 +1,6 @@
 # Marlin's command queue concept
 
-Marlin Firmware processes G-code commands as they arrive from multiple sources, including the SD card and one or more serial ports such as USB-connected hosts, WiFi, Bluetooth, and so on.
+Webber Ranch CNC Firmware processes G-code commands as they arrive from multiple sources, including the SD card and one or more serial ports such as USB-connected hosts, WiFi, Bluetooth, and so on.
 
 Marlin is also continuously processing the commands at the front of the queue, converting them into signals for many physical actuators such as motors, heaters, lasers, and RGB LEDs.
 

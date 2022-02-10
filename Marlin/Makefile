@@ -1,4 +1,4 @@
-# Marlin Firmware Arduino Project Makefile
+# Webber Ranch CNC Firmware Arduino Project Makefile
 #
 # Makefile Based on:
 # Arduino 0011 Makefile

@@ -1,6 +1,6 @@
 /**
- * Marlin 3D Printer Firmware
- * Copyright (c) 2021 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Webber Ranch CNC Firmware
+ * Copyright (c) 2021 MarlinFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -585,5 +585,5 @@
  * Maple environent
  */
 #ifdef __STM32F1__
-  #warning "Maple build environments are deprecated. Please use a non-Maple build environment. Report issues to the Marlin Firmware project."
+  #warning "Maple build environments are deprecated. Please use a non-Maple build environment. Report issues to the Webber Ranch CNC Firmware project."
 #endif

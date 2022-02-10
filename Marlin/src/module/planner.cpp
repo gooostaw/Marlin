@@ -1,24 +1,6 @@
 /**
- * Marlin 3D Printer Firmware
- * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
- *
- * Based on Sprinter and grbl.
- * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- */
+ * Webber Ranch CNC Firmware
+*/
 
 /**
  * planner.cpp
@@ -2512,7 +2494,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
      * change the overall maximum entry speed conditions of all blocks.
      *
      * #######
-     * https://github.com/MarlinFirmware/Marlin/issues/10341#issuecomment-388191754
+     * https://github.com/Domush/Webber-Ranch-CNC-Firmware/issues/10341#issuecomment-388191754
      *
      * hoffbaked: on May 10 2018 tuned and improved the GRBL algorithm for Marlin:
           Okay! It seems to be working good. I somewhat arbitrarily cut it off at 1mm

@@ -7,7 +7,7 @@
  * file, You can obtain one at https://www.mozilla.org/en-US/MPL/2.0/
  *
  * This library was modified, some bugs fixed, stack address validated
- * and adapted to be used in Marlin 3D printer firmware as backtracer
+ * and adapted to be used in Webber Ranch CNC firmware as backtracer
  * for exceptions for debugging purposes in 2018 by Eduardo José Tagle.
  */
 

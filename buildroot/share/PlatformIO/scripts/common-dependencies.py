@@ -25,7 +25,7 @@ if pioutil.is_pio_build():
 				print()
 				print("**************************************************")
 				print("******      An update to PlatformIO is      ******")
-				print("******  required to build Marlin Firmware.  ******")
+				print("******  required to build Webber Ranch CNC Firmware.  ******")
 				print("******                                      ******")
 				print("******      Minimum version: ", PIO_VERSION_MIN, "    ******")
 				print("******      Current Version: ", PIO_VERSION, "    ******")

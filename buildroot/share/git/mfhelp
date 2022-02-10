@@ -4,7 +4,7 @@
 #
 
 cat <<THIS
-Marlin Firmware Commands:
+Webber Ranch CNC Firmware Commands:
 
   firstpush ... Push and set-upstream the current branch to 'origin'
   ghpc ........ Push the current branch to its upstream branch

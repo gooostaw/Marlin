@@ -1,6 +1,6 @@
 /**
- * Marlin 3D Printer Firmware
- * Copyright (C) 2021 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Webber Ranch CNC Firmware
+ * Copyright (C) 2021 MarlinFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
