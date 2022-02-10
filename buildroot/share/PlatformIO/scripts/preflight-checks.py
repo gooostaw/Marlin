@@ -9,7 +9,7 @@ if pioutil.is_pio_build():
 	Import("env")
 
 	def get_envs_for_board(board):
-		with open(os.path.join("Marlin", "src", "pins", "pins.h"), "r") as file:
+		with open(os.path.join("WRCNC", "src", "pins", "pins.h"), "r") as file:
 
 			if sys.platform == 'win32':
 				envregex = r"(?:env|win):"
@@ -52,14 +52,14 @@ if pioutil.is_pio_build():
 		if 'PIOENV' not in env:
 			raise SystemExit("Error: PIOENV is not defined. This script is intended to be used with PlatformIO")
 
-		if 'MARLIN_FEATURES' not in env:
-			raise SystemExit("Error: this script should be used after common Marlin scripts")
+		if 'WRCNC_FEATURES' not in env:
+			raise SystemExit("Error: this script should be used after common WRCNC scripts")
 
-		if 'MOTHERBOARD' not in env['MARLIN_FEATURES']:
+		if 'MOTHERBOARD' not in env['WRCNC_FEATURES']:
 			raise SystemExit("Error: MOTHERBOARD is not defined in Configuration.h")
 
 		build_env = env['PIOENV']
-		motherboard = env['MARLIN_FEATURES']['MOTHERBOARD']
+		motherboard = env['WRCNC_FEATURES']['MOTHERBOARD']
 		board_envs = get_envs_for_board(motherboard)
 		config = env.GetProjectConfig()
 		result = check_envs("env:"+build_env, board_envs, config)
@@ -75,7 +75,7 @@ if pioutil.is_pio_build():
 		for p in [ env['PROJECT_DIR'], os.path.join(env['PROJECT_DIR'], "config") ]:
 			for f in [ "Configuration.h", "Configuration_adv.h" ]:
 				if os.path.isfile(os.path.join(p, f)):
-					err = "ERROR: Config files found in directory %s. Please move them into the Marlin subfolder." % p
+					err = "ERROR: Config files found in directory %s. Please move them into the WRCNC subfolder." % p
 					raise SystemExit(err)
 
 		#
@@ -89,21 +89,21 @@ if pioutil.is_pio_build():
 		#
 		# Rebuild 'settings.cpp' for EEPROM_INIT_NOW
 		#
-		if 'EEPROM_INIT_NOW' in env['MARLIN_FEATURES']:
+		if 'EEPROM_INIT_NOW' in env['WRCNC_FEATURES']:
 			setfile = os.path.join(srcpath, "module", "settings.cpp.o")
 			if os.path.exists(setfile):
 				os.remove(setfile)
 
 		#
-		# Check for old files indicating an entangled Marlin (mixing old and new code)
+		# Check for old files indicating an entangled WRCNC (mixing old and new code)
 		#
 		mixedin = []
-		p = os.path.join(env['PROJECT_DIR'], "Marlin", "src", "lcd", "dogm")
+		p = os.path.join(env['PROJECT_DIR'], "WRCNC", "src", "lcd", "dogm")
 		for f in [ "ultralcd_DOGM.cpp", "ultralcd_DOGM.h" ]:
 			if os.path.isfile(os.path.join(p, f)):
 				mixedin += [ f ]
 		if mixedin:
-			err = "ERROR: Old files fell into your Marlin folder. Remove %s and try again" % ", ".join(mixedin)
+			err = "ERROR: Old files fell into your WRCNC folder. Remove %s and try again" % ", ".join(mixedin)
 			raise SystemExit(err)
 
 	sanity_check_target()

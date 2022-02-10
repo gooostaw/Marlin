@@ -13,7 +13,7 @@ if pioutil.is_pio_build():
 	# Give the binary a distinctive name
 	#
 
-	env['PROGNAME'] = "MarlinSimulator"
+	env['PROGNAME'] = "WRCNCSimulator"
 
 	#
 	# If Xcode is installed add the path to its Frameworks folder,

@@ -28,7 +28,7 @@
 #
 # General program flow
 #
-#  1. Scans Configuration.h for the motherboard name and Marlin version.
+#  1. Scans Configuration.h for the motherboard name and WRCNC version.
 #  2. Scans pins.h for the motherboard.
 #       returns the CPU(s) and platformio environment(s) used by the motherboard
 #  3. If further info is needed then a popup gets it from the user.
@@ -411,21 +411,21 @@ def get_build_last():
 
 
 # Get the board being built from the Configuration.h file
-#   return: board name, major version of Marlin being used (1 or 2)
+#   return: board name, major version of WRCNC being used (1 or 2)
 def get_board_name():
   board_name = ''
   # get board name
 
-  with open('Marlin/Configuration.h', 'r') as myfile:
+  with open('WRCNC/Configuration.h', 'r') as myfile:
     Configuration_h = myfile.read()
 
   Configuration_h = Configuration_h.split('\n')
-  Marlin_ver = 0  # set version to invalid number
+  WRCNC_ver = 0  # set version to invalid number
   for lines in Configuration_h:
     if 0 == lines.find('#define CONFIGURATION_H_VERSION 01'):
-      Marlin_ver = 1
+      WRCNC_ver = 1
     if 0 == lines.find('#define CONFIGURATION_H_VERSION 02'):
-      Marlin_ver = 2
+      WRCNC_ver = 2
     board = lines.find(' BOARD_') + 1
     motherboard = lines.find(' MOTHERBOARD ') + 1
     define = lines.find('#define ')
@@ -441,7 +441,7 @@ def get_board_name():
         board_name = lines[board:spaces]
       break
 
-  return board_name, Marlin_ver
+  return board_name, WRCNC_ver
 
 
 # extract first environment name found after the start position
@@ -469,9 +469,9 @@ def get_starting_env(board_name_full, version):
   # get environment starting point
 
   if version == 1:
-    path = 'Marlin/pins.h'
+    path = 'WRCNC/pins.h'
   if version == 2:
-    path = 'Marlin/src/pins/pins.h'
+    path = 'WRCNC/src/pins/pins.h'
   with open(path, 'r') as myfile:
     pins_h = myfile.read()
 
@@ -499,14 +499,14 @@ def get_starting_env(board_name_full, version):
 
 # get environment to be used for the build
 #  return: environment
-def get_env(board_name, ver_Marlin):
+def get_env(board_name, ver_WRCNC):
 
   def no_environment():
     print('ERROR - no environment for this board')
     print(board_name)
     raise SystemExit(0)  # no environment so quit
 
-  possible_envs = get_starting_env(board_name, ver_Marlin)
+  possible_envs = get_starting_env(board_name, ver_WRCNC)
 
   if not possible_envs:
     no_environment()
@@ -582,7 +582,7 @@ def get_env(board_name, ver_Marlin):
     get_answer(board_name, 'Which environment?', options)
     target_env = possible_envs[get_answer_val - 1]
 
-  if build_type == 'traceback' and target_env != 'LPC1768_debug_and_upload' and target_env != 'DUE_debug' and Marlin_ver == 2:
+  if build_type == 'traceback' and target_env != 'LPC1768_debug_and_upload' and target_env != 'DUE_debug' and WRCNC_ver == 2:
     print("ERROR - this board isn't setup for traceback")
     print('board_name: ', board_name)
     print('target_env: ', target_env)
@@ -1133,10 +1133,10 @@ class output_window(Text):
 
   def _rebuild(self):
     #global board_name
-    #global Marlin_ver
+    #global WRCNC_ver
     #global target_env
-    #board_name, Marlin_ver = get_board_name()
-    #target_env = get_env(board_name, Marlin_ver)
+    #board_name, WRCNC_ver = get_board_name()
+    #target_env = get_env(board_name, WRCNC_ver)
     self.start_thread()
 
   def rebuild(self, event):
@@ -1250,9 +1250,9 @@ def main():
   global target_env
   global board_name
 
-  board_name, Marlin_ver = get_board_name()
+  board_name, WRCNC_ver = get_board_name()
 
-  target_env = get_env(board_name, Marlin_ver)
+  target_env = get_env(board_name, WRCNC_ver)
 
   # Re-use the VSCode terminal, if possible
   if os.environ.get('PLATFORMIO_CALLER', '') == 'vscode':

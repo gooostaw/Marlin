@@ -24,8 +24,8 @@ IFS=' ' read -a INFO <<< "$MFINFO"
 ORG=${INFO[0]}
 TARG=${INFO[3]}
 
-if [[ $ORG == "MarlinFirmware" ]]; then
+if [[ $ORG == "WRCNCFirmware" ]]; then
   git push upstream $REF:$TARG
 else
-  echo "Not a MarlinFirmware working copy."; exit 1
+  echo "Not a WRCNCFirmware working copy."; exit 1
 fi

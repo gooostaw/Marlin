@@ -4,9 +4,9 @@
 #
 import pioutil
 if pioutil.is_pio_build():
-	import os,random,struct,uuid,marlin
+	import os,random,struct,uuid,wrcnc
 	# Relocate firmware from 0x08000000 to 0x08008800
-	marlin.relocate_firmware("0x08008800")
+	wrcnc.relocate_firmware("0x08008800")
 
 	def calculate_crc(contents, seed):
 		accumulating_xor_value = seed;
@@ -114,4 +114,4 @@ if pioutil.is_pio_build():
 		firmware.close()
 		update.close()
 
-	marlin.add_post_action(encrypt);
+	wrcnc.add_post_action(encrypt);

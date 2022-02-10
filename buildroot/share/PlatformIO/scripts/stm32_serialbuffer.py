@@ -32,7 +32,7 @@ if pioutil.is_pio_build():
 		if getBuildFlagValue(name) is None:
 			env.Append(BUILD_FLAGS=[f"-D{name}={value}"])
 
-	# Marlin uses the `RX_BUFFER_SIZE` \ `TX_BUFFER_SIZE` options to
+	# WRCNC uses the `RX_BUFFER_SIZE` \ `TX_BUFFER_SIZE` options to
 	# configure buffer sizes for receiving \ transmitting serial data.
 	# Stm32duino uses another set of defines for the same purpose, so this
 	# script gets the values from the configuration and uses them to define
@@ -42,13 +42,13 @@ if pioutil.is_pio_build():
 	# The script will set the value as the default one (64 bytes)
 	# or the user-configured one, whichever is higher.
 	#
-	# Marlin's default buffer sizes are 128 for RX and 32 for TX.
+	# WRCNC's default buffer sizes are 128 for RX and 32 for TX.
 	# The highest value is taken (128/64).
 	#
 	# If MF_*_BUFFER_SIZE, SERIAL_*_BUFFER_SIZE, USART_*_BUF_SIZE, are
 	# defined, the first of these values will be used as the minimum.
 	build_flags = env.ParseFlags(env.get('BUILD_FLAGS'))["CPPDEFINES"]
-	mf = env["MARLIN_FEATURES"]
+	mf = env["WRCNC_FEATURES"]
 
 	# Get the largest defined buffer sizes for RX or TX, using defaults for undefined
 	rxBuf = getBufferSize("RX", 128)

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # opt_find
-# Find one or more Marlin options - Configuration lines starting with #define
+# Find one or more WRCNC options - Configuration lines starting with #define
 #
 
 MYNAME=$(basename $0)
@@ -15,7 +15,7 @@ case "$ONE" in
   -e|--enabled )
       shift ; COMM="" ; TYPE="enabled " ;;
   -h|--help )
-      echo "$MYNAME [-d|--disabled|-e|--enabled] STRING ... Find matching Marlin configuration options."
+      echo "$MYNAME [-d|--disabled|-e|--enabled] STRING ... Find matching WRCNC configuration options."
       echo ; shift ;;
   -* )
       echo "Unknown option $ONE" ; shift ;;
@@ -24,7 +24,7 @@ esac
 while [[ $# > 0 ]]; do
   DID=0
   for FN in Configuration Configuration_adv; do
-    FOUND=$( grep -HEn "^\s*${COMM}#define\s+[A-Z0-9_]*${1}" "Marlin/$FN.h" 2>/dev/null )
+    FOUND=$( grep -HEn "^\s*${COMM}#define\s+[A-Z0-9_]*${1}" "WRCNC/$FN.h" 2>/dev/null )
     [[ -n "$FOUND" ]] && { echo "$FOUND" ; DID=1 ; }
   done
   ((DID)) || { echo "ERROR: ${MYNAME} - No ${TYPE}match for ${1}" ; exit 9; }

@@ -3,12 +3,12 @@
 */
 
 /**
- * The purpose of this file is just include Marlin Configuration files,
+ * The purpose of this file is just include WRCNC Configuration files,
  * to discover which FEATURES are enabled, without any HAL include.
  * Used by common-dependencies.py
  */
 
-#include "../../../../Marlin/src/inc/MarlinConfig.h"
+#include "../../../../WRCNC/src/inc/WRCNCConfig.h"
 
 //
 // Conditionals only used for [features]
@@ -19,7 +19,7 @@
   #define USES_LIQUIDTWI2
 #elif ENABLED(LCD_I2C_TYPE_PCA8574)
   #define USES_LIQUIDCRYSTAL_I2C
-#elif ANY(HAS_MARLINUI_HD44780, LCD_I2C_TYPE_PCF8575, SR_LCD_2W_NL, LCM1602)
+#elif ANY(HAS_WRCNCUI_HD44780, LCD_I2C_TYPE_PCF8575, SR_LCD_2W_NL, LCM1602)
   #define USES_LIQUIDCRYSTAL
 #endif
 
@@ -35,7 +35,7 @@
   #define HAS_SMART_EFF_MOD
 #endif
 
-#if HAS_MARLINUI_MENU
+#if HAS_WRCNCUI_MENU
   #if ENABLED(BACKLASH_GCODE)
     #define HAS_MENU_BACKLASH
   #endif

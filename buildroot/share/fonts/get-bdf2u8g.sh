@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #####################################################################
-# get-bdf2u8g.sh for Marlin
+# get-bdf2u8g.sh for WRCNC
 #
 # This script downloads, patches, and builds bdf2u8g
 # License: CC-SA

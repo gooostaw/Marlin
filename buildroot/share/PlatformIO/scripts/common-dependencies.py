@@ -1,6 +1,6 @@
 #
 # common-dependencies.py
-# Convenience script to check dependencies and add libs and sources for Marlin Enabled Features
+# Convenience script to check dependencies and add libs and sources for WRCNC Enabled Features
 #
 import pioutil
 if pioutil.is_pio_build():
@@ -79,12 +79,12 @@ if pioutil.is_pio_build():
 				FEATURE_CONFIG[feature] = { 'lib_deps': [] }
 			add_to_feat_cnf(feature, key[1])
 
-		# Add options matching custom_marlin.MY_OPTION to the pile
-		blab("========== Gather custom_marlin entries...")
+		# Add options matching custom_wrcnc.MY_OPTION to the pile
+		blab("========== Gather custom_wrcnc entries...")
 		all_opts = env.GetProjectOptions()
 		for n in all_opts:
 			key = n[0]
-			mat = re.match(r'custom_marlin\.(.+)', key)
+			mat = re.match(r'custom_wrcnc\.(.+)', key)
 			if mat:
 				try:
 					val = env.GetProjectOption(key)
@@ -92,7 +92,7 @@ if pioutil.is_pio_build():
 					val = None
 				if val:
 					opt = mat.group(1).upper()
-					blab("%s.custom_marlin.%s = '%s'" % ( env['PIOENV'], opt, val ))
+					blab("%s.custom_wrcnc.%s = '%s'" % ( env['PIOENV'], opt, val ))
 					add_to_feat_cnf(opt, val)
 
 	def get_all_known_libs():
@@ -130,7 +130,7 @@ if pioutil.is_pio_build():
 		load_config()
 		blab("========== Apply enabled features...")
 		for feature in FEATURE_CONFIG:
-			if not env.MarlinFeatureIsEnabled(feature):
+			if not env.WRCNCFeatureIsEnabled(feature):
 				continue
 
 			feat = FEATURE_CONFIG[feature]
@@ -195,37 +195,37 @@ if pioutil.is_pio_build():
 	#
 	# Use the compiler to get a list of all enabled features
 	#
-	def load_marlin_features():
-		if 'MARLIN_FEATURES' in env:
+	def load_wrcnc_features():
+		if 'WRCNC_FEATURES' in env:
 			return
 
 		# Process defines
 		from preprocessor import run_preprocessor
 		define_list = run_preprocessor(env)
-		marlin_features = {}
+		wrcnc_features = {}
 		for define in define_list:
 			feature = define[8:].strip().decode().split(' ')
 			feature, definition = feature[0], ' '.join(feature[1:])
-			marlin_features[feature] = definition
-		env['MARLIN_FEATURES'] = marlin_features
+			wrcnc_features[feature] = definition
+		env['WRCNC_FEATURES'] = wrcnc_features
 
 	#
 	# Return True if a matching feature is enabled
 	#
-	def MarlinFeatureIsEnabled(env, feature):
-		load_marlin_features()
+	def WRCNCFeatureIsEnabled(env, feature):
+		load_wrcnc_features()
 		r = re.compile('^' + feature + '$')
-		found = list(filter(r.match, env['MARLIN_FEATURES']))
+		found = list(filter(r.match, env['WRCNC_FEATURES']))
 
 		# Defines could still be 'false' or '0', so check
 		some_on = False
 		if len(found):
 			for f in found:
-				val = env['MARLIN_FEATURES'][f]
+				val = env['WRCNC_FEATURES'][f]
 				if val in [ '', '1', 'true' ]:
 					some_on = True
-				elif val in env['MARLIN_FEATURES']:
-					some_on = env.MarlinFeatureIsEnabled(val)
+				elif val in env['WRCNC_FEATURES']:
+					some_on = env.WRCNCFeatureIsEnabled(val)
 
 		return some_on
 
@@ -239,10 +239,10 @@ if pioutil.is_pio_build():
 	#
 	# Add a method for other PIO scripts to query enabled features
 	#
-	env.AddMethod(MarlinFeatureIsEnabled)
+	env.AddMethod(WRCNCFeatureIsEnabled)
 
 	#
-	# Add dependencies for enabled Marlin features
+	# Add dependencies for enabled WRCNC features
 	#
 	apply_features_config()
 	force_ignore_unused_libs()

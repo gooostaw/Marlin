@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #####################################################################
-# genallfont.sh for Marlin
+# genallfont.sh for WRCNC
 #
 # This script generates font data for language headers
 #
@@ -45,14 +45,14 @@ LANG_ARG="$@"
 #
 # Use 6x12 combined font data for Western languages
 #
-FN_FONT="${DN_EXEC}/marlin-6x12-3.bdf"
+FN_FONT="${DN_EXEC}/wrcnc-6x12-3.bdf"
 
 #
-# Change to working directory 'Marlin'
+# Change to working directory 'WRCNC'
 #
 OLDWD=`pwd`
-[[ $(basename "$OLDWD") != 'Marlin' && -d "Marlin" ]] && cd Marlin
-[[ -f "Configuration.h" ]] || { echo -n "cd to the 'Marlin' folder to run " ; basename $0 ; exit 1; }
+[[ $(basename "$OLDWD") != 'WRCNC' && -d "WRCNC" ]] && cd WRCNC
+[[ -f "Configuration.h" ]] || { echo -n "cd to the 'WRCNC' folder to run " ; basename $0 ; exit 1; }
 
 #
 # Compile the 'genpages' command in-place
@@ -65,14 +65,14 @@ OLDWD=`pwd`
 LANGS_DEFAULT="an bg ca cz da de el el_CY en es eu fi fr gl hr hu it jp_kana ko_KR nl pl pt pt_br ro ru sk sv tr uk vi zh_CN zh_TW test"
 
 #
-# Generate data for language list MARLIN_LANGS or all if not provided
+# Generate data for language list WRCNC_LANGS or all if not provided
 #
 for LANG in ${LANG_ARG:=$LANGS_DEFAULT} ; do
-  echo "Generating Marlin language data for '${LANG}'" >&2
+  echo "Generating WRCNC language data for '${LANG}'" >&2
   case "$LANG" in
      zh_* ) FONTFILE="wenquanyi_12pt" ;;
      ko_* ) FONTFILE="${DN_EXEC}/NanumGothic.bdf" ;;
-        * ) FONTFILE="${DN_EXEC}/marlin-6x12-3.bdf" ;;
+        * ) FONTFILE="${DN_EXEC}/wrcnc-6x12-3.bdf" ;;
   esac
   DN_WORK=`mktemp -d`
   cp Configuration.h ${DN_WORK}/
@@ -87,9 +87,9 @@ done
 
 #
 # Generate default ASCII font (char range 0-255):
-#   Marlin/src/lcd/dogm/fontdata/fontdata_ISO10646_1.h
+#   WRCNC/src/lcd/dogm/fontdata/fontdata_ISO10646_1.h
 #
-#if [ "${MARLIN_LANGS}" == "${LANGS_DEFAULT}" ]; then
+#if [ "${WRCNC_LANGS}" == "${LANGS_DEFAULT}" ]; then
 if [ 1 = 1 ]; then
   DN_WORK=`mktemp -d`
   cd ${DN_WORK}

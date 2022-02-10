@@ -13,13 +13,13 @@ while [[ $# -gt 0 ]]; do
 
     find $val -name *.cpp -exec "$HERE/uncrust" '{}' \;
 
-  elif [ -d "./Marlin/src/$val" ]; then
+  elif [ -d "./WRCNC/src/$val" ]; then
 
-    find "./Marlin/src/$val" -name *.cpp -exec "$HERE/uncrust" '{}' \;
+    find "./WRCNC/src/$val" -name *.cpp -exec "$HERE/uncrust" '{}' \;
 
-  elif [ -f "./Marlin/src/$val" ]; then
+  elif [ -f "./WRCNC/src/$val" ]; then
 
-    uncrust "./Marlin/src/$val"
+    uncrust "./WRCNC/src/$val"
 
   elif [ -f "$val" ]; then
 

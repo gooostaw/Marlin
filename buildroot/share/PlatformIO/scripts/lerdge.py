@@ -7,7 +7,7 @@
 #
 import pioutil
 if pioutil.is_pio_build():
-	import os,marlin
+	import os,wrcnc
 	Import("env")
 
 	from SCons.Script import DefaultEnvironment
@@ -43,7 +43,7 @@ if pioutil.is_pio_build():
 
 	if 'encrypt' in board.get("build").keys():
 		if board.get("build.encrypt") != "":
-			marlin.add_post_action(encrypt)
+			wrcnc.add_post_action(encrypt)
 	else:
 		print("LERDGE builds require output file via board_build.encrypt = 'filename' parameter")
 		exit(1)

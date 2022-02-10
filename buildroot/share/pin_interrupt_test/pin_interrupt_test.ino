@@ -1,5 +1,5 @@
 // Search pins usable for endstop-interrupts
-// Compile with the same build settings you'd use for Marlin.
+// Compile with the same build settings you'd use for WRCNC.
 
 #if defined(ARDUINO_AVR_MEGA2560) || defined(ARDUINO_AVR_MEGA)
     #undef  digitalPinToPCICR

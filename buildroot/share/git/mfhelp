@@ -9,15 +9,15 @@ Webber Ranch CNC Firmware Commands:
   firstpush ... Push and set-upstream the current branch to 'origin'
   ghpc ........ Push the current branch to its upstream branch
   ghtp ........ Set the transfer protolcol for all your remotes
-  mfadd ....... Fetch a remote branch from any Marlin fork
+  mfadd ....... Fetch a remote branch from any WRCNC fork
   mfclean ..... Attempt to clean up merged and deleted branches
   mfdoc ....... Build the website, serve locally, and browse
-  mffp ........ Push new commits directly to MarlinFirmware
+  mffp ........ Push new commits directly to WRCNCFirmware
   mfinfo ...... Provide branch information (for the other scripts)
-  mfinit ...... Create an 'upstream' remote for 'MarlinFirmare'
+  mfinit ...... Create an 'upstream' remote for 'WRCNCFirmare'
   mfnew ....... Create a new branch based on 'bugfix-...'
   mfpr ........ Push the current branch and open the PR form
-  mfpub ....... Build and publish the marlinfw.org website
+  mfpub ....... Build and publish the wrcncfw.org website
   mfqp ........ Commit changes, do an interactive rebase, and push
   mfrb ........ Interactively rebase the current branch on 'bugfix-...'
   mftest ...... Run a platform test locally with PlatformIO

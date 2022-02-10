@@ -35,7 +35,7 @@ def run_preprocessor(env, fn=None):
 		else:
 			cmd += ['-D' + s]
 
-	cmd += ['-D__MARLIN_DEPS__ -w -dM -E -x c++']
+	cmd += ['-D__WRCNC_DEPS__ -w -dM -E -x c++']
 	depcmd = cmd + [ filename ]
 	cmd = ' '.join(depcmd)
 	blab(cmd)

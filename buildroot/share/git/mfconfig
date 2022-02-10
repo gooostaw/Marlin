@@ -3,25 +3,25 @@
 # mfconfig init source dest
 # mfconfig manual source dest
 #
-# The MarlinFirmware/Configurations layout could be broken up into branches,
+# The WRCNCFirmware/Configurations layout could be broken up into branches,
 # but this makes management more complicated and requires more commits to
 # perform the same operation, so this uses a single branch with subfolders.
 #
 # init - Initialize the repo with a base commit and changes:
 #   - Source will be an 'import' branch containing all current configs.
 #   - Create an empty 'BASE' branch from 'init-repo'.
-#   - Add Marlin config files, but reset all to defaults.
+#   - Add WRCNC config files, but reset all to defaults.
 #   - Commit this so changes will be clear in following commits.
-#   - Add changed Marlin config files and commit.
+#   - Add changed WRCNC config files and commit.
 #
-# manual - Manually import changes from the Marlin repo
-#   - Replace 'default' configs with those from the Marlin repo.
+# manual - Manually import changes from the WRCNC repo
+#   - Replace 'default' configs with those from the WRCNC repo.
 #   - Wait for manual propagation to the rest of the configs.
 #   - Run init with the given 'source' and 'dest'
 #
 
 REPOHOME="`dirname ~/Projects/Maker/Firmware/.`"
-MARLINREPO="$REPOHOME/MarlinFirmware"
+WRCNCREPO="$REPOHOME/WRCNCFirmware"
 CONFIGREPO="$REPOHOME/Configurations"
 
 CEXA=config/examples
@@ -42,20 +42,20 @@ echo -n "Doing grhh ... " ; grhh ; echo
 if [[ $ACTION == "manual" ]]; then
 
   #
-  # Copy the latest default configs from MarlinFirmware/Marlin
+  # Copy the latest default configs from WRCNCFirmware/WRCNC
   # or one of the import branches here, then use them to construct
   # a 'BASE' branch with only defaults as a starting point.
   #
 
-  echo "- Updating '$IMPORT' from Marlin..."
+  echo "- Updating '$IMPORT' from WRCNC..."
 
   git checkout $IMPORT || exit
 
   # Reset from the latest complete state
   #git reset --hard bugfix-2.0.x
 
-  cp "$MARLINREPO/Marlin/"Configuration*.h "$CDEF/"
-  #git add . && git commit -m "Changes from Marlin ($(date '+%Y-%m-%d %H:%M'))."
+  cp "$WRCNCREPO/WRCNC/"Configuration*.h "$CDEF/"
+  #git add . && git commit -m "Changes from WRCNC ($(date '+%Y-%m-%d %H:%M'))."
 
   echo "- Fix up the import branch and come back."
 
@@ -69,7 +69,7 @@ fi
 
 if [[ $ACTION == "init" ]]; then
   #
-  # Copy all configs from a source such as MarlinFirmware/Marlin
+  # Copy all configs from a source such as WRCNCFirmware/WRCNC
   # or one of the import branches here, then use them to construct
   # a 'BASE' branch with only defaults as a starting point.
   #
@@ -174,7 +174,7 @@ if [[ $ACTION == "init" ]]; then
 
   git add . >/dev/null && git commit -m "Examples Customizations" >/dev/null
 
-  echo "- Copying extras from Marlin..."
+  echo "- Copying extras from WRCNC..."
   cp -R "$TEMP/config" .
 
   # Apply labels again!

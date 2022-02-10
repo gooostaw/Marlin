@@ -2,7 +2,7 @@
 #
 # for python3.5 or higher
 #-----------------------------------
-# Within Marlin project MarlinFirmware/Configurations, this program visits all folders
+# Within WRCNC project WRCNCFirmware/Configurations, this program visits all folders
 # under .../config/examples/*, processing each Configuration.h, Configuration_adv.h,
 # _Bootscreen.h, and _Statusscreen.h, to insert:
 #    #define CONFIG_EXAMPLES_DIR "examples/<style>/<vendor>/<model>"
@@ -14,7 +14,7 @@
 #
 # Invocation:
 #-------------
-# 1. Change directory to your MarlinFirmware/Configurations working copy
+# 1. Change directory to your WRCNCFirmware/Configurations working copy
 # 2. python3 config-labels.py
 #
 #-----------------------------------
