@@ -6,7 +6,7 @@
 /**
  * MRR ESPE pin assignments
  *
- * 3D printer control board based on the ESP32 microcontroller.
+ * CNC control board based on the ESP32 microcontroller.
  * Supports 5 stepper drivers (using I2S stepper stream), heated bed,
  * single hotend, and LCD controller.
  */

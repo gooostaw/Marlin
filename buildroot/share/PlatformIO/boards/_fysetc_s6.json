@@ -18,7 +18,7 @@
     "arduino",
     "stm32cube"
   ],
-  "name": "3D Printer control board",
+  "name": "CNC control board",
   "upload": {
     "maximum_ram_size": 131072,
     "maximum_size": 524288,

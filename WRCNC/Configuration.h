@@ -2256,7 +2256,7 @@
 //#define RIGIDBOT_PANEL
 
 //
-// Makeboard 3D Printer Parts 3D Printer Mini Display 1602 Mini Controller
+// Makeboard CNC Parts CNC Mini Display 1602 Mini Controller
 // https://www.aliexpress.com/item/32765887917.html
 //
 //#define MAKEBOARD_MINI_2_LINE_DISPLAY_1602

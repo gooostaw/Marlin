@@ -8,7 +8,7 @@
 
 ================================================================================
 
-Greetings! Thank you for choosing WRCNC 2 as your 3D printer firmware.
+Greetings! Thank you for choosing WRCNC 2 as your CNC firmware.
 
 To configure WRCNC you must edit Configuration.h and Configuration_adv.h
 located in the root 'WRCNC' folder. Check our Configurations repository to

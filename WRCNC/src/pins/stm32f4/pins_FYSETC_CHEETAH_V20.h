@@ -5,7 +5,7 @@
 
 #include "env_validate.h"
 
-#define DEFAULT_MACHINE_NAME "3D Printer"
+#define DEFAULT_MACHINE_NAME "CNC"
 
 #define BOARD_INFO_NAME   "FYSETC Cheetah V2.0"
 #define BOARD_WEBSITE_URL "fysetc.com"

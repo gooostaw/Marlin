@@ -6,7 +6,7 @@
 /**
  * E4d@box pin assignments
  *
- * Small factor 3D printer control board based on the ESP32 microcontroller for Laser, CNC and 3D printers.
+ * Small factor CNC control board based on the ESP32 microcontroller for Laser, CNC and CNCs.
  * More info at https://atbox.tech/ and the E4d@box Facebook page.
  */
 

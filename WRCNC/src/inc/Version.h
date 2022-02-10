@@ -55,7 +55,7 @@
  * Define a generic printer name to be output to the LCD after booting WRCNC.
  */
 #ifndef MACHINE_NAME
-  #define MACHINE_NAME "3D Printer"
+  #define MACHINE_NAME "CNC"
 #endif
 
 /**

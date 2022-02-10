@@ -13,7 +13,7 @@
  * Arduino - Tested with 1.8.10
  *      Install library per https://github.com/stm32duino/Arduino_Core_STM32
  *      Make the following selections under the TOOL menu in the Arduino IDE
- *          Board: "3D printer boards"
+ *          Board: "CNC boards"
  *          Board part number: "STEVAL-3DP001V1"
  *          U(S)ART support: "Enabled (generic "Serial")"
  *          USB support (if available): "CDC (no generic "Serial")"

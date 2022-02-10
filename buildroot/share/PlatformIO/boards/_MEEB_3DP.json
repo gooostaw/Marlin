@@ -31,7 +31,7 @@
     "libopencm3",
     "stm32cube"
   ],
-  "name": "3D Printer control board for MEEB with 512k flash/rs422 bus/tmc2208 drivers",
+  "name": "CNC control board for MEEB with 512k flash/rs422 bus/tmc2208 drivers",
   "upload": {
     "disable_flushing": false,
     "maximum_ram_size": 49152,

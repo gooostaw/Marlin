@@ -88,7 +88,7 @@
 // LCD / Controller
 //
 
-// Support for AZSMZ 12864 LCD with SD Card 3D printer smart controller control panel
+// Support for AZSMZ 12864 LCD with SD Card CNC smart controller control panel
 #if ENABLED(AZSMZ_12864)
   #define BEEPER_PIN                          66  // Smart RAMPS 1.42 pinout diagram on RepRap WIKI erroneously says this should be pin 65
   #define DOGLCD_A0                           59

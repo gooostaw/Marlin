@@ -118,7 +118,7 @@
  *   each additional Phase that processes it.
  *
  *   P0    Phase 0    Zero Mesh Data and turn off the Mesh Compensation System. This reverts the
- *                    3D Printer to the same state it was in before the Unified Bed Leveling Compensation
+ *                    CNC to the same state it was in before the Unified Bed Leveling Compensation
  *                    was turned on. Setting the entire Mesh to Zero is a special case that allows
  *                    a subsequent G or T leveling operation for backward compatibility.
  *

@@ -142,7 +142,7 @@ typedef struct USB_MicrosoftCompatibleDescriptor {
   USB_MicrosoftCompatibleDescriptor_Interface interfaces[];
 } __attribute__((packed)) USB_MicrosoftCompatibleDescriptor;
 
-// 3D Printer compatible descriptor
+// CNC compatible descriptor
 static USB_MicrosoftCompatibleDescriptor microsoft_compatible_id_descriptor = {
   .dwLength = sizeof(USB_MicrosoftCompatibleDescriptor) +
               1*sizeof(USB_MicrosoftCompatibleDescriptor_Interface),

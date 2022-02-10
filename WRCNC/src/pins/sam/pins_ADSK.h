@@ -19,7 +19,7 @@ On the top put jumper between 5V and 3V3 pins,
     jumper between D12 and A.STEP, jumper between D13 and A.DIR
 */
 
-/* CNC shield 3D printer connections:
+/* CNC shield CNC connections:
 X,Y,Z steppers as normal
 A stepper for E0 extruder
 (X-)&(GND) - X limit

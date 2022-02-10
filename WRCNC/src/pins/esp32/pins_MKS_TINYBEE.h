@@ -23,7 +23,7 @@
 
 /**
  * MRR ESPE pin assignments
- * MRR ESPE is a 3D printer control board based on the ESP32 microcontroller.
+ * MRR ESPE is a CNC control board based on the ESP32 microcontroller.
  * Supports 5 stepper drivers (using I2S stepper stream), heated bed,
  * single hotend, and LCD controller.
  */
