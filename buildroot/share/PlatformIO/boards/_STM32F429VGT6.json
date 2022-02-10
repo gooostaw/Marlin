@@ -5,7 +5,7 @@
     "f_cpu": "168000000L",
     "mcu": "stm32f429vgt6",
     "product_line": "STM32F429xx",
-    "variant": "WRCNC_F4x7Vx"
+    "variant": "mvCNC_F4x7Vx"
   },
   "connectivity": [
     "can"

@@ -1,21 +1,21 @@
-# Webber Ranch CNC Firmware (WRCNC)
+# Modern Vintage CNC Firmware (mvCNC)
 ## Feature rich CNC/Laser firmware with support for multiple hardware platforms
 
 <img align="right" width=175 src="https://github.com/Domush/Webber-Ranch-CNC-Firmware/raw/Webber-Ranch-CNC/Logo.bmp" />
 
-WRCNC is based on the popular Marlin 3D printing firmware, but changes the focus specifically to CNC spindled and laser machines and their unique demands, such as Automatic Tool Changer support, dynamic stepper configuration, multiple coordinate systems, and Real-Time commands.
+mvCNC is based on the popular Marlin 3D printing firmware, but changes the focus specifically to CNC spindled and laser machines and their unique demands, such as Automatic Tool Changer support, dynamic stepper configuration, multiple coordinate systems, and Real-Time commands.
 
-Until the feature set is stabilized and officially documented, you can reference the documentation at the [Marlin Home Page](https://marlinfw.org/) for common gCode commands and CNC features. Just note, WRCNC will not have 3D printing support, so Marlin's extruder and heater support will not apply.
+Until the feature set is stabilized and officially documented, you can reference the documentation at the [Marlin Home Page](https://marlinfw.org/) for common gCode commands and CNC features. Just note, mvCNC will not have 3D printing support, so Marlin's extruder and heater support will not apply.
 
 The base branch is for production machines and will be the most stable of the branches.
 
-## Building WRCNC
+## Building mvCNC
 
-To build WRCNC you'll need [PlatformIO](https://docs.platformio.org/en/latest/ide.html#platformio-ide) and Microsoft's VS Code.
+To build mvCNC you'll need [PlatformIO](https://docs.platformio.org/en/latest/ide.html#platformio-ide) and Microsoft's VS Code.
 
 ## Hardware Abstraction Layer (HAL)
 
-WRCNC contains a layer of abstraction so all the existing high-level code can be built for multiple 32-bit hardware platforms.
+mvCNC contains a layer of abstraction so all the existing high-level code can be built for multiple 32-bit hardware platforms.
 
 ### Current HALs
 
@@ -78,7 +78,7 @@ WRCNC contains a layer of abstraction so all the existing high-level code can be
 
 Proposed patches should be submitted as a Pull Request against the _Dev_ branch.
 
-- This branch is for fixing bugs and integrating any new features for the duration of the WRCNC life-cycle.
+- This branch is for fixing bugs and integrating any new features for the duration of the mvCNC life-cycle.
 - Please submit Feature Requests and Bug Reports to the Issue Queue
 - Whenever you add new features, be sure to add tests to `buildroot/tests` and then run your tests locally, if possible.
   - It's optional: Running all the tests on Windows might take a long time, and they will run anyway on GitHub.
@@ -88,12 +88,12 @@ Proposed patches should be submitted as a Pull Request against the _Dev_ branch.
 
 ## Credits
 
-The current WRCNC dev team consists of:
+The current mvCNC dev team consists of:
 
  - Edward Webber [[@Domush](https://github.com/Domush)] - USA
 
 ## License
 
-Webber Ranch CNC, WRCNC, is published under the [GPL license](/LICENSE) because we believe in open development. The GPL comes with both rights and obligations. Whether you use WRCNC firmware as the driver for your open or closed-source product, you must keep WRCNC open, and you must provide your compatible WRCNC source code to end users upon request. The most straightforward way to comply with the WRCNC license is to make a fork of WRCNC on Github, perform your modifications, and direct users to your modified fork.
+Modern Vintage CNC, mvCNC, is published under the [GPL license](/LICENSE) because we believe in open development. The GPL comes with both rights and obligations. Whether you use mvCNC firmware as the driver for your open or closed-source product, you must keep mvCNC open, and you must provide your compatible mvCNC source code to end users upon request. The most straightforward way to comply with the mvCNC license is to make a fork of mvCNC on Github, perform your modifications, and direct users to your modified fork.
 
 While we can't prevent the use of this code in products (3D printers, CNC, etc.) that are closed source or crippled by a patent, we would prefer that you choose another firmware or, better yet, make your own.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-git checkout WRCNC/Configuration*.h 2>/dev/null
-git checkout WRCNC/src/pins/ramps/pins_RAMPS.h 2>/dev/null
-rm -f WRCNC/_Bootscreen.h WRCNC/_Statusscreen.h wrcnc_config.json .pio/build/mc.zip
+git checkout mvCNC/Configuration*.h 2>/dev/null
+git checkout mvCNC/src/pins/ramps/pins_RAMPS.h 2>/dev/null
+rm -f mvCNC/_Bootscreen.h mvCNC/_Statusscreen.h mvcnc_config.json .pio/build/mc.zip

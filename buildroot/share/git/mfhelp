@@ -4,20 +4,20 @@
 #
 
 cat <<THIS
-Webber Ranch CNC Firmware Commands:
+Modern Vintage CNC Firmware Commands:
 
   firstpush ... Push and set-upstream the current branch to 'origin'
   ghpc ........ Push the current branch to its upstream branch
   ghtp ........ Set the transfer protolcol for all your remotes
-  mfadd ....... Fetch a remote branch from any WRCNC fork
+  mfadd ....... Fetch a remote branch from any mvCNC fork
   mfclean ..... Attempt to clean up merged and deleted branches
   mfdoc ....... Build the website, serve locally, and browse
-  mffp ........ Push new commits directly to WRCNCFirmware
+  mffp ........ Push new commits directly to mvCNCFirmware
   mfinfo ...... Provide branch information (for the other scripts)
-  mfinit ...... Create an 'upstream' remote for 'WRCNCFirmare'
+  mfinit ...... Create an 'upstream' remote for 'mvCNCFirmare'
   mfnew ....... Create a new branch based on 'bugfix-...'
   mfpr ........ Push the current branch and open the PR form
-  mfpub ....... Build and publish the wrcncfw.org website
+  mfpub ....... Build and publish the mvcncfw.org website
   mfqp ........ Commit changes, do an interactive rebase, and push
   mfrb ........ Interactively rebase the current branch on 'bugfix-...'
   mftest ...... Run a platform test locally with PlatformIO

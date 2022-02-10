@@ -49,7 +49,7 @@ def compute_build_signature(env):
 		return
 
 	# Definitions from these files will be kept
-	files_to_keep = [ 'WRCNC/Configuration.h', 'WRCNC/Configuration_adv.h' ]
+	files_to_keep = [ 'mvCNC/Configuration.h', 'mvCNC/Configuration_adv.h' ]
 
 	build_dir=os.path.join(env['PROJECT_BUILD_DIR'], env['PIOENV'])
 
@@ -58,16 +58,16 @@ def compute_build_signature(env):
 	for header in files_to_keep:
 		hashes += get_file_sha256sum(header)[0:10]
 
-	wrcnc_json = os.path.join(build_dir, 'wrcnc_config.json')
-	wrcnc_zip = os.path.join(build_dir, 'mc')
+	mvcnc_json = os.path.join(build_dir, 'mvcnc_config.json')
+	mvcnc_zip = os.path.join(build_dir, 'mc')
 
 	# Read existing config file
 	try:
-		with open(wrcnc_json, 'r') as infile:
+		with open(mvcnc_json, 'r') as infile:
 			conf = json.load(infile)
 			if conf['__INITIAL_HASH'] == hashes:
 				# Same configuration, skip recomputing the building signature
-				compress_file(wrcnc_json, wrcnc_zip)
+				compress_file(mvcnc_json, mvcnc_zip)
 				return
 	except:
 		pass
@@ -155,14 +155,14 @@ def compute_build_signature(env):
 	except:
 		pass
 
-	with open(wrcnc_json, 'w') as outfile:
+	with open(mvcnc_json, 'w') as outfile:
 		json.dump(data, outfile, separators=(',', ':'))
 
 	# Compress the JSON file as much as we can
-	compress_file(wrcnc_json, wrcnc_zip)
+	compress_file(mvcnc_json, mvcnc_zip)
 
 	# Generate a C source file for storing this array
-	with open('WRCNC/src/mczip.h','wb') as result_file:
+	with open('mvCNC/src/mczip.h','wb') as result_file:
 		result_file.write(b'#ifndef NO_CONFIGURATION_EMBEDDING_WARNING\n')
 		result_file.write(b'  #warning "Generated file \'mc.zip\' is embedded (Define NO_CONFIGURATION_EMBEDDING_WARNING to suppress this warning.)"\n')
 		result_file.write(b'#endif\n')

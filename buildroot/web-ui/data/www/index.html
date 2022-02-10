@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimal-ui,shrink-to-fit=no" />
-  <meta name="Title" content="WRCNC WebUI" />
-  <meta name="Description" content="WRCNC WebUI based on E4d@box WebUI" />
+  <meta name="Title" content="mvCNC WebUI" />
+  <meta name="Description" content="mvCNC WebUI based on E4d@box WebUI" />
   <meta name="Generator" content="E4d@box" />
   <meta name="Owner" content="E4d@box" />
   <meta name="Author" content="MandrakeDesign" />
   <meta name="google" content="notranslate" />
   <meta http-equiv="Content-Language" content="en_GB" />
-  <title>WRCNC WebUI</title>
+  <title>mvCNC WebUI</title>
   <link rel="shortcut icon" href="#" />
   <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="webwrcnc-font.css">
-  <link rel="stylesheet" type="text/css" href="webwrcnc.css" />
+  <link rel="stylesheet" type="text/css" href="webmvcnc-font.css">
+  <link rel="stylesheet" type="text/css" href="webmvcnc.css" />
   <script>
     var ua = window.navigator.userAgent;
     var msie = ua.indexOf("MSIE ");
@@ -26,7 +26,7 @@
     window.addEventListener("orientationchange", hideAddressBar );
   </script>
   <script src="moment.min.js"></script>
-  <script src="webwrcnc-class.js"></script>
+  <script src="webmvcnc-class.js"></script>
 </head>
 <body>
   <!-- Javascript sources ========================================================================================== -->
@@ -36,7 +36,7 @@
   <script type="text/javascript" src="bootstrap4-toggle.min.js"></script>
   <script async="" src="filesaver.min.js"></script>
   <script type="text/javascript" src="chart.min.js"></script>
-  <script type="text/javascript" src="webwrcnc.js"></script>
+  <script type="text/javascript" src="webmvcnc.js"></script>
 
   <!-- Accordion =================================================================================================== -->
   <div id="main-panel" class="h-100 bg-secondary m-0 p-0">
@@ -45,9 +45,9 @@
 
         <!-- PANEL: Fixed Title ==================================================================================== -->
         <div class="bg-dark text-light text-left p-2">
-          <span class="h4">WRCNC WebUI </span> by atbox.tech
+          <span class="h4">mvCNC WebUI </span> by atbox.tech
           <button type="button" class="btn btn-sm btn-success float-right ml-1" data-toggle="modal" data-target="#modal-info" style="width:35px; height:33px"><i class="icon icon-info"></i></button>
-          <a href="http://wrcncfw.org/" target="_blank" class="float-right"><img src="wrcnc-logo-dark.png" alt="WRCNCLogo" width="100" height="33" /></a>
+          <a href="http://mvcncfw.org/" target="_blank" class="float-right"><img src="mvcnc-logo-dark.png" alt="mvCNCLogo" width="100" height="33" /></a>
         </div>
 
         <!-- PANEL: Fixed connection status bar ==================================================================== -->
@@ -456,7 +456,7 @@
             <label for="text-gcommand" class="mb-0 field-labels">G-Code command:</label>
             <div class="input-group">
               <div class="input-group-prepend">
-                <a class="btn btn-sm btn-dark" target="_blank" href="http://wrcncfw.org/meta/gcode/"><i class="icon icon-info"></i></a>
+                <a class="btn btn-sm btn-dark" target="_blank" href="http://mvcncfw.org/meta/gcode/"><i class="icon icon-info"></i></a>
                 <button class="btn btn-sm btn-outline-dark" type="button" id="btn-gcommand-preset" data-toggle="modal" data-target="#modal-presets"><i class="icon icon-tasks"></i></button>
               </div>
               <input type="text" id="text-gcommand" class="form-control form-control-sm border-dark text-uppercase" value="" required>
@@ -497,7 +497,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body p-2 text-left">
-          <span class="h3">WRCNC WebUI</span>
+          <span class="h3">mvCNC WebUI</span>
           <p>Release date: January, 1 2020</p>
           <p>
             <i class="icon icon-github"></i> Github project: <a href="https://github.com/exilaus/E4d-box-project" target="_blank">E4d-box-project</a><br />
@@ -505,7 +505,7 @@
           </p>
           <p>Open source dependencies:</p>
           <ul>
-            <li><a href="https://wrcncfw.org/" target="_blank">WRCNC firmware</a></li>
+            <li><a href="https://mvcncfw.org/" target="_blank">mvCNC firmware</a></li>
             <li><a href="https://jquery.com/" target="_blank">JQuery 3.5.1 (slim version)</a></li>
             <li><a href="https://getbootstrap.com/" target="_blank">Bootstrap v4.5.0</a></li>
             <li><a href="https://gitbrent.github.io/bootstrap4-toggle/" target="_blank">Bootstrap4 toggle switch v3.6.1</a></li>
@@ -668,7 +668,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body p-2 text-center my-4">
-          <i class="icon icon-exclamation-triangle"></i><br>Ooopsss!<br />WRCNC firmware Web Socket is not connected.<br />Would you like connect it now?
+          <i class="icon icon-exclamation-triangle"></i><br>Ooopsss!<br />mvCNC firmware Web Socket is not connected.<br />Would you like connect it now?
         </div>
         <div class="modal-footer bg-secondary m-0 p-1">
           <div class="row w-100">

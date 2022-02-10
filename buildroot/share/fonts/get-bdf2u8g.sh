@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #####################################################################
-# get-bdf2u8g.sh for WRCNC
+# get-bdf2u8g.sh for mvCNC
 #
 # This script downloads, patches, and builds bdf2u8g
 # License: CC-SA

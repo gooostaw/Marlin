@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Create a Configuration from wrcnc_config.json
+# Create a Configuration from mvcnc_config.json
 #
 import json
 import sys
@@ -11,7 +11,7 @@ opt_output = '--opt' in sys.argv
 output_suffix = '.sh' if opt_output else '' if '--bare-output' in sys.argv else '.gen'
 
 try:
-	with open('wrcnc_config.json', 'r') as infile:
+	with open('mvcnc_config.json', 'r') as infile:
 		conf = json.load(infile)
 		for key in conf:
 			# We don't care about the hash when restoring here
@@ -22,7 +22,7 @@ try:
 					print(k + ': ' + v)
 				continue
 			# The key is the file name, so let's build it now
-			outfile = open('WRCNC/' + key + output_suffix, 'w')
+			outfile = open('mvCNC/' + key + output_suffix, 'w')
 			for k, v in sorted(conf[key].items()):
 				# Make define line now
 				if opt_output:
@@ -42,9 +42,9 @@ try:
 			# Try to apply changes to the actual configuration file (in order to keep useful comments)
 			if output_suffix != '':
 				# Move the existing configuration so it doesn't interfere
-				shutil.move('WRCNC/' + key, 'WRCNC/' + key + '.orig')
-				infile_lines = open('WRCNC/' + key + '.orig', 'r').read().split('\n')
-				outfile = open('WRCNC/' + key, 'w')
+				shutil.move('mvCNC/' + key, 'mvCNC/' + key + '.orig')
+				infile_lines = open('mvCNC/' + key + '.orig', 'r').read().split('\n')
+				outfile = open('mvCNC/' + key, 'w')
 				for line in infile_lines:
 					sline = line.strip(" \t\n\r")
 					if sline[:7] == "#define":
@@ -64,6 +64,6 @@ try:
 					outfile.write(define)
 				outfile.close()
 
-			print('Output configuration written to: ' + 'WRCNC/' + key + output_suffix)
+			print('Output configuration written to: ' + 'mvCNC/' + key + output_suffix)
 except:
-	print('No wrcnc_config.json found.')
+	print('No mvcnc_config.json found.')

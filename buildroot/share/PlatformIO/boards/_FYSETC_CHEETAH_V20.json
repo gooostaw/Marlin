@@ -15,7 +15,7 @@
       ]
     ],
     "mcu": "stm32f401rct6",
-    "variant": "WRCNC_FYSETC_CHEETAH_V20"
+    "variant": "mvCNC_FYSETC_CHEETAH_V20"
   },
   "debug": {
     "jlink_device": "STM32F401RC",

@@ -6,13 +6,13 @@
 #
 import pioutil
 if pioutil.is_pio_build():
-	import wrcnc
-	board = wrcnc.env.BoardConfig()
+	import mvcnc
+	board = mvcnc.env.BoardConfig()
 
 	address = board.get("build.address", "")
 	if address:
-		wrcnc.relocate_firmware(address)
+		mvcnc.relocate_firmware(address)
 
 	ldscript = board.get("build.ldscript", "")
 	if ldscript:
-		wrcnc.custom_ld_script(ldscript)
+		mvcnc.custom_ld_script(ldscript)

@@ -7,7 +7,7 @@
 #
 import pioutil
 if pioutil.is_pio_build():
-	import os,shutil,wrcnc
+	import os,shutil,mvcnc
 	from SCons.Script import DefaultEnvironment
 	from platformio import util
 
@@ -53,4 +53,4 @@ if pioutil.is_pio_build():
 	source_dir = os.path.join("buildroot/share/PlatformIO/variants", variant)
 	assert os.path.isdir(source_dir)
 
-	wrcnc.copytree(source_dir, variant_dir)
+	mvcnc.copytree(source_dir, variant_dir)

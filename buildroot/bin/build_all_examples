@@ -3,7 +3,7 @@
 # build_all_examples base_branch [resume_point]
 #
 
-GITREPO=https://github.com/WRCNCFirmware/Configurations.git
+GITREPO=https://github.com/mvCNCFirmware/Configurations.git
 STAT_FILE=./.pio/.buildall
 
 # Check dependencies
@@ -17,7 +17,7 @@ SELF=`basename "$0"`
 HERE=`dirname "$0"`
 
 # Check if called in the right location
-[[ -e "WRCNC/src" ]] || { echo -e "This script must be called from a WRCNC working copy with:\n ./buildroot/bin/$SELF $1" ; exit ; }
+[[ -e "mvCNC/src" ]] || { echo -e "This script must be called from a mvCNC working copy with:\n ./buildroot/bin/$SELF $1" ; exit ; }
 
 if [[ $# -lt 1 || $# -gt 2 ]]; then
   echo "Usage: $SELF base_branch [resume_point]
@@ -26,7 +26,7 @@ if [[ $# -lt 1 || $# -gt 2 ]]; then
   exit
 fi
 
-echo "This script downloads all Configurations and builds WRCNC with each one."
+echo "This script downloads all Configurations and builds mvCNC with each one."
 echo "On failure the last-built configs will be left in your working copy."
 echo "Restore your configs with 'git checkout -f' or 'git reset --hard HEAD'."
 

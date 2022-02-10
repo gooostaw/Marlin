@@ -1,10 +1,10 @@
 #
-# Webber Ranch CNC Firmware
+# Modern Vintage CNC Firmware
 
 # Generated files
 _Version.h
 bdf2u8g
-wrcnc_config.json
+mvcnc_config.json
 mczip.h
 *.gen
 *.sublime-workspace

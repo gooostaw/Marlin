@@ -2,44 +2,44 @@ cmake_minimum_required(VERSION 2.8)
 #====================================================================#
 # Usage under Linux:                                                 #
 #                                                                    #
-#    From WRCNC/buildroot/share/cmake folder:                       #
+#    From mvCNC/buildroot/share/cmake folder:                       #
 #        mkdir -p build && cd build                                  #
 #        cmake ..                                                    #
 #        make                                                        #
 #                                                                    #
 # Usage under Windows:                                               #
 #                                                                    #
-#    From WRCNC/buildroot/share/cmake folder:                       #
+#    From mvCNC/buildroot/share/cmake folder:                       #
 #        mkdir build && cd build                                     #
 #        cmake -G"Unix Makefiles" ..                                 #
 #        make                                                        #
 #====================================================================#
 
 #====================================================================#
-# Download wrcnc-cmake scriptfiles if not already installed         #
+# Download mvcnc-cmake scriptfiles if not already installed         #
 # and add the path to the module path                                #
 #====================================================================#
 
-set(SCRIPT_BRANCH 1.0.2) #Set to wanted wrcnc-cmake release tag or branch
+set(SCRIPT_BRANCH 1.0.2) #Set to wanted mvcnc-cmake release tag or branch
 
-if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake)
+if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake)
 
-	file(DOWNLOAD https://github.com/tohara/wrcnc-cmake/archive/${SCRIPT_BRANCH}.tar.gz
-				  ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake-src.tar.gz SHOW_PROGRESS)
+	file(DOWNLOAD https://github.com/tohara/mvcnc-cmake/archive/${SCRIPT_BRANCH}.tar.gz
+				  ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake-src.tar.gz SHOW_PROGRESS)
 
-	execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xvf ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake-src.tar.gz WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+	execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xvf ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake-src.tar.gz WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
-	file(RENAME ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake-${SCRIPT_BRANCH} ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake)
-	file(REMOVE ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake-src.tar.gz)
+	file(RENAME ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake-${SCRIPT_BRANCH} ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake)
+	file(REMOVE ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake-src.tar.gz)
 
 
 endif()
 
 if(WIN32 AND NOT EXISTS ${CMAKE_BINARY_DIR}/make.exe)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake/resources/make.exe DESTINATION ${CMAKE_BINARY_DIR}/)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake/resources/make.exe DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
 
-set(CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake/modules)
+set(CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake/modules)
 
 #====================================================================#
 #  Custom path to Arduino SDK can be set here.                       #
@@ -53,17 +53,17 @@ set(CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmak
 #  Set included cmake files                                          #
 #====================================================================#
 include(Arduino_SDK) # Find the intallpath of Arduino SDK
-include(wrcnc_cmake_functions)
+include(mvcnc_cmake_functions)
 
 #====================================================================#
 #  Set toolchain file for arduino                                    #
 #====================================================================#
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/wrcnc-cmake/toolchain/ArduinoToolchain.cmake) # Arduino Toolchain
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/mvcnc-cmake/toolchain/ArduinoToolchain.cmake) # Arduino Toolchain
 
 #====================================================================#
 #  Setup Project                                                     #
 #====================================================================#
-project(WRCNC C CXX)
+project(mvCNC C CXX)
 
 #====================================================================#
 #  Register non standard hardware                                    #
@@ -82,22 +82,22 @@ print_programmer_list()
 
 #====================================================================#
 #  Get motherboard settings from Configuration.h                     #
-#  setup_motherboard(TARGET WRCNC_src_folder)                       #
+#  setup_motherboard(TARGET mvCNC_src_folder)                       #
 #  Returns ${TARGET}_BOARD and ${TARGET}_CPU                         #
 #                                                                    #
 #  To set it manually:                                               #
 #    set(${PROJECT_NAME}_BOARD mega)                                 #
 #    set(${PROJECT_NAME}_CPU atmega2560)                             #
 #====================================================================#
-setup_motherboard(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/../../../WRCNC)
+setup_motherboard(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/../../../mvCNC)
 
 #====================================================================#
 #  Setup all source files                                            #
-#  Include WRCNC.ino to compile libs not included in *.cpp files    #
+#  Include mvCNC.ino to compile libs not included in *.cpp files    #
 #====================================================================#
 
-file(GLOB_RECURSE SOURCES "../../../WRCNC/*.cpp")
-set(${PROJECT_NAME}_SRCS "${SOURCES};../../../WRCNC/WRCNC.ino")
+file(GLOB_RECURSE SOURCES "../../../mvCNC/*.cpp")
+set(${PROJECT_NAME}_SRCS "${SOURCES};../../../mvCNC/mvCNC.ino")
 
 #====================================================================#
 #  Define the port for uploading code to the Arduino                 #

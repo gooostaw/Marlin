@@ -3,7 +3,7 @@
 from __future__ import print_function
 from __future__ import division
 
-""" Generate the stepper delay lookup table for WRCNC firmware. """
+""" Generate the stepper delay lookup table for mvCNC firmware. """
 
 import argparse
 
@@ -22,7 +22,7 @@ timer_freq = cpu_freq / args.divider
 print("#ifndef SPEED_LOOKUPTABLE_H")
 print("#define SPEED_LOOKUPTABLE_H")
 print()
-print('#include "WRCNCCore.h"')
+print('#include "mvCNCCore.h"')
 print()
 
 print("const uint16_t speed_lookuptable_fast[256][2] PROGMEM = {")

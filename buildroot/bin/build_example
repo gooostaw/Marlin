@@ -16,11 +16,11 @@ SUB=$2/config/examples/$3
 compgen -G "${SUB}Con*.h" > /dev/null || { echo "No configuration files found in $SUB" ; exit 1 ; }
 
 echo "Getting configuration files from $SUB"
-cp "$2/config/default"/*.h    WRCNC/
-cp "$SUB"/Configuration.h     WRCNC/ 2>/dev/null
-cp "$SUB"/Configuration_adv.h WRCNC/ 2>/dev/null
-cp "$SUB"/_Bootscreen.h       WRCNC/ 2>/dev/null
-cp "$SUB"/_Statusscreen.h     WRCNC/ 2>/dev/null
+cp "$2/config/default"/*.h    mvCNC/
+cp "$SUB"/Configuration.h     mvCNC/ 2>/dev/null
+cp "$SUB"/Configuration_adv.h mvCNC/ 2>/dev/null
+cp "$SUB"/_Bootscreen.h       mvCNC/ 2>/dev/null
+cp "$SUB"/_Statusscreen.h     mvCNC/ 2>/dev/null
 
 echo "Building the firmware now..."
 HERE=`dirname "$0"`

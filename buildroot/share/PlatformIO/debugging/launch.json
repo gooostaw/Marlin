@@ -38,9 +38,9 @@
             "request": "launch",
             "type": "cppdbg",
             "cwd": "${workspaceRoot}",
-            //"program": ".pio/build/simulator_linux_debug/WRCNCSimulator",
-            //"program": ".pio/build/simulator_windows/WRCNCSimulator",
-            "program": ".pio/build/simulator_macos_debug/WRCNCSimulator",
+            //"program": ".pio/build/simulator_linux_debug/mvCNCSimulator",
+            //"program": ".pio/build/simulator_windows/mvCNCSimulator",
+            "program": ".pio/build/simulator_macos_debug/mvCNCSimulator",
             "miDebuggerPath": "/opt/local/bin/ggdb",
             "MIMode": "gdb"
         }

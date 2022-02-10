@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
-# Webber Ranch CNC Firmware
-# Copyright (c) 2021 WRCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
+# Modern Vintage CNC Firmware
+# Copyright (c) 2021 mvCNCFirmware [https://github.com/Domush/Webber-Ranch-CNC-Firmware]
 #
 # Based on Marlin and grbl.
 # Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -20,7 +20,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# Generate WRCNC TFT Images from bitmaps/PNG/JPG
+# Generate mvCNC TFT Images from bitmaps/PNG/JPG
 
 import sys,re,struct
 from PIL import Image,ImageDraw
@@ -53,7 +53,7 @@ def image2bin(image, output_file):
 	f.close()
 
 if len(sys.argv) <= 2:
-	print("Utility to export a image in WRCNC TFT friendly format.")
+	print("Utility to export a image in mvCNC TFT friendly format.")
 	print("It will dump a raw bin RGB565 image or create a CPP file with an array of 16 bit image pixels.")
 	print("Usage: gen-tft-image.py INPUT_IMAGE.(png|bmp|jpg) OUTPUT_FILE.(cpp|bin)")
 	print("Author: rhapsodyv")

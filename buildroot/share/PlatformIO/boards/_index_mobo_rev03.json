@@ -19,7 +19,7 @@
       ]
     ],
     "mcu": "stm32f407vet6",
-    "variant": "WRCNC_F407VE"
+    "variant": "mvCNC_F407VE"
   },
   "debug": {
     "jlink_device": "STM32F407VE",

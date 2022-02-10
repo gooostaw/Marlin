@@ -1,0 +1,144 @@
+/**
+ * Modern Vintage CNC Firmware
+*/
+
+/**
+ * stepper/TMC26X.cpp
+ * Stepper driver indirection for TMC26X drivers
+ */
+
+#include "../../inc/mvCNCConfig.h"
+
+//
+// TMC26X Driver objects and inits
+//
+#if HAS_TMC26X
+
+#include "TMC26X.h"
+
+#define _TMC26X_DEFINE(ST) TMC26XStepper stepper##ST(200, ST##_CS_PIN, ST##_STEP_PIN, ST##_DIR_PIN, ST##_MAX_CURRENT, ST##_SENSE_RESISTOR)
+
+#if AXIS_DRIVER_TYPE_X(TMC26X)
+  _TMC26X_DEFINE(X);
+#endif
+#if AXIS_DRIVER_TYPE_X2(TMC26X)
+  _TMC26X_DEFINE(X2);
+#endif
+#if AXIS_DRIVER_TYPE_Y(TMC26X)
+  _TMC26X_DEFINE(Y);
+#endif
+#if AXIS_DRIVER_TYPE_Y2(TMC26X)
+  _TMC26X_DEFINE(Y2);
+#endif
+#if AXIS_DRIVER_TYPE_Z(TMC26X)
+  _TMC26X_DEFINE(Z);
+#endif
+#if AXIS_DRIVER_TYPE_Z2(TMC26X)
+  _TMC26X_DEFINE(Z2);
+#endif
+#if AXIS_DRIVER_TYPE_Z3(TMC26X)
+  _TMC26X_DEFINE(Z3);
+#endif
+#if AXIS_DRIVER_TYPE_Z4(TMC26X)
+  _TMC26X_DEFINE(Z4);
+#endif
+#if AXIS_DRIVER_TYPE_I(TMC26X)
+  _TMC26X_DEFINE(I);
+#endif
+#if AXIS_DRIVER_TYPE_J(TMC26X)
+  _TMC26X_DEFINE(J);
+#endif
+#if AXIS_DRIVER_TYPE_K(TMC26X)
+  _TMC26X_DEFINE(K);
+#endif
+#if AXIS_DRIVER_TYPE_E0(TMC26X)
+  _TMC26X_DEFINE(E0);
+#endif
+#if AXIS_DRIVER_TYPE_E1(TMC26X)
+  _TMC26X_DEFINE(E1);
+#endif
+#if AXIS_DRIVER_TYPE_E2(TMC26X)
+  _TMC26X_DEFINE(E2);
+#endif
+#if AXIS_DRIVER_TYPE_E3(TMC26X)
+  _TMC26X_DEFINE(E3);
+#endif
+#if AXIS_DRIVER_TYPE_E4(TMC26X)
+  _TMC26X_DEFINE(E4);
+#endif
+#if AXIS_DRIVER_TYPE_E5(TMC26X)
+  _TMC26X_DEFINE(E5);
+#endif
+#if AXIS_DRIVER_TYPE_E6(TMC26X)
+  _TMC26X_DEFINE(E6);
+#endif
+#if AXIS_DRIVER_TYPE_E7(TMC26X)
+  _TMC26X_DEFINE(E7);
+#endif
+
+#define _TMC26X_INIT(A) do{ \
+  stepper##A.setMicrosteps(A##_MICROSTEPS); \
+  stepper##A.start(); \
+}while(0)
+
+void tmc26x_init_to_defaults() {
+  #if AXIS_DRIVER_TYPE_X(TMC26X)
+    _TMC26X_INIT(X);
+  #endif
+  #if AXIS_DRIVER_TYPE_X2(TMC26X)
+    _TMC26X_INIT(X2);
+  #endif
+  #if AXIS_DRIVER_TYPE_Y(TMC26X)
+    _TMC26X_INIT(Y);
+  #endif
+  #if AXIS_DRIVER_TYPE_Y2(TMC26X)
+    _TMC26X_INIT(Y2);
+  #endif
+  #if AXIS_DRIVER_TYPE_Z(TMC26X)
+    _TMC26X_INIT(Z);
+  #endif
+  #if AXIS_DRIVER_TYPE_Z2(TMC26X)
+    _TMC26X_INIT(Z2);
+  #endif
+  #if AXIS_DRIVER_TYPE_Z3(TMC26X)
+    _TMC26X_INIT(Z3);
+  #endif
+  #if AXIS_DRIVER_TYPE_Z4(TMC26X)
+    _TMC26X_INIT(Z4);
+  #endif
+  #if AXIS_DRIVER_TYPE_I(TMC26X)
+     _TMC26X_INIT(I);
+  #endif
+  #if AXIS_DRIVER_TYPE_J(TMC26X)
+    _TMC26X_INIT(J);
+  #endif
+  #if AXIS_DRIVER_TYPE_K(TMC26X)
+    _TMC26X_INIT(K);
+  #endif
+  #if AXIS_DRIVER_TYPE_E0(TMC26X)
+    _TMC26X_INIT(E0);
+  #endif
+  #if AXIS_DRIVER_TYPE_E1(TMC26X)
+    _TMC26X_INIT(E1);
+  #endif
+  #if AXIS_DRIVER_TYPE_E2(TMC26X)
+    _TMC26X_INIT(E2);
+  #endif
+  #if AXIS_DRIVER_TYPE_E3(TMC26X)
+    _TMC26X_INIT(E3);
+  #endif
+  #if AXIS_DRIVER_TYPE_E4(TMC26X)
+    _TMC26X_INIT(E4);
+  #endif
+  #if AXIS_DRIVER_TYPE_E5(TMC26X)
+    _TMC26X_INIT(E5);
+  #endif
+  #if AXIS_DRIVER_TYPE_E6(TMC26X)
+    _TMC26X_INIT(E6);
+  #endif
+  #if AXIS_DRIVER_TYPE_E7(TMC26X)
+    _TMC26X_INIT(E7);
+  #endif
+}
+
+#endif // HAS_TMC26X

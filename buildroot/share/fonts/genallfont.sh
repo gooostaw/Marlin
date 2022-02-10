@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #####################################################################
-# genallfont.sh for WRCNC
+# genallfont.sh for mvCNC
 #
 # This script generates font data for language headers
 #
@@ -45,14 +45,14 @@ LANG_ARG="$@"
 #
 # Use 6x12 combined font data for Western languages
 #
-FN_FONT="${DN_EXEC}/wrcnc-6x12-3.bdf"
+FN_FONT="${DN_EXEC}/mvcnc-6x12-3.bdf"
 
 #
-# Change to working directory 'WRCNC'
+# Change to working directory 'mvCNC'
 #
 OLDWD=`pwd`
-[[ $(basename "$OLDWD") != 'WRCNC' && -d "WRCNC" ]] && cd WRCNC
-[[ -f "Configuration.h" ]] || { echo -n "cd to the 'WRCNC' folder to run " ; basename $0 ; exit 1; }
+[[ $(basename "$OLDWD") != 'mvCNC' && -d "mvCNC" ]] && cd mvCNC
+[[ -f "Configuration.h" ]] || { echo -n "cd to the 'mvCNC' folder to run " ; basename $0 ; exit 1; }
 
 #
 # Compile the 'genpages' command in-place
@@ -65,14 +65,14 @@ OLDWD=`pwd`
 LANGS_DEFAULT="an bg ca cz da de el el_CY en es eu fi fr gl hr hu it jp_kana ko_KR nl pl pt pt_br ro ru sk sv tr uk vi zh_CN zh_TW test"
 
 #
-# Generate data for language list WRCNC_LANGS or all if not provided
+# Generate data for language list mvCNC_LANGS or all if not provided
 #
 for LANG in ${LANG_ARG:=$LANGS_DEFAULT} ; do
-  echo "Generating WRCNC language data for '${LANG}'" >&2
+  echo "Generating mvCNC language data for '${LANG}'" >&2
   case "$LANG" in
      zh_* ) FONTFILE="wenquanyi_12pt" ;;
      ko_* ) FONTFILE="${DN_EXEC}/NanumGothic.bdf" ;;
-        * ) FONTFILE="${DN_EXEC}/wrcnc-6x12-3.bdf" ;;
+        * ) FONTFILE="${DN_EXEC}/mvcnc-6x12-3.bdf" ;;
   esac
   DN_WORK=`mktemp -d`
   cp Configuration.h ${DN_WORK}/
@@ -87,9 +87,9 @@ done
 
 #
 # Generate default ASCII font (char range 0-255):
-#   WRCNC/src/lcd/dogm/fontdata/fontdata_ISO10646_1.h
+#   mvCNC/src/lcd/dogm/fontdata/fontdata_ISO10646_1.h
 #
-#if [ "${WRCNC_LANGS}" == "${LANGS_DEFAULT}" ]; then
+#if [ "${mvCNC_LANGS}" == "${LANGS_DEFAULT}" ]; then
 if [ 1 = 1 ]; then
   DN_WORK=`mktemp -d`
   cd ${DN_WORK}
@@ -102,7 +102,7 @@ if [ 1 = 1 ]; then
 
   cat <<EOF >src/lcd/dogm/fontdata/fontdata_ISO10646_1.h
 /**
- * Webber Ranch CNC Firmware
+ * Modern Vintage CNC Firmware
 */
 
 #include <U8glib-HAL.h>

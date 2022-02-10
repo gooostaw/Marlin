@@ -1,4 +1,4 @@
-On the Bresenham algorithm as implemented by WRCNC:
+On the Bresenham algorithm as implemented by mvCNC:
 (Taken from (https://www.cs.helsinki.fi/group/goa/mallinnus/lines/bresenh.html)
 
 The basic Bresenham algorithm:

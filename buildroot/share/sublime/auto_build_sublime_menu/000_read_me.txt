@@ -18,7 +18,7 @@ Sublime with autobuild
       Package Control: Install Package
           type in WebDevShell and click on it
 
-  in Sublime, open WRCNC directory with "platformio.ini" in it
+  in Sublime, open mvCNC directory with "platformio.ini" in it
 
   starting in the top level directory, go to the folder "Buildroot/shared/Sublime"
     copy the folder "auto_build_sublime_menu" and contents to:

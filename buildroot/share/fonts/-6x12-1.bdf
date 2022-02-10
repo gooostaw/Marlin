@@ -1,12 +1,12 @@
 STARTFONT 2.1
-FONT -WRCNC6x12-Fixed-Medium-R-SemiCondensed--12-110-75-75-C-60-ISO10646-1
+FONT -mvCNC6x12-Fixed-Medium-R-SemiCondensed--12-110-75-75-C-60-ISO10646-1
 SIZE 12 75 75
 FONTBOUNDINGBOX 6 12 0 -2
-COMMENT "WRCNC 6x12 Fixed, for menu display"
-COMMENT "This font is base on the X Windows' 6x12 '-Misc-Fixed-Medium-R-SemiCondensed--12-110-75-75-C-60-ISO10646-1', added WRCNC symbols at position 1-9, some chars were tweak for display on LCD screen, such as ',;c69' etc."
+COMMENT "mvCNC 6x12 Fixed, for menu display"
+COMMENT "This font is base on the X Windows' 6x12 '-Misc-Fixed-Medium-R-SemiCondensed--12-110-75-75-C-60-ISO10646-1', added mvCNC symbols at position 1-9, some chars were tweak for display on LCD screen, such as ',;c69' etc."
 STARTPROPERTIES 23
 FONTNAME_REGISTRY ""
-FOUNDRY "WRCNC"
+FOUNDRY "mvCNC"
 FAMILY_NAME "Fixed"
 WEIGHT_NAME "Medium"
 SLANT "R"

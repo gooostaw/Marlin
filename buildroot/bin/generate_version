@@ -9,7 +9,7 @@
 
 set -e
 
-DIR="${1:-WRCNC}"
+DIR="${1:-mvCNC}"
 READ_FILE="${READ_FILE:-${DIR}/Version.h}"
 WRITE_FILE="${WRITE_FILE:-${READ_FILE}}"
 
@@ -34,7 +34,7 @@ WEBSITE_URL="${WEBSITE_URL:-$(awk -F'"' \
 
 cat > "${WRITE_FILE}" <<EOF
 /**
- * Webber Ranch CNC Firmware
+ * Modern Vintage CNC Firmware
 */
 #pragma once
 
@@ -47,7 +47,7 @@ cat > "${WRITE_FILE}" <<EOF
  */
 
 /**
-  * WRCNC release version identifier
+  * mvCNC release version identifier
   */
 #ifndef SHORT_BUILD_VERSION
   #define SHORT_BUILD_VERSION "${SHORT_BUILD_VERSION}"
@@ -80,17 +80,17 @@ cat > "${WRITE_FILE}" <<EOF
 #endif
 
 /**
-  * Defines a generic cnc name to be output to the LCD after booting WRCNC.
+  * Defines a generic cnc name to be output to the LCD after booting mvCNC.
   */
 #ifndef MACHINE_NAME
   #define MACHINE_NAME "${MACHINE_NAME}"
 #endif
 
 /**
-  * The SOURCE_CODE_URL is the location where users will find the WRCNC Source
+  * The SOURCE_CODE_URL is the location where users will find the mvCNC Source
   * Code which is installed on the device. In most cases —unless the manufacturer
   * has a distinct Github fork— the Source Code URL should just be the main
-  * WRCNC repository.
+  * mvCNC repository.
   */
 #ifndef SOURCE_CODE_URL
   #define SOURCE_CODE_URL "${SOURCE_CODE_URL}"
@@ -105,7 +105,7 @@ cat > "${WRITE_FILE}" <<EOF
 
 /**
   * The WEBSITE_URL is the location where users can get more information such as
-  * documentation about a specific WRCNC release.
+  * documentation about a specific mvCNC release.
   */
 #ifndef WEBSITE_URL
   #define WEBSITE_URL "${WEBSITE_URL}"
