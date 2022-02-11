@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU && EITHER(DELTA_CALIBRATION_MENU, DELTA_AUTO_CALIBRATION)
+#if HAS_MVCNCUI_MENU && EITHER(DELTA_CALIBRATION_MENU, DELTA_AUTO_CALIBRATION)
 
 #include "menu_item.h"
 #include "../../module/delta.h"
@@ -133,4 +133,4 @@ void menu_delta_calibrate() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && (DELTA_CALIBRATION_MENU || DELTA_AUTO_CALIBRATION)
+#endif // HAS_MVCNCUI_MENU && (DELTA_CALIBRATION_MENU || DELTA_AUTO_CALIBRATION)

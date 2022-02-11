@@ -22,7 +22,7 @@ uint32_t Password::value, Password::value_entry;
 //
 void Password::lock_machine() {
   is_locked = true;
-  TERN_(HAS_mvCNCUI_MENU, authenticate_user(ui.status_screen, screen_password_entry));
+  TERN_(HAS_MVCNCUI_MENU, authenticate_user(ui.status_screen, screen_password_entry));
 }
 
 //
@@ -37,7 +37,7 @@ void Password::authentication_check() {
     is_locked = true;
     SERIAL_ECHOLNPGM(STR_WRONG_PASSWORD);
   }
-  TERN_(HAS_mvCNCUI_MENU, authentication_done());
+  TERN_(HAS_MVCNCUI_MENU, authentication_done());
 }
 
 #endif // PASSWORD_FEATURE

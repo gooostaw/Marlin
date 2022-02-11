@@ -85,7 +85,7 @@
   #define LCD_PINS_ENABLE                  P0_18  // (MOSI) EXP1-3
   #define LCD_PINS_D4                      P0_15  // (SCK)  EXP1-5
 
-  #if BOTH(HAS_mvCNCUI_HD44780, IS_RRD_SC)
+  #if BOTH(HAS_MVCNCUI_HD44780, IS_RRD_SC)
     #error "REPRAP_DISCOUNT_SMART_CONTROLLER displays aren't supported by the BIQU BQ111-A4"
   #endif
 

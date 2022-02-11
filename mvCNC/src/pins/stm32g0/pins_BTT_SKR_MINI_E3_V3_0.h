@@ -28,6 +28,7 @@
 #endif
 
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 // Ignore temp readings during development.
 //#define BOGUS_TEMPERATURE_GRACE_PERIOD    2000
@@ -156,7 +157,7 @@
 #define EXP1_09_PIN                         PA15
 #define EXP1_03_PIN                         PD6
 
-#if EITHER(DWIN_CREALITY_LCD, IS_DWIN_mvCNCUI)
+#if EITHER(DWIN_CREALITY_LCD, IS_DWIN_MVCNCUI)
   /**
    *        ------                ------                ------
    * (ENT) |10  9 | (BEEP)       |10  9 |              |10  9 |

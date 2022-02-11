@@ -13,7 +13,7 @@
 #include "../../module/planner.h" // for synchronize()
 #include "../../mvCNCCore.h"     // for wait_for_user_response()
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
   #include "../../lcd/mvcncui.h"
 #elif ENABLED(EXTENSIBLE_UI)
   #include "../../lcd/extui/ui_api.h"
@@ -37,7 +37,7 @@ void GcodeSuite::M0_M1() {
 
   planner.synchronize();
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
 
     if (parser.string_arg)
       ui.set_status(parser.string_arg, true);
@@ -71,7 +71,7 @@ void GcodeSuite::M0_M1() {
 
   TERN_(HAS_RESUME_CONTINUE, wait_for_user_response(ms));
 
-  TERN_(HAS_mvCNCUI_MENU, ui.reset_status());
+  TERN_(HAS_MVCNCUI_MENU, ui.reset_status());
 }
 
 #endif // HAS_RESUME_CONTINUE

@@ -70,7 +70,7 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   void mvCNCUI::set_language(const uint8_t lang) {
     if (lang < NUM_LANGUAGES) {
       language = lang;
-      TERN_(HAS_mvCNCUI_U8GLIB, update_language_font());
+      TERN_(HAS_MVCNCUI_U8GLIB, update_language_font());
       return_to_status();
       refresh();
     }
@@ -137,7 +137,7 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   }
 #endif
 
-#if EITHER(HAS_mvCNCUI_MENU, EXTENSIBLE_UI)
+#if EITHER(HAS_MVCNCUI_MENU, EXTENSIBLE_UI)
   bool mvCNCUI::lcd_clicked;
 #endif
 
@@ -229,7 +229,7 @@ void mvCNCUI::init() {
 
 #if HAS_WIRED_LCD
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
     #include "dogm/mvcncui_DOGM.h"
   #endif
 
@@ -239,7 +239,7 @@ void mvCNCUI::init() {
   #include "../module/planner.h"
   #include "../module/motion.h"
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
     #include "../module/settings.h"
   #endif
 
@@ -287,11 +287,11 @@ void mvCNCUI::init() {
 
   millis_t mvCNCUI::next_button_update_ms; // = 0
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
     bool mvCNCUI::drawing_screen, mvCNCUI::first_page; // = false
   #endif
 
-  #if IS_DWIN_mvCNCUI
+  #if IS_DWIN_MVCNCUI
     bool mvCNCUI::did_first_redraw;
     bool mvCNCUI::old_is_printing;
   #endif
@@ -330,7 +330,7 @@ void mvCNCUI::init() {
 
   #endif
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
     #include "menu/menu.h"
 
     screenFunc_t mvCNCUI::currentScreen; // Initialized in CTOR
@@ -432,7 +432,7 @@ void mvCNCUI::init() {
 
     #endif // !HAS_GRAPHICAL_TFT
 
-  #endif // HAS_mvCNCUI_MENU
+  #endif // HAS_MVCNCUI_MENU
 
   ////////////////////////////////////////////
   ///////////// Keypad Handling //////////////
@@ -442,7 +442,7 @@ void mvCNCUI::init() {
 
     volatile uint8_t mvCNCUI::keypad_buttons;
 
-    #if HAS_mvCNCUI_MENU && !HAS_ADC_BUTTONS
+    #if HAS_MVCNCUI_MENU && !HAS_ADC_BUTTONS
 
       void lcd_move_x();
       void lcd_move_y();
@@ -469,7 +469,7 @@ void mvCNCUI::init() {
         if (keypad_buttons) {
           #if HAS_ENCODER_ACTION
             refresh(LCDVIEW_REDRAW_NOW);
-            #if HAS_mvCNCUI_MENU
+            #if HAS_MVCNCUI_MENU
               if (encoderDirection == -(ENCODERBASE)) { // HAS_ADC_BUTTONS forces REVERSE_MENU_DIRECTION, so this indicates menu navigation
                      if (RRK(EN_KEYPAD_UP))     encoderPosition += ENCODER_STEPS_PER_MENU_ITEM;
                 else if (RRK(EN_KEYPAD_DOWN))   encoderPosition -= ENCODER_STEPS_PER_MENU_ITEM;
@@ -479,7 +479,7 @@ void mvCNCUI::init() {
               else
             #endif
             {
-              #if HAS_mvCNCUI_MENU
+              #if HAS_MVCNCUI_MENU
                      if (RRK(EN_KEYPAD_UP))     encoderPosition -= epps;
                 else if (RRK(EN_KEYPAD_DOWN))   encoderPosition += epps;
                 else if (RRK(EN_KEYPAD_LEFT))   { MenuItem_back::action(); quick_feedback(); }
@@ -510,7 +510,7 @@ void mvCNCUI::init() {
 
           const bool homed = all_axes_homed();
 
-          #if HAS_mvCNCUI_MENU
+          #if HAS_MVCNCUI_MENU
 
             if (RRK(EN_KEYPAD_MIDDLE))  goto_screen(menu_move);
 
@@ -529,7 +529,7 @@ void mvCNCUI::init() {
               if (RRK(EN_KEYPAD_UP))    _reprapworld_keypad_move(Y_AXIS, -1);
             }
 
-          #endif // HAS_mvCNCUI_MENU
+          #endif // HAS_MVCNCUI_MENU
 
           if (!homed && RRK(EN_KEYPAD_F1)) queue.inject_P(G28_STR);
           return true;
@@ -557,7 +557,7 @@ void mvCNCUI::init() {
 
   void mvCNCUI::status_screen() {
 
-    TERN_(HAS_mvCNCUI_MENU, ENCODER_RATE_MULTIPLY(false));
+    TERN_(HAS_MVCNCUI_MENU, ENCODER_RATE_MULTIPLY(false));
 
     #if BASIC_PROGRESS_BAR
 
@@ -601,7 +601,7 @@ void mvCNCUI::init() {
 
     #endif // BASIC_PROGRESS_BAR
 
-    #if HAS_mvCNCUI_MENU
+    #if HAS_MVCNCUI_MENU
       if (use_click()) {
         #if BOTH(FILAMENT_LCD_DISPLAY, SDSUPPORT)
           next_filament_display = millis() + 5000UL;  // Show status message for 5s
@@ -655,7 +655,7 @@ void mvCNCUI::init() {
   void mvCNCUI::kill_screen(FSTR_P const lcd_error, FSTR_P const lcd_component) {
     init();
     status_printf(1, F(S_FMT ": " S_FMT), FTOP(lcd_error), FTOP(lcd_component));
-    TERN_(HAS_mvCNCUI_MENU, return_to_status());
+    TERN_(HAS_MVCNCUI_MENU, return_to_status());
 
     // RED ALERT. RED ALERT.
     #if ENABLED(PRINTER_EVENT_LEDS)
@@ -683,7 +683,7 @@ void mvCNCUI::init() {
 
   void mvCNCUI::quick_feedback(const bool clear_buttons/*=true*/) {
     TERN_(HAS_TOUCH_SLEEP, wakeup_screen()); // Wake up the TFT with most buttons
-    TERN_(HAS_mvCNCUI_MENU, refresh());
+    TERN_(HAS_MVCNCUI_MENU, refresh());
 
     #if HAS_ENCODER_ACTION
       if (clear_buttons)
@@ -695,9 +695,9 @@ void mvCNCUI::init() {
 
     #if HAS_CHIRP
       chirp(); // Buzz and wait. Is the delay needed for buttons to settle?
-      #if BOTH(HAS_mvCNCUI_MENU, USE_BEEPER)
+      #if BOTH(HAS_MVCNCUI_MENU, USE_BEEPER)
         for (int8_t i = 5; i--;) { buzzer.tick(); delay(2); }
-      #elif HAS_mvCNCUI_MENU
+      #elif HAS_MVCNCUI_MENU
         delay(10);
       #endif
     #endif
@@ -707,7 +707,7 @@ void mvCNCUI::init() {
   /////////////// Manual Move ////////////////
   ////////////////////////////////////////////
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
 
     ManualMove mvCNCUI::manual_move{};
 
@@ -819,7 +819,7 @@ void mvCNCUI::init() {
 
     #endif
 
-  #endif // HAS_mvCNCUI_MENU
+  #endif // HAS_MVCNCUI_MENU
 
   /**
    * Update the LCD, read encoder buttons, etc.
@@ -870,7 +870,7 @@ void mvCNCUI::init() {
       leds.update_timeout(powerManager.psu_on);
     #endif
 
-    #if HAS_mvCNCUI_MENU
+    #if HAS_MVCNCUI_MENU
 
       // Handle any queued Move Axis motion
       manual_move.task();
@@ -925,9 +925,9 @@ void mvCNCUI::init() {
         goto_previous_screen();
       }
 
-    #endif // HAS_mvCNCUI_MENU
+    #endif // HAS_MVCNCUI_MENU
 
-    if (ELAPSED(ms, next_lcd_update_ms) || TERN0(HAS_mvCNCUI_U8GLIB, drawing_screen)) {
+    if (ELAPSED(ms, next_lcd_update_ms) || TERN0(HAS_MVCNCUI_U8GLIB, drawing_screen)) {
 
       next_lcd_update_ms = ms + LCD_UPDATE_INTERVAL;
 
@@ -972,7 +972,7 @@ void mvCNCUI::init() {
         if (encoderPastThreshold || lcd_clicked) {
           if (encoderPastThreshold && TERN1(IS_TFTGLCD_PANEL, !external_control)) {
 
-            #if BOTH(HAS_mvCNCUI_MENU, ENCODER_RATE_MULTIPLIER)
+            #if BOTH(HAS_MVCNCUI_MENU, ENCODER_RATE_MULTIPLIER)
 
               int32_t encoderMultiplier = 1;
 
@@ -1027,12 +1027,12 @@ void mvCNCUI::init() {
       // This runs every ~100ms when idling often enough.
       // Instead of tracking changes just redraw the Status Screen once per second.
       if (on_status_screen() && !lcd_status_update_delay--) {
-        lcd_status_update_delay = TERN(HAS_mvCNCUI_U8GLIB, 12, 9);
+        lcd_status_update_delay = TERN(HAS_MVCNCUI_U8GLIB, 12, 9);
         if (max_display_update_time) max_display_update_time--;  // Be sure never go to a very big number
         refresh(LCDVIEW_REDRAW_NOW);
       }
 
-      #if BOTH(HAS_mvCNCUI_MENU, SCROLL_LONG_FILENAMES)
+      #if BOTH(HAS_MVCNCUI_MENU, SCROLL_LONG_FILENAMES)
         // If scrolling of long file names is enabled and we are in the sd card menu,
         // cause a refresh to occur until all the text has scrolled into view.
         if (currentScreen == menu_media && !lcd_status_update_delay--) {
@@ -1063,7 +1063,7 @@ void mvCNCUI::init() {
 
         TERN_(HAS_ADC_BUTTONS, keypad_buttons = 0);
 
-        #if HAS_mvCNCUI_U8GLIB
+        #if HAS_MVCNCUI_U8GLIB
 
           #if ENABLED(LIGHTWEIGHT_UI)
             const bool in_status = on_status_screen(),
@@ -1099,11 +1099,11 @@ void mvCNCUI::init() {
           run_current_screen();
 
           // Apply all DWIN drawing after processing
-          TERN_(IS_DWIN_mvCNCUI, DWIN_UpdateLCD());
+          TERN_(IS_DWIN_MVCNCUI, DWIN_UpdateLCD());
 
         #endif
 
-        TERN_(HAS_mvCNCUI_MENU, lcd_clicked = false);
+        TERN_(HAS_MVCNCUI_MENU, lcd_clicked = false);
 
         // Keeping track of the longest time for an individual LCD update.
         // Used to do screen throttling when the planner starts to fill up.
@@ -1317,7 +1317,7 @@ void mvCNCUI::init() {
             case ENCODER_PHASE_2: ENCODER_SPIN(ENCODER_PHASE_1, ENCODER_PHASE_3); break;
             case ENCODER_PHASE_3: ENCODER_SPIN(ENCODER_PHASE_2, ENCODER_PHASE_0); break;
           }
-          #if BOTH(HAS_mvCNCUI_MENU, AUTO_BED_LEVELING_UBL)
+          #if BOTH(HAS_MVCNCUI_MENU, AUTO_BED_LEVELING_UBL)
             external_encoder();
           #endif
           lastEncoderBits = enc;
@@ -1443,7 +1443,7 @@ void mvCNCUI::init() {
   void mvCNCUI::set_alert_status(FSTR_P const fstr) {
     set_status(fstr, 1);
     TERN_(HAS_TOUCH_SLEEP, wakeup_screen());
-    TERN_(HAS_mvCNCUI_MENU, return_to_status());
+    TERN_(HAS_MVCNCUI_MENU, return_to_status());
   }
 
   #include <stdarg.h>
@@ -1528,10 +1528,10 @@ void mvCNCUI::init() {
     IF_DISABLED(SDSUPPORT, print_job_timer.stop());
     TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_open(PROMPT_INFO, F("UI Aborted"), FPSTR(DISMISS_STR)));
     LCD_MESSAGE(MSG_PRINT_ABORTED);
-    TERN_(HAS_mvCNCUI_MENU, return_to_status());
+    TERN_(HAS_MVCNCUI_MENU, return_to_status());
   }
 
-  #if BOTH(HAS_mvCNCUI_MENU, PSU_CONTROL)
+  #if BOTH(HAS_MVCNCUI_MENU, PSU_CONTROL)
 
     void mvCNCUI::poweroff() {
       queue.inject(F("M81" TERN_(POWER_OFF_WAIT_FOR_COOLDOWN, "S")));
@@ -1543,11 +1543,11 @@ void mvCNCUI::init() {
   void mvCNCUI::flow_fault() {
     LCD_ALERTMESSAGE(MSG_FLOWMETER_FAULT);
     TERN_(HAS_BUZZER, buzz(1000, 440));
-    TERN_(HAS_mvCNCUI_MENU, return_to_status());
+    TERN_(HAS_MVCNCUI_MENU, return_to_status());
   }
 
   void mvCNCUI::pause_print() {
-    #if HAS_mvCNCUI_MENU
+    #if HAS_MVCNCUI_MENU
       synchronize(GET_TEXT(MSG_PAUSING));
       defer_status_screen();
     #endif
@@ -1669,7 +1669,7 @@ void mvCNCUI::init() {
           ExtUI::onMediaRemoved();
         #elif PIN_EXISTS(SD_DETECT)
           LCD_MESSAGE(MSG_MEDIA_REMOVED);
-          #if HAS_mvCNCUI_MENU
+          #if HAS_MVCNCUI_MENU
             if (!defer_return_to_status) return_to_status();
           #endif
         #endif
@@ -1695,7 +1695,7 @@ void mvCNCUI::init() {
 
 #endif // SDSUPPORT
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
   void mvCNCUI::reset_settings() {
     settings.reset();
     completion_feedback();
@@ -1751,7 +1751,7 @@ void mvCNCUI::init() {
 
 #if ENABLED(EEPROM_SETTINGS)
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
     void mvCNCUI::init_eeprom() {
       const bool good = settings.init_eeprom();
       completion_feedback(good);
@@ -1779,7 +1779,7 @@ void mvCNCUI::init() {
     }
 
     void mvCNCUI::eeprom_alert(const uint8_t msgid) {
-      #if HAS_mvCNCUI_MENU
+      #if HAS_MVCNCUI_MENU
         editable.uint8 = msgid;
         goto_screen([]{
           PGM_P const restore_msg = GET_TEXT(MSG_INIT_EEPROM);

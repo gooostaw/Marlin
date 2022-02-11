@@ -48,7 +48,7 @@ void mvCNCUI::tft_idle() {
     tft.queue.reset();
 
     tft.canvas(0, 0, TFT_WIDTH, TFT_HEIGHT);
-    #if ENABLED(BOOT_mvCNC_LOGO_SMALL)
+    #if ENABLED(BOOT_MVCNC_LOGO_SMALL)
       #define BOOT_LOGO_W 195   // mvCNCLogo195x59x16
       #define BOOT_LOGO_H  59
       #define SITE_URL_Y (TFT_HEIGHT - 70)
@@ -578,9 +578,9 @@ MotionAxisState motionAxisState;
 static void quick_feedback() {
   #if HAS_CHIRP
     ui.chirp(); // Buzz and wait. Is the delay needed for buttons to settle?
-    #if BOTH(HAS_mvCNCUI_MENU, USE_BEEPER)
+    #if BOTH(HAS_MVCNCUI_MENU, USE_BEEPER)
       for (int8_t i = 5; i--;) { buzzer.tick(); delay(2); }
-    #elif HAS_mvCNCUI_MENU
+    #elif HAS_MVCNCUI_MENU
       delay(10);
     #endif
   #endif

@@ -1259,7 +1259,7 @@
   #define FEEDRATE_CHANGE_BEEP_FREQUENCY 440
 #endif
 
-#if HAS_BED_PROBE && EITHER(HAS_mvCNCUI_MENU, HAS_TFT_LVGL_UI)
+#if HAS_BED_PROBE && EITHER(HAS_MVCNCUI_MENU, HAS_TFT_LVGL_UI)
   //#define PROBE_OFFSET_WIZARD       // Add a Probe Z Offset calibration option to the LCD menu
   #if ENABLED(PROBE_OFFSET_WIZARD)
     /**
@@ -1274,7 +1274,7 @@
   #endif
 #endif
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
   #if BOTH(HAS_BED_PROBE, AUTO_BED_LEVELING_BILINEAR)
     // Add calibration in the Probe Offsets menu to compensate for X-axis twist.
@@ -1303,7 +1303,7 @@
   // Insert a menu for preheating at the top level to allow for quick access
   //#define PREHEAT_SHORTCUT_MENU_ITEM
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU
 
 #if ANY(HAS_DISPLAY, DWIN_CREALITY_LCD_ENHANCED, DWIN_CREALITY_LCD_JYERSUI)
   //#define SOUND_MENU_ITEM   // Add a mute option to the LCD menu
@@ -1315,8 +1315,8 @@
 
   #if ENABLED(SHOW_BOOTSCREEN)
     #define BOOTSCREEN_TIMEOUT 4000      // (ms) Total Duration to display the boot screen(s)
-    #if EITHER(HAS_mvCNCUI_U8GLIB, TFT_COLOR_UI)
-      #define BOOT_mvCNC_LOGO_SMALL     // Show a smaller mvCNC logo on the Boot Screen (saving lots of flash)
+    #if EITHER(HAS_MVCNCUI_U8GLIB, TFT_COLOR_UI)
+      #define BOOT_MVCNC_LOGO_SMALL     // Show a smaller mvCNC logo on the Boot Screen (saving lots of flash)
     #endif
   #endif
 
@@ -1370,11 +1370,11 @@
     #endif
   #endif
 
-  #if EITHER(HAS_mvCNCUI_U8GLIB, EXTENSIBLE_UI)
+  #if EITHER(HAS_MVCNCUI_U8GLIB, EXTENSIBLE_UI)
     //#define PRINT_PROGRESS_SHOW_DECIMALS // Show progress with decimal digits
   #endif
 
-  #if EITHER(HAS_mvCNCUI_HD44780, IS_TFTGLCD_PANEL)
+  #if EITHER(HAS_MVCNCUI_HD44780, IS_TFTGLCD_PANEL)
     //#define LCD_PROGRESS_BAR            // Show a progress bar on HD44780 LCDs for SD printing
     #if ENABLED(LCD_PROGRESS_BAR)
       #define PROGRESS_BAR_BAR_TIME 2000  // (ms) Amount of time to show the bar
@@ -1637,7 +1637,7 @@
  * controller events, as there is a trade-off between reliable
  * printing performance versus fast display updates.
  */
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
   // Save many cycles by drawing a hollow frame or no frame on the Info Screen
   #define XYZ_NO_FRAME
   // #define XYZ_HOLLOW_FRAME
@@ -1691,17 +1691,17 @@
   //#define STATUS_ALT_FAN_BITMAP     // Use the alternative fan bitmap
   //#define STATUS_FAN_FRAMES 3       // :[0,1,2,3,4] Number of fan animation frames
   //#define STATUS_HEAT_PERCENT       // Show heating in a progress bar
-  //#define BOOT_mvCNC_LOGO_ANIMATED // Animated mvCNC logo. Costs ~3260 (or ~940) bytes of PROGMEM.
+  //#define BOOT_MVCNC_LOGO_ANIMATED // Animated mvCNC logo. Costs ~3260 (or ~940) bytes of PROGMEM.
 
   // Frivolous Game Options
-  //#define mvCNC_BRICKOUT
-  //#define mvCNC_INVADERS
-  //#define mvCNC_SNAKE
+  //#define MVCNC_BRICKOUT
+  //#define MVCNC_INVADERS
+  //#define MVCNC_SNAKE
   //#define GAMES_EASTER_EGG          // Add extra blank lines above the "Games" sub-menu
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB
 
-#if HAS_mvCNCUI_U8GLIB || IS_DWIN_mvCNCUI
+#if HAS_MVCNCUI_U8GLIB || IS_DWIN_MVCNCUI
   // Show SD percentage next to the progress bar
   #define SHOW_SD_PERCENT
 
@@ -1777,7 +1777,7 @@
 //
 // Specify additional languages for the UI. Default specified by LCD_LANGUAGE.
 //
-#if ANY(DOGLCD, TFT_COLOR_UI, TOUCH_UI_FTDI_EVE, IS_DWIN_mvCNCUI)
+#if ANY(DOGLCD, TFT_COLOR_UI, TOUCH_UI_FTDI_EVE, IS_DWIN_MVCNCUI)
   //#define LCD_LANGUAGE_2 fr
   //#define LCD_LANGUAGE_3 de
   //#define LCD_LANGUAGE_4 es
@@ -2992,7 +2992,7 @@
    * CHOPPER_DEFAULT_36V
    * CHOPPER_09STEP_24V   // 0.9 degree steppers (24V)
    * CHOPPER_PRUSAMK3_24V // Imported parameters from the official Průša firmware for MK3 (24V)
-   * CHOPPER_mvCNC_119   // Old defaults from mvCNC v1.1.9
+   * CHOPPER_MVCNC_119   // Old defaults from mvCNC v1.1.9
    *
    * Define your own with:
    * { <off_time[1..15]>, <hysteresis_end[-3..12]>, hysteresis_start[1..8] }

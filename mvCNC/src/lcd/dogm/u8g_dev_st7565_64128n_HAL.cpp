@@ -37,7 +37,7 @@
 
 #include "../../inc/mvCNCConfig.h"
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
 #include <U8glib-HAL.h>
 #include "HAL_LCD_com_defines.h"
@@ -218,4 +218,4 @@ u8g_dev_t u8g_dev_st7565_64128n_HAL_2x_sw_spi = { u8g_dev_st7565_64128n_HAL_2x_f
 U8G_PB_DEV(u8g_dev_st7565_64128n_HAL_hw_spi, WIDTH, HEIGHT, PAGE_HEIGHT, u8g_dev_st7565_64128n_HAL_fn, U8G_COM_HAL_HW_SPI_FN);
 u8g_dev_t u8g_dev_st7565_64128n_HAL_2x_hw_spi = { u8g_dev_st7565_64128n_HAL_2x_fn, &u8g_dev_st7565_64128n_HAL_2x_pb, U8G_COM_HAL_HW_SPI_FN };
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB

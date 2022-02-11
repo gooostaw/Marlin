@@ -16,7 +16,7 @@
 #define CHOPPER_DEFAULT_24V  { 4,  2, 1 }
 #define CHOPPER_DEFAULT_36V  { 5,  2, 4 }
 #define CHOPPER_PRUSAMK3_24V { 3, -2, 6 }
-#define CHOPPER_mvCNC_119   { 5,  2, 3 }
+#define CHOPPER_MVCNC_119   { 5,  2, 3 }
 #define CHOPPER_09STEP_24V   { 3, -1, 5 }
 
 #if ENABLED(MONITOR_DRIVER_STATUS) && !defined(MONITOR_DRIVER_STATUS_INTERVAL_MS)
@@ -110,7 +110,7 @@ class TMCmvCNC : public TMC, public TMCStorage<AXIS_LETTER, DRIVER_ID> {
       }
       void set_pwm_thrs(const uint32_t thrs) {
         TMC::TPWMTHRS(_tmc_thrs(this->microsteps(), thrs, planner.settings.axis_steps_per_mm[AXIS_ID]));
-        TERN_(HAS_mvCNCUI_MENU, this->stored.hybrid_thrs = thrs);
+        TERN_(HAS_MVCNCUI_MENU, this->stored.hybrid_thrs = thrs);
       }
     #endif
 
@@ -119,14 +119,14 @@ class TMCmvCNC : public TMC, public TMCStorage<AXIS_LETTER, DRIVER_ID> {
       void homing_threshold(int16_t sgt_val) {
         sgt_val = (int16_t)constrain(sgt_val, sgt_min, sgt_max);
         TMC::sgt(sgt_val);
-        TERN_(HAS_mvCNCUI_MENU, this->stored.homing_thrs = sgt_val);
+        TERN_(HAS_MVCNCUI_MENU, this->stored.homing_thrs = sgt_val);
       }
       #if ENABLED(SPI_ENDSTOPS)
         bool test_stall_status();
       #endif
     #endif
 
-    #if HAS_mvCNCUI_MENU
+    #if HAS_MVCNCUI_MENU
       void refresh_stepper_current() { rms_current(this->val_mA); }
 
       #if ENABLED(HYBRID_THRESHOLD)
@@ -185,11 +185,11 @@ class TMCmvCNC<TMC2208Stepper, AXIS_LETTER, DRIVER_ID, AXIS_ID> : public TMC2208
       }
       void set_pwm_thrs(const uint32_t thrs) {
         TMC2208Stepper::TPWMTHRS(_tmc_thrs(this->microsteps(), thrs, planner.settings.axis_steps_per_mm[AXIS_ID]));
-        TERN_(HAS_mvCNCUI_MENU, this->stored.hybrid_thrs = thrs);
+        TERN_(HAS_MVCNCUI_MENU, this->stored.hybrid_thrs = thrs);
       }
     #endif
 
-    #if HAS_mvCNCUI_MENU
+    #if HAS_MVCNCUI_MENU
       void refresh_stepper_current() { rms_current(this->val_mA); }
 
       #if ENABLED(HYBRID_THRESHOLD)
@@ -239,7 +239,7 @@ class TMCmvCNC<TMC2209Stepper, AXIS_LETTER, DRIVER_ID, AXIS_ID> : public TMC2209
       }
       void set_pwm_thrs(const uint32_t thrs) {
         TMC2209Stepper::TPWMTHRS(_tmc_thrs(this->microsteps(), thrs, planner.settings.axis_steps_per_mm[AXIS_ID]));
-        TERN_(HAS_mvCNCUI_MENU, this->stored.hybrid_thrs = thrs);
+        TERN_(HAS_MVCNCUI_MENU, this->stored.hybrid_thrs = thrs);
       }
     #endif
     #if USE_SENSORLESS
@@ -247,11 +247,11 @@ class TMCmvCNC<TMC2209Stepper, AXIS_LETTER, DRIVER_ID, AXIS_ID> : public TMC2209
       void homing_threshold(int16_t sgt_val) {
         sgt_val = (int16_t)constrain(sgt_val, sgt_min, sgt_max);
         TMC2209Stepper::SGTHRS(sgt_val);
-        TERN_(HAS_mvCNCUI_MENU, this->stored.homing_thrs = sgt_val);
+        TERN_(HAS_MVCNCUI_MENU, this->stored.homing_thrs = sgt_val);
       }
     #endif
 
-    #if HAS_mvCNCUI_MENU
+    #if HAS_MVCNCUI_MENU
       void refresh_stepper_current() { rms_current(this->val_mA); }
 
       #if ENABLED(HYBRID_THRESHOLD)
@@ -293,11 +293,11 @@ class TMCmvCNC<TMC2660Stepper, AXIS_LETTER, DRIVER_ID, AXIS_ID> : public TMC2660
       void homing_threshold(int16_t sgt_val) {
         sgt_val = (int16_t)constrain(sgt_val, sgt_min, sgt_max);
         TMC2660Stepper::sgt(sgt_val);
-        TERN_(HAS_mvCNCUI_MENU, this->stored.homing_thrs = sgt_val);
+        TERN_(HAS_MVCNCUI_MENU, this->stored.homing_thrs = sgt_val);
       }
     #endif
 
-    #if HAS_mvCNCUI_MENU
+    #if HAS_MVCNCUI_MENU
       void refresh_stepper_current() { rms_current(this->val_mA); }
 
       #if USE_SENSORLESS

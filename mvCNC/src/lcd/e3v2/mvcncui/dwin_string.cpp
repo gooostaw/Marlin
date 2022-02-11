@@ -22,7 +22,7 @@
 
 #include "../../../inc/mvCNCConfig.h"
 
-#if IS_DWIN_mvCNCUI
+#if IS_DWIN_MVCNCUI
 
 #include "dwin_string.h"
 //#include "../../fontutils.h"
@@ -177,4 +177,4 @@ int pf_bsearch_cb_comp_dwinmap_pgm(void *userdata, size_t idx, void * data_pin) 
 
 DWIN_String dwin_string;
 
-#endif // IS_DWIN_mvCNCUI
+#endif // IS_DWIN_MVCNCUI

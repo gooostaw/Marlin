@@ -6,6 +6,7 @@
 #include "env_validate.h"
 
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 // If you have the BigTreeTech driver expansion module, enable BTT_MOTOR_EXPANSION
 // https://github.com/bigtreetech/BTT-Expansion-module/tree/master/BTT%20EXP-MOT

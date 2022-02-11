@@ -102,7 +102,7 @@ public:
   static const float _mesh_index_to_xpos[GRID_MAX_POINTS_X],
                      _mesh_index_to_ypos[GRID_MAX_POINTS_Y];
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
     static bool lcd_map_control;
     static void steppers_were_disabled();
   #else

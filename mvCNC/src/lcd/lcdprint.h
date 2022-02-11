@@ -16,7 +16,7 @@
 
 #include "../inc/mvCNCConfig.h"
 
-#if IS_DWIN_mvCNCUI
+#if IS_DWIN_MVCNCUI
 
   #include "e3v2/mvcncui/mvcncui_dwin.h"
 
@@ -30,7 +30,7 @@
   #define LCD_ROW_Y(row)    (row)
   #define LCD_COL_X_RJ(len) (LCD_WIDTH - LCD_COL_X(len))
 
-#elif HAS_mvCNCUI_U8GLIB
+#elif HAS_MVCNCUI_U8GLIB
 
   #include "dogm/u8g_fontutf8.h"
   typedef u8g_uint_t lcd_uint_t;

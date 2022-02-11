@@ -6,7 +6,7 @@
 
 #include "../../../inc/mvCNCConfig.h"
 
-#if BOTH(HAS_mvCNCUI_U8GLIB, FORCE_SOFT_SPI)
+#if BOTH(HAS_MVCNCUI_U8GLIB, FORCE_SOFT_SPI)
 
 #include <U8glib-HAL.h>
 #include "../../shared/HAL_SPI.h"
@@ -148,5 +148,5 @@ uint8_t u8g_com_HAL_STM32F1_sw_spi_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, 
   return 1;
 }
 
-#endif // HAS_mvCNCUI_U8GLIB && FORCE_SOFT_SPI
+#endif // HAS_MVCNCUI_U8GLIB && FORCE_SOFT_SPI
 #endif // STM32F1

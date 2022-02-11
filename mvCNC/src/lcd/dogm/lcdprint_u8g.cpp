@@ -9,7 +9,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
 #include "mvcncui_DOGM.h"
 
@@ -53,4 +53,4 @@ int lcd_put_u8str_max_P(PGM_P utf8_pstr, pixel_len_t max_length) {
   return ret;
 }
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB

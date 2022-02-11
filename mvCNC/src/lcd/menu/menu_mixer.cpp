@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, MIXING_EXTRUDER)
+#if BOTH(HAS_MVCNCUI_MENU, MIXING_EXTRUDER)
 
 #include "menu_item.h"
 #include "menu_addon.h"
@@ -257,4 +257,4 @@ void menu_mixer() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && MIXING_EXTRUDER
+#endif // HAS_MVCNCUI_MENU && MIXING_EXTRUDER

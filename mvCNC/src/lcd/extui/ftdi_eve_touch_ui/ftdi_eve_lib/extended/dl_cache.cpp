@@ -85,7 +85,7 @@ bool DLCache::wait_until_idle() {
       CLCD::CommandFifo::reset();
       return false;
     }
-    #ifdef __mvCNC_FIRMWARE__
+    #ifdef __MVCNC_FIRMWARE__
       ExtUI::yield();
     #endif
   } while (CLCD::CommandFifo::is_processing());

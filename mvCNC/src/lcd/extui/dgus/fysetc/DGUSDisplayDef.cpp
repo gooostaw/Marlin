@@ -24,7 +24,7 @@
 #endif
 
 const uint16_t VPList_Boot[] PROGMEM = {
-  VP_mvCNC_VERSION,
+  VP_MVCNC_VERSION,
   0x0000
 };
 
@@ -232,7 +232,7 @@ const uint16_t VPList_PIDBED[] PROGMEM = {
 };
 
 const uint16_t VPList_Infos[] PROGMEM = {
-  VP_mvCNC_VERSION,
+  VP_MVCNC_VERSION,
   VP_PrintTime,
   #if ENABLED(PRINTCOUNTER)
     VP_PrintAccTime,
@@ -335,7 +335,7 @@ const struct DGUS_VP_Variable ListOfVP[] PROGMEM = {
     VPHELPER(VP_Z_FIRST_LAYER_CAL, nullptr, ScreenHandler.HandleFirstLayerCal, nullptr),
   #endif
 
-  { .VP = VP_mvCNC_VERSION, .memadr = (void*)mvCNCVersion, .size = VP_mvCNC_VERSION_LEN, .set_by_display_handler = nullptr, .send_to_display_handler = ScreenHandler.DGUSLCD_SendStringToDisplayPGM },
+  { .VP = VP_MVCNC_VERSION, .memadr = (void*)mvCNCVersion, .size = VP_MVCNC_VERSION_LEN, .set_by_display_handler = nullptr, .send_to_display_handler = ScreenHandler.DGUSLCD_SendStringToDisplayPGM },
   // M117 LCD String (We don't need the string in memory but "just" push it to the display on demand, hence the nullptr
   { .VP = VP_M117, .memadr = nullptr, .size = VP_M117_LEN, .set_by_display_handler = nullptr, .send_to_display_handler = ScreenHandler.DGUSLCD_SendStringToDisplay },
 

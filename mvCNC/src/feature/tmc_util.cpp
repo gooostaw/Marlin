@@ -22,7 +22,7 @@
   #endif
 #endif
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
   #include "../module/stepper.h"
 #endif
 

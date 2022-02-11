@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
 #include "menu_item.h"
 #include "../../module/planner.h"
@@ -635,4 +635,4 @@ void menu_advanced_settings() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU

@@ -4,7 +4,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if ENABLED(mvCNC_MAZE)
+#if ENABLED(MVCNC_MAZE)
 
 #include "game.h"
 
@@ -113,4 +113,4 @@ void MazeGame::enter_game() {
   reset_enemies();
 }
 
-#endif // mvCNC_MAZE
+#endif // MVCNC_MAZE

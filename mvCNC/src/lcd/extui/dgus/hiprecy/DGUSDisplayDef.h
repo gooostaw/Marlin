@@ -148,8 +148,8 @@ constexpr uint16_t VP_Z_CALIBRATE = 0x2430;
 constexpr uint16_t VP_Z_FIRST_LAYER_CAL = 0x2500; // Data: 0 - Cancel first layer cal progress, >0 filament type have loaded
 
 // Firmware version on the boot screen.
-constexpr uint16_t VP_mvCNC_VERSION = 0x3000;
-constexpr uint8_t VP_mvCNC_VERSION_LEN = 16;   // there is more space on the display, if needed.
+constexpr uint16_t VP_MVCNC_VERSION = 0x3000;
+constexpr uint8_t VP_MVCNC_VERSION_LEN = 16;   // there is more space on the display, if needed.
 
 // Place for status messages.
 constexpr uint16_t VP_M117 = 0x3020;

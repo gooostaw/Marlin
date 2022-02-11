@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, AUTO_BED_LEVELING_UBL)
+#if BOTH(HAS_MVCNCUI_MENU, AUTO_BED_LEVELING_UBL)
 
 #include "menu_item.h"
 #include "../../gcode/gcode.h"
@@ -666,4 +666,4 @@ void _lcd_ubl_level_bed() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && AUTO_BED_LEVELING_UBL
+#endif // HAS_MVCNCUI_MENU && AUTO_BED_LEVELING_UBL

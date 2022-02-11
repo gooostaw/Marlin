@@ -39,7 +39,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
 #include "../../../inc/mvCNCConfig.h"
 #include "../../shared/Delay.h"
@@ -91,5 +91,5 @@ void u8g_spiSend_sw_DUE_mode_3(uint8_t val) { // 3.5MHz
   }
 }
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB
 #endif // ARDUINO_ARCH_SAM

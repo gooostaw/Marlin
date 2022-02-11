@@ -215,7 +215,7 @@
   //
   // LCD Display output pins
   //
-  #if HAS_DWIN_E3V2 || IS_DWIN_mvCNCUI
+  #if HAS_DWIN_E3V2 || IS_DWIN_MVCNCUI
 
     #if LCD_SERIAL_PORT != 1
       #error "LCD_SERIAL_PORT should be 1 for this display."

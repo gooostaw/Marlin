@@ -106,7 +106,7 @@ void xatc_wizard_menu() {
     sprintf_P(tmp, GET_TEXT(MSG_MOVE_N_MM), dtostrf(FINE_MANUAL_MOVE, 1, digs, numstr));
     #if DISABLED(HAS_GRAPHICAL_TFT)
       SUBMENU_P(NUL_STR, []{ _goto_manual_move_z(float(FINE_MANUAL_MOVE)); });
-      MENU_ITEM_ADDON_START(0 + ENABLED(HAS_mvCNCUI_HD44780));
+      MENU_ITEM_ADDON_START(0 + ENABLED(HAS_MVCNCUI_HD44780));
       lcd_put_u8str(tmp);
       MENU_ITEM_ADDON_END();
     #else

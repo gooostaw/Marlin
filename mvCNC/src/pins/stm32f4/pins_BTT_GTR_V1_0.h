@@ -14,6 +14,7 @@
 #define BOARD_INFO_NAME "BTT GTR V1.0"
 
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 #define HAS_OTG_USB_HOST_SUPPORT                  // USB Flash Drive support
 #define M5_EXTENDER                               // The M5 extender is attached
 

@@ -9,7 +9,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB && DISABLED(LIGHTWEIGHT_UI)
+#if HAS_MVCNCUI_U8GLIB && DISABLED(LIGHTWEIGHT_UI)
 
 #include "dogm_Statusscreen.h"
 #include "mvcncui_DOGM.h"
@@ -1010,4 +1010,4 @@ void mvCNCUI::draw_status_message(const bool blink) {
   #endif
 }
 
-#endif // HAS_mvCNCUI_U8GLIB && !LIGHTWEIGHT_UI
+#endif // HAS_MVCNCUI_U8GLIB && !LIGHTWEIGHT_UI

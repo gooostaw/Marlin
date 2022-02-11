@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, ASSISTED_TRAMMING_WIZARD)
+#if BOTH(HAS_MVCNCUI_MENU, ASSISTED_TRAMMING_WIZARD)
 
 #include "menu_item.h"
 
@@ -91,4 +91,4 @@ void goto_tramming_wizard() {
   });
 }
 
-#endif // HAS_mvCNCUI_MENU && ASSISTED_TRAMMING_WIZARD
+#endif // HAS_MVCNCUI_MENU && ASSISTED_TRAMMING_WIZARD

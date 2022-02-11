@@ -8,7 +8,7 @@
 
 #include "power_monitor.h"
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
   #include "../lcd/mvcncui.h"
   #include "../lcd/lcdprint.h"
 #endif
@@ -29,7 +29,7 @@ uint8_t PowerMonitor::display_item;
 
 PowerMonitor power_monitor; // Single instance - this calls the constructor
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
   #if ENABLED(POWER_MONITOR_CURRENT)
     void PowerMonitor::draw_current() {
@@ -55,6 +55,6 @@ PowerMonitor power_monitor; // Single instance - this calls the constructor
     }
   #endif
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB
 
 #endif // HAS_POWER_MONITOR

@@ -39,7 +39,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
 #include "../shared/Marduino.h"
 #include "../shared/Delay.h"
@@ -171,5 +171,5 @@ uint8_t u8g_com_HAL_AVR_sw_sp_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, void 
   return 1;
 }
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB
 #endif // ARDUINO_ARCH_SAM

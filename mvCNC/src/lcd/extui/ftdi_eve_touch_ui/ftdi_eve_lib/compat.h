@@ -19,7 +19,7 @@
 
 #include "../config.h"
 
-#ifdef __mvCNC_FIRMWARE__
+#ifdef __MVCNC_FIRMWARE__
 
   // mvCNC will define the I/O functions for us
   #if ENABLED(TOUCH_UI_FTDI_EVE)
@@ -27,7 +27,7 @@
     #define FTDI_EXTENDED
   #endif
 
-#else // !__mvCNC_FIRMWARE__
+#else // !__MVCNC_FIRMWARE__
 
   #include <Arduino.h>
 
@@ -323,7 +323,7 @@
     #endif
   #endif
 
-#endif // !__mvCNC_FIRMWARE__
+#endif // !__MVCNC_FIRMWARE__
 
 #ifndef SD_SPI_SPEED
   #define SD_SPI_SPEED SPI_FULL_SPEED

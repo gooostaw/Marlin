@@ -278,8 +278,8 @@ constexpr uint16_t SP_T_Bed_Set   = 0x5040;
   constexpr uint16_t VP_MSGSTR4                       = 0x11C0;
   constexpr uint8_t  VP_MSGSTR4_LEN                   = 0x20;
 
-  constexpr uint16_t VP_mvCNC_VERSION                = 0x1A00;
-  constexpr uint8_t VP_mvCNC_VERSION_LEN             = 16;       // there is more space on the display, if needed.
+  constexpr uint16_t VP_MVCNC_VERSION                = 0x1A00;
+  constexpr uint8_t VP_MVCNC_VERSION_LEN             = 16;       // there is more space on the display, if needed.
 
 
   constexpr uint16_t VP_SCREENCHANGE_ASK              = 0x1500;

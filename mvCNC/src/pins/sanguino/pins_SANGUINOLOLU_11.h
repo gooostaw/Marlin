@@ -137,7 +137,7 @@
 
   #define SD_DETECT_PIN                       -1
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
 
     #if ENABLED(LCD_FOR_MELZI)
 

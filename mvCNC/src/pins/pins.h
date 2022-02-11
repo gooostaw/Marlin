@@ -48,7 +48,7 @@
 #endif
 
 // Test the target within the included pins file
-#ifdef __mvCNC_DEPS__
+#ifdef __MVCNC_DEPS__
   #define NOT_TARGET(V...) 0
 #else
   #define NOT_TARGET(V...) NONE(V)

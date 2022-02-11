@@ -11,6 +11,7 @@
 
 #define LPC1768_IS_SKRV1_3
 #define USES_DIAG_JUMPERS
+#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 //
 // Trinamic Stallguard pins

@@ -34,8 +34,8 @@
   #include "../ui_api.h"
 #endif
 
-#ifdef __mvCNC_FIRMWARE__
-  // __mvCNC_FIRMWARE__ exists when compiled within mvCNC.
+#ifdef __MVCNC_FIRMWARE__
+  // __MVCNC_FIRMWARE__ exists when compiled within mvCNC.
   #include "pin_mappings.h"
   #undef max
   #define max(a,b) ((a)>(b)?(a):(b))

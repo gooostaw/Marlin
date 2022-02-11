@@ -254,7 +254,7 @@
 #define EXP2_09_PIN                        P0_15
 #define EXP2_10_PIN                        P0_17
 
-#if HAS_DWIN_E3V2 || IS_DWIN_mvCNCUI
+#if HAS_DWIN_E3V2 || IS_DWIN_MVCNCUI
 
   // RET6 DWIN ENCODER LCD
   #define BTN_ENC                    EXP1_06_PIN
@@ -461,7 +461,7 @@
 
     #endif // !FYSETC_MINI_12864
 
-  #endif // HAS_mvCNCUI_U8GLIB
+  #endif // HAS_MVCNCUI_U8GLIB
 
 #endif // HAS_WIRED_LCD
 

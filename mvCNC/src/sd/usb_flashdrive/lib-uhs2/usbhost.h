@@ -51,7 +51,7 @@ class MAX3421e {
     uint8_t Task();
 };
 
-#define USE_mvCNC_MAX3421E
+#define USE_MVCNC_MAX3421E
 
 #if defined(__SAM3X8E__) && !defined(ARDUINO_SAM_DUE)
   #define ARDUINO_SAM_DUE // Spoof the USB library that this is a DUE

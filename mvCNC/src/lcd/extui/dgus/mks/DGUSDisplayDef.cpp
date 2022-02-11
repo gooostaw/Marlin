@@ -94,7 +94,7 @@ RUNOUT_MKS_DEF runout_mks;
 NOZZLE_PARK_DEF nozzle_park_mks;
 
 const uint16_t VPList_Boot[] PROGMEM = {
-  VP_mvCNC_VERSION,
+  VP_MVCNC_VERSION,
   0x0000
 };
 
@@ -432,7 +432,7 @@ const uint16_t MKSBabyStep[] PROGMEM = {
 
 const uint16_t MKSList_About[] PROGMEM = {
   // mvCNC version
-  VP_mvCNC_VERSION,
+  VP_MVCNC_VERSION,
   // H43 Version
   VP_MKS_H43_VERSION,
   VP_MKS_H43_UpdataVERSION,
@@ -517,7 +517,7 @@ const struct DGUS_VP_Variable ListOfVP[] PROGMEM = {
   #if ENABLED(FIRST_LAYER_CAL)
     VPHELPER(VP_Z_FIRST_LAYER_CAL, nullptr, ScreenHandler.HandleFirstLayerCal, nullptr),
   #endif
-  {.VP = VP_mvCNC_VERSION, .memadr = (void *)mvCNCVersion, .size = VP_mvCNC_VERSION_LEN, .set_by_display_handler = nullptr, .send_to_display_handler = ScreenHandler.DGUSLCD_SendStringToDisplayPGM},
+  {.VP = VP_MVCNC_VERSION, .memadr = (void *)mvCNCVersion, .size = VP_MVCNC_VERSION_LEN, .set_by_display_handler = nullptr, .send_to_display_handler = ScreenHandler.DGUSLCD_SendStringToDisplayPGM},
   // M117 LCD String (We don't need the string in memory but "just" push it to the display on demand, hence the nullptr
   {.VP = VP_M117, .memadr = nullptr, .size = VP_M117_LEN, .set_by_display_handler = nullptr, .send_to_display_handler = ScreenHandler.DGUSLCD_SendStringToDisplay},
   {.VP = VP_MKS_H43_VERSION, .memadr = (void *)H43Version, .size = VP_MKS_H43_VERSION_LEN, .set_by_display_handler = nullptr, .send_to_display_handler = ScreenHandler.DGUSLCD_SendStringToDisplayPGM},

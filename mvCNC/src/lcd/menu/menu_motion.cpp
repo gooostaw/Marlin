@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
 #define LARGE_AREA_TEST ((X_BED_SIZE) >= 1000 || (Y_BED_SIZE) >= 1000 || (Z_MAX_POS) >= 1000)
 
@@ -177,7 +177,7 @@ void _menu_move_distance(const AxisEnum axis, const screenFunc_t func, const int
       sprintf_P(tmp, label, dtostrf(FINE_MANUAL_MOVE, 1, digs, numstr));
       #if DISABLED(HAS_GRAPHICAL_TFT)
         SUBMENU_P(NUL_STR, []{ _goto_manual_move(float(FINE_MANUAL_MOVE)); });
-        MENU_ITEM_ADDON_START(0 + ENABLED(HAS_mvCNCUI_HD44780));
+        MENU_ITEM_ADDON_START(0 + ENABLED(HAS_MVCNCUI_HD44780));
         lcd_put_u8str(tmp);
         MENU_ITEM_ADDON_END();
       #else
@@ -459,4 +459,4 @@ void menu_motion() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU

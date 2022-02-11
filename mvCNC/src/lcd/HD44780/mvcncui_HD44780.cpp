@@ -4,7 +4,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_HD44780
+#if HAS_MVCNCUI_HD44780
 
 /**
  * mvcncui_HD44780.cpp
@@ -266,7 +266,7 @@ void mvCNCUI::set_custom_characters(const HD44780CharSet screen_charset/*=CHARSE
 
   #endif // LCD_PROGRESS_BAR
 
-  #if BOTH(SDSUPPORT, HAS_mvCNCUI_MENU)
+  #if BOTH(SDSUPPORT, HAS_MVCNCUI_MENU)
 
     // CHARSET_MENU
     const static PROGMEM byte refresh[8] = {
@@ -316,7 +316,7 @@ void mvCNCUI::set_custom_characters(const HD44780CharSet screen_charset/*=CHARSE
       #endif
         {
           createChar_P(LCD_STR_UPLEVEL[0], uplevel);
-          #if BOTH(SDSUPPORT, HAS_mvCNCUI_MENU)
+          #if BOTH(SDSUPPORT, HAS_MVCNCUI_MENU)
             // SD Card sub-menu special characters
             createChar_P(LCD_STR_REFRESH[0], refresh);
             createChar_P(LCD_STR_FOLDER[0], folder);
@@ -1033,7 +1033,7 @@ void mvCNCUI::draw_status_screen() {
   draw_status_message(blink);
 }
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
   #include "../menu/menu.h"
 
@@ -1570,6 +1570,6 @@ void mvCNCUI::draw_status_screen() {
 
   #endif // AUTO_BED_LEVELING_UBL
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU
 
-#endif // HAS_mvCNCUI_HD44780
+#endif // HAS_MVCNCUI_HD44780

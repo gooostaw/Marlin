@@ -162,7 +162,7 @@
   #endif
 #endif
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
   #define BOARD_ST7920_DELAY_1               125
   #define BOARD_ST7920_DELAY_2               125
   #define BOARD_ST7920_DELAY_3               125

@@ -19,7 +19,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
 #include "mvcncui_DOGM.h"
 #include "u8g_fontutf8.h"
@@ -207,7 +207,7 @@ bool mvCNCUI::detected() { return true; }
       u8g.firstPage(); do { _draw_bootscreen_bmp(bitmap); } while (u8g.nextPage());
     };
 
-    #if DISABLED(BOOT_mvCNC_LOGO_ANIMATED)
+    #if DISABLED(BOOT_MVCNC_LOGO_ANIMATED)
       draw_bootscreen_bmp(start_bmp);
     #else
       constexpr millis_t frame_time = mvCNC_BOOTSCREEN_FRAME_TIME;
@@ -335,7 +335,7 @@ void mvCNCUI::clear_lcd() { } // Automatically cleared by Picture Loop
 
 #endif
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
   #include "../menu/menu.h"
 
@@ -726,6 +726,6 @@ void mvCNCUI::clear_lcd() { } // Automatically cleared by Picture Loop
 
   #endif // BABYSTEP_ZPROBE_GFX_OVERLAY || MESH_EDIT_GFX_OVERLAY
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB

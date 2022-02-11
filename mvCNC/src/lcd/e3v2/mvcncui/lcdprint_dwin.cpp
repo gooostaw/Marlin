@@ -28,7 +28,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if IS_DWIN_mvCNCUI
+#if IS_DWIN_MVCNCUI
 
 #include "lcdprint_dwin.h"
 #include "dwin_lcd.h"
@@ -188,4 +188,4 @@ lcd_uint_t lcd_put_u8str_ind_P(PGM_P const pstr, const int8_t ind, PGM_P const i
 
 #endif // DEBUG_LCDPRINT
 
-#endif // IS_DWIN_mvCNCUI
+#endif // IS_DWIN_MVCNCUI

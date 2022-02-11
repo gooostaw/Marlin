@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU && HAS_TRINAMIC_CONFIG
+#if HAS_MVCNCUI_MENU && HAS_TRINAMIC_CONFIG
 
 #include "menu_item.h"
 #include "../../module/stepper/indirection.h"

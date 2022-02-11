@@ -20,31 +20,31 @@
   void menu_game();
 #endif
 
-#if ENABLED(mvCNC_BRICKOUT)
+#if ENABLED(MVCNC_BRICKOUT)
   #include "brickout.h"
 #endif
-#if ENABLED(mvCNC_INVADERS)
+#if ENABLED(MVCNC_INVADERS)
   #include "invaders.h"
 #endif
-#if ENABLED(mvCNC_MAZE)
+#if ENABLED(MVCNC_MAZE)
   #include "maze.h"
 #endif
-#if ENABLED(mvCNC_SNAKE)
+#if ENABLED(MVCNC_SNAKE)
   #include "snake.h"
 #endif
 
 // Pool game data to save SRAM
 union mvCNCGameData {
-  #if ENABLED(mvCNC_BRICKOUT)
+  #if ENABLED(MVCNC_BRICKOUT)
     brickout_data_t brickout;
   #endif
-  #if ENABLED(mvCNC_INVADERS)
+  #if ENABLED(MVCNC_INVADERS)
     invaders_data_t invaders;
   #endif
-  #if ENABLED(mvCNC_SNAKE)
+  #if ENABLED(MVCNC_SNAKE)
     snake_data_t snake;
   #endif
-  #if ENABLED(mvCNC_MAZE)
+  #if ENABLED(MVCNC_MAZE)
     maze_data_t maze;
   #endif
 };

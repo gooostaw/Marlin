@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, PASSWORD_FEATURE)
+#if BOTH(HAS_MVCNCUI_MENU, PASSWORD_FEATURE)
 
 #include "../../feature/password/password.h"
 
@@ -35,7 +35,7 @@ void Password::menu_password_entry() {
 
   STATIC_ITEM_P(NUL_STR, SS_CENTER, string);
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
     STATIC_ITEM_P(NUL_STR, SS_CENTER, "");
   #endif
 
@@ -166,4 +166,4 @@ void Password::menu_password() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && PASSWORD_FEATURE
+#endif // HAS_MVCNCUI_MENU && PASSWORD_FEATURE

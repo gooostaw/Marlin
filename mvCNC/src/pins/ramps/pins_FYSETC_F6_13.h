@@ -242,7 +242,7 @@
       #define NEOPIXEL_PIN                    25
     #endif
 
-  #elif HAS_mvCNCUI_U8GLIB || HAS_mvCNCUI_HD44780
+  #elif HAS_MVCNCUI_U8GLIB || HAS_MVCNCUI_HD44780
 
     #define LCD_PINS_RS                       16
     #define LCD_PINS_ENABLE                   17

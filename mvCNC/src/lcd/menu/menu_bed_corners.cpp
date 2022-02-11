@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, LEVEL_BED_CORNERS)
+#if BOTH(HAS_MVCNCUI_MENU, LEVEL_BED_CORNERS)
 
 #include "menu_item.h"
 #include "../../module/motion.h"
@@ -38,7 +38,7 @@
   int good_points;
   bool corner_probing_done, wait_for_probe;
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
     #include "../dogm/mvcncui_DOGM.h"
   #endif
   #define GOOD_POINTS_TO_STR(N) ui8tostr2(N)
@@ -148,7 +148,7 @@ static void _lcd_level_bed_corners_get_next_position() {
   void _lcd_draw_probing() {
     if (!ui.should_draw()) return;
 
-    TERN_(HAS_mvCNCUI_U8GLIB, ui.set_font(FONT_MENU)); // Set up the font for extra info
+    TERN_(HAS_MVCNCUI_U8GLIB, ui.set_font(FONT_MENU)); // Set up the font for extra info
 
     MenuItem_static::draw(0, GET_TEXT(MSG_PROBING_POINT), SS_INVERT); // "Probing Mesh" heading
 
@@ -346,4 +346,4 @@ void _lcd_level_bed_corners() {
   ui.goto_screen(_lcd_level_bed_corners_homing);
 }
 
-#endif // HAS_mvCNCUI_MENU && LEVEL_BED_CORNERS
+#endif // HAS_MVCNCUI_MENU && LEVEL_BED_CORNERS

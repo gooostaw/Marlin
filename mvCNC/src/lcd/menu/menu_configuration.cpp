@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
 #include "menu_item.h"
 
@@ -52,7 +52,7 @@ void menu_advanced_settings();
     static int8_t bar_percent = 0;
     if (ui.use_click()) {
       ui.goto_previous_screen();
-      TERN_(HAS_mvCNCUI_HD44780, ui.set_custom_characters(CHARSET_MENU));
+      TERN_(HAS_MVCNCUI_HD44780, ui.set_custom_characters(CHARSET_MENU));
       return;
     }
     bar_percent += (int8_t)ui.encoderPosition;
@@ -65,7 +65,7 @@ void menu_advanced_settings();
 
   void _progress_bar_test() {
     ui.goto_screen(progress_bar_test);
-    TERN_(HAS_mvCNCUI_HD44780, ui.set_custom_characters(CHARSET_INFO));
+    TERN_(HAS_MVCNCUI_HD44780, ui.set_custom_characters(CHARSET_INFO));
   }
 
 #endif // LCD_PROGRESS_BAR_TEST
@@ -559,4 +559,4 @@ void menu_configuration() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU

@@ -9,20 +9,20 @@
 
 #include "mvCNCConfigPre.h"
 
-#ifndef __mvCNC_DEPS__
+#ifndef __MVCNC_DEPS__
   #include "../HAL/HAL.h"
 #endif
 
 #include "../pins/pins.h"
 
-#ifndef __mvCNC_DEPS__
+#ifndef __MVCNC_DEPS__
   #include HAL_PATH(../HAL, timers.h)
   #include HAL_PATH(../HAL, spi_pins.h)
 #endif
 
 #include "Conditionals_post.h"
 
-#ifndef __mvCNC_DEPS__
+#ifndef __MVCNC_DEPS__
 
   #include HAL_PATH(../HAL, inc/Conditionals_post.h)
 

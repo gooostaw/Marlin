@@ -168,7 +168,7 @@ enum ADCSensorState : char {
   #define unscalePID_d(d) ( float(d) * PID_dT )
 #endif
 
-#if ENABLED(G26_MESH_VALIDATION) && EITHER(HAS_mvCNCUI_MENU, EXTENSIBLE_UI)
+#if ENABLED(G26_MESH_VALIDATION) && EITHER(HAS_MVCNCUI_MENU, EXTENSIBLE_UI)
   #define G26_CLICK_CAN_CANCEL 1
 #endif
 
@@ -947,7 +947,7 @@ class Temperature {
       static void set_heating_message(const uint8_t) {}
     #endif
 
-    #if HAS_mvCNCUI_MENU && HAS_TEMPERATURE
+    #if HAS_MVCNCUI_MENU && HAS_TEMPERATURE
       static void lcd_preheat(const uint8_t e, const int8_t indh, const int8_t indb);
     #endif
 

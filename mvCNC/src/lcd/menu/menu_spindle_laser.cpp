@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfig.h"
 
-#if HAS_mvCNCUI_MENU && HAS_CUTTER
+#if HAS_MVCNCUI_MENU && HAS_CUTTER
 
   #include "menu_item.h"
 
@@ -63,4 +63,4 @@
     END_MENU();
   }
 
-#endif // HAS_mvCNCUI_MENU && HAS_CUTTER
+#endif // HAS_MVCNCUI_MENU && HAS_CUTTER

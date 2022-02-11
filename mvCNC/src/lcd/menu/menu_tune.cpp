@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
 #include "menu_item.h"
 #include "../../module/motion.h"
@@ -28,7 +28,7 @@
 
   #include "../../feature/babystep.h"
   #include "../lcdprint.h"
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
     #include "../dogm/mvcncui_DOGM.h"
   #endif
 
@@ -50,16 +50,16 @@
       const float mps = planner.mm_per_step[axis];
       MenuEditItemBase::draw_edit_screen(msg, BABYSTEP_TO_STR(mps * babystep.accum));
       #if ENABLED(BABYSTEP_DISPLAY_TOTAL)
-        const bool in_view = TERN1(HAS_mvCNCUI_U8GLIB, PAGE_CONTAINS(LCD_PIXEL_HEIGHT - MENU_FONT_HEIGHT, LCD_PIXEL_HEIGHT - 1));
+        const bool in_view = TERN1(HAS_MVCNCUI_U8GLIB, PAGE_CONTAINS(LCD_PIXEL_HEIGHT - MENU_FONT_HEIGHT, LCD_PIXEL_HEIGHT - 1));
         if (in_view) {
-          TERN_(HAS_mvCNCUI_U8GLIB, ui.set_font(FONT_MENU));
+          TERN_(HAS_MVCNCUI_U8GLIB, ui.set_font(FONT_MENU));
           #if ENABLED(TFT_COLOR_UI)
             lcd_moveto(4, 3);
             lcd_put_u8str(GET_TEXT_F(MSG_BABYSTEP_TOTAL));
             lcd_put_wchar(':');
             lcd_moveto(10, 3);
           #else
-            lcd_moveto(0, TERN(HAS_mvCNCUI_U8GLIB, LCD_PIXEL_HEIGHT - MENU_FONT_DESCENT, LCD_HEIGHT - 1));
+            lcd_moveto(0, TERN(HAS_MVCNCUI_U8GLIB, LCD_PIXEL_HEIGHT - MENU_FONT_DESCENT, LCD_HEIGHT - 1));
             lcd_put_u8str(GET_TEXT_F(MSG_BABYSTEP_TOTAL));
             lcd_put_wchar(':');
           #endif
@@ -218,4 +218,4 @@ void menu_tune() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU

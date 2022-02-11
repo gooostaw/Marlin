@@ -22,7 +22,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if IS_DWIN_mvCNCUI
+#if IS_DWIN_MVCNCUI
 
 #include "mvcncui_dwin.h"
 #include "dwin_lcd.h"
@@ -253,7 +253,7 @@ void mvCNCUI::draw_status_message(const bool blink) {
   void mvCNCUI::_set_brightness() { DWIN_LCD_Brightness(backlight ? brightness : 0); }
 #endif
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
   #include "../../menu/menu.h"
 
@@ -581,6 +581,6 @@ void mvCNCUI::draw_status_message(const bool blink) {
 
   #endif // BABYSTEP_ZPROBE_GFX_OVERLAY || MESH_EDIT_GFX_OVERLAY
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU
 
-#endif // IS_DWIN_mvCNCUI
+#endif // IS_DWIN_MVCNCUI

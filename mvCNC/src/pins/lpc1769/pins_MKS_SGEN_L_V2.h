@@ -13,6 +13,7 @@
 #define BOARD_WEBSITE_URL "github.com/makerbase-mks"
 
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 //
 // EEPROM, MKS SGEN_L V2.0 hardware has 4K EEPROM on the board

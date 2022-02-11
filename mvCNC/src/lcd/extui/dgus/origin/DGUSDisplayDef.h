@@ -138,8 +138,8 @@ constexpr uint16_t VP_PID_AUTOTUNE_E0 = 0x2410;
 constexpr uint16_t VP_PID_AUTOTUNE_BED = 0x2420;
 
 // Firmware version on the boot screen.
-constexpr uint16_t VP_mvCNC_VERSION = 0x3000;
-constexpr uint8_t VP_mvCNC_VERSION_LEN = 16;   // there is more space on the display, if needed.
+constexpr uint16_t VP_MVCNC_VERSION = 0x3000;
+constexpr uint8_t VP_MVCNC_VERSION_LEN = 16;   // there is more space on the display, if needed.
 
 // Place for status messages.
 constexpr uint16_t VP_M117 = 0x3020;

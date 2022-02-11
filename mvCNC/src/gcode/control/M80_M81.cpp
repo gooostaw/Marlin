@@ -45,7 +45,7 @@
       OUT_WRITE(SUICIDE_PIN, !SUICIDE_PIN_STATE);
     #endif
 
-    TERN_(HAS_mvCNCUI_MENU, ui.reset_status());
+    TERN_(HAS_MVCNCUI_MENU, ui.reset_status());
   }
 
 #endif // PSU_CONTROL

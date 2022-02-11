@@ -39,7 +39,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB && !IS_U8GLIB_ST7920
+#if HAS_MVCNCUI_U8GLIB && !IS_U8GLIB_ST7920
 
 #include "u8g_com_HAL_DUE_sw_spi_shared.h"
 
@@ -123,5 +123,5 @@ uint8_t u8g_com_HAL_DUE_sw_spi_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, void
   return 1;
 }
 
-#endif // HAS_mvCNCUI_U8GLIB && !IS_U8GLIB_ST7920
+#endif // HAS_MVCNCUI_U8GLIB && !IS_U8GLIB_ST7920
 #endif // ARDUINO_ARCH_SAM

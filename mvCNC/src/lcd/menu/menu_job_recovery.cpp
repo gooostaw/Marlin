@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, POWER_LOSS_RECOVERY)
+#if BOTH(HAS_MVCNCUI_MENU, POWER_LOSS_RECOVERY)
 
 #include "menu_item.h"
 #include "../../gcode/queue.h"
@@ -36,4 +36,4 @@ void menu_job_recovery() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && POWER_LOSS_RECOVERY
+#endif // HAS_MVCNCUI_MENU && POWER_LOSS_RECOVERY

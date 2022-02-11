@@ -904,7 +904,7 @@ void mvCNCUI::draw_status_screen() {
   lcd.print_screen();
 }
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
   #include "../menu/menu.h"
 
@@ -1070,6 +1070,6 @@ void mvCNCUI::draw_status_screen() {
 
   #endif // AUTO_BED_LEVELING_UBL
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU
 
 #endif // IS_TFTGLCD_PANEL

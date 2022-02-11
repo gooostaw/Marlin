@@ -8,7 +8,7 @@
 
 #include "../inc/mvCNCConfigPre.h"
 
-#if HAS_WIRED_LCD && !HAS_GRAPHICAL_TFT && !IS_DWIN_mvCNCUI
+#if HAS_WIRED_LCD && !HAS_GRAPHICAL_TFT && !IS_DWIN_MVCNCUI
 
 #include "mvcncui.h"
 #include "lcdprint.h"

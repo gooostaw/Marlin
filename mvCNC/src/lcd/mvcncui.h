@@ -17,7 +17,7 @@
   #include "tft_io/touch_calibration.h"
 #endif
 
-#if ANY(HAS_mvCNCUI_MENU, ULTIPANEL_FEEDMULTIPLY, SOFT_RESET_ON_KILL)
+#if ANY(HAS_MVCNCUI_MENU, ULTIPANEL_FEEDMULTIPLY, SOFT_RESET_ON_KILL)
   #define HAS_ENCODER_ACTION 1
 #endif
 
@@ -59,7 +59,7 @@
     uint8_t get_ADC_keyValue();
   #endif
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
 
     #include "lcdprint.h"
 
@@ -72,7 +72,7 @@
     typedef void (*screenFunc_t)();
     typedef void (*menuAction_t)();
 
-  #endif // HAS_mvCNCUI_MENU
+  #endif // HAS_MVCNCUI_MENU
 
 #endif // HAS_WIRED_LCD
 
@@ -80,7 +80,7 @@
   #define LCD_UPDATE_INTERVAL TERN(HAS_TOUCH_BUTTONS, 50, 100)
 #endif
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
   enum mvCNCFont : uint8_t {
     FONT_STATUSMENU = 1,
     FONT_EDIT,
@@ -108,7 +108,7 @@
   } preheat_t;
 #endif
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
   // Manual Movement class
   class ManualMove {
@@ -180,7 +180,7 @@ class mvCNCUI {
 public:
 
   mvCNCUI() {
-    TERN_(HAS_mvCNCUI_MENU, currentScreen = status_screen);
+    TERN_(HAS_MVCNCUI_MENU, currentScreen = status_screen);
   }
 
   static void init();
@@ -202,7 +202,7 @@ public:
     static void set_language(const uint8_t lang);
   #endif
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
     static void update_language_font();
   #endif
 
@@ -227,7 +227,7 @@ public:
   // LCD implementations
   static void clear_lcd();
 
-  #if BOTH(HAS_mvCNCUI_MENU, TOUCH_SCREEN_CALIBRATION)
+  #if BOTH(HAS_MVCNCUI_MENU, TOUCH_SCREEN_CALIBRATION)
     static void check_touch_calibration() {
       if (touch_calibration.need_calibration()) currentScreen = touch_calibration_screen;
     }
@@ -357,7 +357,7 @@ public:
     static void resume_print();
     static void flow_fault();
 
-    #if BOTH(HAS_mvCNCUI_MENU, PSU_CONTROL)
+    #if BOTH(HAS_MVCNCUI_MENU, PSU_CONTROL)
       static void poweroff();
     #endif
 
@@ -388,17 +388,17 @@ public:
         static void bootscreen_completion(const millis_t sofar);
       #endif
 
-      #if HAS_mvCNCUI_U8GLIB
+      #if HAS_MVCNCUI_U8GLIB
         static void set_font(const mvCNCFont font_nr);
-      #elif IS_DWIN_mvCNCUI
+      #elif IS_DWIN_MVCNCUI
         static void set_font(const uint8_t font_nr);
       #endif
 
-      #if HAS_mvCNCUI_HD44780
+      #if HAS_MVCNCUI_HD44780
         static void set_custom_characters(const HD44780CharSet screen_charset=CHARSET_INFO);
       #endif
 
-      #if ENABLED(LCD_PROGRESS_BAR) && !HAS_mvCNCUI_U8GLIB
+      #if ENABLED(LCD_PROGRESS_BAR) && !HAS_MVCNCUI_U8GLIB
         static millis_t progress_bar_ms;  // Start time for the current progress bar cycle
         static void draw_progress_bar(const uint8_t percent);
         #if PROGRESS_MSG_EXPIRE > 0
@@ -444,13 +444,13 @@ public:
 
     #endif
 
-    #if HAS_mvCNCUI_U8GLIB
+    #if HAS_MVCNCUI_U8GLIB
       static bool drawing_screen, first_page;
     #else
       static constexpr bool drawing_screen = false, first_page = true;
     #endif
 
-    #if IS_DWIN_mvCNCUI
+    #if IS_DWIN_MVCNCUI
       static bool did_first_redraw;
       static bool old_is_printing;
     #endif
@@ -470,7 +470,7 @@ public:
   #endif
 
   #if ENABLED(SDSUPPORT)
-    #if BOTH(SCROLL_LONG_FILENAMES, HAS_mvCNCUI_MENU)
+    #if BOTH(SCROLL_LONG_FILENAMES, HAS_MVCNCUI_MENU)
       #define mvCNCUI_SCROLL_NAME 1
     #endif
     #if mvCNCUI_SCROLL_NAME
@@ -495,7 +495,7 @@ public:
     TERN(SCREENS_CAN_TIME_OUT, return_to_status_ms = ms + LCD_TIMEOUT_TO_STATUS, UNUSED(ms));
   }
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
 
     #if HAS_TOUCH_BUTTONS
       static uint8_t touch_buttons;
@@ -579,7 +579,7 @@ public:
 
   #endif
 
-  #if EITHER(HAS_mvCNCUI_MENU, EXTENSIBLE_UI)
+  #if EITHER(HAS_MVCNCUI_MENU, EXTENSIBLE_UI)
     static bool lcd_clicked;
     static bool use_click() {
       const bool click = lcd_clicked;
@@ -591,7 +591,7 @@ public:
     static bool use_click() { return false; }
   #endif
 
-  #if ENABLED(ADVANCED_PAUSE_FEATURE) && ANY(HAS_mvCNCUI_MENU, EXTENSIBLE_UI, DWIN_CREALITY_LCD_ENHANCED, DWIN_CREALITY_LCD_JYERSUI)
+  #if ENABLED(ADVANCED_PAUSE_FEATURE) && ANY(HAS_MVCNCUI_MENU, EXTENSIBLE_UI, DWIN_CREALITY_LCD_ENHANCED, DWIN_CREALITY_LCD_JYERSUI)
     static void pause_show_message(const PauseMessage message, const PauseMode mode=PAUSE_MODE_SAME, const uint8_t extruder=active_extruder);
   #else
     static void _pause_show_message() {}
@@ -601,12 +601,12 @@ public:
   //
   // EEPROM: Reset / Init / Load / Store
   //
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
     static void reset_settings();
   #endif
 
   #if ENABLED(EEPROM_SETTINGS)
-    #if HAS_mvCNCUI_MENU
+    #if HAS_MVCNCUI_MENU
       static void init_eeprom();
       static void load_settings();
       static void store_settings();
@@ -632,7 +632,7 @@ public:
   //
   // Block interaction while under external control
   //
-  #if HAS_mvCNCUI_MENU && EITHER(AUTO_BED_LEVELING_UBL, G26_MESH_VALIDATION)
+  #if HAS_MVCNCUI_MENU && EITHER(AUTO_BED_LEVELING_UBL, G26_MESH_VALIDATION)
     static bool external_control;
     FORCE_INLINE static void capture() { external_control = true; }
     FORCE_INLINE static void release() { external_control = false; }

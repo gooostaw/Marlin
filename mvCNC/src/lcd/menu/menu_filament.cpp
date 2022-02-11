@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, ADVANCED_PAUSE_FEATURE)
+#if BOTH(HAS_MVCNCUI_MENU, ADVANCED_PAUSE_FEATURE)
 
 #include "menu_item.h"
 #include "../../module/temperature.h"
@@ -324,4 +324,4 @@ void mvCNCUI::pause_show_message(
     ui.return_to_status();
 }
 
-#endif // HAS_mvCNCUI_MENU && ADVANCED_PAUSE_FEATURE
+#endif // HAS_MVCNCUI_MENU && ADVANCED_PAUSE_FEATURE

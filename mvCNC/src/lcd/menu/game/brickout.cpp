@@ -4,7 +4,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if ENABLED(mvCNC_BRICKOUT)
+#if ENABLED(MVCNC_BRICKOUT)
 
 #include "game.h"
 
@@ -186,4 +186,4 @@ void BrickoutGame::enter_game() {
   ui.encoderPosition = paddle_start / (PADDLE_VEL);
 }
 
-#endif // mvCNC_BRICKOUT
+#endif // MVCNC_BRICKOUT

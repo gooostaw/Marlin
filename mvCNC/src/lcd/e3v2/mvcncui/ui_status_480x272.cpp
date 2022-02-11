@@ -22,7 +22,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if IS_DWIN_mvCNCUI
+#if IS_DWIN_MVCNCUI
 
 #include "mvcncui_dwin.h"
 #include "dwin_lcd.h"
@@ -459,4 +459,4 @@ void mvCNCUI::draw_status_screen() {
   ui.old_is_printing = print_job_timer.isRunning();
 }
 
-#endif // IS_DWIN_mvCNCUI
+#endif // IS_DWIN_MVCNCUI

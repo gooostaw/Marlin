@@ -21,7 +21,7 @@
  */
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if HAS_DWIN_E3V2 || IS_DWIN_mvCNCUI
+#if HAS_DWIN_E3V2 || IS_DWIN_MVCNCUI
 
 #include "dwin_api.h"
 #include "dwin_set.h"
@@ -428,4 +428,4 @@ void DWIN_ICON_AnimationControl(uint16_t state) {
 //
 //  Flash writing returns 0xA5 0x4F 0x4B
 
-#endif // HAS_DWIN_E3V2 || IS_DWIN_mvCNCUI
+#endif // HAS_DWIN_E3V2 || IS_DWIN_MVCNCUI

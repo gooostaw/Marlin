@@ -47,7 +47,7 @@
 
 #include "env_validate.h"
 
-#if !defined(__mvCNC_DEPS__) && !defined(USBCON)
+#if !defined(__MVCNC_DEPS__) && !defined(USBCON)
   #error "USBCON should be defined by the platform for this board."
 #endif
 

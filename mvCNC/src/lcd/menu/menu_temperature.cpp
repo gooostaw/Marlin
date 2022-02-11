@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfig.h"
 
-#if HAS_mvCNCUI_MENU && HAS_TEMPERATURE
+#if HAS_MVCNCUI_MENU && HAS_TEMPERATURE
 
 #include "menu_item.h"
 #include "../../module/temperature.h"
@@ -289,4 +289,4 @@ void menu_temperature() {
 
 #endif
 
-#endif // HAS_mvCNCUI_MENU && HAS_TEMPERATURE
+#endif // HAS_MVCNCUI_MENU && HAS_TEMPERATURE

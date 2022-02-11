@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, BACKLASH_GCODE)
+#if BOTH(HAS_MVCNCUI_MENU, BACKLASH_GCODE)
 
 #include "menu_item.h"
 
@@ -50,4 +50,4 @@ void menu_backlash() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && BACKLASH_GCODE
+#endif // HAS_MVCNCUI_MENU && BACKLASH_GCODE

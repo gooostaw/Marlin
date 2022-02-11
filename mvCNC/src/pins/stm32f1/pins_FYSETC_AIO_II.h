@@ -138,7 +138,7 @@
 
   #define BEEPER_PIN                        PC9
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
 
     #define DOGLCD_A0                       PA15
     #ifdef pins_v2_20190128

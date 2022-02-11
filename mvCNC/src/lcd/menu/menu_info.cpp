@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, LCD_INFO_MENU)
+#if BOTH(HAS_MVCNCUI_MENU, LCD_INFO_MENU)
 
 #include "menu_item.h"
 
@@ -283,13 +283,13 @@ void menu_info() {
     SUBMENU(
       #if HAS_GAME_MENU
         MSG_GAMES, menu_game
-      #elif ENABLED(mvCNC_BRICKOUT)
+      #elif ENABLED(MVCNC_BRICKOUT)
         MSG_BRICKOUT, brickout.enter_game
-      #elif ENABLED(mvCNC_INVADERS)
+      #elif ENABLED(MVCNC_INVADERS)
         MSG_INVADERS, invaders.enter_game
-      #elif ENABLED(mvCNC_SNAKE)
+      #elif ENABLED(MVCNC_SNAKE)
         MSG_SNAKE, snake.enter_game
-      #elif ENABLED(mvCNC_MAZE)
+      #elif ENABLED(MVCNC_MAZE)
         MSG_MAZE, maze.enter_game
       #endif
     );
@@ -299,4 +299,4 @@ void menu_info() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && LCD_INFO_MENU
+#endif // HAS_MVCNCUI_MENU && LCD_INFO_MENU

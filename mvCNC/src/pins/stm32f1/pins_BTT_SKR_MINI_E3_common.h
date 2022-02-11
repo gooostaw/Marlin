@@ -9,6 +9,7 @@
 #define DISABLE_JTAG
 
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 // Ignore temp readings during development.
 //#define BOGUS_TEMPERATURE_GRACE_PERIOD    2000
@@ -118,7 +119,7 @@
   #define EXP1_3                            PB7
 #endif
 
-#if HAS_DWIN_E3V2 || IS_DWIN_mvCNCUI
+#if HAS_DWIN_E3V2 || IS_DWIN_MVCNCUI
   /**
    *        ------                ------                ------
    * (ENT) |10  9 | (BEEP)       |10  9 |              |10  9 |

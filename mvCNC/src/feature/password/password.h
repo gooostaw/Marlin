@@ -15,7 +15,7 @@ public:
   static void lock_machine();
   static void authentication_check();
 
-  #if HAS_mvCNCUI_MENU
+  #if HAS_MVCNCUI_MENU
     static void access_menu_password();
     static void authentication_done();
     static void media_gatekeeper();

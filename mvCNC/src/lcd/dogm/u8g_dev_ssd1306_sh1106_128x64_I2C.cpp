@@ -49,7 +49,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
 #include "HAL_LCD_com_defines.h"
 
@@ -281,4 +281,4 @@ uint8_t u8g_WriteEscSeqP_2_wire(u8g_t *u8g, u8g_dev_t *dev, const uint8_t *esc_s
   return 1;
 }
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB

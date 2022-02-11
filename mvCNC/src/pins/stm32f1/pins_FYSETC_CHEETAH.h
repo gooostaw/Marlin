@@ -140,7 +140,7 @@
 #if HAS_WIRED_LCD
   #define BEEPER_PIN                 EXP1_10_PIN
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
     #define DOGLCD_A0                EXP1_07_PIN
     #define DOGLCD_CS                EXP1_04_PIN
     #define DOGLCD_SCK               EXP1_05_PIN

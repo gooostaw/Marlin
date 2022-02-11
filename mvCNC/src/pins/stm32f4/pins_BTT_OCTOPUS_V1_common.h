@@ -25,6 +25,7 @@
 
 #define HAS_OTG_USB_HOST_SUPPORT                  // USB Flash Drive support
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 // Onboard I2C EEPROM
 #define I2C_EEPROM

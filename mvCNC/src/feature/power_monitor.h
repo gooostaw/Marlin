@@ -67,7 +67,7 @@ public:
   #endif
 
   #if HAS_WIRED_LCD
-    #if HAS_mvCNCUI_U8GLIB && DISABLED(LIGHTWEIGHT_UI)
+    #if HAS_MVCNCUI_U8GLIB && DISABLED(LIGHTWEIGHT_UI)
       FORCE_INLINE static bool display_enabled() { return flags != 0x00; }
     #endif
     #if ENABLED(POWER_MONITOR_CURRENT)

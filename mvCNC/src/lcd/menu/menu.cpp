@@ -4,7 +4,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
 
 #include "menu.h"
 #include "../../module/planner.h"
@@ -154,7 +154,7 @@ bool cnc_busy() {
 void mvCNCUI::goto_screen(screenFunc_t screen, const uint16_t encoder/*=0*/, const uint8_t top/*=0*/, const uint8_t items/*=0*/) {
   if (currentScreen != screen) {
 
-    TERN_(IS_DWIN_mvCNCUI, did_first_redraw = false);
+    TERN_(IS_DWIN_MVCNCUI, did_first_redraw = false);
 
     TERN_(HAS_TOUCH_BUTTONS, repeat_delay = BUTTON_DELAY_MENU);
 
@@ -193,16 +193,16 @@ void mvCNCUI::goto_screen(screenFunc_t screen, const uint16_t encoder/*=0*/, con
     clear_lcd();
 
     // Re-initialize custom characters that may be re-used
-    #if HAS_mvCNCUI_HD44780
+    #if HAS_MVCNCUI_HD44780
       if (TERN1(AUTO_BED_LEVELING_UBL, !ubl.lcd_map_control))
         set_custom_characters(on_status_screen() ? CHARSET_INFO : CHARSET_MENU);
     #endif
 
     refresh(LCDVIEW_CALL_REDRAW_NEXT);
     screen_changed = true;
-    TERN_(HAS_mvCNCUI_U8GLIB, drawing_screen = false);
+    TERN_(HAS_MVCNCUI_U8GLIB, drawing_screen = false);
 
-    TERN_(HAS_mvCNCUI_MENU, encoder_direction_normal());
+    TERN_(HAS_MVCNCUI_MENU, encoder_direction_normal());
 
     set_selection(false);
   }
@@ -361,4 +361,4 @@ void MenuItem_confirm::select_screen(
   }
 }
 
-#endif // HAS_mvCNCUI_MENU
+#endif // HAS_MVCNCUI_MENU

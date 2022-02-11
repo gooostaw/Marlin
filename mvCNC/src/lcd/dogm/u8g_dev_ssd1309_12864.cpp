@@ -4,7 +4,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
 #include "HAL_LCD_com_defines.h"
 #include <U8glib-HAL.h>
@@ -108,4 +108,4 @@ uint8_t u8g_dev_ssd1309_buf[WIDTH*2] U8G_NOCOMMON ;
 u8g_pb_t u8g_dev_ssd1309_pb = { {8, HEIGHT, 0, 0, 0},  WIDTH, u8g_dev_ssd1309_buf};
 u8g_dev_t u8g_dev_ssd1309_sw_spi = { u8g_dev_ssd1309_128x64_fn, &u8g_dev_ssd1309_pb, U8G_COM_HAL_SW_SPI_FN };
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB

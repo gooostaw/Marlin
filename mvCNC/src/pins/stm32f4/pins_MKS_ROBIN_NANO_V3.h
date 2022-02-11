@@ -15,6 +15,7 @@
 #define BOARD_INFO_NAME "MKS Robin Nano V3"
 
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 #ifndef X_CS_PIN
   #define X_CS_PIN                          PD5

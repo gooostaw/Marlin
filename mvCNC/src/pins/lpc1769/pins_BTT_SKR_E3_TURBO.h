@@ -14,6 +14,7 @@
 #endif
 
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 // Onboard I2C EEPROM
 #define I2C_EEPROM
@@ -185,7 +186,7 @@
 #define EXP1_09_PIN                        P0_16
 #define EXP1_10_PIN                        P2_08
 
-#if HAS_DWIN_E3V2 || IS_DWIN_mvCNCUI
+#if HAS_DWIN_E3V2 || IS_DWIN_MVCNCUI
   #error "Ender-3 V2 display requires a custom cable with TX = P0_15, RX = P0_16. Comment out this line to continue."
 
  /**

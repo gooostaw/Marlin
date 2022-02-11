@@ -25,7 +25,7 @@
 #include "../compat.h"
 #include "../basic/ftdi_basic.h"
 
-#ifndef __mvCNC_FIRMWARE__
+#ifndef __MVCNC_FIRMWARE__
   #define FTDI_EXTENDED
 #endif
 

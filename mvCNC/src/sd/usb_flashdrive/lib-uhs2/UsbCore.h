@@ -35,7 +35,7 @@
 
 /* shield pins. First parameter - SS pin, second parameter - INT pin */
 
-#ifdef __mvCNC_FIRMWARE__
+#ifdef __MVCNC_FIRMWARE__
 typedef MAX3421e MAX3421E; // mvCNC redefines this class in "../usb_host.h"
 #elif defined(BOARD_BLACK_WIDDOW)
 typedef MAX3421e<P6, P3> MAX3421E; // Black Widow

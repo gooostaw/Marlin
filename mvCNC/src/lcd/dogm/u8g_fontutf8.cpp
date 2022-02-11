@@ -9,7 +9,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
 
 #include <string.h>
 #include "../fontutils.h"
@@ -312,4 +312,4 @@ int uxg_GetUtf8StrPixelWidthP(u8g_t *pu8g, PGM_P utf8_msg) {
   return data.adv;
 }
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB

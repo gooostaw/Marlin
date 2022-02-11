@@ -4,7 +4,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if ENABLED(mvCNC_INVADERS)
+#if ENABLED(MVCNC_INVADERS)
 
 #include "game.h"
 
@@ -417,4 +417,4 @@ void InvadersGame::enter_game() {
   reset_player();
 }
 
-#endif // mvCNC_INVADERS
+#endif // MVCNC_INVADERS

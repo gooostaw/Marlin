@@ -35,7 +35,7 @@
  *  Installation:
  *
  *    1. In the Arduino IDE, under Files -> Preferences paste the following URL
- *       https://rawgit.com/Bob-the-Kuhn/mvCNC_AT90USB/master/package_mvCNC_AT90USB_index.json
+ *       https://rawgit.com/Bob-the-Kuhn/mvCNC_AT90USB/master/package_MVCNC_AT90USB_index.json
  *    2. Under Tools > Board -> Boards manager, scroll to the bottom, click on mvCNC_AT90USB
  *       and then click on "Install"
  *    3. Select "AT90USB646_TEENSYPP" from the 'Tools > Board' menu.

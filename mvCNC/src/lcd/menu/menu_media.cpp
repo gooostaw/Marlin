@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, SDSUPPORT)
+#if BOTH(HAS_MVCNCUI_MENU, SDSUPPORT)
 
 #include "menu_item.h"
 #include "../../sd/cardreader.h"
@@ -82,7 +82,7 @@ class MenuItem_sdfolder : public MenuItem_sdbase {
       encoderTopLine = 0;
       ui.encoderPosition = 2 * (ENCODER_STEPS_PER_MENU_ITEM);
       ui.screen_changed = true;
-      TERN_(HAS_mvCNCUI_U8GLIB, ui.drawing_screen = false);
+      TERN_(HAS_MVCNCUI_U8GLIB, ui.drawing_screen = false);
       ui.refresh();
     }
 };
@@ -90,7 +90,7 @@ class MenuItem_sdfolder : public MenuItem_sdbase {
 void menu_media_filelist() {
   ui.encoder_direction_menus();
 
-  #if HAS_mvCNCUI_U8GLIB
+  #if HAS_MVCNCUI_U8GLIB
     static uint16_t fileCnt;
     if (ui.first_page) fileCnt = card.get_num_Files();
   #else
@@ -143,4 +143,4 @@ void menu_media() {
   TERN(MULTI_VOLUME, menu_media_select, menu_media_filelist)();
 }
 
-#endif // HAS_mvCNCUI_MENU && SDSUPPORT
+#endif // HAS_MVCNCUI_MENU && SDSUPPORT

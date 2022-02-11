@@ -18,7 +18,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_HD44780
+#if HAS_MVCNCUI_HD44780
 
 #include "../mvcncui.h"
 #include "../../mvCNCCore.h"
@@ -1123,4 +1123,4 @@ int lcd_put_u8str_max_P(PGM_P utf8_pstr, pixel_len_t max_length) {
 
 #endif // DEBUG_LCDPRINT
 
-#endif // HAS_mvCNCUI_HD44780
+#endif // HAS_MVCNCUI_HD44780

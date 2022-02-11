@@ -132,7 +132,7 @@
   #define BTN_EN2                             12
   #define BTN_ENC                             14
 
-#endif // HAS_mvCNCUI_U8GLIB
+#endif // HAS_MVCNCUI_U8GLIB
 
 // Hardware serial pins
 // Add the following to Configuration.h or Configuration_adv.h to assign

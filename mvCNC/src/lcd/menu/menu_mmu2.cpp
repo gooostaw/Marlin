@@ -4,7 +4,7 @@
 
 #include "../../inc/mvCNCConfig.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, MMU2_MENUS)
+#if BOTH(HAS_MVCNCUI_MENU, MMU2_MENUS)
 
 #include "../../mvCNCCore.h"
 #include "../../feature/mmu/mmu2.h"
@@ -149,4 +149,4 @@ uint8_t mmu2_choose_filament() {
   return feeder_index;
 }
 
-#endif // HAS_mvCNCUI_MENU && MMU2_MENUS
+#endif // HAS_MVCNCUI_MENU && MMU2_MENUS

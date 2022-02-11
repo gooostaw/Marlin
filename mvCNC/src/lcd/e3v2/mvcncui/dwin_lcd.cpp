@@ -27,7 +27,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if IS_DWIN_mvCNCUI
+#if IS_DWIN_MVCNCUI
 
 #include "../../../inc/mvCNCConfig.h"
 
@@ -59,4 +59,4 @@ void DWIN_ICON_Show(uint8_t libID, uint8_t picID, uint16_t x, uint16_t y) {
   DWIN_ICON_Show(true, false, false, libID, picID, x, y);
 }
 
-#endif // IS_DWIN_mvCNCUI
+#endif // IS_DWIN_MVCNCUI

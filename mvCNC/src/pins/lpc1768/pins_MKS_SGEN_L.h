@@ -13,6 +13,7 @@
 #define BOARD_WEBSITE_URL "github.com/makerbase-mks/MKS-SGEN_L"
 
 #define USES_DIAG_JUMPERS
+//#define DIAG_JUMPERS_REMOVED // enable this if you don't use SENSORLESS_HOMING and removed the DIAG jumpers from the board.
 
 //
 // Servos

@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU && EITHER(LED_CONTROL_MENU, CASE_LIGHT_MENU)
+#if HAS_MVCNCUI_MENU && EITHER(LED_CONTROL_MENU, CASE_LIGHT_MENU)
 
 #include "menu_item.h"
 
@@ -151,4 +151,4 @@ void menu_led() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && LED_CONTROL_MENU
+#endif // HAS_MVCNCUI_MENU && LED_CONTROL_MENU

@@ -8,7 +8,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if HAS_mvCNCUI_MENU && HAS_POWER_MONITOR
+#if HAS_MVCNCUI_MENU && HAS_POWER_MONITOR
 
 #include "menu_item.h"
 #include "../../feature/power_monitor.h"
@@ -41,4 +41,4 @@ void menu_power_monitor() {
   END_MENU();
 }
 
-#endif // HAS_mvCNCUI_MENU && HAS_POWER_MONITOR
+#endif // HAS_MVCNCUI_MENU && HAS_POWER_MONITOR

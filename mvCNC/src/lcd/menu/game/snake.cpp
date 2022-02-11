@@ -4,7 +4,7 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if ENABLED(mvCNC_SNAKE)
+#if ENABLED(MVCNC_SNAKE)
 
 #include "game.h"
 
@@ -302,4 +302,4 @@ void SnakeGame::enter_game() {
   food_reset();
 }
 
-#endif // mvCNC_SNAKE
+#endif // MVCNC_SNAKE

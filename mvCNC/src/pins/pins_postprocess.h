@@ -544,7 +544,7 @@
   #define LCD_PINS_D4 -1
 #endif
 
-#if HAS_mvCNCUI_HD44780 || TOUCH_UI_ULTIPANEL
+#if HAS_MVCNCUI_HD44780 || TOUCH_UI_ULTIPANEL
   #ifndef LCD_PINS_D5
     #define LCD_PINS_D5 -1
   #endif

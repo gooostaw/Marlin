@@ -178,7 +178,7 @@ namespace ExtUI {
   #endif
 
   inline void simulateUserClick() {
-    #if ANY(HAS_mvCNCUI_MENU, EXTENSIBLE_UI, DWIN_CREALITY_LCD_JYERSUI)
+    #if ANY(HAS_MVCNCUI_MENU, EXTENSIBLE_UI, DWIN_CREALITY_LCD_JYERSUI)
       ui.lcd_clicked = true;
     #endif
   }

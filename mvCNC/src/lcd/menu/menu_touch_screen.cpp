@@ -4,7 +4,7 @@
 
 #include "../../inc/mvCNCConfigPre.h"
 
-#if BOTH(HAS_mvCNCUI_MENU, TOUCH_SCREEN_CALIBRATION)
+#if BOTH(HAS_MVCNCUI_MENU, TOUCH_SCREEN_CALIBRATION)
 
 #include "menu_item.h"
 #include "../mvcncui.h"

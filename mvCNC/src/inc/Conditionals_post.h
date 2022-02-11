@@ -419,7 +419,7 @@
 
   // Set SD_DETECT_STATE based on hardware if not overridden
   #if PIN_EXISTS(SD_DETECT) && !defined(SD_DETECT_STATE)
-    #if BOTH(HAS_mvCNCUI_MENU, ELB_FULL_GRAPHIC_CONTROLLER) && (SD_CONNECTION_IS(LCD) || !defined(SDCARD_CONNECTION))
+    #if BOTH(HAS_MVCNCUI_MENU, ELB_FULL_GRAPHIC_CONTROLLER) && (SD_CONNECTION_IS(LCD) || !defined(SDCARD_CONNECTION))
       #define SD_DETECT_STATE HIGH
     #else
       #define SD_DETECT_STATE LOW
@@ -441,7 +441,7 @@
 
 #endif
 
-#if ANY(HAS_GRAPHICAL_TFT, LCD_USE_DMA_FSMC, HAS_FSMC_GRAPHICAL_TFT, HAS_SPI_GRAPHICAL_TFT, IS_DWIN_mvCNCUI) || !PIN_EXISTS(SD_DETECT)
+#if ANY(HAS_GRAPHICAL_TFT, LCD_USE_DMA_FSMC, HAS_FSMC_GRAPHICAL_TFT, HAS_SPI_GRAPHICAL_TFT, IS_DWIN_MVCNCUI) || !PIN_EXISTS(SD_DETECT)
   #define NO_LCD_REINIT 1  // Suppress LCD re-initialization
 #endif
 
@@ -3034,7 +3034,7 @@
   #define HAS_TEMPERATURE 1
 #endif
 
-#if HAS_TEMPERATURE && EITHER(HAS_mvCNCUI_MENU, HAS_DWIN_E3V2)
+#if HAS_TEMPERATURE && EITHER(HAS_MVCNCUI_MENU, HAS_DWIN_E3V2)
   #ifdef PREHEAT_6_LABEL
     #define PREHEAT_COUNT 6
   #elif defined(PREHEAT_5_LABEL)
@@ -3159,7 +3159,7 @@
  * Advanced Pause - Filament Change
  */
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #if ANY(HAS_mvCNCUI_MENU, EXTENSIBLE_UI, DWIN_CREALITY_LCD_ENHANCED, DWIN_CREALITY_LCD_JYERSUI) || BOTH(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
+  #if ANY(HAS_MVCNCUI_MENU, EXTENSIBLE_UI, DWIN_CREALITY_LCD_ENHANCED, DWIN_CREALITY_LCD_JYERSUI) || BOTH(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT)
     #define M600_PURGE_MORE_RESUMABLE 1
   #endif
   #ifndef FILAMENT_CHANGE_SLOW_LOAD_LENGTH
@@ -3324,7 +3324,7 @@
 /**
  * Make sure DOGLCD_SCK and DOGLCD_MOSI are defined.
  */
-#if HAS_mvCNCUI_U8GLIB
+#if HAS_MVCNCUI_U8GLIB
   #ifndef DOGLCD_SCK
     #define DOGLCD_SCK  SD_SCK_PIN
   #endif
@@ -3389,7 +3389,7 @@
   #endif
 #endif
 
-#if HAS_mvCNCUI_MENU
+#if HAS_MVCNCUI_MENU
   // LCD timeout to status screen default is 15s
   #ifndef LCD_TIMEOUT_TO_STATUS
     #define LCD_TIMEOUT_TO_STATUS 15000
@@ -3463,18 +3463,18 @@
 #if HAS_WIRED_LCD
   // Get LCD character width/height, which may be overridden by pins, configs, etc.
   #ifndef LCD_WIDTH
-    #if HAS_mvCNCUI_U8GLIB
+    #if HAS_MVCNCUI_U8GLIB
       #define LCD_WIDTH 21
-    #elif IS_DWIN_mvCNCUI
+    #elif IS_DWIN_MVCNCUI
       // Defined by header
     #else
       #define LCD_WIDTH TERN(IS_ULTIPANEL, 20, 16)
     #endif
   #endif
   #ifndef LCD_HEIGHT
-    #if HAS_mvCNCUI_U8GLIB
+    #if HAS_MVCNCUI_U8GLIB
       #define LCD_HEIGHT 5
-    #elif IS_DWIN_mvCNCUI
+    #elif IS_DWIN_MVCNCUI
       // Defined by header
     #else
       #define LCD_HEIGHT TERN(IS_ULTIPANEL, 4, 2)

@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#ifndef __mvCNC_FIRMWARE__
-#define __mvCNC_FIRMWARE__
+#ifndef __MVCNC_FIRMWARE__
+#define __MVCNC_FIRMWARE__
 #endif
 
 //
@@ -12,7 +12,7 @@
 //
 #include <stdint.h>
 
-#ifndef __mvCNC_DEPS__
+#ifndef __MVCNC_DEPS__
   #include "../HAL/platforms.h"
 #endif
 
@@ -30,7 +30,7 @@
 
 #include "Conditionals_LCD.h"
 
-#ifndef __mvCNC_DEPS__
+#ifndef __MVCNC_DEPS__
   #include HAL_PATH(../HAL, inc/Conditionals_LCD.h)
 #endif
 
@@ -39,6 +39,6 @@
 
 #include "Conditionals_adv.h"
 
-#ifndef __mvCNC_DEPS__
+#ifndef __MVCNC_DEPS__
   #include HAL_PATH(../HAL, inc/Conditionals_adv.h)
 #endif
