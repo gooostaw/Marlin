@@ -9,7 +9,7 @@
 #include "../../gcode.h"
 #include "../../../feature/pause.h"
 #include "../../../module/motion.h"
-#include "../../../module/printcounter.h"
+#include "../../../module/jobcounter.h"
 #include "../../../lcd/mvcncui.h"
 
 #if HAS_MULTI_EXTRUDER
@@ -58,7 +58,7 @@ void GcodeSuite::M600() {
     MIXER_STEPPER_LOOP(i) mixer.set_collector(i, i == uint8_t(eindex) ? 1.0 : 0.0);
     mixer.normalize();
 
-    const int8_t target_extruder = active_extruder;
+    const int8_t target_extruder = active_tool;
   #else
     const int8_t target_extruder = get_target_extruder_from_command();
     if (target_extruder < 0) return;
@@ -72,7 +72,7 @@ void GcodeSuite::M600() {
         if (idex_is_duplicating())
           DXC_ext = (READ(FIL_RUNOUT2_PIN) == FIL_RUNOUT2_STATE) ? 1 : 0;
       #else
-        DXC_ext = active_extruder;
+      DXC_ext = active_tool;
       #endif
     }
   #endif
@@ -88,8 +88,8 @@ void GcodeSuite::M600() {
 
   #if HAS_MULTI_EXTRUDER
     // Change toolhead if specified
-    const uint8_t active_extruder_before_filament_change = active_extruder;
-    if (active_extruder != target_extruder && TERN1(DUAL_X_CARRIAGE, !idex_is_duplicating()))
+  const uint8_t active_tool_before_filament_change = active_tool;
+  if (active_tool != target_extruder && TERN1(DUAL_X_CARRIAGE, !idex_is_duplicating()))
       tool_change(target_extruder);
   #endif
 
@@ -109,15 +109,15 @@ void GcodeSuite::M600() {
   );
 
   #if HAS_HOTEND_OFFSET && NONE(DUAL_X_CARRIAGE, DELTA)
-    park_point += hotend_offset[active_extruder];
+  park_point += hotend_offset[active_tool];
   #endif
 
   #if ENABLED(MMU2_MENUS)
     // For MMU2, when enabled, reset retract value so it doesn't mess with MMU filament handling
-    const float unload_length = standardM600 ? -ABS(parser.axisunitsval('U', E_AXIS, fc_settings[active_extruder].unload_length)) : 0.5f;
+  const float unload_length = standardM600 ? -ABS(parser.axisunitsval('U', E_AXIS, fc_settings[active_tool].unload_length)) : 0.5f;
   #else
     // Unload filament
-    const float unload_length = -ABS(parser.axisunitsval('U', E_AXIS, fc_settings[active_extruder].unload_length));
+  const float unload_length = -ABS(parser.axisunitsval('U', E_AXIS, fc_settings[active_tool].unload_length));
   #endif
 
   const int beep_count = parser.intval('B', -1
@@ -126,12 +126,12 @@ void GcodeSuite::M600() {
     #endif
   );
 
-  if (pause_print(retract, park_point, true, unload_length DXC_PASS)) {
+  if (pause_job(retract, park_point, true, unload_length DXC_PASS)) {
     if (standardM600) {
       wait_for_confirmation(true, beep_count DXC_PASS);
       resume_print(
         FILAMENT_CHANGE_SLOW_LOAD_LENGTH,
-        ABS(parser.axisunitsval('L', E_AXIS, fc_settings[active_extruder].load_length)),
+        ABS(parser.axisunitsval('L', E_AXIS, fc_settings[active_tool].load_length)),
         ADVANCED_PAUSE_PURGE_LENGTH,
         beep_count,
         parser.celsiusval('R')
@@ -148,8 +148,8 @@ void GcodeSuite::M600() {
 
   #if HAS_MULTI_EXTRUDER
     // Restore toolhead if it was changed
-    if (active_extruder_before_filament_change != active_extruder)
-      tool_change(active_extruder_before_filament_change);
+  if (active_tool_before_filament_change != active_tool)
+    tool_change(active_tool_before_filament_change);
   #endif
 
   TERN_(MIXING_EXTRUDER, mixer.T(old_mixing_tool)); // Restore original mixing tool

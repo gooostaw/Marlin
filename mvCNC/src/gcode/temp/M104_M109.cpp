@@ -21,7 +21,7 @@
 #include "../../mvCNCCore.h" // for startOrResumeJob, etc.
 
 #if ENABLED(PRINTJOB_TIMER_AUTOSTART)
-  #include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
   #if ENABLED(CANCEL_OBJECTS)
     #include "../../feature/cancel_object.h"
   #endif
@@ -52,8 +52,8 @@
  *  M104 S100 : Set target to 100° and return.
  *  M109 R150 : Set target to 150°. Wait until the hotend gets close to 150°.
  *
- * With PRINTJOB_TIMER_AUTOSTART turning on heaters will start the print job timer
- *  (used by printingIsActive, etc.) and turning off heaters will stop the timer.
+ * With PRINTJOB_TIMER_AUTOSTART turning on heaters will start the CNC job timer
+ *  (used by jobIsActive, etc.) and turning off heaters will stop the timer.
  */
 void GcodeSuite::M104_M109(const bool isM109) {
 
@@ -88,14 +88,14 @@ void GcodeSuite::M104_M109(const bool isM109) {
 
   if (got_temp) {
     #if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
-      thermalManager.singlenozzle_temp[target_extruder] = temp;
-      if (target_extruder != active_extruder) return;
+    fanManager.singlenozzle_temp[target_extruder] = temp;
+    if (target_extruder != active_tool) return;
     #endif
-    thermalManager.setTargetHotend(temp, target_extruder);
+    fanManager.setTargetHotend(temp, target_extruder);
 
     #if ENABLED(DUAL_X_CARRIAGE)
       if (idex_is_duplicating() && target_extruder == 0)
-        thermalManager.setTargetHotend(temp ? temp + duplicate_extruder_temp_offset : 0, 1);
+        fanManager.setTargetHotend(temp ? temp + duplicate_extruder_temp_offset : 0, 1);
     #endif
 
     #if ENABLED(PRINTJOB_TIMER_AUTOSTART)
@@ -104,17 +104,17 @@ void GcodeSuite::M104_M109(const bool isM109) {
        * standby mode, (e.g., in a dual extruder setup) without affecting
        * the running print timer.
        */
-      thermalManager.auto_job_check_timer(isM109, true);
+      fanManager.auto_job_check_timer(isM109, true);
     #endif
 
-    if (thermalManager.isHeatingHotend(target_extruder) || !no_wait_for_cooling)
-      thermalManager.set_heating_message(target_extruder);
+      if (fanManager.isHeatingHotend(target_extruder) || !no_wait_for_cooling)
+        fanManager.set_heating_message(target_extruder);
   }
 
   TERN_(AUTOTEMP, planner.autotemp_M104_M109());
 
   if (isM109 && got_temp)
-    (void)thermalManager.wait_for_hotend(target_extruder, no_wait_for_cooling);
+    (void)fanManager.wait_for_hotend(target_extruder, no_wait_for_cooling);
 }
 
 #endif // EXTRUDERS

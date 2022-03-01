@@ -637,7 +637,7 @@ class Temperature {
       #endif
 
       #if EITHER(PROBING_FANS_OFF, ADVANCED_PAUSE_FANS_PAUSE)
-        void set_fans_paused(const bool p);
+        void fanPause(const bool p);
       #endif
 
     #endif // HAS_FAN
@@ -1043,4 +1043,4 @@ class Temperature {
     #endif // HAS_THERMAL_PROTECTION
 };
 
-extern Temperature thermalManager;
+extern Temperature fanManager;

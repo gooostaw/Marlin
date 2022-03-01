@@ -120,7 +120,7 @@ inline void park_above_object(measurements_t &m, const float uncertainty) {
 
 #if HAS_MULTI_HOTEND
   inline void set_nozzle(measurements_t &m, const uint8_t extruder) {
-    if (extruder != active_extruder) {
+    if (extruder != active_tool) {
       park_above_object(m, CALIBRATION_MEASUREMENT_UNKNOWN);
       tool_change(extruder);
     }
@@ -448,7 +448,7 @@ inline void probe_sides(measurements_t &m, const float uncertainty) {
 
   inline void report_measured_positional_error(const measurements_t &m) {
     SERIAL_CHAR('T');
-    SERIAL_ECHO(active_extruder);
+    SERIAL_ECHO(active_tool);
     SERIAL_ECHOLNPGM(" Positional Error:");
     #if HAS_X_CENTER && AXIS_CAN_CALIBRATE(X)
       SERIAL_ECHOLNPGM_P(SP_X_STR, m.pos_error.x);
@@ -703,7 +703,7 @@ void GcodeSuite::G425() {
   if (parser.seen_test('B'))
     calibrate_backlash(m, uncertainty);
   else if (parser.seen_test('T'))
-    calibrate_toolhead(m, uncertainty, parser.intval('T', active_extruder));
+    calibrate_toolhead(m, uncertainty, parser.intval('T', active_tool));
   #if ENABLED(CALIBRATION_REPORTING)
     else if (parser.seen('V')) {
       probe_sides(m, uncertainty);

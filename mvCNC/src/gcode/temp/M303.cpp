@@ -32,10 +32,10 @@ void GcodeSuite::M303() {
 
   #if ANY(PID_DEBUG, PID_BED_DEBUG, PID_CHAMBER_DEBUG)
     if (parser.seen_test('D')) {
-      thermalManager.pid_debug_flag ^= true;
+      fanManager.pid_debug_flag ^= true;
       SERIAL_ECHO_START();
       SERIAL_ECHOPGM("PID Debug ");
-      serialprintln_onoff(thermalManager.pid_debug_flag);
+      serialprintln_onoff(fanManager.pid_debug_flag);
       return;
     }
   #endif
@@ -75,7 +75,7 @@ void GcodeSuite::M303() {
   #endif
 
   LCD_MESSAGE(MSG_PID_AUTOTUNE);
-  thermalManager.PID_autotune(temp, hid, c, u);
+  fanManager.PID_autotune(temp, hid, c, u);
   ui.reset_status();
 }
 

@@ -290,7 +290,7 @@ void unified_bed_leveling::G29() {
   const uint8_t p_val = parser.byteval('P');
   const bool may_move = p_val == 1 || p_val == 2 || p_val == 4 || parser.seen_test('J');
   #if HAS_MULTI_HOTEND
-    const uint8_t old_tool_index = active_extruder;
+  const uint8_t old_tool_index = active_tool;
   #endif
 
   // Check for commands that require the cnc to be homed
@@ -298,7 +298,7 @@ void unified_bed_leveling::G29() {
     planner.synchronize();
     // Send 'N' to force homing before G29 (internal only)
     if (axes_should_home() || parser.seen_test('N')) gcode.home_all_axes();
-    TERN_(HAS_MULTI_HOTEND, if (active_extruder) tool_change(0));
+    TERN_(HAS_MULTI_HOTEND, if (active_tool) tool_change(0));
   }
 
   // Invalidate one or more nearby mesh points, possibly all.

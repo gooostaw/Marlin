@@ -28,7 +28,7 @@
 #include "module/endstops.h"
 #include "module/temperature.h"
 #include "module/settings.h"
-#include "module/printcounter.h" // CNCCounter or Stopwatch
+#include "module/jobcounter.h" // CNCCounter or Stopwatch
 
 #include "module/stepper.h"
 #include "module/stepper/indirection.h"
@@ -103,12 +103,12 @@
   #include "feature/leds/leds.h"
 #endif
 
-#if ENABLED(BLTOUCH)
-  #include "feature/bltouch.h"
+#if ENABLED(JOYSTICK)
+#include "feature/joystick.h"
 #endif
 
-#if ENABLED(POLL_JOG)
-  #include "feature/joystick.h"
+#if ENABLED(WII_NUNCHUCK_JOGGING)
+#include "feature/wii_i2c.h"
 #endif
 
 #if HAS_SERVOS
@@ -239,7 +239,7 @@ PGMSTR(M112_KILL_STR, "M112 Shutdown");
 mvCNCState mvcnc_state = MF_INITIALIZING;
 
 // For M109 and M190, this flag may be cleared (by M108) to exit the wait loop
-bool wait_for_heatup = true;
+bool wait_for_heatup = false;
 
 // For M0/M1, this flag may be cleared (by M108) to exit the wait-for-user loop
 #if HAS_RESUME_CONTINUE
@@ -303,24 +303,24 @@ bool pin_is_protected(const pin_t pin) {
 #pragma GCC diagnostic pop
 
 /**
- * A CNC Job exists when the timer is running or SD is printing
+ * A CNC Job exists when the timer is running or SD job is running
  */
-bool printJobOngoing() { return print_job_timer.isRunning() || IS_SD_PRINTING(); }
+bool jobIsOngoing() { return JobTimer.isRunning() || IS_SD_JOB_RUNNING(); }
 
 /**
  * CNCing is active when a job is underway but not paused
  */
-bool printingIsActive() { return !did_pause_print && printJobOngoing(); }
+bool jobIsActive() { return !did_pause_job && jobIsOngoing(); }
 
 /**
  * CNCing is paused according to SD or host indicators
  */
-bool printingIsPaused() {
-  return did_pause_print || print_job_timer.isPaused() || IS_SD_PAUSED();
+bool jobIsPaused() {
+  return did_pause_job || JobTimer.isPaused() || IS_SD_PAUSED();
 }
 
 void startOrResumeJob() {
-  if (!printingIsPaused()) {
+  if (!jobIsPaused()) {
     TERN_(GCODE_REPEAT_MARKERS, repeat.reset());
     TERN_(CANCEL_OBJECTS, cancelable.reset());
     TERN_(LCD_SHOW_E_TOTAL, e_move_accumulator = 0);
@@ -328,23 +328,23 @@ void startOrResumeJob() {
       ui.reset_remaining_time();
     #endif
   }
-  print_job_timer.start();
+  JobTimer.start();
 }
 
 #if ENABLED(SDSUPPORT)
 
-  inline void abortSDPrinting() {
+inline void abortSDJob() {
     IF_DISABLED(NO_SD_AUTOSTART, card.autofile_cancel());
     card.abortFilePrintNow(TERN_(SD_RESORT, true));
 
     queue.clear();
     quickstop_stepper();
 
-    print_job_timer.abort();
+    JobTimer.abort();
 
-    IF_DISABLED(SD_ABORT_NO_COOLDOWN, thermalManager.disable_all_heaters());
+    IF_DISABLED(SD_ABORT_NO_COOLDOWN, fanManager.disable_all_heaters());
 
-    TERN(HAS_CUTTER, cutter.kill(), thermalManager.zero_fan_speeds()); // Full cutter shutdown including ISR control
+    TERN(HAS_CUTTER, cutter.kill(), fanManager.zero_fan_speeds()); // Full cutter shutdown including ISR control
 
     wait_for_heatup = false;
 
@@ -357,11 +357,11 @@ void startOrResumeJob() {
     TERN_(PASSWORD_AFTER_SD_PRINT_ABORT, password.lock_machine());
   }
 
-  inline void finishSDPrinting() {
+inline void finishSDJob() {
     if (queue.enqueue_one(F("M1001"))) {  // Keep trying until it gets queued
       mvcnc_state = MF_RUNNING;          // Signal to stop trying
       TERN_(PASSWORD_AFTER_SD_PRINT_END, password.lock_machine());
-      TERN_(DGUS_LCD_UI_MKS, ScreenHandler.SDPrintingFinished());
+      TERN_(DGUS_LCD_UI_MKS, ScreenHandler.SDJobFinished());
     }
   }
 
@@ -388,7 +388,7 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
 
   // Prevent steppers timing-out
   const bool do_reset_timeout = no_stepper_sleep
-                               || TERN0(PAUSE_PARK_NO_STEPPER_TIMEOUT, did_pause_print);
+    || TERN0(PAUSE_PARK_NO_STEPPER_TIMEOUT, did_pause_job);
 
   // Reset both the M18/M84 activity timeout and the M85 max 'kill' timeout
   if (do_reset_timeout) gcode.reset_stepper_timeout(ms);
@@ -465,7 +465,7 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
     // Handle a standalone HOME button
     constexpr millis_t HOME_DEBOUNCE_DELAY = 1000UL;
     static millis_t next_home_key_ms; // = 0
-    if (!IS_SD_PRINTING() && !READ(HOME_PIN)) { // HOME_PIN goes LOW when pressed
+    if (!IS_SD_JOB_RUNNING() && !READ(HOME_PIN)) { // HOME_PIN goes LOW when pressed
       if (ELAPSED(ms, next_home_key_ms)) {
         next_home_key_ms = ms + HOME_DEBOUNCE_DELAY;
         LCD_MESSAGE(MSG_AUTO_HOME);
@@ -476,14 +476,14 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
 
   #if ENABLED(CUSTOM_USER_BUTTONS)
     // Handle a custom user button if defined
-    const bool cnc_not_busy = !printingIsActive();
+    const bool cnc_not_busy = !jobIsActive();
     #define HAS_CUSTOM_USER_BUTTON(N) (PIN_EXISTS(BUTTON##N) && defined(BUTTON##N##_HIT_STATE) && defined(BUTTON##N##_GCODE))
     #define HAS_BETTER_USER_BUTTON(N) HAS_CUSTOM_USER_BUTTON(N) && defined(BUTTON##N##_DESC)
     #define _CHECK_CUSTOM_USER_BUTTON(N, CODE) do{                     \
       constexpr millis_t CUB_DEBOUNCE_DELAY_##N = 250UL;               \
       static millis_t next_cub_ms_##N;                                 \
       if (BUTTON##N##_HIT_STATE == READ(BUTTON##N##_PIN)               \
-        && (ENABLED(BUTTON##N##_WHEN_PRINTING) || cnc_not_busy)) { \
+        && (ENABLED(BUTTON##N##_WHEN_CUTTING) || cnc_not_busy)) { \
         if (ELAPSED(ms, next_cub_ms_##N)) {                            \
           next_cub_ms_##N = ms + CUB_DEBOUNCE_DELAY_##N;               \
           CODE;                                                        \
@@ -627,18 +627,18 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
 
   TERN_(USE_CONTROLLER_FAN, controllerFan.update()); // Check if fan should be turned on to cool stepper drivers down
 
-  TERN_(AUTO_POWER_CONTROL, powerManager.check(!ui.on_status_screen() || printJobOngoing() || printingIsPaused()));
+  TERN_(AUTO_POWER_CONTROL, powerManager.check(!ui.on_status_screen() || jobIsOngoing() || jobIsPaused()));
 
   TERN_(HOTEND_IDLE_TIMEOUT, hotend_idle.check());
 
   #if ENABLED(EXTRUDER_RUNOUT_PREVENT)
-    if (thermalManager.degHotend(active_extruder) > (EXTRUDER_RUNOUT_MINTEMP)
+  if (fanManager.degHotend(active_tool) > (EXTRUDER_RUNOUT_MINTEMP)
       && ELAPSED(ms, gcode.previous_move_ms + SEC_TO_MS(EXTRUDER_RUNOUT_SECONDS))
       && !planner.has_blocks_queued()
     ) {
       #if ENABLED(SWITCHING_EXTRUDER)
         bool oldstatus;
-        switch (active_extruder) {
+        switch (active_tool) {
           default: oldstatus = stepper.AXIS_IS_ENABLED(E_AXIS, 0); stepper.ENABLE_EXTRUDER(0); break;
           #if E_STEPPERS > 1
             case 2: case 3: oldstatus = stepper.AXIS_IS_ENABLED(E_AXIS, 1); stepper.ENABLE_EXTRUDER(1); break;
@@ -652,7 +652,7 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
         }
       #else // !SWITCHING_EXTRUDER
         bool oldstatus;
-        switch (active_extruder) {
+        switch (active_tool) {
           default:
           #define _CASE_EN(N) case N: oldstatus = stepper.AXIS_IS_ENABLED(E_AXIS, N); stepper.ENABLE_EXTRUDER(N); break;
           REPEAT(E_STEPPERS, _CASE_EN);
@@ -667,7 +667,7 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
       planner.synchronize();
 
       #if ENABLED(SWITCHING_EXTRUDER)
-        switch (active_extruder) {
+      switch (active_tool) {
           default: if (oldstatus) stepper.ENABLE_EXTRUDER(0); else stepper.DISABLE_EXTRUDER(0); break;
           #if E_STEPPERS > 1
             case 2: case 3: if (oldstatus) stepper.ENABLE_EXTRUDER(1); else stepper.DISABLE_EXTRUDER(1); break;
@@ -677,7 +677,7 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
           #endif // E_STEPPERS > 1
         }
       #else // !SWITCHING_EXTRUDER
-        switch (active_extruder) {
+      switch (active_tool) {
           #define _CASE_RESTORE(N) case N: if (oldstatus) stepper.ENABLE_EXTRUDER(N); else stepper.DISABLE_EXTRUDER(N); break;
           REPEAT(E_STEPPERS, _CASE_RESTORE);
         }
@@ -745,7 +745,7 @@ inline void manage_inactivity(const bool no_stepper_sleep=false) {
  *  - Handle Joystick jogging
  */
 void idle(bool no_stepper_sleep/*=false*/) {
-  #if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
     static uint16_t idle_depth = 0;
     if (++idle_depth > 5) SERIAL_ECHOLNPGM("idle() call depth: ", idle_depth);
   #endif
@@ -754,7 +754,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
   manage_inactivity(no_stepper_sleep);
 
   // Manage Heaters (and Watchdog)
-  thermalManager.manage_heater();
+  fanManager.manage_heater();
 
   // Max7219 heartbeat, animation, etc
   TERN_(MAX7219_DEBUG, max7219.idle_tasks());
@@ -763,7 +763,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
   if (mvcnc_state == MF_INITIALIZING) goto IDLE_DONE;
 
   // TODO: Still causing errors
-  (void)check_tool_sensor_stats(active_extruder, true);
+  (void)check_tool_sensor_stats(active_tool, true);
 
   // Handle filament runout sensors
   #if HAS_FILAMENT_SENSOR
@@ -779,7 +779,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
 
   // Handle Power-Loss Recovery
   #if ENABLED(POWER_LOSS_RECOVERY) && PIN_EXISTS(POWER_LOSS)
-    if (IS_SD_PRINTING()) recovery.outage();
+  if (IS_SD_JOB_RUNNING()) recovery.outage();
   #endif
 
   // Run StallGuard endstop checks
@@ -798,7 +798,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
   TERN_(HOST_KEEPALIVE_FEATURE, gcode.host_keepalive());
 
   // Update the CNC Job Timer state
-  TERN_(PRINTCOUNTER, print_job_timer.tick());
+  TERN_(JOBCOUNTER, JobTimer.tick());
 
   // Update the Beeper queue
   TERN_(USE_BEEPER, buzzer.tick());
@@ -823,7 +823,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
   // Auto-report Temperatures / SD Status
   #if HAS_AUTO_REPORTING
     if (!gcode.autoreport_paused) {
-      TERN_(AUTO_REPORT_TEMPERATURES, thermalManager.auto_reporter.tick());
+      TERN_(AUTO_REPORT_TEMPERATURES, fanManager.auto_reporter.tick());
       TERN_(AUTO_REPORT_FANS, fan_check.auto_reporter.tick());
       TERN_(AUTO_REPORT_SD_STATUS, card.auto_reporter.tick());
       TERN_(AUTO_REPORT_POSITION, position_auto_reporter.tick());
@@ -835,7 +835,10 @@ void idle(bool no_stepper_sleep/*=false*/) {
   TERN_(HAS_PRUSA_MMU2, mmu2.mmu_loop());
 
   // Handle Joystick jogging
-  TERN_(POLL_JOG, joystick.inject_jog_moves());
+  TERN_(JOYSTICK, joystick.injectJogMoves());
+
+  // Handle Wii Nunchuck jogging
+  TERN_(WII_NUNCHUCK_JOGGING, wii.injectJogMoves());
 
   // Direct Stepping
   TERN_(DIRECT_STEPPING, page_manager.write_responses());
@@ -844,7 +847,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
   TERN_(HAS_TFT_LVGL_UI, LV_TASK_HANDLER());
 
   IDLE_DONE:
-  TERN_(mvCNC_DEV_MODE, idle_depth--);
+  TERN_(MVCNC_DEV_MODE, idle_depth--);
   return;
 }
 
@@ -853,7 +856,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
  * After this the machine will need to be reset.
  */
 void kill(FSTR_P const lcd_error/*=nullptr*/, FSTR_P const lcd_component/*=nullptr*/, const bool steppers_off/*=false*/) {
-  thermalManager.disable_all_heaters();
+  fanManager.disable_all_heaters();
 
   TERN_(HAS_CUTTER, cutter.kill()); // Full cutter shutdown including ISR control
 
@@ -889,12 +892,12 @@ void minkill(const bool steppers_off/*=false*/) {
   for (int i = 1000; i--;) DELAY_US(250);
 
   // Reiterate heaters off
-  thermalManager.disable_all_heaters();
+  fanManager.disable_all_heaters();
 
   TERN_(HAS_CUTTER, cutter.kill());  // Reiterate cutter shutdown
 
   // Power off all steppers (for M112) or just the E steppers
-  steppers_off ? stepper.disable_all_steppers() : stepper.disable_e_steppers();
+  if (steppers_off) stepper.disable_all_steppers();
 
   TERN_(PSU_CONTROL, powerManager.power_off());
 
@@ -925,12 +928,12 @@ void minkill(const bool steppers_off/*=false*/) {
  * After a stop the machine may be resumed with M999
  */
 void stop() {
-  thermalManager.disable_all_heaters(); // 'unpause' taken care of in here
+  fanManager.disable_all_heaters(); // 'unpause' taken care of in here
 
-  print_job_timer.stop();
+  JobTimer.stop();
 
   #if EITHER(PROBING_FANS_OFF, ADVANCED_PAUSE_FANS_PAUSE)
-    thermalManager.set_fans_paused(false); // Un-pause fans for safety
+  fanManager.fanPause(false); // Un-pause fans for safety
   #endif
 
   if (!IsStopped()) {
@@ -1104,7 +1107,7 @@ void setup() {
   const byte mcu = HAL_get_reset_source();
   HAL_clear_reset_source();
 
-  #if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
     auto log_current_ms = [&](PGM_P const msg) {
       SERIAL_ECHO_START();
       SERIAL_CHAR('['); SERIAL_ECHO(millis()); SERIAL_ECHOPGM("] ");
@@ -1315,9 +1318,9 @@ void setup() {
 
   sync_plan_position();               // Vital to init stepper/planner equivalent for current_position
 
-  SETUP_RUN(thermalManager.init());   // Initialize temperature loop
+  SETUP_RUN(fanManager.init());   // Initialize temperature loop
 
-  SETUP_RUN(print_job_timer.init());  // Initial setup of print job timer
+  SETUP_RUN(JobTimer.init());  // Initial setup of CNC job timer
 
   SETUP_RUN(endstops.init());         // Init endstops and pullups
 
@@ -1587,7 +1590,7 @@ void setup() {
 
   #if BOTH(HAS_WIRED_LCD, SHOW_BOOTSCREEN)
     const millis_t elapsed = millis() - bootscreen_ms;
-    #if ENABLED(mvCNC_DEV_MODE)
+  #if ENABLED(MVCNC_DEV_MODE)
       SERIAL_ECHOLNPGM("elapsed=", elapsed);
     #endif
     SETUP_RUN(ui.bootscreen_completion(elapsed));
@@ -1628,8 +1631,8 @@ void loop() {
     idle();
 
     #if ENABLED(SDSUPPORT)
-      if (card.flag.abort_sd_printing) abortSDPrinting();
-      if (mvcnc_state == MF_SD_COMPLETE) finishSDPrinting();
+    if (card.flag.abort_sd_job_running) abortSDJob();
+    if (mvcnc_state == MF_SD_COMPLETE) finishSDJob();
     #endif
 
     queue.advance();

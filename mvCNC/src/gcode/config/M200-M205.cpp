@@ -6,7 +6,7 @@
 #include "../../mvCNCCore.h"
 #include "../../module/planner.h"
 
-#if DISABLED(NO_VOLUMETRICS)
+#if ENABLED(USE_VOLUMETRICS)
 
   /**
    * M200: Set filament diameter and set E axis units to cubic units
@@ -87,7 +87,7 @@
     #endif
   }
 
-#endif // !NO_VOLUMETRICS
+#endif // USE_VOLUMETRICS
 
 /**
  * M201: Set max acceleration in units/s^2 for print moves (M201 X1000 Y1000)
@@ -190,7 +190,7 @@ void GcodeSuite::M203_report(const bool forReplay/*=true*/) {
  *
  *    P = CNCing moves
  *    R = Retract only (no X, Y, Z) moves
- *    T = Travel (non printing) moves
+ *    T = Travel (non cutting) moves
  */
 void GcodeSuite::M204() {
   if (!parser.seen("PRST"))

@@ -145,7 +145,7 @@ void ChironTFT::TimerEvent(timer_event_t event)  {
     case AC_timer_started: {
       live_Zoffset = 0.0; // reset print offset
       setSoftEndstopState(false);  // disable endstops to print
-      cnc_state = AC_cnc_printing;
+      cnc_state = AC_cnc_job_running;
       SendtoTFTLN(AC_msg_print_from_sd_card);
     } break;
 
@@ -189,7 +189,7 @@ void ChironTFT::ConfirmationRequest(const char * const msg)  {
     } break;
 
     case AC_cnc_resuming_from_power_outage:
-    case AC_cnc_printing:
+    case AC_cnc_job_running:
     case AC_cnc_paused: {
       // Heater timeout, send acknowledgement
       if (strcmp_P(msg, mvCNC_msg_heater_timeout) == 0) {
@@ -241,7 +241,7 @@ void ChironTFT::StatusChange(const char * const msg)  {
       }
     } break;
 
-    case AC_cnc_printing: {
+    case AC_cnc_job_running: {
       if (strcmp_P(msg, mvCNC_msg_reheating) == 0) {
         SendtoTFTLN(AC_msg_paused); // enable continue button
         msg_matched = true;
@@ -528,7 +528,7 @@ void ChironTFT::PanelInfo(uint8_t req) {
       TFTSer.println(getAxisPosition_mm(Z));
       break;
 
-    case 6:   // A6 Get printing progress
+    case 6:   // A6 Get job_running progress
       if (isPrintingFromMedia()) {
         SendtoTFT(F("A6V "));
         TFTSer.println(ui8tostr2(getProgress_percent()));
@@ -682,7 +682,7 @@ void ChironTFT::PanelAction(uint8_t req) {
       // lets just wrap this in a gcode relative nonprint move and let the controller deal with it
       // G91 G0 <panel command> G90
 
-      if (!isPrinting()) { // Ignore request if printing
+      if (!isPrinting()) { // Ignore request if running job
         char MoveCmnd[30];
         sprintf_P(MoveCmnd, PSTR("G91\nG0%s\nG90"), panel_command + 3);
         #if ACDEBUG(AC_ACTION)
@@ -694,7 +694,7 @@ void ChironTFT::PanelAction(uint8_t req) {
     } break;
 
     case 23:   // A23 Preheat PLA
-      // Ignore request if printing
+      // Ignore request if running job
       if (!isPrinting()) {
         // Temps defined in configuration.h
         setTargetTemp_celsius(PREHEAT_1_TEMP_BED, BED);
@@ -706,7 +706,7 @@ void ChironTFT::PanelAction(uint8_t req) {
       break;
 
     case 24:   // A24 Preheat ABS
-      // Ignore request if printing
+      // Ignore request if running job
       if (!isPrinting()) {
         setTargetTemp_celsius(PREHEAT_2_TEMP_BED, BED);
         setTargetTemp_celsius(PREHEAT_2_TEMP_HOTEND, E0);
@@ -717,7 +717,7 @@ void ChironTFT::PanelAction(uint8_t req) {
       break;
 
     case 25:   // A25 Cool Down
-      // Ignore request if printing
+      // Ignore request if running job
       if (!isPrinting()) {
         setTargetTemp_celsius(0, E0);
         setTargetTemp_celsius(0, BED);
@@ -738,7 +738,7 @@ void ChironTFT::PanelAction(uint8_t req) {
       break;
 
     case 28:   // A28 Filament set A28 O/C
-      // Ignore request if printing
+      // Ignore request if running job
       if (isPrinting()) break;
       SendtoTFTLN();
       break;
@@ -785,7 +785,7 @@ void ChironTFT::PanelProcess(uint8_t req) {
 
     case 30: {   // A30 Auto leveling
       if (FindToken('S') != -1) { // Start probing New panel adds spaces..
-        // Ignore request if printing
+        // Ignore request if running job
         if (isPrinting())
           SendtoTFTLN(AC_msg_probing_not_allowed); // forbid auto leveling
         else {
@@ -823,7 +823,7 @@ void ChironTFT::PanelProcess(uint8_t req) {
 
       else if (FindToken('G') != -1) { // Get current offset
         SendtoTFT(F("A31V "));
-        // When printing use the live z Offset position
+        // When running job use the live z Offset position
         // we will use babystepping to move the print head
         if (isPrinting())
           TFTSer.println(live_Zoffset);
@@ -892,7 +892,7 @@ void ChironTFT::PanelProcess(uint8_t req) {
     } break;
 
     case 32: { // A32 clean leveling beep flag
-      // Ignore request if printing
+      // Ignore request if running job
       //if (isPrinting()) break;
       //injectCommands(F("M500\nM420 S1\nG1 Z10 F240\nG1 X0 Y0 F6000"));
       //TFTSer.println();

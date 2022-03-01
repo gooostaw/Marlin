@@ -159,7 +159,7 @@ static FSTR_P const assets[] = {
   F("bmp_function1.bin"),
 
   // Start screen
-  F("bmp_printing.bin"),
+  F("bmp_job_running.bin"),
   F("bmp_set.bin"),
   F("bmp_tool.bin"),
 
@@ -215,7 +215,7 @@ uint32_t lv_get_pic_addr(uint8_t *Pname) {
 
   currentFlashPage = 0;
 
-  #if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
     SERIAL_ECHOLNPGM("Getting picture SPI Flash Address: ", (const char*)Pname);
   #endif
 
@@ -376,7 +376,7 @@ uint32_t Pic_Info_Write(uint8_t *P_name, uint32_t P_size) {
     return -1;
   }
 
-  #if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
     static uint32_t totalSizes = 0, totalCompressed = 0;
   #endif
 
@@ -390,7 +390,7 @@ uint32_t Pic_Info_Write(uint8_t *P_name, uint32_t P_size) {
     char dosFilename[FILENAME_LENGTH];
     createFilename(dosFilename, entry);
     if (!file.open(&dir, dosFilename, O_READ)) {
-      #if ENABLED(mvCNC_DEV_MODE)
+    #if ENABLED(MVCNC_DEV_MODE)
         SERIAL_ECHOLNPGM("Error opening Asset: ", fn);
       #endif
       return;
@@ -435,7 +435,7 @@ uint32_t Pic_Info_Write(uint8_t *P_name, uint32_t P_size) {
         do {
           watchdog_refresh();
           pbr = file.read(public_buf, SPI_FLASH_PageSize);
-          TERN_(mvCNC_DEV_MODE, totalSizes += pbr);
+          TERN_(MVCNC_DEV_MODE, totalSizes += pbr);
           SPIFlash.writeData(public_buf, SPI_FLASH_PageSize);
         } while (pbr >= SPI_FLASH_PageSize);
       #else
@@ -445,7 +445,7 @@ uint32_t Pic_Info_Write(uint8_t *P_name, uint32_t P_size) {
           Pic_Write_Addr += pbr;
         } while (pbr >= BMP_WRITE_BUF_LEN);
       #endif
-      #if ENABLED(mvCNC_DEV_MODE)
+      #if ENABLED(MVCNC_DEV_MODE)
         SERIAL_ECHOLNPGM("Space used: ", fn, " - ", (SPIFlash.getCurrentPage() + 1) * SPI_FLASH_PageSize / 1024, "KB");
         totalCompressed += (SPIFlash.getCurrentPage() + 1) * SPI_FLASH_PageSize;
       #endif
@@ -463,7 +463,7 @@ uint32_t Pic_Info_Write(uint8_t *P_name, uint32_t P_size) {
 
     file.close();
 
-    #if ENABLED(mvCNC_DEV_MODE)
+  #if ENABLED(MVCNC_DEV_MODE)
       SERIAL_ECHOLNPGM("Asset added: ", fn);
     #endif
   }
@@ -517,7 +517,7 @@ uint32_t Pic_Info_Write(uint8_t *P_name, uint32_t P_size) {
     }
     dir.close();
 
-    #if ENABLED(mvCNC_DEV_MODE)
+  #if ENABLED(MVCNC_DEV_MODE)
       uint8_t pic_counter = 0;
       W25QXX.SPI_FLASH_BufferRead(&pic_counter, PIC_COUNTER_ADDR, 1);
       SERIAL_ECHOLNPGM("Total assets loaded: ", pic_counter);

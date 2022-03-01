@@ -27,11 +27,11 @@ FIL eeprom_file;
 bool eeprom_file_open = false;
 
 #define EEPROM_FILENAME "eeprom.dat"
-#ifndef mvCNC_EEPROM_SIZE
-  #define mvCNC_EEPROM_SIZE size_t(0x1000) // 4KiB of Emulated EEPROM
+#ifndef MVCNC_EEPROM_SIZE
+#define MVCNC_EEPROM_SIZE size_t(0x1000) // 4KiB of Emulated EEPROM
 #endif
 
-size_t PersistentStore::capacity() { return mvCNC_EEPROM_SIZE; }
+size_t PersistentStore::capacity() { return MVCNC_EEPROM_SIZE; }
 
 bool PersistentStore::access_start() {
   const char eeprom_erase_value = 0xFF;

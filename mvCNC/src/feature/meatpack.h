@@ -22,7 +22,7 @@
  * character alphabet (at the cost of an extra 8-bits per full-width character), and by stripping
  * out unnecessary comments, the end result is gcode which is roughly half the original size.
  *
- * Why did I do this? I noticed micro-stuttering and other data-bottleneck issues while printing
+ * Why did I do this? I noticed micro-stuttering and other data-bottleneck issues while running job
  * objects with high curvature, especially at high speeds. There is also the issue of the limited
  * baud rate provided by Prusa's Atmega2560-based boards, over the USB serial connection. So soft-
  * ware like OctoPrint would also suffer this same micro-stuttering and poor print quality issue.

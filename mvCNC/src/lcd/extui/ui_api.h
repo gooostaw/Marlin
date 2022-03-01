@@ -75,7 +75,7 @@ namespace ExtUI {
 
   #if ENABLED(JOYSTICK)
     void jog(const xyz_float_t &dir);
-    void _joystick_update(xyz_float_t &norm_jog);
+    void _jogging_update(xyz_float_t &norm_jog);
   #endif
 
   /**
@@ -183,7 +183,7 @@ namespace ExtUI {
     #endif
   }
 
-  #if ENABLED(PRINTCOUNTER)
+#if ENABLED(JOBCOUNTER)
     char* getFailedPrints_str(char buffer[21]);
     char* getTotalPrints_str(char buffer[21]);
     char* getFinishedPrints_str(char buffer[21]);

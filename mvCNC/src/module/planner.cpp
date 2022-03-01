@@ -147,7 +147,7 @@ float Planner::mm_per_step[DISTINCT_AXES];      // (mm) Millimeters per step
   float Planner::e_factor[EXTRUDERS] = ARRAY_BY_EXTRUDERS1(1.0f); // The flow percentage and volumetric multiplier combine to scale E movement
 #endif
 
-#if DISABLED(NO_VOLUMETRICS)
+#if ENABLED(USE_VOLUMETRICS)
   float Planner::filament_size[EXTRUDERS],          // diameter of filament (in millimeters), typically around 1.75 or 2.85, 0 disables the volumetric calculations for the extruder
         Planner::volumetric_area_nominal = CIRCLE_AREA(float(DEFAULT_NOMINAL_FILAMENT_DIA) * 0.5f), // Nominal cross-sectional area
         Planner::volumetric_multiplier[EXTRUDERS];  // Reciprocal of cross-sectional area of filament (in mm^2). Pre-calculated to reduce computation in the planner
@@ -1163,7 +1163,7 @@ void Planner::recalculate_trapezoids() {
             calculate_trapezoid_for_block(block, current_entry_speed * nomr, next_entry_speed * nomr);
             #if ENABLED(LIN_ADVANCE)
               if (block->use_advance_lead) {
-                const float comp = block->e_D_ratio * extruder_advance_K[active_extruder] * settings.axis_steps_per_mm[E_AXIS];
+                const float comp = block->e_D_ratio * extruder_advance_K[active_tool] * settings.axis_steps_per_mm[E_AXIS];
                 block->max_adv_steps = current_nominal_speed * comp;
                 block->final_adv_steps = next_entry_speed * comp;
               }
@@ -1202,7 +1202,7 @@ void Planner::recalculate_trapezoids() {
       calculate_trapezoid_for_block(next, next_entry_speed * nomr, float(MINIMUM_PLANNER_SPEED) * nomr);
       #if ENABLED(LIN_ADVANCE)
         if (next->use_advance_lead) {
-          const float comp = next->e_D_ratio * extruder_advance_K[active_extruder] * settings.axis_steps_per_mm[E_AXIS];
+          const float comp = next->e_D_ratio * extruder_advance_K[active_tool] * settings.axis_steps_per_mm[E_AXIS];
           next->max_adv_steps = next_nominal_speed * comp;
           next->final_adv_steps = (MINIMUM_PLANNER_SPEED) * comp;
         }
@@ -1240,7 +1240,7 @@ void Planner::recalculate() {
     #endif
 
     #if ENABLED(FAN_SOFT_PWM)
-      #define _FAN_SET(F) thermalManager.soft_pwm_amount_fan[F] = CALC_FAN_SPEED(F);
+  #define _FAN_SET(F) fanManager.soft_pwm_amount_fan[F] = CALC_FAN_SPEED(F);
     #else
       #define _FAN_SET(F) set_pwm_duty(pin_t(FAN##F##_PIN), CALC_FAN_SPEED(F));
     #endif
@@ -1309,7 +1309,7 @@ void Planner::check_axes_activity() {
 
     #if HAS_TAIL_FAN_SPEED
       FANS_LOOP(i) {
-        const uint8_t spd = thermalManager.scaledFanSpeed(i, block->fan_speed[i]);
+        const uint8_t spd = fanManager.scaledFanSpeed(i, block->fan_speed[i]);
         if (tail_fan_speed[i] != spd) {
           fans_need_update = true;
           tail_fan_speed[i] = spd;
@@ -1343,7 +1343,7 @@ void Planner::check_axes_activity() {
 
     #if HAS_TAIL_FAN_SPEED
       FANS_LOOP(i) {
-        const uint8_t spd = thermalManager.scaledFanSpeed(i);
+        const uint8_t spd = fanManager.scaledFanSpeed(i);
         if (tail_fan_speed[i] != spd) {
           fans_need_update = true;
           tail_fan_speed[i] = spd;
@@ -1388,7 +1388,7 @@ void Planner::check_axes_activity() {
 
   #if ENABLED(AUTOTEMP_PROPORTIONAL)
     void Planner::_autotemp_update_from_hotend() {
-      const celsius_t target = thermalManager.degTargetHotend(active_extruder);
+      const celsius_t target = fanManager.degTargetHotend(active_tool);
       autotemp_min = target + AUTOTEMP_MIN_P;
       autotemp_max = target + AUTOTEMP_MAX_P;
     }
@@ -1430,7 +1430,7 @@ void Planner::check_axes_activity() {
     static float oldt = 0;
 
     if (!autotemp_enabled) return;
-    if (thermalManager.degTargetHotend(active_extruder) < autotemp_min - 2) return; // Below the min?
+    if (fanManager.degTargetHotend(active_tool) < autotemp_min - 2) return; // Below the min?
 
     float high = 0.0;
     for (uint8_t b = block_buffer_tail; b != block_buffer_head; b = next_block_index(b)) {
@@ -1445,12 +1445,12 @@ void Planner::check_axes_activity() {
     LIMIT(t, autotemp_min, autotemp_max);
     if (t < oldt) t = t * (1.0f - (AUTOTEMP_OLDWEIGHT)) + oldt * (AUTOTEMP_OLDWEIGHT);
     oldt = t;
-    thermalManager.setTargetHotend(t, active_extruder);
+    fanManager.setTargetHotend(t, active_tool);
   }
 
 #endif
 
-#if DISABLED(NO_VOLUMETRICS)
+#if ENABLED(USE_VOLUMETRICS)
 
   /**
    * Get a volumetric multiplier from a filament diameter.
@@ -1475,7 +1475,7 @@ void Planner::check_axes_activity() {
     #endif
   }
 
-#endif // !NO_VOLUMETRICS
+#endif // USE_VOLUMETRICS
 
 #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
 
@@ -1622,12 +1622,12 @@ void Planner::check_axes_activity() {
    */
   void Planner::apply_retract(float &rz, float &e) {
     rz += fwretract.current_hop;
-    e -= fwretract.current_retract[active_extruder];
+    e -= fwretract.current_retract[active_tool];
   }
 
   void Planner::unapply_retract(float &rz, float &e) {
     rz -= fwretract.current_hop;
-    e += fwretract.current_retract[active_extruder];
+    e += fwretract.current_retract[active_tool];
   }
 
 #endif
@@ -1863,7 +1863,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   #if EITHER(PREVENT_COLD_EXTRUSION, PREVENT_LENGTHY_EXTRUDE)
     if (de) {
       #if ENABLED(PREVENT_COLD_EXTRUSION)
-        if (thermalManager.tooColdToExtrude(extruder)) {
+      if (fanManager.tooColdToExtrude(extruder)) {
           position.e = target.e; // Behave as if the move really took place, but ignore E part
           TERN_(HAS_POSITION_FLOAT, position_float.e = target_float.e);
           de = 0; // no difference
@@ -2117,7 +2117,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   TERN_(HAS_CUTTER, block->cutter_power = cutter.power);
 
   #if HAS_FAN
-    FANS_LOOP(i) block->fan_speed[i] = thermalManager.fan_speed[i];
+  FANS_LOOP(i) block->fan_speed[i] = fanManager.fan_speed[i];
   #endif
 
   #if ENABLED(BARICUDA)
@@ -2394,12 +2394,12 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
        *
        * esteps             : This is a print move, because we checked for A, B, C steps before.
        *
-       * extruder_advance_K[active_extruder] : There is an advance factor set for this extruder.
+       * extruder_advance_K[active_tool] : There is an advance factor set for this extruder.
        *
        * de > 0             : Extruder is running forward (e.g., for "Wipe while retracting" (Slic3r) or "Combing" (Cura) moves)
        */
       block->use_advance_lead =  esteps
-                              && extruder_advance_K[active_extruder]
+        && extruder_advance_K[active_tool]
                               && de > 0;
 
       if (block->use_advance_lead) {
@@ -2418,7 +2418,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
         if (block->e_D_ratio > 3.0f)
           block->use_advance_lead = false;
         else {
-          const uint32_t max_accel_steps_per_s2 = MAX_E_JERK(extruder) / (extruder_advance_K[active_extruder] * block->e_D_ratio) * steps_per_mm;
+          const uint32_t max_accel_steps_per_s2 = MAX_E_JERK(extruder) / (extruder_advance_K[active_tool] * block->e_D_ratio) * steps_per_mm;
           if (TERN0(LA_DEBUG, accel > max_accel_steps_per_s2))
             SERIAL_ECHOLNPGM("Acceleration limited.");
           NOMORE(accel, max_accel_steps_per_s2);
@@ -2457,9 +2457,9 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   #endif
   #if ENABLED(LIN_ADVANCE)
     if (block->use_advance_lead) {
-      block->advance_speed = (STEPPER_TIMER_RATE) / (extruder_advance_K[active_extruder] * block->e_D_ratio * block->acceleration * settings.axis_steps_per_mm[E_AXIS_N(extruder)]);
+      block->advance_speed = (STEPPER_TIMER_RATE) / (extruder_advance_K[active_tool] * block->e_D_ratio * block->acceleration * settings.axis_steps_per_mm[E_AXIS_N(extruder)]);
       #if ENABLED(LA_DEBUG)
-        if (extruder_advance_K[active_extruder] * block->e_D_ratio * block->acceleration * 2 < SQRT(block->nominal_speed_sqr) * block->e_D_ratio)
+      if (extruder_advance_K[active_tool] * block->e_D_ratio * block->acceleration * 2 < SQRT(block->nominal_speed_sqr) * block->e_D_ratio)
           SERIAL_ECHOLNPGM("More than 2 steps per eISR loop executed.");
         if (block->advance_speed < 200)
           SERIAL_ECHOLNPGM("eISR running at > 10kHz.");
@@ -2821,7 +2821,7 @@ void Planner::buffer_sync_block(TERN_(LASER_SYNCHRONOUS_M106_M107, uint8_t sync_
   block->position = position;
 
   #if BOTH(HAS_FAN, LASER_SYNCHRONOUS_M106_M107)
-    FANS_LOOP(i) block->fan_speed[i] = thermalManager.fan_speed[i];
+  FANS_LOOP(i) block->fan_speed[i] = fanManager.fan_speed[i];
   #endif
 
   // If this is the first added movement, reload the delay, otherwise, cancel it.
@@ -2855,7 +2855,7 @@ void Planner::buffer_sync_block(TERN_(LASER_SYNCHRONOUS_M106_M107, uint8_t sync_
  */
 bool Planner::buffer_segment(const abce_pos_t &abce
   OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-  , const_feedRate_t fr_mm_s, const uint8_t extruder/*=active_extruder*/, const_float_t millimeters/*=0.0*/
+  , const_feedRate_t fr_mm_s, const uint8_t extruder/*=active_tool*/, const_float_t millimeters/*=0.0*/
 ) {
 
   // If we are cleaning, do not accept queuing of movements
@@ -2961,7 +2961,7 @@ bool Planner::buffer_segment(const abce_pos_t &abce
  *  millimeters     - the length of the movement, if known
  *  inv_duration    - the reciprocal if the duration of the movement, if known (kinematic only if feeedrate scaling is enabled)
  */
-bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s, const uint8_t extruder/*=active_extruder*/, const float millimeters/*=0.0*/
+bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s, const uint8_t extruder/*=active_tool*/, const float millimeters/*=0.0*/
   OPTARG(SCARA_FEEDRATE_SCALING, const_float_t inv_duration/*=0.0*/)
 ) {
   xyze_pos_t machine = cart;
@@ -3021,7 +3021,7 @@ bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s, cons
     block->flag = BLOCK_FLAG_IS_PAGE;
 
     #if HAS_FAN
-      FANS_LOOP(i) block->fan_speed[i] = thermalManager.fan_speed[i];
+    FANS_LOOP(i) block->fan_speed[i] = fanManager.fan_speed[i];
     #endif
 
     E_TERN_(block->extruder = extruder);
@@ -3073,11 +3073,11 @@ bool Planner::buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s, cons
  * The provided ABCE position is in machine units.
  */
 void Planner::set_machine_position_mm(const abce_pos_t &abce) {
-  TERN_(DISTINCT_E_FACTORS, last_extruder = active_extruder);
+  TERN_(DISTINCT_E_FACTORS, last_extruder = active_tool);
   TERN_(HAS_POSITION_FLOAT, position_float = abce);
   position.set(
     LOGICAL_AXIS_LIST(
-      LROUND(abce.e * settings.axis_steps_per_mm[E_AXIS_N(active_extruder)]),
+      LROUND(abce.e * settings.axis_steps_per_mm[E_AXIS_N(active_tool)]),
       LROUND(abce.a * settings.axis_steps_per_mm[A_AXIS]),
       LROUND(abce.b * settings.axis_steps_per_mm[B_AXIS]),
       LROUND(abce.c * settings.axis_steps_per_mm[C_AXIS]),
@@ -3114,10 +3114,10 @@ void Planner::set_position_mm(const xyze_pos_t &xyze) {
    * Setters for planner position (also setting stepper position).
    */
   void Planner::set_e_position_mm(const_float_t e) {
-    const uint8_t axis_index = E_AXIS_N(active_extruder);
-    TERN_(DISTINCT_E_FACTORS, last_extruder = active_extruder);
+    const uint8_t axis_index = E_AXIS_N(active_tool);
+    TERN_(DISTINCT_E_FACTORS, last_extruder = active_tool);
 
-    const float e_new = DIFF_TERN(FWRETRACT, e, fwretract.current_retract[active_extruder]);
+    const float e_new = DIFF_TERN(FWRETRACT, e, fwretract.current_retract[active_tool]);
     position.e = LROUND(settings.axis_steps_per_mm[axis_index] * e_new);
     TERN_(HAS_POSITION_FLOAT, position_float.e = e_new);
     TERN_(IS_KINEMATIC, TERN_(HAS_EXTRUDERS, position_cart.e = e));
@@ -3135,7 +3135,7 @@ void Planner::reset_acceleration_rates() {
   uint32_t highest_rate = 1;
   LOOP_DISTINCT_AXES(i) {
     max_acceleration_steps_per_s2[i] = settings.max_acceleration_mm_per_s2[i] * settings.axis_steps_per_mm[i];
-    if (TERN1(DISTINCT_E_FACTORS, i < E_AXIS || i == E_AXIS_N(active_extruder)))
+    if (TERN1(DISTINCT_E_FACTORS, i < E_AXIS || i == E_AXIS_N(active_tool)))
       NOLESS(highest_rate, max_acceleration_steps_per_s2[i]);
   }
   acceleration_long_cutoff = 4294967295UL / highest_rate; // 0xFFFFFFFFUL

@@ -263,7 +263,7 @@ namespace Language_zh_TW {
   LSTR MSG_AMAX_E                         = _UxGT("最大列印加速度") STR_E;
   LSTR MSG_AMAX_EN                        = _UxGT("最大列印加速度 *");     // "Amax " max_acceleration_mm_per_s2, acceleration in units/s^2 for print moves
   LSTR MSG_A_RETRACT                      = _UxGT("回縮加速度");     // "A-retract" retract_acceleration, E acceleration in mm/s^2 for retracts
-  LSTR MSG_A_TRAVEL                       = _UxGT("非列印移動加速度");     // "A-travel" travel_acceleration, X, Y, Z acceleration in mm/s^2 for travel (non printing) moves
+  LSTR MSG_A_TRAVEL = _UxGT("非列印移動加速度");     // "A-travel" travel_acceleration, X, Y, Z acceleration in mm/s^2 for travel (non cutting) moves
   LSTR MSG_STEPS_PER_MM                   = _UxGT("軸步數/mm");     // "Steps/mm" axis_steps_per_mm, axis steps-per-unit G92
   LSTR MSG_A_STEPS                        = STR_A _UxGT(" 軸步數/mm");     // "Asteps/mm" axis_steps_per_mm, axis steps-per-unit G92
   LSTR MSG_B_STEPS                        = STR_B _UxGT(" 軸步數/mm");

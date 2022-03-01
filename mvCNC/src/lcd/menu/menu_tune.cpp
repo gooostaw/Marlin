@@ -108,22 +108,22 @@ void menu_tune() {
   // Nozzle [1-4]:
   //
   #if HOTENDS == 1
-    EDIT_ITEM_FAST(int3, MSG_NOZZLE, &thermalManager.temp_hotend[0].target, 0, thermalManager.hotend_max_target(0), []{ thermalManager.start_watching_hotend(0); });
+    EDIT_ITEM_FAST(int3, MSG_NOZZLE, &fanManager.temp_hotend[0].target, 0, fanManager.hotend_max_target(0), [] { fanManager.start_watching_hotend(0); });
   #elif HAS_MULTI_HOTEND
     HOTEND_LOOP()
-      EDIT_ITEM_FAST_N(int3, e, MSG_NOZZLE_N, &thermalManager.temp_hotend[e].target, 0, thermalManager.hotend_max_target(e), []{ thermalManager.start_watching_hotend(MenuItemBase::itemIndex); });
+      EDIT_ITEM_FAST_N(int3, e, MSG_NOZZLE_N, &fanManager.temp_hotend[e].target, 0, fanManager.hotend_max_target(e), [] { fanManager.start_watching_hotend(MenuItemBase::itemIndex); });
   #endif
 
   #if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
     LOOP_S_L_N(e, 1, EXTRUDERS)
-      EDIT_ITEM_FAST_N(int3, e, MSG_NOZZLE_STANDBY, &thermalManager.singlenozzle_temp[e], 0, thermalManager.hotend_max_target(0));
+      EDIT_ITEM_FAST_N(int3, e, MSG_NOZZLE_STANDBY, &fanManager.singlenozzle_temp[e], 0, fanManager.hotend_max_target(0));
   #endif
 
   //
   // Bed:
   //
   #if HAS_HEATED_BED
-    EDIT_ITEM_FAST(int3, MSG_BED, &thermalManager.temp_bed.target, 0, BED_MAX_TARGET, thermalManager.start_watching_bed);
+    EDIT_ITEM_FAST(int3, MSG_BED, &fanManager.temp_bed.target, 0, BED_MAX_TARGET, fanManager.start_watching_bed);
   #endif
 
   //
@@ -178,7 +178,7 @@ void menu_tune() {
   // Flow:
   //
   #if HAS_EXTRUDERS
-    EDIT_ITEM(int3, MSG_FLOW, &planner.flow_percentage[active_extruder], 10, 999, []{ planner.refresh_e_factor(active_extruder); });
+      EDIT_ITEM(int3, MSG_FLOW, &planner.flow_percentage[active_tool], 10, 999, [] { planner.refresh_e_factor(active_tool); });
     // Flow En:
     #if HAS_MULTI_EXTRUDER
       LOOP_L_N(n, EXTRUDERS)

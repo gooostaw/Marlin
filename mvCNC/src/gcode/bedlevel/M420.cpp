@@ -37,14 +37,14 @@
  *
  *   C         Center mesh on the mean of the lowest and highest
  *
- * With mvCNC_DEV_MODE:
+ * With MVCNC_DEV_MODE:
  *   S2        Create a simple random mesh and enable
  */
 void GcodeSuite::M420() {
   const bool seen_S = parser.seen('S'),
              to_enable = seen_S ? parser.value_bool() : planner.leveling_active;
 
-  #if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
     if (parser.intval('S') == 2) {
       const float x_min = probe.min_x(), x_max = probe.max_x(),
                   y_min = probe.min_y(), y_max = probe.max_y();

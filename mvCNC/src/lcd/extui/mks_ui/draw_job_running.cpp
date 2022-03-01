@@ -68,20 +68,20 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
           uiCfg.print_state = PAUSING;
         #endif
         lv_imgbtn_set_src_both(buttonPause, "F:/bmp_resume.bin");
-        lv_label_set_text(labelPause, printing_menu.resume);
+        lv_label_set_text(labelPause, job_running_menu.resume);
         lv_obj_align(labelPause, buttonPause, LV_ALIGN_CENTER, 30, 0);
       }
       else if (uiCfg.print_state == PAUSED) {
         uiCfg.print_state = RESUMING;
         lv_imgbtn_set_src_both(obj, "F:/bmp_pause.bin");
-        lv_label_set_text(labelPause, printing_menu.pause);
+        lv_label_set_text(labelPause, job_running_menu.pause);
         lv_obj_align(labelPause, buttonPause, LV_ALIGN_CENTER, 30, 0);
       }
       #if ENABLED(POWER_LOSS_RECOVERY)
         else if (uiCfg.print_state == REPRINTING) {
           uiCfg.print_state = REPRINTED;
           lv_imgbtn_set_src_both(obj, "F:/bmp_pause.bin");
-          lv_label_set_text(labelPause, printing_menu.pause);
+          lv_label_set_text(labelPause, job_running_menu.pause);
           lv_obj_align(labelPause, buttonPause, LV_ALIGN_CENTER, 30, 0);
           print_time.minutes = recovery.info.print_job_elapsed / 60;
           print_time.seconds = recovery.info.print_job_elapsed % 60;
@@ -90,35 +90,35 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
       #endif
       break;
     case ID_STOP:
-      lv_clear_printing();
+      lv_clear_job_running();
       lv_draw_dialog(DIALOG_TYPE_STOP);
       break;
     case ID_OPTION:
-      lv_clear_printing();
+      lv_clear_job_running();
       lv_draw_operation();
       break;
     case ID_TEMP_EXT:
       uiCfg.curTempType = 0;
-      lv_clear_printing();
+      lv_clear_job_running();
       lv_draw_preHeat();
       break;
     case ID_TEMP_BED:
       uiCfg.curTempType = 1;
-      lv_clear_printing();
+      lv_clear_job_running();
       lv_draw_preHeat();
       break;
     case ID_BABYSTEP:
-      lv_clear_printing();
+      lv_clear_job_running();
       lv_draw_baby_stepping();
       break;
     case ID_FAN:
-      lv_clear_printing();
+      lv_clear_job_running();
       lv_draw_fan();
       break;
   }
 }
 
-void lv_draw_printing() {
+void lv_draw_job_running() {
   disp_state_stack._disp_index = 0;
   ZERO(disp_state_stack._disp_state);
   scr = lv_screen_create(PRINTING_UI);
@@ -176,13 +176,13 @@ void lv_draw_printing() {
   labelOperat = lv_label_create_empty(buttonOperat);
 
   if (gCfgItems.multiple_language) {
-    lv_label_set_text(labelPause, uiCfg.print_state == WORKING ? printing_menu.pause : printing_menu.resume);
+    lv_label_set_text(labelPause, uiCfg.print_state == WORKING ? job_running_menu.pause : job_running_menu.resume);
     lv_obj_align(labelPause, buttonPause, LV_ALIGN_CENTER, 20, 0);
 
-    lv_label_set_text(labelStop, printing_menu.stop);
+    lv_label_set_text(labelStop, job_running_menu.stop);
     lv_obj_align(labelStop, buttonStop, LV_ALIGN_CENTER, 20, 0);
 
-    lv_label_set_text(labelOperat, printing_menu.option);
+    lv_label_set_text(labelOperat, job_running_menu.option);
     lv_obj_align(labelOperat, buttonOperat, LV_ALIGN_CENTER, 20, 0);
   }
 
@@ -204,24 +204,24 @@ void lv_draw_printing() {
 }
 
 void disp_ext_temp() {
-  sprintf(public_buf_l, printing_menu.temp1, thermalManager.wholeDegHotend(0), thermalManager.degTargetHotend(0));
+  sprintf(public_buf_l, job_running_menu.temp1, fanManager.wholeDegHotend(0), fanManager.degTargetHotend(0));
   lv_label_set_text(labelExt1, public_buf_l);
 
   #if HAS_MULTI_EXTRUDER
-    sprintf(public_buf_l, printing_menu.temp1, thermalManager.wholeDegHotend(1), thermalManager.degTargetHotend(1));
+  sprintf(public_buf_l, job_running_menu.temp1, fanManager.wholeDegHotend(1), fanManager.degTargetHotend(1));
     lv_label_set_text(labelExt2, public_buf_l);
   #endif
 }
 
 void disp_bed_temp() {
   #if HAS_HEATED_BED
-    sprintf(public_buf_l, printing_menu.bed_temp, thermalManager.wholeDegBed(), thermalManager.degTargetBed());
+  sprintf(public_buf_l, job_running_menu.bed_temp, fanManager.wholeDegBed(), fanManager.degTargetBed());
     lv_label_set_text(labelBed, public_buf_l);
   #endif
 }
 
 void disp_fan_speed() {
-  sprintf_P(public_buf_l, PSTR("%d%%"), (int)thermalManager.fanSpeedPercent(0));
+  sprintf_P(public_buf_l, PSTR("%d%%"), (int)fanManager.fanSpeedPercent(0));
   lv_label_set_text(labelFan, public_buf_l);
 }
 
@@ -282,7 +282,7 @@ void setProBarRate() {
 
         flash_preview_begin = false;
         default_preview_flg = false;
-        lv_clear_printing();
+        lv_clear_job_running();
         lv_draw_dialog(DIALOG_TYPE_FINISH_PRINT);
 
         once_flag = true;
@@ -299,7 +299,7 @@ void setProBarRate() {
   }
 }
 
-void lv_clear_printing() {
+void lv_clear_job_running() {
   #if HAS_ROTARY_ENCODER
     if (gCfgItems.encoder_enable) lv_group_remove_all_objs(g);
   #endif

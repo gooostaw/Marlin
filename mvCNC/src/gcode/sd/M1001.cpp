@@ -8,7 +8,7 @@
 
 #include "../gcode.h"
 #include "../../module/planner.h"
-#include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
 #include "../../module/temperature.h"
 #include "../../sd/cardreader.h"
 
@@ -50,7 +50,7 @@ void GcodeSuite::M1001() {
   planner.synchronize();
 
   // SD CNCing is finished when the queue reaches M1001
-  card.flag.sdprinting = card.flag.sdprintdone = false;
+  card.flag.sdjob_running = card.flag.sdprintdone = false;
 
   // If there's another auto#.g file to run...
   if (TERN(NO_SD_AUTOSTART, false, card.autofile_check())) return;
@@ -59,10 +59,10 @@ void GcodeSuite::M1001() {
   TERN_(POWER_LOSS_RECOVERY, recovery.purge());
 
   // Report total print time
-  const bool long_print = print_job_timer.duration() > 60;
+  const bool long_print = JobTimer.duration() > 60;
   if (long_print) process_subcommands_now(F("M31"));
 
-  // Stop the print job timer
+  // Stop the CNC job timer
   process_subcommands_now(F("M77"));
 
   // Set the progress bar "done" state

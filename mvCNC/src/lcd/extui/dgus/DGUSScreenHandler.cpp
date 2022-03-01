@@ -15,7 +15,7 @@
 #include "../../../module/temperature.h"
 #include "../../../module/motion.h"
 #include "../../../module/planner.h"
-#include "../../../module/printcounter.h"
+#include "../../../module/jobcounter.h"
 #include "../../../sd/cardreader.h"
 
 #if ENABLED(POWER_LOSS_RECOVERY)
@@ -123,7 +123,7 @@ void DGUSScreenHandler::DGUSLCD_SendPrintProgressToDisplay(DGUS_VP_Variable &var
 // Send the current print time to the display.
 // It is using a hex display for that: It expects BSD coded data in the format xxyyzz
 void DGUSScreenHandler::DGUSLCD_SendPrintTimeToDisplay(DGUS_VP_Variable &var) {
-  duration_t elapsed = print_job_timer.duration();
+  duration_t elapsed = JobTimer.duration();
   char buf[32];
   elapsed.toString(buf);
   dgusdisplay.WriteVariable(VP_PrintTime, buf, var.size, true);
@@ -190,12 +190,12 @@ void DGUSScreenHandler::DGUSLCD_SendStringToDisplayPGM(DGUS_VP_Variable &var) {
   }
 #endif
 
-#if ENABLED(PRINTCOUNTER)
+#if ENABLED(JOBCOUNTER)
 
   // Send the accumulate print time to the display.
   // It is using a hex display for that: It expects BSD coded data in the format xxyyzz
   void DGUSScreenHandler::DGUSLCD_SendPrintAccTimeToDisplay(DGUS_VP_Variable &var) {
-    printStatistics state = print_job_timer.getStats();
+    printStatistics state = JobTimer.getStats();
     char buf[22];
     duration_t elapsed = state.printTime;
     elapsed.toString(buf);
@@ -203,7 +203,7 @@ void DGUSScreenHandler::DGUSLCD_SendStringToDisplayPGM(DGUS_VP_Variable &var) {
   }
 
   void DGUSScreenHandler::DGUSLCD_SendPrintsTotalToDisplay(DGUS_VP_Variable &var) {
-    printStatistics state = print_job_timer.getStats();
+    printStatistics state = JobTimer.getStats();
     char buf[10];
     sprintf_P(buf, PSTR("%u"), state.totalPrints);
     dgusdisplay.WriteVariable(VP_PrintsTotal, buf, var.size, true);
@@ -258,17 +258,17 @@ void DGUSScreenHandler::DGUSLCD_SendHeaterStatusToDisplay(DGUS_VP_Variable &var)
 #if ENABLED(SDSUPPORT)
 
   void DGUSScreenHandler::ScreenChangeHookIfSD(DGUS_VP_Variable &var, void *val_ptr) {
-    // default action executed when there is a SD card, but not printing
+    // default action executed when there is a SD card, but not running job
     if (ExtUI::isMediaInserted() && !ExtUI::isPrintingFromMedia()) {
       ScreenChangeHook(var, val_ptr);
       dgusdisplay.RequestScreen(current_screen);
       return;
     }
 
-    // if we are printing, we jump to two screens after the requested one.
+    // if we are running job, we jump to two screens after the requested one.
     // This should host e.g a print pause / print abort / print resume dialog.
     // This concept allows to recycle this hook for other file
-    if (ExtUI::isPrintingFromMedia() && !card.flag.abort_sd_printing) {
+    if (ExtUI::isPrintingFromMedia() && !card.flag.abort_sd_job_running) {
       GotoScreen(DGUSLCD_SCREEN_SDPRINTMANIPULATION);
       return;
     }
@@ -278,7 +278,7 @@ void DGUSScreenHandler::DGUSLCD_SendHeaterStatusToDisplay(DGUS_VP_Variable &var)
       setstatusmessagePGM(GET_TEXT(MSG_NO_MEDIA));
       return;
     }
-    if (card.flag.abort_sd_printing) {
+    if (card.flag.abort_sd_job_running) {
       setstatusmessagePGM(GET_TEXT(MSG_MEDIA_ABORTING));
       return;
     }
@@ -365,7 +365,7 @@ void DGUSScreenHandler::ScreenChangeHookIfIdle(DGUS_VP_Variable &var, void *val_
 }
 
 void DGUSScreenHandler::HandleAllHeatersOff(DGUS_VP_Variable &var, void *val_ptr) {
-  thermalManager.disable_all_heaters();
+  fanManager.disable_all_heaters();
   ForceCompleteUpdate(); // hint to send all data.
 }
 
@@ -378,22 +378,22 @@ void DGUSScreenHandler::HandleTemperatureChanged(DGUS_VP_Variable &var, void *va
     #if HAS_HOTEND
       case VP_T_E0_Set:
         NOMORE(newvalue, HEATER_0_MAXTEMP);
-        thermalManager.setTargetHotend(newvalue, 0);
-        acceptedvalue = thermalManager.degTargetHotend(0);
+        fanManager.setTargetHotend(newvalue, 0);
+        acceptedvalue = fanManager.degTargetHotend(0);
         break;
     #endif
     #if HAS_MULTI_HOTEND
       case VP_T_E1_Set:
         NOMORE(newvalue, HEATER_1_MAXTEMP);
-        thermalManager.setTargetHotend(newvalue, 1);
-        acceptedvalue = thermalManager.degTargetHotend(1);
+        fanManager.setTargetHotend(newvalue, 1);
+        acceptedvalue = fanManager.degTargetHotend(1);
         break;
     #endif
     #if HAS_HEATED_BED
       case VP_T_Bed_Set:
         NOMORE(newvalue, BED_MAXTEMP);
-        thermalManager.setTargetBed(newvalue);
-        acceptedvalue = thermalManager.degTargetBed();
+        fanManager.setTargetBed(newvalue);
+        acceptedvalue = fanManager.degTargetBed();
         break;
     #endif
   }
@@ -468,7 +468,7 @@ void DGUSScreenHandler::HandleSettings(DGUS_VP_Variable &var, void *val_ptr) {
   switch (value) {
     default: break;
     case 1:
-      TERN_(PRINTCOUNTER, print_job_timer.initStats());
+      TERN_(JOBCOUNTER, JobTimer.initStats());
       settings.reset();
       settings.save();
       break;
@@ -612,7 +612,7 @@ void DGUSScreenHandler::HandleHeaterControl(DGUS_VP_Variable &var, void *val_ptr
         case VP_E1_BED_PREHEAT: TERN_(HAS_MULTI_HOTEND, ui.preheat_all(1)); break;
       }
       case 7: break; // Custom preheat
-      case 9: thermalManager.cooldown(); break; // Cool down
+      case 9: fanManager.cooldown(); break; // Cool down
     }
 
     // Go to the preheat screen to show the heating progress

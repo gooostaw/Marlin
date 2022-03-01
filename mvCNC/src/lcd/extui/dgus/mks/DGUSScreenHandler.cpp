@@ -15,7 +15,7 @@
 #include "../../../../module/temperature.h"
 #include "../../../../module/motion.h"
 #include "../../../../module/planner.h"
-#include "../../../../module/printcounter.h"
+#include "../../../../module/jobcounter.h"
 
 #include "../../../../gcode/gcode.h"
 
@@ -81,7 +81,7 @@ void DGUSScreenHandler::DGUSLCD_SendBabyStepToDisplay_MKS(DGUS_VP_Variable &var)
 }
 
 void DGUSScreenHandler::DGUSLCD_SendPrintTimeToDisplay_MKS(DGUS_VP_Variable &var) {
-  duration_t elapsed = print_job_timer.duration();
+  duration_t elapsed = JobTimer.duration();
   uint32_t time = elapsed.value;
   dgusdisplay.WriteVariable(VP_PrintTime_H, uint16_t(time / 3600));
   dgusdisplay.WriteVariable(VP_PrintTime_M, uint16_t(time % 3600 / 60));
@@ -205,7 +205,7 @@ void DGUSScreenHandler::DGUSLCD_SendTMCStepValue(DGUS_VP_Variable &var) {
         }
         break;
       case 2: // Abort
-        HandleUserConfirmationPopUp(VP_SD_AbortPrintConfirmed, nullptr, PSTR("Abort printing"), filelist.filename(), PSTR("?"), true, true, false, true);
+        HandleUserConfirmationPopUp(VP_SD_AbortPrintConfirmed, nullptr, PSTR("Abort running job"), filelist.filename(), PSTR("?"), true, true, false, true);
         break;
     }
   }
@@ -241,7 +241,7 @@ void DGUSScreenHandler::DGUSLCD_SendTMCStepValue(DGUS_VP_Variable &var) {
     ) filelist.refresh();
   }
 
-  void DGUSScreenHandler::SDPrintingFinished() {
+  void DGUSScreenHandler::SDJobFinished() {
     if (DGUSAutoTurnOff) {
       queue.exhaust();
       gcode.process_subcommands_now(F("M81"));
@@ -268,10 +268,10 @@ void DGUSScreenHandler::ScreenChangeHook(DGUS_VP_Variable &var, void *val_ptr) {
 
   // when the dgus had reboot, it will enter the DGUSLCD_SCREEN_MAIN page,
   // so user can change any page to use this function, an it will check
-  // if robin nano is printing. when it is, dgus will enter the printing
+  // if robin nano is running job. when it is, dgus will enter the running job
   // page to continue print;
   //
-  //if (printJobOngoing() || printingIsPaused()) {
+  //if (jobIsOngoing() || jobIsPaused()) {
   //  if (target == MKSLCD_PAUSE_SETTING_MOVE || target == MKSLCD_PAUSE_SETTING_EX
   //    || target == MKSLCD_SCREEN_PRINT || target == MKSLCD_SCREEN_PAUSE
   //  ) {
@@ -306,9 +306,9 @@ void DGUSScreenHandler::ScreenBackChange(DGUS_VP_Variable &var, void *val_ptr) {
 
 void DGUSScreenHandler::ZoffsetConfirm(DGUS_VP_Variable &var, void *val_ptr) {
   settings.save();
-  if (printJobOngoing())
+  if (jobIsOngoing())
     GotoScreen(MKSLCD_SCREEN_PRINT);
-  else if (print_job_timer.isPaused)
+  else if (JobTimer.isPaused)
     GotoScreen(MKSLCD_SCREEN_PAUSE);
 }
 
@@ -324,7 +324,7 @@ void DGUSScreenHandler::GetTurnOffCtrl(DGUS_VP_Variable &var, void *val_ptr) {
 void DGUSScreenHandler::GetMinExtrudeTemp(DGUS_VP_Variable &var, void *val_ptr) {
   DEBUG_ECHOLNPGM("GetMinExtrudeTemp");
   const uint16_t value = swap16(*(uint16_t *)val_ptr);
-  TERN_(PREVENT_COLD_EXTRUSION, thermalManager.extrude_min_temp = value);
+  TERN_(PREVENT_COLD_EXTRUSION, fanManager.extrude_min_temp = value);
   mks_min_extrusion_temp = value;
   settings.save();
 }
@@ -740,7 +740,7 @@ void DGUSScreenHandler::HandleManualMove(DGUS_VP_Variable &var, void *val_ptr) {
 
   DEBUG_ECHOLNPGM("QUEUE LEN:", queue.ring_buffer.length);
 
-  if (!print_job_timer.isPaused() && !queue.ring_buffer.empty())
+  if (!JobTimer.isPaused() && !queue.ring_buffer.empty())
     return;
 
   char axiscode;
@@ -1065,7 +1065,7 @@ void DGUSScreenHandler::HandleAccChange_MKS(DGUS_VP_Variable &var, void *val_ptr
 #if ENABLED(PREVENT_COLD_EXTRUSION)
   void DGUSScreenHandler::HandleGetExMinTemp_MKS(DGUS_VP_Variable &var, void *val_ptr) {
     const uint16_t value_ex_min_temp = swap16(*(uint16_t*)val_ptr);
-    thermalManager.extrude_min_temp = value_ex_min_temp;
+    fanManager.extrude_min_temp = value_ex_min_temp;
     skipVP = var.VP; // don't overwrite value the next update time as the display might autoincrement in parallel
   }
 #endif
@@ -1186,7 +1186,7 @@ void DGUSScreenHandler::MKS_FilamentLoadUnload(DGUS_VP_Variable &var, void *val_
     uint8_t hotend_too_cold = 0;
   #endif
 
-  if (!print_job_timer.isPaused() && !queue.ring_buffer.empty())
+    if (!JobTimer.isPaused() && !queue.ring_buffer.empty())
     return;
 
   const uint16_t val_t = swap16(*(uint16_t*)val_ptr);
@@ -1194,7 +1194,7 @@ void DGUSScreenHandler::MKS_FilamentLoadUnload(DGUS_VP_Variable &var, void *val_
     default: break;
     case 0:
       #if HAS_HOTEND
-        if (thermalManager.tooColdToExtrude(0))
+      if (fanManager.tooColdToExtrude(0))
           hotend_too_cold = 1;
         else {
           #if EITHER(HAS_MULTI_HOTEND, SINGLENOZZLE)
@@ -1205,16 +1205,16 @@ void DGUSScreenHandler::MKS_FilamentLoadUnload(DGUS_VP_Variable &var, void *val_
       break;
     case 1:
       #if HAS_MULTI_HOTEND
-        if (thermalManager.tooColdToExtrude(1)) hotend_too_cold = 2; else swap_tool = 2;
+      if (fanManager.tooColdToExtrude(1)) hotend_too_cold = 2; else swap_tool = 2;
       #elif ENABLED(SINGLENOZZLE)
-        if (thermalManager.tooColdToExtrude(0)) hotend_too_cold = 1; else swap_tool = 2;
+      if (fanManager.tooColdToExtrude(0)) hotend_too_cold = 1; else swap_tool = 2;
       #endif
       break;
   }
 
   #if BOTH(HAS_HOTEND, PREVENT_COLD_EXTRUSION)
     if (hotend_too_cold) {
-      if (thermalManager.targetTooColdToExtrude(hotend_too_cold - 1)) thermalManager.setTargetHotend(thermalManager.extrude_min_temp, hotend_too_cold - 1);
+      if (fanManager.targetTooColdToExtrude(hotend_too_cold - 1)) fanManager.setTargetHotend(fanManager.extrude_min_temp, hotend_too_cold - 1);
       sendinfoscreen(F("NOTICE"), nullptr, F("Please wait."), F("Nozzle heating!"), true, true, true, true);
       SetupConfirmAction(nullptr);
       GotoScreen(DGUSLCD_SCREEN_POPUP);
@@ -1313,10 +1313,10 @@ void DGUSScreenHandler::MKS_FilamentUnLoad(DGUS_VP_Variable &var, void *val_ptr)
 
     if (filament_data.action == 0) { // Go back to utility screen
       #if HAS_HOTEND
-        thermalManager.setTargetHotend(e_temp, ExtUI::extruder_t::E0);
+      fanManager.setTargetHotend(e_temp, ExtUI::extruder_t::E0);
       #endif
       #if HAS_MULTI_HOTEND
-        thermalManager.setTargetHotend(e_temp, ExtUI::extruder_t::E1);
+      fanManager.setTargetHotend(e_temp, ExtUI::extruder_t::E1);
       #endif
       GotoScreen(DGUSLCD_SCREEN_UTILITY);
     }
@@ -1326,13 +1326,13 @@ void DGUSScreenHandler::MKS_FilamentUnLoad(DGUS_VP_Variable &var, void *val_ptr)
           #if HAS_HOTEND
             case VP_E0_FILAMENT_LOAD_UNLOAD:
               filament_data.extruder = ExtUI::extruder_t::E0;
-              thermalManager.setTargetHotend(e_temp, filament_data.extruder);
+              fanManager.setTargetHotend(e_temp, filament_data.extruder);
               break;
           #endif
           #if HAS_MULTI_HOTEND
             case VP_E1_FILAMENT_LOAD_UNLOAD:
               filament_data.extruder = ExtUI::extruder_t::E1;
-              thermalManager.setTargetHotend(e_temp, filament_data.extruder);
+              fanManager.setTargetHotend(e_temp, filament_data.extruder);
               break;
           #endif
       }
@@ -1344,8 +1344,8 @@ void DGUSScreenHandler::MKS_FilamentUnLoad(DGUS_VP_Variable &var, void *val_ptr)
     if (filament_data.action <= 0) return;
 
     // If we close to the target temperature, we can start load or unload the filament
-    if (thermalManager.hotEnoughToExtrude(filament_data.extruder) && \
-        thermalManager.targetHotEnoughToExtrude(filament_data.extruder)) {
+    if (fanManager.hotEnoughToExtrude(filament_data.extruder) && \
+      fanManager.targetHotEnoughToExtrude(filament_data.extruder)) {
       float movevalue = DGUS_FILAMENT_LOAD_LENGTH_PER_TIME;
 
       if (filament_data.action == 1) { // load filament
@@ -1405,7 +1405,7 @@ bool DGUSScreenHandler::loop() {
 
       #if ENABLED(PREVENT_COLD_EXTRUSION)
         if (mks_min_extrusion_temp != 0)
-          thermalManager.extrude_min_temp = mks_min_extrusion_temp;
+          fanManager.extrude_min_temp = mks_min_extrusion_temp;
       #endif
 
       DGUS_ExtrudeLoadInit();
@@ -1419,7 +1419,7 @@ bool DGUSScreenHandler::loop() {
     }
 
     #if ENABLED(DGUS_MKS_RUNOUT_SENSOR)
-      if (booted && printingIsActive()) DGUS_Runout_Idle();
+    if (booted && jobIsActive()) DGUS_Runout_Idle();
     #endif
   #endif // SHOW_BOOTSCREEN
 

@@ -173,7 +173,7 @@ public:
     // mvCNC informed us about a bad SD Card.
     static void SDCardError();
     // mvCNC informed us about SD print completion.
-    static void SDPrintingFinished();
+    static void SDJobFinished();
   #else
     static void CNCReturn(DGUS_VP_Variable &var, void *val_ptr);
   #endif
@@ -210,7 +210,7 @@ public:
   static void DGUSLCD_SendStringToDisplay_Language_MKS(DGUS_VP_Variable &var);
   static void DGUSLCD_SendTMCStepValue(DGUS_VP_Variable &var);
 
-  #if ENABLED(PRINTCOUNTER)
+#if ENABLED(JOBCOUNTER)
     static void DGUSLCD_SendPrintAccTimeToDisplay(DGUS_VP_Variable &var);
     static void DGUSLCD_SendPrintsTotalToDisplay(DGUS_VP_Variable &var);
   #endif

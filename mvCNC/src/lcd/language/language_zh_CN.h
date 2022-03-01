@@ -278,7 +278,7 @@ namespace Language_zh_CN {
   LSTR MSG_AMAX_E                         = _UxGT("最大打印加速度") STR_E;
   LSTR MSG_AMAX_EN                        = _UxGT("最大打印加速度 *");
   LSTR MSG_A_RETRACT                      = _UxGT("收进加速度");     // "A-retract" retract_acceleration, E acceleration in mm/s^2 for retracts
-  LSTR MSG_A_TRAVEL                       = _UxGT("非打印移动加速度");     // "A-travel" travel_acceleration, X, Y, Z acceleration in mm/s^2 for travel (non printing) moves
+  LSTR MSG_A_TRAVEL = _UxGT("非打印移动加速度");     // "A-travel" travel_acceleration, X, Y, Z acceleration in mm/s^2 for travel (non cutting) moves
   LSTR MSG_XY_FREQUENCY_LIMIT             = _UxGT("频率最大");
   LSTR MSG_XY_FREQUENCY_FEEDRATE          = _UxGT("进给速度");
   LSTR MSG_STEPS_PER_MM                   = _UxGT("轴步数/mm");     // "Steps/mm" axis_steps_per_mm, axis steps-per-unit G92

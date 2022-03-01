@@ -56,7 +56,7 @@ bool FilamentMonitorBase::enabled = true,
 
 void event_filament_runout(const uint8_t extruder) {
 
-  if (did_pause_print) return;  // Action already in progress. Purge triggered repeated runout.
+  if (did_pause_job) return;  // Action already in progress. Purge triggered repeated runout.
 
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
     if (migration.in_progress) {

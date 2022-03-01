@@ -203,7 +203,7 @@ float segments_per_second = TERN(AXEL_TPARA, TPARA_SEGMENTS_PER_SECOND, SCARA_SE
       TERN_(Z_SENSORLESS, sensorless_t stealth_states_z = start_sensorless_homing_per_axis(Z_AXIS));
     #endif
 
-    //const int x_axis_home_dir = TOOL_X_HOME_DIR(active_extruder);
+      //const int x_axis_home_dir = TOOL_X_HOME_DIR(active_tool);
 
     //const xy_pos_t pos { max_length(X_AXIS) , max_length(Y_AXIS) };
     //const float mlz = max_length(X_AXIS),

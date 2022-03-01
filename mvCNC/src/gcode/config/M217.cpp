@@ -98,7 +98,7 @@ void GcodeSuite::M217() {
       const int16_t lval = parser.value_int();
       if (WITHIN(lval, 0, EXTRUDERS - 1)) {
         migration.last = lval;
-        migration.automode = (active_extruder < migration.last);
+        migration.automode = (active_tool < migration.last);
       }
     }
 
@@ -108,7 +108,7 @@ void GcodeSuite::M217() {
     if (parser.seen('T')) {     // Migrate now
       if (parser.has_value()) {
         const int16_t tval = parser.value_int();
-        if (WITHIN(tval, 0, EXTRUDERS - 1) && tval != active_extruder) {
+        if (WITHIN(tval, 0, EXTRUDERS - 1) && tval != active_tool) {
           migration.target = tval + 1;
           extruder_migration();
           migration.target = 0; // disable

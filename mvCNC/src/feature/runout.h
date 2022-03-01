@@ -8,7 +8,7 @@
  */
 
 #include "../sd/cardreader.h"
-#include "../module/printcounter.h"
+#include "../module/jobcounter.h"
 #include "../module/planner.h"
 #include "../module/stepper.h" // for block_t
 #include "../gcode/queue.h"
@@ -97,7 +97,7 @@ class TFilamentMonitor : public FilamentMonitorBase {
 
     // Give the response a chance to update its counter.
     static void run() {
-      if (enabled && !filament_ran_out && (printingIsActive() || did_pause_print)) {
+      if (enabled && !filament_ran_out && (jobIsActive() || did_pause_job)) {
         TERN_(HAS_FILAMENT_RUNOUT_DISTANCE, cli()); // Prevent RunoutResponseDelayed::block_completed from accumulating here
         response.run();
         sensor.run();
@@ -115,12 +115,12 @@ class TFilamentMonitor : public FilamentMonitorBase {
               }
             }
           #else
-            const bool ran_out = TEST(runout_flags, active_extruder);  // suppress non active extruders
-            uint8_t extruder = active_extruder;
+        const bool ran_out = TEST(runout_flags, active_tool);  // suppress non active extruders
+        uint8_t extruder = active_tool;
           #endif
         #else
           const bool ran_out = !!runout_flags;
-          uint8_t extruder = active_extruder;
+          uint8_t extruder = active_tool;
         #endif
 
         #if ENABLED(FILAMENT_RUNOUT_SENSOR_DEBUG)
@@ -351,7 +351,7 @@ class FilamentSensorBase {
       }
 
       static void block_completed(const block_t * const b) {
-        if (b->steps.x || b->steps.y || b->steps.z || did_pause_print) { // Allow pause purge move to re-trigger runout state
+        if (b->steps.x || b->steps.y || b->steps.z || did_pause_job) { // Allow pause purge move to re-trigger runout state
           // Only trigger on extrusion with XYZ movement to allow filament change and retract/recover.
           const uint8_t e = b->extruder;
           const int32_t steps = b->steps.e;

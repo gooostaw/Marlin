@@ -968,10 +968,10 @@ static void ee_Init() {
 
 #include "../shared/eeprom_api.h"
 
-#ifndef mvCNC_EEPROM_SIZE
-  #define mvCNC_EEPROM_SIZE 0x1000 // 4KB
+#ifndef MVCNC_EEPROM_SIZE
+#define MVCNC_EEPROM_SIZE 0x1000 // 4KB
 #endif
-size_t PersistentStore::capacity()    { return mvCNC_EEPROM_SIZE; }
+size_t PersistentStore::capacity() { return MVCNC_EEPROM_SIZE; }
 bool PersistentStore::access_start()  { ee_Init();  return true; }
 bool PersistentStore::access_finish() { ee_Flush(); return true; }
 

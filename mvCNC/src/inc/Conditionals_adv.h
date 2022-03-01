@@ -62,7 +62,7 @@
 #endif
 
 #if !HAS_EXTRUDERS
-  #define NO_VOLUMETRICS
+#undef USE_VOLUMETRICS
   #undef TEMP_SENSOR_0
   #undef TEMP_SENSOR_1
   #undef TEMP_SENSOR_2
@@ -521,7 +521,7 @@
   #define HAS_DUPLICATION_MODE 1
 #endif
 
-#if ENABLED(PRINTCOUNTER) && (SERVICE_INTERVAL_1 > 0 || SERVICE_INTERVAL_2 > 0 || SERVICE_INTERVAL_3 > 0)
+#if ENABLED(JOBCOUNTER) && (SERVICE_INTERVAL_1 > 0 || SERVICE_INTERVAL_2 > 0 || SERVICE_INTERVAL_3 > 0)
   #define HAS_SERVICE_INTERVALS 1
 #endif
 
@@ -794,11 +794,6 @@
   #define TOUCH_UI_ULTIPANEL 1
 #endif
 
-// Poll-based jogging for joystick and other devices
-#if ENABLED(JOYSTICK)
-  #define POLL_JOG
-#endif
-
 #if X2_HOME_DIR > 0
   #define X2_HOME_TO_MAX 1
 #elif X2_HOME_DIR < 0
@@ -949,7 +944,7 @@
 #endif
 
 // Flag whether hex_print.cpp is used
-#if ANY(AUTO_BED_LEVELING_UBL, M100_FREE_MEMORY_WATCHER, DEBUG_GCODE_PARSER, TMC_DEBUG, mvCNC_DEV_MODE)
+#if ANY(AUTO_BED_LEVELING_UBL, M100_FREE_MEMORY_WATCHER, DEBUG_GCODE_PARSER, TMC_DEBUG, MVCNC_DEV_MODE)
   #define NEED_HEX_PRINT 1
 #endif
 

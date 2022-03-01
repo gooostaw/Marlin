@@ -223,7 +223,7 @@ void tft_lvgl_init() {
       #else
         strncpy(list_file.long_name[sel_id], recovery.info.sd_filename, sizeof(list_file.long_name[0]));
       #endif
-      lv_draw_printing();
+        lv_draw_job_running();
     }
   #endif
 

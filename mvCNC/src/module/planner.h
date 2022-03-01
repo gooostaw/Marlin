@@ -341,7 +341,7 @@ class Planner {
       static float e_factor[EXTRUDERS];             // The flow percentage and volumetric multiplier combine to scale E movement
     #endif
 
-    #if DISABLED(NO_VOLUMETRICS)
+    #if ENABLED(USE_VOLUMETRICS)
       static float filament_size[EXTRUDERS],          // diameter of filament (in millimeters), typically around 1.75 or 2.85, 0 disables the volumetric calculations for the extruder
                    volumetric_area_nominal,           // Nominal cross-sectional area
                    volumetric_multiplier[EXTRUDERS];  // Reciprocal of cross-sectional area of filament (in mm^2). Pre-calculated to reduce computation in the planner
@@ -495,7 +495,7 @@ class Planner {
 
     #if HAS_EXTRUDERS
       FORCE_INLINE static void refresh_e_factor(const uint8_t e) {
-        e_factor[e] = flow_percentage[e] * 0.01f * TERN(NO_VOLUMETRICS, 1.0f, volumetric_multiplier[e]);
+        e_factor[e] = flow_percentage[e] * 0.01f * TERN(USE_VOLUMETRICS, volumetric_multiplier[e], 1.0f);
       }
 
       static void set_flow(const uint8_t e, const int16_t flow) {
@@ -533,7 +533,7 @@ class Planner {
       void enable_stall_prevention(const bool onoff);
     #endif
 
-    #if DISABLED(NO_VOLUMETRICS)
+    #if ENABLED(USE_VOLUMETRICS)
 
       // Update multipliers based on new diameter measurements
       static void calculate_volumetric_multipliers();
@@ -763,7 +763,7 @@ class Planner {
      */
     static bool buffer_segment(const abce_pos_t &abce
       OPTARG(HAS_DIST_MM_ARG, const xyze_float_t &cart_dist_mm)
-      , const_feedRate_t fr_mm_s, const uint8_t extruder=active_extruder, const_float_t millimeters=0.0
+      , const_feedRate_t fr_mm_s, const uint8_t extruder = active_tool, const_float_t millimeters = 0.0
     );
 
   public:
@@ -779,7 +779,7 @@ class Planner {
      *  millimeters  - the length of the movement, if known
      *  inv_duration - the reciprocal if the duration of the movement, if known (kinematic only if feeedrate scaling is enabled)
      */
-    static bool buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s, const uint8_t extruder=active_extruder, const float millimeters=0.0
+  static bool buffer_line(const xyze_pos_t &cart, const_feedRate_t fr_mm_s, const uint8_t extruder = active_tool, const float millimeters = 0.0
       OPTARG(SCARA_FEEDRATE_SCALING, const_float_t inv_duration=0.0)
     );
 

@@ -56,7 +56,7 @@
     current_position.set(0.0, 0.0);
     sync_plan_position();
 
-    const int x_axis_home_dir = TOOL_X_HOME_DIR(active_extruder);
+    const int x_axis_home_dir = TOOL_X_HOME_DIR(active_tool);
 
     const float mlx = max_length(X_AXIS),
                 mly = max_length(Y_AXIS),
@@ -203,7 +203,7 @@ void GcodeSuite::G28() {
     DualXMode IDEX_saved_mode = dual_x_carriage_mode;
   #endif
 
-  #if ENABLED(mvCNC_DEV_MODE)
+  #if ENABLED(MVCNC_DEV_MODE)
     if (parser.seen_test('S')) {
       LOOP_LINEAR_AXES(a) set_axis_is_at_home((AxisEnum)a);
       sync_plan_position();
@@ -316,7 +316,7 @@ void GcodeSuite::G28() {
   // Always home with tool 0 active
   #if HAS_MULTI_HOTEND
     #if DISABLED(DELTA) || ENABLED(DELTA_HOME_TO_SAFE_ZONE)
-      const uint8_t old_tool_index = active_extruder;
+    const uint8_t old_tool_index = active_tool;
     #endif
     // PARKING_EXTRUDER homing requires different handling of movement / solenoid activation, depending on the side of homing
     #if ENABLED(PARKING_EXTRUDER)
@@ -399,14 +399,14 @@ void GcodeSuite::G28() {
       #if ENABLED(DUAL_X_CARRIAGE)
 
         // Always home the 2nd (right) extruder first
-        active_extruder = 1;
+      active_tool = 1;
         homeaxis(X_AXIS);
 
         // Remember this extruder's position for later tool change
-        inactive_extruder_x = current_position.x;
+        inactive_tool_x = current_position.x;
 
         // Home the 1st (left) extruder
-        active_extruder = 0;
+        active_tool = 0;
         homeaxis(X_AXIS);
 
         // Consider the active extruder to be in its "parked" position
@@ -459,14 +459,14 @@ void GcodeSuite::G28() {
       TERN_(IMPROVE_HOMING_RELIABILITY, saved_motion_state = begin_slow_homing());
 
       // Always home the 2nd (right) extruder first
-      active_extruder = 1;
+      active_tool = 1;
       homeaxis(X_AXIS);
 
       // Remember this extruder's position for later tool change
-      inactive_extruder_x = current_position.x;
+      inactive_tool_x = current_position.x;
 
       // Home the 1st (left) extruder
-      active_extruder = 0;
+      active_tool = 0;
       homeaxis(X_AXIS);
 
       // Consider the active extruder to be parked

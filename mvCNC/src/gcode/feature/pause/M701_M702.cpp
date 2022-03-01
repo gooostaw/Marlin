@@ -51,7 +51,7 @@ void GcodeSuite::M701() {
     MIXER_STEPPER_LOOP(i) mixer.set_collector(i, i == uint8_t(eindex) ? 1.0 : 0.0);
     mixer.normalize();
 
-    const int8_t target_extruder = active_extruder;
+    const int8_t target_extruder = active_tool;
   #else
     const int8_t target_extruder = get_target_extruder_from_command();
     if (target_extruder < 0) return;
@@ -65,8 +65,8 @@ void GcodeSuite::M701() {
 
   #if HAS_MULTI_EXTRUDER && (HAS_PRUSA_MMU1 || !HAS_MMU)
     // Change toolhead if specified
-    uint8_t active_extruder_before_filament_change = active_extruder;
-    if (active_extruder != target_extruder)
+  uint8_t active_tool_before_filament_change = active_tool;
+  if (active_tool != target_extruder)
       tool_change(target_extruder);
   #endif
 
@@ -89,12 +89,12 @@ void GcodeSuite::M701() {
     constexpr float     purge_length = ADVANCED_PAUSE_PURGE_LENGTH,
                     slow_load_length = FILAMENT_CHANGE_SLOW_LOAD_LENGTH;
         const float fast_load_length = ABS(parser.seen('L') ? parser.value_axis_units(E_AXIS)
-                                                            : fc_settings[active_extruder].load_length);
+          : fc_settings[active_tool].load_length);
     load_filament(
       slow_load_length, fast_load_length, purge_length,
       FILAMENT_CHANGE_ALERT_BEEPS,
       true,                                           // show_lcd
-      thermalManager.still_heating(target_extruder),  // pause_for_user
+      fanManager.still_heating(target_extruder),  // pause_for_user
       PAUSE_MODE_LOAD_FILAMENT                        // pause_mode
       OPTARG(DUAL_X_CARRIAGE, target_extruder)        // Dual X target
     );
@@ -105,8 +105,8 @@ void GcodeSuite::M701() {
 
   #if HAS_MULTI_EXTRUDER && (HAS_PRUSA_MMU1 || !HAS_MMU)
     // Restore toolhead if it was changed
-    if (active_extruder_before_filament_change != active_extruder)
-      tool_change(active_extruder_before_filament_change);
+  if (active_tool_before_filament_change != active_tool)
+    tool_change(active_tool_before_filament_change);
   #endif
 
   TERN_(MIXING_EXTRUDER, mixer.T(old_mixing_tool)); // Restore original mixing tool
@@ -154,7 +154,7 @@ void GcodeSuite::M702() {
       mixer.normalize();
     }
 
-    const int8_t target_extruder = active_extruder;
+    const int8_t target_extruder = active_tool;
   #else
     const int8_t target_extruder = get_target_extruder_from_command();
     if (target_extruder < 0) return;
@@ -168,8 +168,8 @@ void GcodeSuite::M702() {
 
   #if HAS_MULTI_EXTRUDER && (HAS_PRUSA_MMU1 || !HAS_MMU)
     // Change toolhead if specified
-    uint8_t active_extruder_before_filament_change = active_extruder;
-    if (active_extruder != target_extruder)
+  uint8_t active_tool_before_filament_change = active_tool;
+  if (active_tool != target_extruder)
       tool_change(target_extruder);
   #endif
 
@@ -184,7 +184,7 @@ void GcodeSuite::M702() {
     #if BOTH(HAS_MULTI_EXTRUDER, FILAMENT_UNLOAD_ALL_EXTRUDERS)
       if (!parser.seenval('T')) {
         HOTEND_LOOP() {
-          if (e != active_extruder) tool_change(e);
+          if (e != active_tool) tool_change(e);
           unload_filament(-fc_settings[e].unload_length, true, PAUSE_MODE_UNLOAD_FILAMENT);
         }
       }
@@ -209,8 +209,8 @@ void GcodeSuite::M702() {
 
   #if HAS_MULTI_EXTRUDER && (HAS_PRUSA_MMU1 || !HAS_MMU)
     // Restore toolhead if it was changed
-    if (active_extruder_before_filament_change != active_extruder)
-      tool_change(active_extruder_before_filament_change);
+  if (active_tool_before_filament_change != active_tool)
+    tool_change(active_tool_before_filament_change);
   #endif
 
   TERN_(MIXING_EXTRUDER, mixer.T(old_mixing_tool)); // Restore original mixing tool

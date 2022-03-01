@@ -206,6 +206,6 @@ namespace Language_nl {
     LSTR MSG_FILAMENT_CHANGE_HEATING      = _UxGT(MSG_1_LINE("Verwarmen..."));
     LSTR MSG_FILAMENT_CHANGE_INSERT       = _UxGT(MSG_2_LINE("Laad filament", "en druk knop"));
     LSTR MSG_FILAMENT_CHANGE_LOAD         = _UxGT(MSG_2_LINE("Wacht voor", "inladen..."));
-    LSTR MSG_FILAMENT_CHANGE_RESUME       = _UxGT(MSG_2_LINE("Wacht voor", "printing..."));
+    LSTR MSG_FILAMENT_CHANGE_RESUME = _UxGT(MSG_2_LINE("Wacht voor", "running job..."));
   #endif
 }

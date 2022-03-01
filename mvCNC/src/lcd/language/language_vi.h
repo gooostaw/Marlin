@@ -279,7 +279,7 @@ namespace Language_vi {
   LSTR MSG_DWELL                          = _UxGT("Ngủ...");                               // Sleep
   LSTR MSG_USERWAIT                       = _UxGT("Nhấn để tiếp tục...");                  // Click to resume (same as 'continue')
   LSTR MSG_PRINT_PAUSED                   = _UxGT("In tạm dừng");                          // print paused
-  LSTR MSG_PRINTING                       = _UxGT("Đang in...");                           // printing
+  LSTR MSG_PRINTING = _UxGT("Đang in...");                           // running job
   LSTR MSG_PRINT_ABORTED                  = _UxGT("In đã hủy bỏ");                         // Print aborted
   LSTR MSG_NO_MOVE                        = _UxGT("Không di chuyển.");                     // No move.
   LSTR MSG_KILLED                         = _UxGT("ĐÃ CHẾT. ");

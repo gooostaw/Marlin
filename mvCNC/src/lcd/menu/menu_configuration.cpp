@@ -113,7 +113,7 @@ void menu_advanced_settings();
 
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
 
-    #include "../../module/motion.h" // for active_extruder
+#include "../../module/motion.h" // for active_tool
     #include "../../gcode/queue.h"
 
     void menu_toolchange_migration() {
@@ -128,7 +128,7 @@ void menu_advanced_settings();
 
       // Migrate to a chosen extruder
       LOOP_L_N(s, EXTRUDERS) {
-        if (s != active_extruder) {
+        if (s != active_tool) {
           ACTION_ITEM_N_P(s, msg_migrate, []{
             char cmd[12];
             sprintf_P(cmd, PSTR("M217 T%i"), int(MenuItemBase::itemIndex));
@@ -149,9 +149,9 @@ void menu_advanced_settings();
   void menu_tool_offsets() {
 
     auto _recalc_offsets = []{
-      if (active_extruder && all_axes_trusted()) {  // For the 2nd extruder re-home so the next tool-change gets the new offsets.
+      if (active_tool && all_axes_trusted()) {  // For the 2nd extruder re-home so the next tool-change gets the new offsets.
         queue.inject_P(G28_STR); // In future, we can babystep the 2nd extruder (if active), making homing unnecessary.
-        active_extruder = 0;
+        active_tool = 0;
       }
     };
 

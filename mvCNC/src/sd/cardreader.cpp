@@ -20,7 +20,7 @@
 #endif
 
 #include "../module/planner.h"        // for synchronize
-#include "../module/printcounter.h"
+#include "../module/jobcounter.h"
 #include "../gcode/queue.h"
 #include "../module/settings.h"
 #include "../module/stepper/indirection.h"
@@ -37,7 +37,7 @@
   #include "../feature/pause.h"
 #endif
 
-#define DEBUG_OUT EITHER(DEBUG_CARDREADER, mvCNC_DEV_MODE)
+#define DEBUG_OUT EITHER(DEBUG_CARDREADER, MVCNC_DEV_MODE)
 #include "../core/debug_out.h"
 #include "../libs/hex_print.h"
 
@@ -143,7 +143,7 @@ CardReader::CardReader() {
     #endif
   #endif
 
-  flag.sdprinting = flag.sdprintdone = flag.mounted = flag.saving = flag.logging = false;
+      flag.sdjob_running = flag.sdprintdone = flag.mounted = flag.saving = flag.logging = false;
   filesize = sdpos = 0;
 
   TERN_(HAS_MEDIA_SUBCALLS, file_subcall_ctr = 0);
@@ -504,8 +504,8 @@ void CardReader::manage_media() {
  * Used by M22, "Release Media", manage_media.
  */
 void CardReader::release() {
-  // Card removed while printing? Abort!
-  if (IS_SD_PRINTING())
+  // Card removed while running job? Abort!
+  if (IS_SD_JOB_RUNNING())
     abortFilePrintSoon();
   else
     endFilePrintNow();
@@ -530,14 +530,14 @@ void CardReader::openAndPrintFile(const char *name) {
 }
 
 /**
- * Start or resume a media print by setting the sdprinting flag.
+ * Start or resume a media print by setting the sdjob_running flag.
  * The file browser pre-sort is also purged to free up memory,
- * since you cannot browse files during active printing.
+ * since you cannot browse files during active running job.
  * Used by M24 and anywhere Start / Resume applies.
  */
 void CardReader::startOrResumeFilePrinting() {
   if (isMounted()) {
-    flag.sdprinting = true;
+    flag.sdjob_running = true;
     flag.sdprintdone = false;
     TERN_(SD_RESORT, flush_presort());
   }
@@ -547,15 +547,15 @@ void CardReader::startOrResumeFilePrinting() {
 // Run tasks upon finishing or aborting a file print.
 //
 void CardReader::endFilePrintNow(TERN_(SD_RESORT, const bool re_sort/*=false*/)) {
-  TERN_(ADVANCED_PAUSE_FEATURE, did_pause_print = 0);
-  TERN_(HAS_DWIN_E3V2_BASIC, HMI_flag.print_finish = flag.sdprinting);
-  flag.abort_sd_printing = false;
+  TERN_(ADVANCED_PAUSE_FEATURE, did_pause_job = 0);
+  TERN_(HAS_DWIN_E3V2_BASIC, HMI_flag.print_finish = flag.sdjob_running);
+  flag.abort_sd_job_running = false;
   if (isFileOpen()) file.close();
   TERN_(SD_RESORT, if (re_sort) presort());
 }
 
 void CardReader::abortFilePrintNow(TERN_(SD_RESORT, const bool re_sort/*=false*/)) {
-  flag.sdprinting = flag.sdprintdone = false;
+  flag.sdjob_running = flag.sdprintdone = false;
   endFilePrintNow(TERN_(SD_RESORT, re_sort));
 }
 
@@ -758,7 +758,7 @@ void CardReader::removeFile(const char * const name) {
 
 void CardReader::report_status() {
   if (isPrinting()) {
-    SERIAL_ECHOPGM(STR_SD_PRINTING_BYTE, sdpos);
+    SERIAL_ECHOPGM(STR_JOB_RUNNING_BYTE, sdpos);
     SERIAL_CHAR('/');
     SERIAL_ECHOLN(filesize);
   }
@@ -836,7 +836,7 @@ void CardReader::closefile(const bool store_location/*=false*/) {
 
   if (store_location) {
     //future: store cnc state, filename and position for continuing a stopped print
-    // so one can unplug the cnc and continue printing the next day.
+    // so one can unplug the cnc and continue running job the next day.
   }
 }
 
@@ -1299,7 +1299,7 @@ void CardReader::fileHasFinished() {
   }
 
   // Removing the job recovery file currently requires closing
-  // the file being printed, so during SD printing the file should
+  // the file being printed, so during SD job the file should
   // be zeroed and written instead of deleted.
   void CardReader::removeJobRecoveryFile() {
     if (jobRecoverFileExists()) {

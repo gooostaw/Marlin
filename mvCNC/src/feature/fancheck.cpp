@@ -130,7 +130,7 @@ void FanCheck::compute_speed(uint16_t elapsedTime) {
         // Check fan speed
         constexpr int8_t max_extruder_fan_errors = TERN(HAS_PWMFANCHECK, 10000, 5000) / Temperature::fan_update_interval_ms;
 
-        if (rps[f] >= 20 || TERN0(HAS_AUTO_FAN, thermalManager.autofan_speed[f] == 0))
+        if (rps[f] >= 20 || TERN0(HAS_AUTO_FAN, fanManager.autofan_speed[f] == 0))
           errors_count[f] = 0;
         else if (errors_count[f] < max_extruder_fan_errors)
           ++errors_count[f];
@@ -143,7 +143,7 @@ void FanCheck::compute_speed(uint16_t elapsedTime) {
   // Drop the error when all fans are ok
   if (!fan_error_msk && error == TachoError::REPORTED) error = TachoError::FIXED;
 
-  if (error == TachoError::FIXED && !printJobOngoing() && !printingIsPaused()) {
+  if (error == TachoError::FIXED && !jobIsOngoing() && !jobIsPaused()) {
     error = TachoError::NONE; // if the issue has been fixed while the cnc is idle, reenable immediately
     ui.reset_alert_level();
   }
@@ -156,9 +156,9 @@ void FanCheck::compute_speed(uint16_t elapsedTime) {
 }
 
 void FanCheck::report_speed_error(uint8_t fan) {
-  if (printJobOngoing()) {
+  if (jobIsOngoing()) {
     if (error == TachoError::NONE) {
-      if (thermalManager.degTargetHotend(fan) != 0) {
+      if (fanManager.degTargetHotend(fan) != 0) {
         kill(GET_TEXT_F(MSG_FAN_SPEED_FAULT));
         error = TachoError::REPORTED;
       }
@@ -166,8 +166,8 @@ void FanCheck::report_speed_error(uint8_t fan) {
         error = TachoError::DETECTED;   // Plans error for next processed command
     }
   }
-  else if (!printingIsPaused()) {
-    thermalManager.setTargetHotend(0, fan); // Always disable heating
+  else if (!jobIsPaused()) {
+    fanManager.setTargetHotend(0, fan); // Always disable heating
     if (error == TachoError::NONE) error = TachoError::REPORTED;
   }
 
@@ -191,7 +191,7 @@ void FanCheck::print_fan_states() {
           if (s == 0)
             SERIAL_ECHOPGM(":", 60 * rps[f], " RPM ");
           else
-            SERIAL_ECHOPGM("@:", TERN(HAS_AUTO_FAN, thermalManager.autofan_speed[f], 255), " ");
+            SERIAL_ECHOPGM("@:", TERN(HAS_AUTO_FAN, fanManager.autofan_speed[f], 255), " ");
           break;
       }
     }

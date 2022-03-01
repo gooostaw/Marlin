@@ -12,7 +12,7 @@
  *
  * Basic settings can be found in Configuration.h
  */
-#define CONFIGURATION_ADV_H_VERSION 02000903
+#define CONFIGURATION_ADV_H_VERSION 00000100
 
 //===========================================================================
 //============================= Thermal Settings ============================
@@ -1027,7 +1027,7 @@
 #define DISABLE_INACTIVE_K true
 #define DISABLE_INACTIVE_E true
 
-// Default Minimum Feedrates for printing and travel moves
+ // Default Minimum Feedrates for cutting and travel moves
 #define DEFAULT_MINIMUMFEEDRATE       1.0     // (mm/s) Minimum feedrate. Set with M205 S.
 #define DEFAULT_MINTRAVELFEEDRATE     10.0     // (mm/s) Minimum travel feedrate. Set with M205 T.
 
@@ -1329,7 +1329,7 @@
   // Add an 'M73' G-code to set the current percentage
   #define LCD_SET_PROGRESS_MANUALLY
 
-  // Show the E position (filament used) during printing
+  // Show the E position (filament used) during running job
   //#define LCD_SHOW_E_TOTAL
 
   /**
@@ -1375,7 +1375,7 @@
   #endif
 
   #if EITHER(HAS_MVCNCUI_HD44780, IS_TFTGLCD_PANEL)
-    //#define LCD_PROGRESS_BAR            // Show a progress bar on HD44780 LCDs for SD printing
+    //#define LCD_PROGRESS_BAR            // Show a progress bar on HD44780 LCDs for SD job
     #if ENABLED(LCD_PROGRESS_BAR)
       #define PROGRESS_BAR_BAR_TIME 2000  // (ms) Amount of time to show the bar
       #define PROGRESS_BAR_MSG_TIME 3000  // (ms) Amount of time to show the status message
@@ -1416,7 +1416,7 @@
   // Since the FAT gets out of order with usage, SDCARD_SORT_ALPHA is recommended.
   #define SDCARD_RATHERRECENTFIRST
 
-  #define SD_MENU_CONFIRM_START             // Confirm the selected SD file before printing
+#define SD_MENU_CONFIRM_START             // Confirm the selected SD file before running job
 
   //#define NO_SD_AUTOSTART                 // Remove auto#.g file support completely to save some Flash, SRAM
   //#define MENU_ADDAUTOSTART               // Add a menu option to run auto#.g files
@@ -1435,7 +1435,7 @@
    * Continue after Power-Loss (Creality3D)
    *
    * Store the current state to the SD Card at the start of each layer
-   * during SD printing. If the recovery file is found at boot time, present
+   * during SD job. If the recovery file is found at boot time, present
    * an option on the LCD screen to continue the print from the last-known
    * point in the file.
    */
@@ -1452,7 +1452,7 @@
     //#define POWER_LOSS_RETRACT_LEN 10 // (mm) Length of filament to retract on fail. Requires backup power.
 
     // Without a POWER_LOSS_PIN the following option helps reduce wear on the SD card,
-    // especially with "vase mode" printing. Set too high and vases cannot be continued.
+    // especially with "vase mode" running job. Set too high and vases cannot be continued.
     #define POWER_LOSS_MIN_Z_CHANGE 0.05 // (mm) Minimum Z change before saving power-loss data
 
     // Enable if Z homing is needed for proper recovery. 99.9% of the time this should be disabled!
@@ -1512,7 +1512,7 @@
   //#define SD_ABORT_NO_COOLDOWN          // Leave the heaters on after Stop Print (not recommended!)
 
   /**
-   * Abort SD printing when any endstop is triggered.
+   * Abort SD job when any endstop is triggered.
    * This feature is enabled with 'M540 S1' or from the LCD menu.
    * Endstops must be activated for this option to work.
    */
@@ -1628,14 +1628,14 @@
 /**
  * Additional options for Graphical Displays
  *
- * Use the optimizations here to improve printing performance,
+ * Use the optimizations here to improve cutting performance,
  * which can be adversely affected by graphical display drawing,
- * especially when doing several short moves, and when printing
+ * especially when doing several short moves, and when cutting
  * on DELTA and SCARA machines.
  *
  * Some of these options may result in the display lagging behind
  * controller events, as there is a trade-off between reliable
- * printing performance versus fast display updates.
+ * running job performance versus fast display updates.
  */
 #if HAS_MVCNCUI_U8GLIB
   // Save many cycles by drawing a hollow frame or no frame on the Info Screen
@@ -1726,7 +1726,7 @@
   #define DGUS_UPDATE_INTERVAL_MS  500    // (ms) Interval between automatic screen updates
 
   #if ANY(DGUS_LCD_UI_FYSETC, DGUS_LCD_UI_MKS, DGUS_LCD_UI_HIPRECY)
-    #define DGUS_PRINT_FILENAME           // Display the filename during printing
+#define DGUS_PRINT_FILENAME           // Display the filename during running job
     #define DGUS_PREHEAT_UI               // Display a preheat screen during heatup
 
     #if EITHER(DGUS_LCD_UI_FYSETC, DGUS_LCD_UI_MKS)
@@ -2144,7 +2144,7 @@
  * Direct Stepping
  *
  * Comparable to the method used by Klipper, G6 direct stepping significantly
- * reduces motion calculations, increases top printing speeds, and results in
+ * reduces motion calculations, increases top running job speeds, and results in
  * less step aliasing by calculating all motions in advance.
  * Preparing your G-code: https://github.com/colinrgodsey/step-daemon
  */
@@ -2326,7 +2326,7 @@
  * Example: |#|X10.000:Y100.000:Z0.5|X20.000:Y120.000:Z10.5|1|0|1|2|110|2
  * Legend:
  *  Status header [|#], Work coords (G92..), Machine coords (G53), Metric [1] (G21), Absolute pos. mode [0] (G90),
- *  Tool #[1] (active_extruder), Coord set [2] (G55), Feed rate override [110]% (M220 S110), Status: MF_WAITING [2]
+ *  Tool #[1] (active_tool), Coord set [2] (G55), Feed rate override [110]% (M220 S110), Status: MF_WAITING [2]
  *
  * As you can see, quite a bit of info is transmitted to hosts which support it, saving multiple verbose queries.
  */
@@ -2472,7 +2472,7 @@
     //#define TOOLCHANGE_FS_INIT_BEFORE_SWAP
 
     // Prime on the first T0 (If other, TOOLCHANGE_FS_INIT_BEFORE_SWAP applied)
-    // Enable it (M217 V[0/1]) before printing, to avoid unwanted priming on host connect
+    // Enable it (M217 V[0/1]) before running job, to avoid unwanted priming on host connect
     //#define TOOLCHANGE_FS_PRIME_FIRST_USED
 
     /**
@@ -3749,14 +3749,14 @@
  * Add the M16 G-code to compare a string to the MACHINE_NAME.
  * M16 with a non-matching string causes the cnc to halt.
  */
-//#define EXPECTED_PRINTER_CHECK
+ //#define CNC_ID_CHECK
 
 /**
- * Disable all Volumetric extrusion options
+ * Enable Volumetric extrusion options
  */
-#define NO_VOLUMETRICS
+ //#define USE_VOLUMETRICS
 
-#if DISABLED(NO_VOLUMETRICS)
+#if ENABLED(USE_VOLUMETRICS)
   /**
    * Volumetric extrusion default state
    * Activate to make volumetric extrusion the default method,
@@ -3853,7 +3853,7 @@
 /**
  * CNC G-code options
  * Support CNC-style G-code dialects used by laser cutters, drawing machine cams, etc.
- * Note that G0 feedrates should be used with care for 3D printing (if used at all).
+ * Note that G0 feedrates should be used with care for cutting (if used at all).
  * High feedrates may cause ringing and harm print quality.
  */
 #define PAREN_COMMENTS      // Support for parentheses-delimited comments
@@ -3958,7 +3958,7 @@
   //#define BUTTON1_PIN -1
   #if PIN_EXISTS(BUTTON1)
     #define BUTTON1_HIT_STATE     LOW       // State of the triggered button. NC=LOW. NO=HIGH.
-    #define BUTTON1_WHEN_PRINTING false     // Button allowed to trigger during printing?
+#define BUTTON1_WHEN_CUTTING false     // Button allowed to trigger during running job?
     #define BUTTON1_GCODE         "G28"
     #define BUTTON1_DESC          "Homing"  // Optional string to set the LCD status
   #endif
@@ -3966,7 +3966,7 @@
   //#define BUTTON2_PIN -1
   #if PIN_EXISTS(BUTTON2)
     #define BUTTON2_HIT_STATE     LOW
-    #define BUTTON2_WHEN_PRINTING false
+#define BUTTON2_WHEN_CUTTING false
     #define BUTTON2_GCODE         "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
     #define BUTTON2_DESC          "Preheat for " PREHEAT_1_LABEL
   #endif
@@ -3974,7 +3974,7 @@
   //#define BUTTON3_PIN -1
   #if PIN_EXISTS(BUTTON3)
     #define BUTTON3_HIT_STATE     LOW
-    #define BUTTON3_WHEN_PRINTING false
+#define BUTTON3_WHEN_CUTTING false
     #define BUTTON3_GCODE         "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
     #define BUTTON3_DESC          "Preheat for " PREHEAT_2_LABEL
   #endif
@@ -4112,6 +4112,29 @@
   #define JOY_Z_LIMITS { 4800, 8080-100, 8080+100, 11550 }
   //#define JOYSTICK_DEBUG
 #endif
+
+/**
+ * Wii Nunchuck (joystick controller) jogging support
+ */
+#define WII_NUNCHUCK_JOGGING
+#if ENABLED(WII_NUNCHUCK_JOGGING)
+ // #define WII_SDA_PIN    5
+ // #define WII_SCL_PIN    10
+ // #define WII_EN_PIN     44
+
+ // Pressing the C button enables full speed movements up to max_feed_rate for each respective axis
+#define WII_SLOW_DIVISER 3 // Divide all speeds by value for standard (C unpressed) movements
+
+//#define INVERT_WII_X  // Enable to reverse X axis jogging
+//#define INVERT_WII_Y  // Enable to reverse Y axis jogging
+//#define INVERT_WII_Z  // Enable to reverse Z axis jogging
+
+// Use M119 with WII_NUNCHUCK_DEBUG to find reasonable values after connecting:
+#define WII_X_LIMITS { 0, 128-10, 128+10, 255 } // min, deadzone start, deadzone end, max
+#define WII_Y_LIMITS { 0, 128-10, 128+10, 255 }
+#define WII_NUNCHUCK_DEBUG
+#endif
+
 
 /**
  * Mechanical Gantry Calibration
@@ -4320,17 +4343,17 @@
 #endif // HAS_PRUSA_MMU2
 
 /**
- * Advanced CNC Counter settings
+ * Advanced Job Counter settings
  */
-#if ENABLED(PRINTCOUNTER)
+#if ENABLED(JOBCOUNTER)
   #define SERVICE_WARNING_BUZZES  3
   // Activate up to 3 service interval watchdogs
   //#define SERVICE_NAME_1      "Service S"
-  //#define SERVICE_INTERVAL_1  100 // print hours
+  //#define SERVICE_INTERVAL_1  100 // hours
   //#define SERVICE_NAME_2      "Service L"
-  //#define SERVICE_INTERVAL_2  200 // print hours
+  //#define SERVICE_INTERVAL_2  200 // hours
   //#define SERVICE_NAME_3      "Service 3"
-  //#define SERVICE_INTERVAL_3    1 // print hours
+  //#define SERVICE_INTERVAL_3    1 // hours
 #endif
 
 // @section develop
@@ -4351,9 +4374,9 @@
 #define PINS_DEBUGGING
 
 // Enable mvCNC dev mode which adds some special commands
-//#define mvCNC_DEV_MODE
+//#define MVCNC_DEV_MODE
 
-#if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
   /**
    * D576 - Buffer Monitoring
    * To help diagnose print quality issues stemming from empty command buffers.

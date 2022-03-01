@@ -26,11 +26,11 @@ cloud_menu_def               cloud_menu;
 about_menu_def               about_menu;
 fan_menu_def                 fan_menu;
 filament_menu_def            filament_menu;
-printing_menu_def            printing_menu;
+job_running_menu_def            job_running_menu;
 operation_menu_def           operation_menu;
 pause_menu_def               pause_menu;
 speed_menu_def               speed_menu;
-printing_more_menu_def       printing_more_menu;
+job_running_more_menu_def       job_running_more_menu;
 dialog_menu_def              dialog_menu;
 language_menu_def            language_menu;
 print_file_dialog_menu_def   print_file_dialog_menu;
@@ -804,9 +804,9 @@ void disp_language_init() {
   wifi_menu.disconnected = WIFI_DISCONNECTED_TEXT;
   wifi_menu.exception    = WIFI_EXCEPTION_TEXT;
 
-  printing_menu.temp1    = TEXT_VALUE_TARGET;
-  printing_menu.temp2    = TEXT_VALUE_TARGET;
-  printing_menu.bed_temp = TEXT_VALUE_TARGET;
+  job_running_menu.temp1 = TEXT_VALUE_TARGET;
+  job_running_menu.temp2 = TEXT_VALUE_TARGET;
+  job_running_menu.bed_temp = TEXT_VALUE_TARGET;
 
   filament_menu.stat_temp = TEXT_VALUE;
 
@@ -1002,11 +1002,11 @@ void disp_language_init() {
       language_menu.up    = PAGE_UP_TEXT_CN;
 
       //
-      printing_menu.title  = TITLE_PRINTING_CN;
-      printing_menu.option = PRINTING_OPERATION_CN;
-      printing_menu.stop   = PRINTING_STOP_CN;
-      printing_menu.pause  = PRINTING_PAUSE_CN;
-      printing_menu.resume = PRINTING_RESUME_CN;
+      job_running_menu.title = TITLE_PRINTING_CN;
+      job_running_menu.option = PRINTING_OPERATION_CN;
+      job_running_menu.stop = PRINTING_STOP_CN;
+      job_running_menu.pause = PRINTING_PAUSE_CN;
+      job_running_menu.resume = PRINTING_RESUME_CN;
 
       //
       operation_menu.title      = TITLE_OPERATION_CN;
@@ -1039,12 +1039,12 @@ void disp_language_init() {
       speed_menu.extrude_speed = EXTRUDER_SPEED_STATE_CN;
       speed_menu.move_speed    = MOVE_SPEED_STATE_CN;
       //
-      printing_more_menu.title      = TITLE_MORE_CN;
-      printing_more_menu.fan        = FAN_TEXT_CN;
-      printing_more_menu.auto_close = AUTO_SHUTDOWN_CN;
-      printing_more_menu.manual     = MANUAL_SHUTDOWN_CN;
-      printing_more_menu.speed      = PRINTING_CHANGESPEED_CN;
-      printing_more_menu.temp       = PRINTING_TEMP_CN;
+      job_running_more_menu.title = TITLE_MORE_CN;
+      job_running_more_menu.fan = FAN_TEXT_CN;
+      job_running_more_menu.auto_close = AUTO_SHUTDOWN_CN;
+      job_running_more_menu.manual = MANUAL_SHUTDOWN_CN;
+      job_running_more_menu.speed = PRINTING_CHANGESPEED_CN;
+      job_running_more_menu.temp = PRINTING_TEMP_CN;
 
       print_file_dialog_menu.confirm               = DIALOG_CONFIRM_CN;
       print_file_dialog_menu.cancel                = DIALOG_CANCLE_CN;
@@ -1247,11 +1247,11 @@ void disp_language_init() {
             language_menu.up    = PAGE_UP_TEXT_T_CN;
 
             //
-            printing_menu.title  = TITLE_PRINTING_T_CN;
-            printing_menu.option = PRINTING_OPERATION_T_CN;
-            printing_menu.stop   = PRINTING_STOP_T_CN;
-            printing_menu.pause  = PRINTING_PAUSE_T_CN;
-            printing_menu.resume = PRINTING_RESUME_T_CN;
+            job_running_menu.title = TITLE_PRINTING_T_CN;
+            job_running_menu.option = PRINTING_OPERATION_T_CN;
+            job_running_menu.stop = PRINTING_STOP_T_CN;
+            job_running_menu.pause = PRINTING_PAUSE_T_CN;
+            job_running_menu.resume = PRINTING_RESUME_T_CN;
 
             //
             operation_menu.title      = TITLE_OPERATION_T_CN;
@@ -1284,12 +1284,12 @@ void disp_language_init() {
             speed_menu.extrude_speed = EXTRUDER_SPEED_STATE_T_CN;
             speed_menu.move_speed    = MOVE_SPEED_STATE_T_CN;
             //
-            printing_more_menu.title      = TITLE_MORE_T_CN;
-            printing_more_menu.fan        = FAN_TEXT_T_CN;
-            printing_more_menu.auto_close = AUTO_SHUTDOWN_T_CN;
-            printing_more_menu.manual     = MANUAL_SHUTDOWN_T_CN;
-            printing_more_menu.speed      = PRINTING_CHANGESPEED_T_CN;
-            printing_more_menu.temp       = PRINTING_TEMP_T_CN;
+            job_running_more_menu.title = TITLE_MORE_T_CN;
+            job_running_more_menu.fan = FAN_TEXT_T_CN;
+            job_running_more_menu.auto_close = AUTO_SHUTDOWN_T_CN;
+            job_running_more_menu.manual = MANUAL_SHUTDOWN_T_CN;
+            job_running_more_menu.speed = PRINTING_CHANGESPEED_T_CN;
+            job_running_more_menu.temp = PRINTING_TEMP_T_CN;
 
             print_file_dialog_menu.confirm               = DIALOG_CONFIRM_T_CN;
             print_file_dialog_menu.cancel                = DIALOG_CANCLE_T_CN;
@@ -1483,11 +1483,11 @@ void disp_language_init() {
             language_menu.next  = PAGE_DOWN_TEXT_EN;
             language_menu.up    = PAGE_UP_TEXT_EN;
             //
-            printing_menu.title  = TITLE_PRINTING_EN;
-            printing_menu.option = PRINTING_OPERATION_EN;
-            printing_menu.stop   = PRINTING_STOP_EN;
-            printing_menu.pause  = PRINTING_PAUSE_EN;
-            printing_menu.resume = PRINTING_RESUME_EN;
+            job_running_menu.title = TITLE_PRINTING_EN;
+            job_running_menu.option = PRINTING_OPERATION_EN;
+            job_running_menu.stop = PRINTING_STOP_EN;
+            job_running_menu.pause = PRINTING_PAUSE_EN;
+            job_running_menu.resume = PRINTING_RESUME_EN;
 
             //
             operation_menu.title      = TITLE_OPERATION_EN;
@@ -1520,12 +1520,12 @@ void disp_language_init() {
             speed_menu.extrude_speed = EXTRUDER_SPEED_STATE_EN;
             speed_menu.move_speed    = MOVE_SPEED_STATE_EN;
             //
-            printing_more_menu.title      = TITLE_MORE_EN;
-            printing_more_menu.fan        = FAN_TEXT_EN;
-            printing_more_menu.auto_close = AUTO_SHUTDOWN_EN;
-            printing_more_menu.manual     = MANUAL_SHUTDOWN_EN;
-            printing_more_menu.speed      = PRINTING_CHANGESPEED_EN;
-            printing_more_menu.temp       = PRINTING_TEMP_EN;
+            job_running_more_menu.title = TITLE_MORE_EN;
+            job_running_more_menu.fan = FAN_TEXT_EN;
+            job_running_more_menu.auto_close = AUTO_SHUTDOWN_EN;
+            job_running_more_menu.manual = MANUAL_SHUTDOWN_EN;
+            job_running_more_menu.speed = PRINTING_CHANGESPEED_EN;
+            job_running_more_menu.temp = PRINTING_TEMP_EN;
 
             print_file_dialog_menu.confirm               = DIALOG_CONFIRM_EN;
             print_file_dialog_menu.cancel                = DIALOG_CANCLE_EN;
@@ -1809,11 +1809,11 @@ void disp_language_init() {
             language_menu.next  = PAGE_DOWN_TEXT_RU;
             language_menu.up    = PAGE_UP_TEXT_RU;
             //
-            printing_menu.title  = TITLE_PRINTING_RU;
-            printing_menu.option = PRINTING_OPERATION_RU;
-            printing_menu.stop   = PRINTING_STOP_RU;
-            printing_menu.pause  = PRINTING_PAUSE_RU;
-            printing_menu.resume = PRINTING_RESUME_RU;
+            job_running_menu.title = TITLE_PRINTING_RU;
+            job_running_menu.option = PRINTING_OPERATION_RU;
+            job_running_menu.stop = PRINTING_STOP_RU;
+            job_running_menu.pause = PRINTING_PAUSE_RU;
+            job_running_menu.resume = PRINTING_RESUME_RU;
 
             //
             operation_menu.title      = TITLE_OPERATION_RU;
@@ -1846,12 +1846,12 @@ void disp_language_init() {
             speed_menu.extrude_speed = EXTRUDER_SPEED_STATE_RU;
             speed_menu.move_speed    = MOVE_SPEED_STATE_RU;
             //
-            printing_more_menu.title      = TITLE_MORE_RU;
-            printing_more_menu.fan        = FAN_TEXT_RU;
-            printing_more_menu.auto_close = AUTO_SHUTDOWN_RU;
-            printing_more_menu.manual     = MANUAL_SHUTDOWN_RU;
-            printing_more_menu.speed      = PRINTING_CHANGESPEED_RU;
-            printing_more_menu.temp       = PRINTING_TEMP_RU;
+            job_running_more_menu.title = TITLE_MORE_RU;
+            job_running_more_menu.fan = FAN_TEXT_RU;
+            job_running_more_menu.auto_close = AUTO_SHUTDOWN_RU;
+            job_running_more_menu.manual = MANUAL_SHUTDOWN_RU;
+            job_running_more_menu.speed = PRINTING_CHANGESPEED_RU;
+            job_running_more_menu.temp = PRINTING_TEMP_RU;
             print_file_dialog_menu.confirm               = DIALOG_CONFIRM_RU;
             print_file_dialog_menu.cancel                = DIALOG_CANCLE_RU;
             print_file_dialog_menu.print_file            = DIALOG_PRINT_MODEL_RU;
@@ -2045,11 +2045,11 @@ void disp_language_init() {
             language_menu.next  = PAGE_DOWN_TEXT_SP;
             language_menu.up    = PAGE_UP_TEXT_SP;
             //
-            printing_menu.title  = TITLE_PRINTING_SP;
-            printing_menu.option = PRINTING_OPERATION_SP;
-            printing_menu.stop   = PRINTING_STOP_SP;
-            printing_menu.pause  = PRINTING_PAUSE_SP;
-            printing_menu.resume = PRINTING_RESUME_SP;
+            job_running_menu.title = TITLE_PRINTING_SP;
+            job_running_menu.option = PRINTING_OPERATION_SP;
+            job_running_menu.stop = PRINTING_STOP_SP;
+            job_running_menu.pause = PRINTING_PAUSE_SP;
+            job_running_menu.resume = PRINTING_RESUME_SP;
 
             //
             operation_menu.title      = TITLE_OPERATION_SP;
@@ -2082,12 +2082,12 @@ void disp_language_init() {
             speed_menu.extrude_speed = EXTRUDER_SPEED_STATE_SP;
             speed_menu.move_speed    = MOVE_SPEED_STATE_SP;
             //
-            printing_more_menu.title      = TITLE_MORE_SP;
-            printing_more_menu.fan        = FAN_TEXT_SP;
-            printing_more_menu.auto_close = AUTO_SHUTDOWN_SP;
-            printing_more_menu.manual     = MANUAL_SHUTDOWN_SP;
-            printing_more_menu.speed      = PRINTING_CHANGESPEED_SP;
-            printing_more_menu.temp       = PRINTING_TEMP_SP;
+            job_running_more_menu.title = TITLE_MORE_SP;
+            job_running_more_menu.fan = FAN_TEXT_SP;
+            job_running_more_menu.auto_close = AUTO_SHUTDOWN_SP;
+            job_running_more_menu.manual = MANUAL_SHUTDOWN_SP;
+            job_running_more_menu.speed = PRINTING_CHANGESPEED_SP;
+            job_running_more_menu.temp = PRINTING_TEMP_SP;
 
             print_file_dialog_menu.confirm               = DIALOG_CONFIRM_SP;
             print_file_dialog_menu.cancel                = DIALOG_CANCLE_SP;
@@ -2280,11 +2280,11 @@ void disp_language_init() {
           language_menu.title = LANGUAGE_TEXT_FR;
 
           //
-          printing_menu.title  = TITLE_PRINTING_FR;
-          printing_menu.option = PRINTING_OPERATION_FR;
-          printing_menu.stop   = PRINTING_STOP_FR;
-          printing_menu.pause  = PRINTING_PAUSE_FR;
-          printing_menu.resume = PRINTING_RESUME_FR;
+          job_running_menu.title = TITLE_PRINTING_FR;
+          job_running_menu.option = PRINTING_OPERATION_FR;
+          job_running_menu.stop = PRINTING_STOP_FR;
+          job_running_menu.pause = PRINTING_PAUSE_FR;
+          job_running_menu.resume = PRINTING_RESUME_FR;
 
           //
           operation_menu.title      = TITLE_OPERATION_FR;
@@ -2317,11 +2317,11 @@ void disp_language_init() {
           speed_menu.extrude_speed = EXTRUDER_SPEED_STATE_FR;
           speed_menu.move_speed    = MOVE_SPEED_STATE_FR;
           //
-          printing_more_menu.fan        = FAN_TEXT_FR;
-          printing_more_menu.auto_close = AUTO_SHUTDOWN_FR;
-          printing_more_menu.manual     = MANUAL_SHUTDOWN_FR;
-          printing_more_menu.speed      = PRINTING_CHANGESPEED_FR;
-          printing_more_menu.temp       = PRINTING_TEMP_FR;
+          job_running_more_menu.fan = FAN_TEXT_FR;
+          job_running_more_menu.auto_close = AUTO_SHUTDOWN_FR;
+          job_running_more_menu.manual = MANUAL_SHUTDOWN_FR;
+          job_running_more_menu.speed = PRINTING_CHANGESPEED_FR;
+          job_running_more_menu.temp = PRINTING_TEMP_FR;
 
           print_file_dialog_menu.confirm               = DIALOG_CONFIRM_FR;
           print_file_dialog_menu.cancel                = DIALOG_CANCLE_FR;
@@ -2513,11 +2513,11 @@ void disp_language_init() {
           language_menu.title = LANGUAGE_TEXT_IT;
 
           //
-          printing_menu.title  = TITLE_PRINTING_IT;
-          printing_menu.option = PRINTING_OPERATION_IT;
-          printing_menu.stop   = PRINTING_STOP_IT;
-          printing_menu.pause  = PRINTING_PAUSE_IT;
-          printing_menu.resume = PRINTING_RESUME_IT;
+          job_running_menu.title = TITLE_PRINTING_IT;
+          job_running_menu.option = PRINTING_OPERATION_IT;
+          job_running_menu.stop = PRINTING_STOP_IT;
+          job_running_menu.pause = PRINTING_PAUSE_IT;
+          job_running_menu.resume = PRINTING_RESUME_IT;
 
           //
           operation_menu.title      = TITLE_OPERATION_IT;
@@ -2550,11 +2550,11 @@ void disp_language_init() {
           speed_menu.extrude_speed = EXTRUDER_SPEED_STATE_IT;
           speed_menu.move_speed    = MOVE_SPEED_STATE_IT;
           //
-          printing_more_menu.fan        = FAN_TEXT_IT;
-          printing_more_menu.auto_close = AUTO_SHUTDOWN_IT;
-          printing_more_menu.manual     = MANUAL_SHUTDOWN_IT;
-          printing_more_menu.temp       = PRINTING_TEMP_IT;
-          printing_more_menu.speed      = PRINTING_CHANGESPEED_IT;
+          job_running_more_menu.fan = FAN_TEXT_IT;
+          job_running_more_menu.auto_close = AUTO_SHUTDOWN_IT;
+          job_running_more_menu.manual = MANUAL_SHUTDOWN_IT;
+          job_running_more_menu.temp = PRINTING_TEMP_IT;
+          job_running_more_menu.speed = PRINTING_CHANGESPEED_IT;
 
           print_file_dialog_menu.confirm               = DIALOG_CONFIRM_IT;
           print_file_dialog_menu.cancel                = DIALOG_CANCLE_IT;
@@ -2748,11 +2748,11 @@ void disp_language_init() {
       language_menu.next  = PAGE_DOWN_TEXT_EN;
       language_menu.up    = PAGE_UP_TEXT_EN;
       //
-      printing_menu.title  = TITLE_PRINTING_EN;
-      printing_menu.option = PRINTING_OPERATION_EN;
-      printing_menu.stop   = PRINTING_STOP_EN;
-      printing_menu.pause  = PRINTING_PAUSE_EN;
-      printing_menu.resume = PRINTING_RESUME_EN;
+      job_running_menu.title = TITLE_PRINTING_EN;
+      job_running_menu.option = PRINTING_OPERATION_EN;
+      job_running_menu.stop = PRINTING_STOP_EN;
+      job_running_menu.pause = PRINTING_PAUSE_EN;
+      job_running_menu.resume = PRINTING_RESUME_EN;
 
       //
       operation_menu.title      = TITLE_OPERATION_EN;
@@ -2785,12 +2785,12 @@ void disp_language_init() {
       speed_menu.extrude_speed = EXTRUDER_SPEED_STATE_EN;
       speed_menu.move_speed    = MOVE_SPEED_STATE_EN;
       //
-      printing_more_menu.title      = TITLE_MORE_EN;
-      printing_more_menu.fan        = FAN_TEXT_EN;
-      printing_more_menu.auto_close = AUTO_SHUTDOWN_EN;
-      printing_more_menu.manual     = MANUAL_SHUTDOWN_EN;
-      printing_more_menu.speed      = PRINTING_CHANGESPEED_EN;
-      printing_more_menu.temp       = PRINTING_TEMP_EN;
+      job_running_more_menu.title = TITLE_MORE_EN;
+      job_running_more_menu.fan = FAN_TEXT_EN;
+      job_running_more_menu.auto_close = AUTO_SHUTDOWN_EN;
+      job_running_more_menu.manual = MANUAL_SHUTDOWN_EN;
+      job_running_more_menu.speed = PRINTING_CHANGESPEED_EN;
+      job_running_more_menu.temp = PRINTING_TEMP_EN;
 
       print_file_dialog_menu.confirm               = DIALOG_CONFIRM_EN;
       print_file_dialog_menu.cancel                = DIALOG_CANCLE_EN;

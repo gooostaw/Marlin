@@ -14,7 +14,7 @@
 
 #include "../../sd/cardreader.h"
 #include "../../module/temperature.h"
-#include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
 #include "../../module/planner.h"
 #include "../../module/motion.h"
 
@@ -105,20 +105,20 @@ void draw_heater_status(uint16_t x, uint16_t y, const int8_t Heater) {
   celsius_t currentTemperature, targetTemperature;
 
   if (Heater >= 0) { // HotEnd
-    currentTemperature = thermalManager.wholeDegHotend(Heater);
-    targetTemperature = thermalManager.degTargetHotend(Heater);
+    currentTemperature = fanManager.wholeDegHotend(Heater);
+    targetTemperature = fanManager.degTargetHotend(Heater);
   }
   #if HAS_HEATED_BED
     else if (Heater == H_BED) {
-      currentTemperature = thermalManager.wholeDegBed();
-      targetTemperature = thermalManager.degTargetBed();
+    currentTemperature = fanManager.wholeDegBed();
+    targetTemperature = fanManager.degTargetBed();
     }
   #endif
   #if HAS_TEMP_CHAMBER
     else if (Heater == H_CHAMBER) {
-      currentTemperature = thermalManager.wholeDegChamber();
+    currentTemperature = fanManager.wholeDegChamber();
       #if HAS_HEATED_CHAMBER
-        targetTemperature = thermalManager.degTargetChamber();
+    targetTemperature = fanManager.degTargetChamber();
       #else
         targetTemperature = ABSOLUTE_ZERO;
       #endif
@@ -126,8 +126,8 @@ void draw_heater_status(uint16_t x, uint16_t y, const int8_t Heater) {
   #endif
   #if HAS_TEMP_COOLER
     else if (Heater == H_COOLER) {
-      currentTemperature = thermalManager.wholeDegCooler();
-      targetTemperature = TERN(HAS_COOLER, thermalManager.degTargetCooler(), ABSOLUTE_ZERO);
+    currentTemperature = fanManager.wholeDegCooler();
+    targetTemperature = TERN(HAS_COOLER, fanManager.degTargetCooler(), ABSOLUTE_ZERO);
     }
   #endif
   else return;
@@ -181,7 +181,7 @@ void draw_fan_status(uint16_t x, uint16_t y, const bool blink) {
   tft.canvas(x, y, 80, 120);
   tft.set_background(COLOR_BACKGROUND);
 
-  uint8_t fanSpeed = thermalManager.fan_speed[0];
+  uint8_t fanSpeed = fanManager.fan_speed[0];
   mvCNCImage image;
 
   if (fanSpeed >= 127)
@@ -193,7 +193,7 @@ void draw_fan_status(uint16_t x, uint16_t y, const bool blink) {
 
   tft.add_image(8, 20, image, COLOR_FAN);
 
-  tft_string.set((uint8_t *)ui8tostr4pctrj(thermalManager.fan_speed[0]));
+  tft_string.set((uint8_t *)ui8tostr4pctrj(fanManager.fan_speed[0]));
   tft_string.trim();
   tft.add_text(tft_string.center(80) + 6, 82, COLOR_FAN, tft_string);
 }
@@ -240,7 +240,7 @@ void mvCNCUI::draw_status_screen() {
   tft.set_background(COLOR_BACKGROUND);
   tft.add_rectangle(0, 0, TFT_WIDTH - 8, FONT_LINE_HEIGHT, COLOR_AXIS_HOMED);
 
-  if (TERN0(LCD_SHOW_E_TOTAL, printingIsActive())) {
+  if (TERN0(LCD_SHOW_E_TOTAL, jobIsActive())) {
     #if ENABLED(LCD_SHOW_E_TOTAL)
       tft.add_text(200, 3, COLOR_AXIS_HOMED , "E");
       const uint8_t escale = e_move_accumulator >= 100000.0f ? 10 : 1; // After 100m switch to cm
@@ -294,20 +294,20 @@ void mvCNCUI::draw_status_screen() {
   tft.set_background(COLOR_BACKGROUND);
   color = planner.flow_percentage[0] == 100 ? COLOR_RATE_100 : COLOR_RATE_ALTERED;
   tft.add_image(0, 0, imgFlowRate, color);
-  tft_string.set(i16tostr3rj(planner.flow_percentage[active_extruder]));
+  tft_string.set(i16tostr3rj(planner.flow_percentage[active_tool]));
   tft_string.add('%');
   tft.add_text(36, 1, color , tft_string);
-  TERN_(TOUCH_SCREEN, touch.add_control(FLOWRATE, 650, y, 100, 32, active_extruder));
+  TERN_(TOUCH_SCREEN, touch.add_control(FLOWRATE, 650, y, 100, 32, active_tool));
 
   #if ENABLED(TOUCH_SCREEN)
     add_control(900, y, menu_main, imgSettings);
-    TERN_(SDSUPPORT, add_control(12, y, menu_media, imgSD, !printingIsActive(), COLOR_CONTROL_ENABLED, card.isMounted() && printingIsActive() ? COLOR_BUSY : COLOR_CONTROL_DISABLED));
+    TERN_(SDSUPPORT, add_control(12, y, menu_media, imgSD, !jobIsActive(), COLOR_CONTROL_ENABLED, card.isMounted() && jobIsActive() ? COLOR_BUSY : COLOR_CONTROL_DISABLED));
   #endif
 
   y += 100;
   // print duration
   char buffer[14];
-  duration_t elapsed = print_job_timer.duration();
+  duration_t elapsed = JobTimer.duration();
   elapsed.toDigital(buffer);
 
   tft.canvas((TFT_WIDTH - 128) / 2, y, 128, 29);
@@ -459,10 +459,10 @@ void MenuItem_confirm::draw_select_screen(PGM_P const yes, PGM_P const no, const
     tft_string.add('E');
     tft_string.add((char)('1' + extruder));
     tft_string.add(' ');
-    tft_string.add(i16tostr3rj(thermalManager.wholeDegHotend(extruder)));
+    tft_string.add(i16tostr3rj(fanManager.wholeDegHotend(extruder)));
     tft_string.add(LCD_STR_DEGREE);
     tft_string.add(" / ");
-    tft_string.add(i16tostr3rj(thermalManager.degTargetHotend(extruder)));
+    tft_string.add(i16tostr3rj(fanManager.degTargetHotend(extruder)));
     tft_string.add(LCD_STR_DEGREE);
     tft_string.trim();
     tft.add_text(tft_string.center(TFT_WIDTH), 0, COLOR_MENU_TEXT, tft_string);
@@ -647,7 +647,7 @@ static void moveAxis(const AxisEnum axis, const int8_t direction) {
   quick_feedback();
 
   #if ENABLED(PREVENT_COLD_EXTRUSION)
-    if (axis == E_AXIS && thermalManager.tooColdToExtrude(motionAxisState.e_selection)) {
+  if (axis == E_AXIS && fanManager.tooColdToExtrude(motionAxisState.e_selection)) {
       drawMessage("Too cold");
       return;
     }
@@ -658,11 +658,11 @@ static void moveAxis(const AxisEnum axis, const int8_t direction) {
   if (axis == Z_AXIS && motionAxisState.z_selection == Z_SELECTION_Z_PROBE) {
     #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
       const int16_t babystep_increment = direction * BABYSTEP_SIZE_Z;
-      const bool do_probe = DISABLED(BABYSTEP_HOTEND_Z_OFFSET) || active_extruder == 0;
+      const bool do_probe = DISABLED(BABYSTEP_HOTEND_Z_OFFSET) || active_tool == 0;
       const float bsDiff = planner.mm_per_step[Z_AXIS] * babystep_increment,
                   new_probe_offset = probe.offset.z + bsDiff,
                   new_offs = TERN(BABYSTEP_HOTEND_Z_OFFSET
-                    , do_probe ? new_probe_offset : hotend_offset[active_extruder].z - bsDiff
+                    , do_probe ? new_probe_offset : hotend_offset[active_tool].z - bsDiff
                     , new_probe_offset
                   );
       if (WITHIN(new_offs, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX)) {
@@ -670,7 +670,7 @@ static void moveAxis(const AxisEnum axis, const int8_t direction) {
         if (do_probe)
           probe.offset.z = new_offs;
         else
-          TERN(BABYSTEP_HOTEND_Z_OFFSET, hotend_offset[active_extruder].z = new_offs, NOOP);
+          TERN(BABYSTEP_HOTEND_Z_OFFSET, hotend_offset[active_tool].z = new_offs, NOOP);
         drawMessage(""); // clear the error
         drawAxisValue(axis);
       }
@@ -813,9 +813,9 @@ void mvCNCUI::move_axis_screen() {
 
   TERN_(TOUCH_SCREEN, touch.clear());
 
-  const bool busy = printingIsActive();
+  const bool busy = jobIsActive();
 
-  // Babysteps during printing? Select babystep for Z probe offset
+  // Babysteps during running job? Select babystep for Z probe offset
   if (busy && ENABLED(BABYSTEP_ZPROBE_OFFSET))
     motionAxisState.z_selection = Z_SELECTION_Z_PROBE;
 

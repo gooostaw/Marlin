@@ -4,7 +4,7 @@
 
 #include "../inc/mvCNCConfig.h"
 
-#include "../mvCNCCore.h" // for printingIsPaused
+#include "../mvCNCCore.h" // for jobIsPaused
 
 #if LED_POWEROFF_TIMEOUT > 0 || BOTH(HAS_WIRED_LCD, PRINTER_EVENT_LEDS)
   #include "../feature/leds/leds.h"
@@ -41,7 +41,7 @@ mvCNCUI ui;
 #endif
 
 #if ANY(HAS_DISPLAY, HAS_STATUS_MESSAGE, BASIC_PROGRESS_BAR)
-  #include "../module/printcounter.h"
+#include "../module/jobcounter.h"
 #endif
 
 #if LCD_HAS_WAIT_FOR_MOVE
@@ -128,12 +128,12 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
     return (PGM_P)pgm_read_ptr(&preheat_labels[m]);
   }
 
-  void mvCNCUI::apply_preheat(const uint8_t m, const uint8_t pmask, const uint8_t e/*=active_extruder*/) {
+  void mvCNCUI::apply_preheat(const uint8_t m, const uint8_t pmask, const uint8_t e/*=active_tool*/) {
     const preheat_t &pre = material_preset[m];
-    TERN_(HAS_HOTEND,           if (TEST(pmask, PT_HOTEND))  thermalManager.setTargetHotend(pre.hotend_temp, e));
-    TERN_(HAS_HEATED_BED,       if (TEST(pmask, PT_BED))     thermalManager.setTargetBed(pre.bed_temp));
-    //TERN_(HAS_HEATED_CHAMBER, if (TEST(pmask, PT_CHAMBER)) thermalManager.setTargetBed(pre.chamber_temp));
-    TERN_(HAS_FAN,              if (TEST(pmask, PT_FAN))     thermalManager.set_fan_speed(0, pre.fan_speed));
+    TERN_(HAS_HOTEND, if (TEST(pmask, PT_HOTEND))  fanManager.setTargetHotend(pre.hotend_temp, e));
+    TERN_(HAS_HEATED_BED, if (TEST(pmask, PT_BED))     fanManager.setTargetBed(pre.bed_temp));
+    //TERN_(HAS_HEATED_CHAMBER, if (TEST(pmask, PT_CHAMBER)) fanManager.setTargetBed(pre.chamber_temp));
+    TERN_(HAS_FAN, if (TEST(pmask, PT_FAN))     fanManager.set_fan_speed(0, pre.fan_speed));
   }
 #endif
 
@@ -293,7 +293,7 @@ void mvCNCUI::init() {
 
   #if IS_DWIN_MVCNCUI
     bool mvCNCUI::did_first_redraw;
-    bool mvCNCUI::old_is_printing;
+    bool mvCNCUI::old_is_job_running;
   #endif
 
   #if ENABLED(SDSUPPORT)
@@ -584,7 +584,7 @@ void mvCNCUI::init() {
         if (expire_status_ms) {
 
           // Expire the message if a job is active and the bar has ticks
-          if (get_progress_percent() > 2 && !print_job_timer.isPaused()) {
+          if (get_progress_percent() > 2 && !JobTimer.isPaused()) {
             if (ELAPSED(ms, expire_status_ms)) {
               status_message[0] = '\0';
               expire_status_ms = 0;
@@ -754,9 +754,9 @@ void mvCNCUI::init() {
         #if IS_KINEMATIC
 
           #if HAS_MULTI_EXTRUDER
-            REMEMBER(ae, active_extruder);
+        REMEMBER(ae, active_tool);
             #if MULTI_E_MANUAL
-              if (axis == E_AXIS) active_extruder = e_index;
+        if (axis == E_AXIS) active_tool = e_index;
             #endif
           #endif
 
@@ -784,7 +784,7 @@ void mvCNCUI::init() {
 
           // For Cartesian / Core motion simply move to the current_position
           planner.buffer_line(current_position, fr_mm_s,
-            TERN_(MULTI_E_MANUAL, axis == E_AXIS ? e_index :) active_extruder
+            TERN_(MULTI_E_MANUAL, axis == E_AXIS ? e_index : ) active_tool
           );
 
           //SERIAL_ECHOLNPGM("Add planner.move with Axis ", AS_CHAR(axis_codes[axis]), " at FR ", fr_mm_s);
@@ -799,7 +799,7 @@ void mvCNCUI::init() {
     // Tell ui.update() to start a move to current_position after a short delay.
     //
     void ManualMove::soon(const AxisEnum move_axis
-      OPTARG(MULTI_E_MANUAL, const int8_t eindex/*=active_extruder*/)
+      OPTARG(MULTI_E_MANUAL, const int8_t eindex/*=active_tool*/)
     ) {
       TERN_(MULTI_E_MANUAL, if (move_axis == E_AXIS) e_index = eindex);
       start_time = millis() + (menu_scale < 0.99f ? 0UL : 250UL); // delay for bigger moves
@@ -1188,10 +1188,10 @@ void mvCNCUI::init() {
     };
 
     uint8_t get_ADC_keyValue() {
-      if (thermalManager.ADCKey_count >= 16) {
-        const uint16_t currentkpADCValue = thermalManager.current_ADCKey_raw;
-        thermalManager.current_ADCKey_raw = HAL_ADC_RANGE;
-        thermalManager.ADCKey_count = 0;
+      if (fanManager.ADCKey_count >= 16) {
+        const uint16_t currentkpADCValue = fanManager.current_ADCKey_raw;
+        fanManager.current_ADCKey_raw = HAL_ADC_RANGE;
+        fanManager.ADCKey_count = 0;
         if (currentkpADCValue < adc_other_button)
           LOOP_L_N(i, ADC_KEY_NUM) {
             const uint16_t lo = pgm_read_word(&stADCKeyTable[i].ADCKeyValueMin),
@@ -1384,23 +1384,23 @@ void mvCNCUI::init() {
       static PGMSTR(service3, "> " SERVICE_NAME_3 "!");
     #endif
     FSTR_P msg;
-    if (printingIsPaused())
+    if (jobIsPaused())
       msg = GET_TEXT_F(MSG_PRINT_PAUSED);
     #if ENABLED(SDSUPPORT)
-      else if (IS_SD_PRINTING())
+    else if (IS_SD_JOB_RUNNING())
         return set_status(card.longest_filename(), true);
     #endif
-    else if (print_job_timer.isRunning())
+    else if (JobTimer.isRunning())
       msg = GET_TEXT_F(MSG_PRINTING);
 
     #if SERVICE_INTERVAL_1 > 0
-      else if (print_job_timer.needsService(1)) msg = FPSTR(service1);
+    else if (JobTimer.needsService(1)) msg = FPSTR(service1);
     #endif
     #if SERVICE_INTERVAL_2 > 0
-      else if (print_job_timer.needsService(2)) msg = FPSTR(service2);
+    else if (JobTimer.needsService(2)) msg = FPSTR(service2);
     #endif
     #if SERVICE_INTERVAL_3 > 0
-      else if (print_job_timer.needsService(3)) msg = FPSTR(service3);
+    else if (JobTimer.needsService(3)) msg = FPSTR(service3);
     #endif
 
     else if (!no_welcome)
@@ -1525,7 +1525,7 @@ void mvCNCUI::init() {
     #ifdef ACTION_ON_CANCEL
       hostui.cancel();
     #endif
-    IF_DISABLED(SDSUPPORT, print_job_timer.stop());
+      IF_DISABLED(SDSUPPORT, JobTimer.stop());
     TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_open(PROMPT_INFO, F("UI Aborted"), FPSTR(DISMISS_STR)));
     LCD_MESSAGE(MSG_PRINT_ABORTED);
     TERN_(HAS_MVCNCUI_MENU, return_to_status());
@@ -1546,7 +1546,7 @@ void mvCNCUI::init() {
     TERN_(HAS_MVCNCUI_MENU, return_to_status());
   }
 
-  void mvCNCUI::pause_print() {
+  void mvCNCUI::pause_job() {
     #if HAS_MVCNCUI_MENU
       synchronize(GET_TEXT(MSG_PAUSING));
       defer_status_screen();
@@ -1574,7 +1574,7 @@ void mvCNCUI::init() {
     #ifdef ACTION_ON_RESUME
       hostui.resume();
     #endif
-    print_job_timer.start(); // Also called by M24
+      JobTimer.start(); // Also called by M24
   }
 
   #if HAS_PRINT_PROGRESS
@@ -1724,7 +1724,7 @@ void mvCNCUI::init() {
   void mvCNCUI::pause_show_message(
     const PauseMessage message,
     const PauseMode mode/*=PAUSE_MODE_SAME*/,
-    const uint8_t extruder/*=active_extruder*/
+    const uint8_t extruder/*=active_tool*/
   ) {
     pause_mode = mode;
     ExtUI::pauseModeStatus = message;

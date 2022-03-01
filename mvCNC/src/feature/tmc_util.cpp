@@ -10,7 +10,7 @@
 #include "../mvCNCCore.h"
 
 #include "../module/stepper/indirection.h"
-#include "../module/printcounter.h"
+#include "../module/jobcounter.h"
 #include "../libs/duration_t.h"
 #include "../gcode/gcode.h"
 
@@ -201,7 +201,7 @@
   template<typename TMC>
   void report_driver_otpw(TMC &st) {
     char timestamp[14];
-    duration_t elapsed = print_job_timer.duration();
+    duration_t elapsed = JobTimer.duration();
     const bool has_days = (elapsed.value > 60*60*24L);
     (void)elapsed.toDigital(timestamp, has_days);
     SERIAL_EOL();

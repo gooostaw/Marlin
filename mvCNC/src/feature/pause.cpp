@@ -18,7 +18,7 @@
 #include "../module/motion.h"
 #include "../module/planner.h"
 #include "../module/stepper.h"
-#include "../module/printcounter.h"
+#include "../module/jobcounter.h"
 #include "../module/temperature.h"
 
 #if ENABLED(AUTO_BED_LEVELING_UBL)
@@ -121,23 +121,23 @@ static bool ensure_safe_temperature(const bool wait=true, const PauseMode mode=P
   DEBUG_ECHOLNPGM("... wait:", wait, " mode:", mode);
 
   #if ENABLED(PREVENT_COLD_EXTRUSION)
-    if (!DEBUGGING(DRYRUN) && thermalManager.targetTooColdToExtrude(active_extruder))
-      thermalManager.setTargetHotend(thermalManager.extrude_min_temp, active_extruder);
+  if (!DEBUGGING(DRYRUN) && fanManager.targetTooColdToExtrude(active_tool))
+    fanManager.setTargetHotend(fanManager.extrude_min_temp, active_tool);
   #endif
 
   ui.pause_show_message(PAUSE_MESSAGE_HEATING, mode); UNUSED(mode);
 
-  if (wait) return thermalManager.wait_for_hotend(active_extruder);
+  if (wait) return fanManager.wait_for_hotend(active_tool);
 
   // Allow interruption by Emergency Parser M108
-  wait_for_heatup = TERN1(PREVENT_COLD_EXTRUSION, !thermalManager.allow_cold_extrude);
-  while (wait_for_heatup && ABS(thermalManager.wholeDegHotend(active_extruder) - thermalManager.degTargetHotend(active_extruder)) > (TEMP_WINDOW))
+  wait_for_heatup = TERN1(PREVENT_COLD_EXTRUSION, !fanManager.allow_cold_extrude);
+  while (wait_for_heatup && ABS(fanManager.wholeDegHotend(active_tool) - fanManager.degTargetHotend(active_tool)) > (TEMP_WINDOW))
     idle();
   wait_for_heatup = false;
 
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     // A user can cancel wait-for-heating with M108
-    if (!DEBUGGING(DRYRUN) && thermalManager.targetTooColdToExtrude(active_extruder)) {
+  if (!DEBUGGING(DRYRUN) && fanManager.targetTooColdToExtrude(active_tool)) {
       SERIAL_ECHO_MSG(STR_ERR_HOTEND_TOO_COLD);
       return false;
     }
@@ -183,7 +183,7 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
     TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(F("Load Filament")));
 
     #if ENABLED(HOST_PROMPT_SUPPORT)
-      const char tool = '0' + TERN0(MULTI_FILAMENT_SENSOR, active_extruder);
+    const char tool = '0' + TERN0(MULTI_FILAMENT_SENSOR, active_tool);
       hostui.prompt_do(PROMPT_USER_CONTINUE, F("Load Filament T"), tool, FPSTR(CONTINUE_STR));
     #endif
 
@@ -192,7 +192,7 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
       #if BOTH(FILAMENT_CHANGE_RESUME_ON_INSERT, FILAMENT_RUNOUT_SENSOR)
         #if ENABLED(MULTI_FILAMENT_SENSOR)
           #define _CASE_INSERTED(N) case N-1: if (READ(FIL_RUNOUT##N##_PIN) != FIL_RUNOUT##N##_STATE) wait_for_user = false; break;
-          switch (active_extruder) {
+      switch (active_tool) {
             REPEAT_1(NUM_RUNOUT_SENSORS, _CASE_INSERTED)
           }
         #else
@@ -206,7 +206,7 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
   if (show_lcd) ui.pause_show_message(PAUSE_MESSAGE_LOAD, mode);
 
   #if ENABLED(DUAL_X_CARRIAGE)
-    const int8_t saved_ext        = active_extruder;
+  const int8_t saved_ext = active_tool;
     const bool saved_ext_dup_mode = extruder_duplication_enabled;
     set_duplication_enabled(false, DXC_ext);
   #endif
@@ -286,9 +286,9 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
  * as long as users don't spin the E motor ridiculously fast and
  * send current back to their board, potentially frying it.
  */
-inline void disable_active_extruder() {
+inline void disable_active_tool() {
   #if HAS_EXTRUDERS
-    stepper.DISABLE_EXTRUDER(active_extruder);
+  stepper.DISABLE_EXTRUDER(active_tool);
     safe_delay(100);
   #endif
 }
@@ -350,7 +350,7 @@ bool unload_filament(const_float_t unload_length, const bool show_lcd/*=false*/,
   #endif
 
   // Disable the Extruder for manual change
-  disable_active_extruder();
+    disable_active_tool();
 
   return true;
 }
@@ -370,15 +370,15 @@ bool unload_filament(const_float_t unload_length, const bool show_lcd/*=false*/,
  *
  * Return 'true' if pause was completed, 'false' for abort
  */
-uint8_t did_pause_print = 0;
+uint8_t did_pause_job = 0;
 
-bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool show_lcd/*=false*/, const_float_t unload_length/*=0*/ DXC_ARGS) {
-  DEBUG_SECTION(pp, "pause_print", true);
+bool pause_job(const_float_t retract, const xyz_pos_t &park_point, const bool show_lcd/*=false*/, const_float_t unload_length/*=0*/ DXC_ARGS) {
+  DEBUG_SECTION(pp, "pause_job", true);
   DEBUG_ECHOLNPGM("... park.x:", park_point.x, " y:", park_point.y, " z:", park_point.z, " unloadlen:", unload_length, " showlcd:", show_lcd DXC_SAY);
 
   UNUSED(show_lcd);
 
-  if (did_pause_print) return false; // already paused
+  if (did_pause_job) return false; // already paused
 
   #if ENABLED(HOST_ACTION_COMMANDS)
     #ifdef ACTION_ON_PAUSED
@@ -391,18 +391,18 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_open(PROMPT_INFO, F("Pause"), FPSTR(DISMISS_STR)));
 
   // Indicate that the cnc is paused
-  ++did_pause_print;
+  ++did_pause_job;
 
-  // Pause the print job and timer
+  // Pause the CNC job and timer
   #if ENABLED(SDSUPPORT)
-    const bool was_sd_printing = IS_SD_PRINTING();
-    if (was_sd_printing) {
+  const bool was_sd_job_running = IS_SD_JOB_RUNNING();
+  if (was_sd_job_running) {
       card.pauseSDPrint();
-      ++did_pause_print; // Indicate SD pause also
+      ++did_pause_job; // Indicate SD pause also
     }
   #endif
 
-  print_job_timer.pause();
+  JobTimer.pause();
 
   // Save current position
   resume_position = current_position;
@@ -413,18 +413,18 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   #if ENABLED(POWER_LOSS_RECOVERY)
     // Save PLR info in case the power goes out while parked
     const float park_raise = do_park ? nozzle.park_mode_0_height(park_point.z) - current_position.z : POWER_LOSS_ZRAISE;
-    if (was_sd_printing && recovery.enabled) recovery.save(true, park_raise, do_park);
+    if (was_sd_job_running && recovery.enabled) recovery.save(true, park_raise, do_park);
   #endif
 
   // Wait for buffered blocks to complete
   planner.synchronize();
 
   #if ENABLED(ADVANCED_PAUSE_FANS_PAUSE) && HAS_FAN
-    thermalManager.set_fans_paused(true);
+  fanManager.fanPause(true);
   #endif
 
   // Initial retract before move to filament change position
-  if (retract && thermalManager.hotEnoughToExtrude(active_extruder)) {
+  if (retract && fanManager.hotEnoughToExtrude(active_tool)) {
     DEBUG_ECHOLNPGM("... retract:", retract);
 
     #if ENABLED(AUTO_BED_LEVELING_UBL)
@@ -441,7 +441,7 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   if (do_park) nozzle.park(0, park_point); // Park the nozzle by doing a Minimum Z Raise followed by an XY Move
 
   #if ENABLED(DUAL_X_CARRIAGE)
-    const int8_t saved_ext        = active_extruder;
+  const int8_t saved_ext = active_tool;
     const bool saved_ext_dup_mode = extruder_duplication_enabled;
     set_duplication_enabled(false, DXC_ext);
   #endif
@@ -455,7 +455,7 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   #endif
 
   // Disable the Extruder for manual change
-  disable_active_extruder();
+    disable_active_tool();
 
   return true;
 }
@@ -474,7 +474,7 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
  */
 
 void show_continue_prompt(const bool is_reload) {
-  DEBUG_SECTION(scp, "pause_print", true);
+  DEBUG_SECTION(scp, "pause_job", true);
   DEBUG_ECHOLNPGM("... is_reload:", is_reload);
 
   ui.pause_show_message(is_reload ? PAUSE_MESSAGE_INSERT : PAUSE_MESSAGE_WAITING);
@@ -495,10 +495,10 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
   // Start the heater idle timers
   const millis_t nozzle_timeout = SEC_TO_MS(PAUSE_PARK_NOZZLE_TIMEOUT);
 
-  HOTEND_LOOP() thermalManager.heater_idle[e].start(nozzle_timeout);
+  HOTEND_LOOP() fanManager.heater_idle[e].start(nozzle_timeout);
 
   #if ENABLED(DUAL_X_CARRIAGE)
-    const int8_t saved_ext        = active_extruder;
+  const int8_t saved_ext = active_tool;
     const bool saved_ext_dup_mode = extruder_duplication_enabled;
     set_duplication_enabled(false, DXC_ext);
   #endif
@@ -513,7 +513,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
 
     // If the nozzle has timed out...
     if (!nozzle_timed_out)
-      HOTEND_LOOP() nozzle_timed_out |= thermalManager.heater_idle[e].timed_out;
+      HOTEND_LOOP() nozzle_timed_out |= fanManager.heater_idle[e].timed_out;
 
     // Wait for the user to press the button to re-heat the nozzle, then
     // re-heat the nozzle, re-show the continue prompt, restart idle timers, start over
@@ -534,7 +534,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
       TERN_(DWIN_CREALITY_LCD_ENHANCED, LCD_MESSAGE(MSG_REHEATING));
 
       // Re-enable the heaters if they timed out
-      HOTEND_LOOP() thermalManager.reset_hotend_idle_timer(e);
+      HOTEND_LOOP() fanManager.reset_hotend_idle_timer(e);
 
       // Wait for the heaters to reach the target temperatures
       ensure_safe_temperature(false);
@@ -545,7 +545,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
       // Start the heater idle timers
       const millis_t nozzle_timeout = SEC_TO_MS(PAUSE_PARK_NOZZLE_TIMEOUT);
 
-      HOTEND_LOOP() thermalManager.heater_idle[e].start(nozzle_timeout);
+      HOTEND_LOOP() fanManager.heater_idle[e].start(nozzle_timeout);
 
       TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_do(PROMPT_USER_CONTINUE, GET_TEXT_F(MSG_REHEATDONE), FPSTR(CONTINUE_STR)));
       TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(GET_TEXT_F(MSG_REHEATDONE)));
@@ -581,7 +581,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
  *                 Not sure how this logic comes into use.
  * - Sync the planner E to resume_position.e
  * - Send host action for resume, if configured
- * - Resume the current SD print job, if any
+ * - Resume the current SD CNC job, if any
  */
 void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_length/*=0*/, const_float_t purge_length/*=ADVANCED_PAUSE_PURGE_LENGTH*/, const int8_t max_beep_count/*=0*/, const celsius_t targetTemp/*=0*/ DXC_ARGS) {
   DEBUG_SECTION(rp, "resume_print", true);
@@ -591,29 +591,29 @@ void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_
   SERIAL_ECHOLNPGM(
     "start of resume_print()\ndual_x_carriage_mode:", dual_x_carriage_mode,
     "\nextruder_duplication_enabled:", extruder_duplication_enabled,
-    "\nactive_extruder:", active_extruder,
+    "\nactive_tool:", active_tool,
     "\n"
   );
   //*/
 
-  if (!did_pause_print) return;
+  if (!did_pause_job) return;
 
   // Re-enable the heaters if they timed out
   bool nozzle_timed_out = false;
   HOTEND_LOOP() {
-    nozzle_timed_out |= thermalManager.heater_idle[e].timed_out;
-    thermalManager.reset_hotend_idle_timer(e);
+    nozzle_timed_out |= fanManager.heater_idle[e].timed_out;
+    fanManager.reset_hotend_idle_timer(e);
   }
 
-  if (targetTemp > thermalManager.degTargetHotend(active_extruder))
-    thermalManager.setTargetHotend(targetTemp, active_extruder);
+  if (targetTemp > fanManager.degTargetHotend(active_tool))
+    fanManager.setTargetHotend(targetTemp, active_tool);
 
   // Load the new filament
   load_filament(slow_load_length, fast_load_length, purge_length, max_beep_count, true, nozzle_timed_out, PAUSE_MODE_SAME DXC_PASS);
 
   if (targetTemp > 0) {
-    thermalManager.setTargetHotend(targetTemp, active_extruder);
-    thermalManager.wait_for_hotend(active_extruder, false);
+    fanManager.setTargetHotend(targetTemp, active_tool);
+    fanManager.wait_for_hotend(active_tool, false);
   }
 
   ui.pause_show_message(PAUSE_MESSAGE_RESUME);
@@ -647,7 +647,7 @@ void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_
   // Intelligent resuming
   #if ENABLED(FWRETRACT)
     // If retracted before goto pause
-    if (fwretract.retracted[active_extruder])
+  if (fwretract.retracted[active_tool])
       unscaled_e_move(-fwretract.settings.retract_length, fwretract.settings.retract_feedrate_mm_s);
   #endif
 
@@ -669,16 +669,16 @@ void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_
     hostui.resume();
   #endif
 
-  --did_pause_print;
+    --did_pause_job;
 
   TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_open(PROMPT_INFO, F("Resuming"), FPSTR(DISMISS_STR)));
 
-  // Resume the print job timer if it was running
-  if (print_job_timer.isPaused()) print_job_timer.start();
+  // Resume the CNC job timer if it was running
+  if (JobTimer.isPaused()) JobTimer.start();
 
   #if ENABLED(SDSUPPORT)
-    if (did_pause_print) {
-      --did_pause_print;
+  if (did_pause_job) {
+    --did_pause_job;
       card.startOrResumeFilePrinting();
       // Write PLR now to update the z axis value
       TERN_(POWER_LOSS_RECOVERY, if (recovery.enabled) recovery.save(true));
@@ -686,7 +686,7 @@ void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_
   #endif
 
   #if ENABLED(ADVANCED_PAUSE_FANS_PAUSE) && HAS_FAN
-    thermalManager.set_fans_paused(false);
+  fanManager.fanPause(false);
   #endif
 
   TERN_(HAS_FILAMENT_SENSOR, runout.reset());

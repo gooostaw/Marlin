@@ -33,7 +33,7 @@ void GcodeSuite::M218() {
   if (parser.seenval('Z')) hotend_offset[target_extruder].z = parser.value_linear_units();
 
   #if ENABLED(DELTA)
-    if (target_extruder == active_extruder)
+  if (target_extruder == active_tool)
       do_blocking_move_to_xy(current_position, planner.settings.max_feedrate_mm_s[X_AXIS]);
   #endif
 }

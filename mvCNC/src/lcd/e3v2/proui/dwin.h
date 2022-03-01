@@ -109,7 +109,7 @@ typedef struct {
 
 typedef struct {
   uint8_t language;
-  bool pause_flag:1;    // printing is paused
+  bool pause_flag : 1;    // running job is paused
   bool pause_action:1;  // flag a pause action
   bool print_finish:1;  // print was finished
   bool select_flag:1;   // Popup button selected
@@ -203,7 +203,7 @@ void HMI_LockScreen();
 #if HAS_ESDIAG
   void Draw_EndStopDiag();
 #endif
-#if ENABLED(PRINTCOUNTER)
+#if ENABLED(JOBCOUNTER)
   void Draw_PrintStats();
 #endif
 

@@ -121,7 +121,7 @@ namespace Anycubic {
     AC_cnc_booting,
     AC_cnc_idle,
     AC_cnc_probing,
-    AC_cnc_printing,
+    AC_cnc_job_running,
     AC_cnc_pausing,
     AC_cnc_paused,
     AC_cnc_stopping,

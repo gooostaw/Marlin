@@ -37,7 +37,7 @@
 #include "../../../sd/cardreader.h"
 #include "../../../module/motion.h"
 #include "../../../module/temperature.h"
-#include "../../../module/printcounter.h"
+#include "../../../module/jobcounter.h"
 
 #if ENABLED(SDSUPPORT)
   #include "../../../libs/duration_t.h"
@@ -47,7 +47,7 @@
   #include "../../../feature/bedlevel/bedlevel.h"
 #endif
 
-// DWIN printing specifies the font on each string operation
+// DWIN job specifies the font on each string operation
 // but we'll make the font modal for mvCNC
 dwin_font_t dwin_font = { font8x16, 8, 16, Color_White, Color_Bg_Black, true };
 void mvCNCUI::set_font(const uint8_t font_nr) {
@@ -266,10 +266,10 @@ void mvCNCUI::draw_status_message(const bool blink) {
       dwin_string.set("E");
       dwin_string.add('1' + extruder);
       dwin_string.add(' ');
-      dwin_string.add(i16tostr3rj(thermalManager.degHotend(extruder)));
+      dwin_string.add(i16tostr3rj(fanManager.degHotend(extruder)));
       dwin_string.add('/');
-      if (get_blink() || !thermalManager.heater_idle[thermalManager.idle_index_for_id(extruder)].timed_out)
-        dwin_string.add(i16tostr3rj(thermalManager.degTargetHotend(extruder)));
+      if (get_blink() || !fanManager.heater_idle[fanManager.idle_index_for_id(extruder)].timed_out)
+        dwin_string.add(i16tostr3rj(fanManager.degTargetHotend(extruder)));
       else
         dwin_string.add(PSTR("    "));
 

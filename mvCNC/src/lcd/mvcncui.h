@@ -30,7 +30,7 @@
 #endif
 
 #if HAS_DISPLAY
-  #include "../module/printcounter.h"
+#include "../module/jobcounter.h"
 #endif
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
@@ -167,7 +167,7 @@
       static bool constexpr processing = false;
     #endif
     static void task();
-    static void soon(const AxisEnum axis OPTARG(MULTI_E_MANUAL, const int8_t eindex=active_extruder));
+    static void soon(const AxisEnum axis OPTARG(MULTI_E_MANUAL, const int8_t eindex = active_tool));
   };
 
 #endif
@@ -281,7 +281,7 @@ public:
     #endif
     #if ENABLED(SHOW_REMAINING_TIME)
       static uint32_t _calculated_remaining_time() {
-        const duration_t elapsed = print_job_timer.duration();
+        const duration_t elapsed = JobTimer.duration();
         const progress_t progress = _get_progress();
         return progress ? elapsed.value * (100 * (PROGRESS_SCALE) - progress) / progress : 0;
       }
@@ -353,7 +353,7 @@ public:
     static void update();
 
     static void abort_print();
-    static void pause_print();
+    static void pause_job();
     static void resume_print();
     static void flow_fault();
 
@@ -452,7 +452,7 @@ public:
 
     #if IS_DWIN_MVCNCUI
       static bool did_first_redraw;
-      static bool old_is_printing;
+      static bool old_is_job_running;
     #endif
 
     #if EITHER(BABYSTEP_ZPROBE_GFX_OVERLAY, MESH_EDIT_GFX_OVERLAY)
@@ -483,10 +483,10 @@ public:
     enum PreheatTarget : uint8_t { PT_HOTEND, PT_BED, PT_FAN, PT_CHAMBER, PT_ALL = 0xFF };
     static preheat_t material_preset[PREHEAT_COUNT];
     static PGM_P get_preheat_label(const uint8_t m);
-    static void apply_preheat(const uint8_t m, const uint8_t pmask, const uint8_t e=active_extruder);
+    static void apply_preheat(const uint8_t m, const uint8_t pmask, const uint8_t e = active_tool);
     static void preheat_set_fan(const uint8_t m) { TERN_(HAS_FAN, apply_preheat(m, _BV(PT_FAN))); }
-    static void preheat_hotend(const uint8_t m, const uint8_t e=active_extruder) { TERN_(HAS_HOTEND, apply_preheat(m, _BV(PT_HOTEND))); }
-    static void preheat_hotend_and_fan(const uint8_t m, const uint8_t e=active_extruder) { preheat_hotend(m, e); preheat_set_fan(m); }
+    static void preheat_hotend(const uint8_t m, const uint8_t e = active_tool) { TERN_(HAS_HOTEND, apply_preheat(m, _BV(PT_HOTEND))); }
+    static void preheat_hotend_and_fan(const uint8_t m, const uint8_t e = active_tool) { preheat_hotend(m, e); preheat_set_fan(m); }
     static void preheat_bed(const uint8_t m) { TERN_(HAS_HEATED_BED, apply_preheat(m, _BV(PT_BED))); }
     static void preheat_all(const uint8_t m) { apply_preheat(m, PT_ALL); }
   #endif
@@ -592,7 +592,7 @@ public:
   #endif
 
   #if ENABLED(ADVANCED_PAUSE_FEATURE) && ANY(HAS_MVCNCUI_MENU, EXTENSIBLE_UI, DWIN_CREALITY_LCD_ENHANCED, DWIN_CREALITY_LCD_JYERSUI)
-    static void pause_show_message(const PauseMessage message, const PauseMode mode=PAUSE_MODE_SAME, const uint8_t extruder=active_extruder);
+    static void pause_show_message(const PauseMessage message, const PauseMode mode = PAUSE_MODE_SAME, const uint8_t extruder = active_tool);
   #else
     static void _pause_show_message() {}
     #define pause_show_message(...) _pause_show_message()

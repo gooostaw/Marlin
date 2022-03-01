@@ -32,7 +32,7 @@
 #include "../ui_api.h"
 #include "../../../core/language.h"
 #include "../../../module/temperature.h"
-#include "../../../module/printcounter.h"
+#include "../../../module/jobcounter.h"
 #include "../../../module/stepper.h"
 #include "../../../gcode/queue.h"
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
@@ -65,7 +65,7 @@ void DGUSRxHandler::ScreenChange(DGUS_VP &vp, void *data_ptr) {
 
   if (vp.addr == DGUS_Addr::SCREENCHANGE_Idle
       && (ExtUI::isPrinting() || ExtUI::isPrintingPaused())) {
-    dgus_screen_handler.SetStatusMessage(F("Impossible while printing"));
+    dgus_screen_handler.SetStatusMessage(F("Impossible while running job"));
     return;
   }
 

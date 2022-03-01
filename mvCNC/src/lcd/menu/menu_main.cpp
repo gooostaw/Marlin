@@ -13,7 +13,7 @@
 #include "menu_item.h"
 #include "../../module/temperature.h"
 #include "../../gcode/queue.h"
-#include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
 #include "../../module/stepper.h"
 #include "../../sd/cardreader.h"
 
@@ -205,7 +205,7 @@ void menu_configuration();
 #endif // CUSTOM_MENU_MAIN
 
 void menu_main() {
-  const bool busy = printingIsActive()
+  const bool busy = jobIsActive()
     #if ENABLED(SDSUPPORT)
       , card_detected = card.isMounted()
       , card_open = card_detected && card.isFileOpen()
@@ -256,7 +256,7 @@ void menu_main() {
 
   if (busy) {
     #if MACHINE_CAN_PAUSE
-      ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
+    ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_job);
     #endif
     #if MACHINE_CAN_STOP
       SUBMENU(MSG_STOP_PRINT, []{
@@ -285,7 +285,7 @@ void menu_main() {
       sdcard_menu_items();
     #endif
 
-    if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused()))
+      if (TERN0(MACHINE_CAN_PAUSE, jobIsPaused()))
       ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
 
     #if ENABLED(HOST_START_MENU_ITEM) && defined(ACTION_ON_START)
@@ -374,7 +374,7 @@ void menu_main() {
 
   #if HAS_SERVICE_INTERVALS
     static auto _service_reset = [](const int index) {
-      print_job_timer.resetServiceInterval(index);
+      JobTimer.resetServiceInterval(index);
       ui.completion_feedback();
       ui.reset_status();
       ui.return_to_status();

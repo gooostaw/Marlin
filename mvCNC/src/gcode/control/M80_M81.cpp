@@ -6,7 +6,7 @@
 
 #include "../../module/temperature.h"
 #include "../../module/planner.h"       // for planner.finish_and_disable
-#include "../../module/printcounter.h"  // for print_job_timer.stop
+#include "../../module/jobcounter.h"  // for JobTimer.stop
 #include "../../lcd/mvcncui.h"         // for LCD_MESSAGE_F
 
 #include "../../inc/mvCNCConfig.h"
@@ -57,13 +57,13 @@
  */
 void GcodeSuite::M81() {
   planner.finish_and_disable();
-  thermalManager.cooldown();
+  fanManager.cooldown();
 
-  print_job_timer.stop();
+  JobTimer.stop();
 
   #if BOTH(HAS_FAN, PROBING_FANS_OFF)
-    thermalManager.fans_paused = false;
-    ZERO(thermalManager.saved_fan_speed);
+  fanManager.fans_paused = false;
+  ZERO(fanManager.saved_fan_speed);
   #endif
 
   safe_delay(1000); // Wait 1 second before switching off

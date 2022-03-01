@@ -18,7 +18,7 @@
 #endif
 
 #if BOTH(SD_ABORT_ON_ENDSTOP_HIT, SDSUPPORT)
-  #include "printcounter.h" // for print_job_timer
+#include "jobcounter.h" // for JobTimer
 #endif
 
 #if ENABLED(BLTOUCH)
@@ -456,8 +456,8 @@ void Endstops::event_handler() {
       if (planner.abort_on_endstop_hit) {
         card.abortFilePrintNow();
         quickstop_stepper();
-        thermalManager.disable_all_heaters();
-        print_job_timer.stop();
+        fanManager.disable_all_heaters();
+        JobTimer.stop();
       }
     #endif
   }

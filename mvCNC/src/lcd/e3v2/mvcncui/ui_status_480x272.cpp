@@ -36,7 +36,7 @@
 #include "../../../sd/cardreader.h"
 #include "../../../module/motion.h"
 #include "../../../module/temperature.h"
-#include "../../../module/printcounter.h"
+#include "../../../module/jobcounter.h"
 #include "../../../module/planner.h"
 
 #if ENABLED(SDSUPPORT)
@@ -44,7 +44,7 @@
 #endif
 
 #if ENABLED(LCD_SHOW_E_TOTAL)
-  #include "../../../mvCNCCore.h" // for printingIsActive
+#include "../../../mvCNCCore.h" // for jobIsActive
 #endif
 
 #if ENABLED(DWIN_mvCNCUI_PORTRAIT)
@@ -95,7 +95,7 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
 
   #else // !DWIN_mvCNCUI_PORTRAIT
 
-    if (!ui.did_first_redraw || ui.old_is_printing != print_job_timer.isRunning()) {
+  if (!ui.did_first_redraw || ui.old_is_job_running != JobTimer.isRunning()) {
       dwin_string.set();
       dwin_string.add('X' + axis);
       DWIN_Draw_String(true, font16x32, Color_IconBlue, Color_Bg_Black, x, y, S(dwin_string.string()));
@@ -118,7 +118,7 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
     }
 
     // For E_TOTAL there may be some characters to cover up
-    if (ENABLED(LCD_SHOW_E_TOTAL) && (!ui.did_first_redraw  || ui.old_is_printing != print_job_timer.isRunning()) && axis == X_AXIS)
+    if (ENABLED(LCD_SHOW_E_TOTAL) && (!ui.did_first_redraw || ui.old_is_job_running != JobTimer.isRunning()) && axis == X_AXIS)
       dwin_string.add("   ");
 
     DWIN_Draw_String(true, font14x28, Color_White, Color_Bg_Black, x + 32, y + 4, S(dwin_string.string()));
@@ -147,7 +147,7 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
 
     #else // !DWIN_mvCNCUI_PORTRAIT
 
-      if (!ui.did_first_redraw || ui.old_is_printing != print_job_timer.isRunning()) {
+    if (!ui.did_first_redraw || ui.old_is_job_running != JobTimer.isRunning()) {
         dwin_string.set("E ");
         DWIN_Draw_String(true, font16x32, Color_IconBlue, Color_Bg_Black, x, y, S(dwin_string.string()));
       }
@@ -167,7 +167,7 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
 //
 FORCE_INLINE void _draw_fan_status(const uint16_t x, const uint16_t y) {
   const uint16_t fanx = (4 * STATUS_CHR_WIDTH - STATUS_FAN_WIDTH) / 2;
-  const uint8_t fan_pct = thermalManager.scaledFanSpeedPercent(0);
+  const uint8_t fan_pct = fanManager.scaledFanSpeedPercent(0);
   const bool fan_on = !!fan_pct;
   if (fan_on) {
     DWIN_ICON_Animation(0, fan_on, ICON, ICON_Fan0, ICON_Fan3, x + fanx, y, 25);
@@ -211,9 +211,9 @@ FORCE_INLINE void _draw_heater_status(const heater_id_t heater, const uint16_t x
 
   #if HAS_HOTEND && HAS_HEATED_BED
     const bool isBed = heater < 0;
-    const float tc = isBed ? thermalManager.degBed() : thermalManager.degHotend(heater),
-                tt = isBed ? thermalManager.degTargetBed() : thermalManager.degTargetHotend(heater);
-    const bool ta = isBed ? thermalManager.isHeatingBed() : thermalManager.isHeatingHotend(heater);
+    const float tc = isBed ? fanManager.degBed() : fanManager.degHotend(heater),
+      tt = isBed ? fanManager.degTargetBed() : fanManager.degTargetHotend(heater);
+    const bool ta = isBed ? fanManager.isHeatingBed() : fanManager.isHeatingHotend(heater);
 
     bool c_draw = tc != (isBed ? old_bed_temp : old_temp[heater]),
          t_draw = tt != (isBed ? old_bed_target : old_target[heater]),
@@ -235,14 +235,14 @@ FORCE_INLINE void _draw_heater_status(const heater_id_t heater, const uint16_t x
     }
   #elif HAS_HOTEND
     constexpr bool isBed = false;
-    const float tc = thermalManager.degHotend(heater), tt = thermalManager.degTargetHotend(heater);
-    const uint8_t ta = thermalManager.isHeatingHotend(heater);
+    const float tc = fanManager.degHotend(heater), tt = fanManager.degTargetHotend(heater);
+    const uint8_t ta = fanManager.isHeatingHotend(heater);
     const bool c_draw = tc != old_bed_temp, t_draw = tt != old_bed_target, i_draw = ta != old_bed_on;
     old_temp[heater] = tc; old_target[heater] = tt; old_on[heater] = ta;
   #elif HAS_HEATED_BED
     constexpr bool isBed = true;
-    const float tc = thermalManager.degBed(), tt = thermalManager.degTargetBed();
-    const uint8_t ta = thermalManager.isHeatingBed();
+    const float tc = fanManager.degBed(), tt = fanManager.degTargetBed();
+    const uint8_t ta = fanManager.isHeatingBed();
     bool c_draw = tc != old_temp[heater], t_draw = tt != old_target[heater], i_draw = ta != old_on[heater];
     #if HAS_LEVELING
       if (!idraw && planner.leveling_active != old_leveling_on) i_draw = true;
@@ -331,7 +331,7 @@ void mvCNCUI::draw_status_screen() {
 
   // Axis values
   const xyz_pos_t lpos = current_position.asLogical();
-  const bool show_e_total = TERN0(LCD_SHOW_E_TOTAL, printingIsActive()); UNUSED(show_e_total);
+  const bool show_e_total = TERN0(LCD_SHOW_E_TOTAL, jobIsActive()); UNUSED(show_e_total);
 
   constexpr int16_t cpy = TERN(DWIN_mvCNCUI_PORTRAIT, 195, 117);
   if (show_e_total) {
@@ -368,13 +368,13 @@ void mvCNCUI::draw_status_screen() {
     dwin_string.set();
     char prefix = ' ';
     #if ENABLED(SHOW_REMAINING_TIME)
-      if (TERN1(ROTATE_PROGRESS_DISPLAY, blink) && print_job_timer.isRunning()) {
+    if (TERN1(ROTATE_PROGRESS_DISPLAY, blink) && JobTimer.isRunning()) {
         time = get_remaining_time();
         prefix = 'R';
       }
       else
     #endif
-        time = print_job_timer.duration();
+      time = JobTimer.duration();
 
     time.toDigital(buffer);
     dwin_string.add(prefix);
@@ -384,17 +384,17 @@ void mvCNCUI::draw_status_screen() {
   #else
 
     // landscape mode shows both elapsed and remaining (if SHOW_REMAINING_TIME)
-    time = print_job_timer.duration();
+  time = JobTimer.duration();
     time.toDigital(buffer);
     dwin_string.set(" ");
     dwin_string.add(buffer);
     DWIN_Draw_String(true, font14x28, Color_White, Color_Bg_Black, 230, 170, S(dwin_string.string()));
 
     #if ENABLED(SHOW_REMAINING_TIME)
-      if (print_job_timer.isRunning()) {
+    if (JobTimer.isRunning()) {
         time = get_remaining_time();
         DWIN_Draw_String(true, font14x28, Color_IconBlue, Color_Bg_Black, 336, 170, S(" R "));
-        if (print_job_timer.isPaused() && blink)
+        if (JobTimer.isPaused() && blink)
           dwin_string.set("     ");
         else {
           time.toDigital(buffer);
@@ -402,7 +402,7 @@ void mvCNCUI::draw_status_screen() {
         }
         DWIN_Draw_String(true, font14x28, Color_White, Color_Bg_Black, 378, 170, S(dwin_string.string()));
       }
-      else if (!ui.did_first_redraw || ui.old_is_printing != print_job_timer.isRunning()) {
+    else if (!ui.did_first_redraw || ui.old_is_job_running != JobTimer.isRunning()) {
         dwin_string.set("        ");
         DWIN_Draw_String(true, font14x28, Color_IconBlue, Color_Bg_Black, 336, 170, S(dwin_string.string()));
       }
@@ -456,7 +456,7 @@ void mvCNCUI::draw_status_screen() {
   draw_status_message(blink);
 
   ui.did_first_redraw = true;
-  ui.old_is_printing = print_job_timer.isRunning();
+  ui.old_is_job_running = JobTimer.isRunning();
 }
 
 #endif // IS_DWIN_MVCNCUI

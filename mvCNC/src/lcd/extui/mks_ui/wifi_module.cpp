@@ -950,7 +950,7 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
               start_print_time();
               preview_gcode_prehandle(list_file.file_name[sel_id]);
               uiCfg.print_state = WORKING;
-              lv_draw_printing();
+              lv_draw_job_running();
 
               #if ENABLED(SDSUPPORT)
                 if (!gcode_preview_over) {
@@ -994,7 +994,7 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
                 flash_preview_begin = true;
               else
                 default_preview_flg = true;
-              lv_draw_printing();
+              lv_draw_job_running();
             }
             else if (uiCfg.print_state == REPRINTING) {
               uiCfg.print_state = REPRINTED;
@@ -1004,7 +1004,7 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
                 flash_preview_begin = true;
               else
                 default_preview_flg = true;
-              lv_draw_printing();
+              lv_draw_job_running();
             }
           }
           SEND_OK_TO_WIFI;
@@ -1025,7 +1025,7 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
               flash_preview_begin = true;
             else
               default_preview_flg = true;
-            lv_draw_printing();
+            lv_draw_job_running();
             SEND_OK_TO_WIFI;
           }
           break;
@@ -1109,7 +1109,7 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
             char *outBuf = (char *)tempBuf;
             char tbuf[34];
 
-            sprintf_P(tbuf, PSTR("%d /%d"), thermalManager.wholeDegHotend(0), thermalManager.degTargetHotend(0));
+            sprintf_P(tbuf, PSTR("%d /%d"), fanManager.wholeDegHotend(0), fanManager.degTargetHotend(0));
 
             const int tlen = strlen(tbuf);
             sprintf_P(outBuf, PSTR("T:%s"), tbuf);
@@ -1118,7 +1118,7 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
             strcpy_P(outBuf, PSTR(" B:"));
             outBuf += 3;
             #if HAS_HEATED_BED
-              sprintf_P(outBuf, PSTR("%d /%d"), thermalManager.wholeDegBed(), thermalManager.degTargetBed());
+            sprintf_P(outBuf, PSTR("%d /%d"), fanManager.wholeDegBed(), fanManager.degTargetBed());
             #else
               strcpy_P(outBuf, PSTR("0 /0"));
             #endif
@@ -1131,7 +1131,7 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
             strcat_P(outBuf, PSTR(" T1:"));
             outBuf += 4;
             #if HAS_MULTI_HOTEND
-              sprintf_P(outBuf, PSTR("%d /%d"), thermalManager.wholeDegHotend(1), thermalManager.degTargetHotend(1));
+            sprintf_P(outBuf, PSTR("%d /%d"), fanManager.wholeDegHotend(1), fanManager.degTargetHotend(1));
             #else
               strcpy_P(outBuf, PSTR("0 /0"));
             #endif
@@ -1141,12 +1141,12 @@ static void wifi_gcode_exec(uint8_t *cmd_line) {
           }
           else {
             sprintf_P((char *)tempBuf, PSTR("T:%d /%d B:%d /%d T0:%d /%d T1:%d /%d @:0 B@:0\r\n"),
-              thermalManager.wholeDegHotend(0), thermalManager.degTargetHotend(0),
-              TERN0(HAS_HEATED_BED, thermalManager.wholeDegBed()),
-              TERN0(HAS_HEATED_BED, thermalManager.degTargetBed()),
-              thermalManager.wholeDegHotend(0), thermalManager.degTargetHotend(0),
-              TERN0(HAS_MULTI_HOTEND, thermalManager.wholeDegHotend(1)),
-              TERN0(HAS_MULTI_HOTEND, thermalManager.degTargetHotend(1))
+              fanManager.wholeDegHotend(0), fanManager.degTargetHotend(0),
+              TERN0(HAS_HEATED_BED, fanManager.wholeDegBed()),
+              TERN0(HAS_HEATED_BED, fanManager.degTargetBed()),
+              fanManager.wholeDegHotend(0), fanManager.degTargetHotend(0),
+              TERN0(HAS_MULTI_HOTEND, fanManager.wholeDegHotend(1)),
+              TERN0(HAS_MULTI_HOTEND, fanManager.degTargetHotend(1))
             );
           }
 

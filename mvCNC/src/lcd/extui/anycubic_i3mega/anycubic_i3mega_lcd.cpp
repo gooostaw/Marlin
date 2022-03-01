@@ -28,7 +28,7 @@
 
 #include "../../../libs/numtostr.h"
 #include "../../../module/stepper.h" // for disable_all_steppers
-#include "../../../module/motion.h"  // for quickstop_stepper, A20 read printing speed, feedrate_percentage
+#include "../../../module/motion.h"  // for quickstop_stepper, A20 read running job speed, feedrate_percentage
 #include "../../../mvCNCCore.h"     // for disable_steppers
 #include "../../../inc/mvCNCConfig.h"
 
@@ -197,7 +197,7 @@ void AnycubicTFTClass::OnUserConfirmRequired(const char * const msg) {
       mediaPauseState    = AMPAUSESTATE_PARKING;
       // TODO: JBA I don't think J05 just disables the continue button, i think it injects a rogue M25. So taking this out
       // disable continue button
-      // SENDLINE_DBG_PGM("J05", "TFT Serial Debug: UserConfirm SD Filament Purging... J05"); // J05 printing pause
+      // SENDLINE_DBG_PGM("J05", "TFT Serial Debug: UserConfirm SD Filament Purging... J05"); // J05 running job pause
 
       // enable continue button
       SENDLINE_DBG_PGM("J18", "TFT Serial Debug: UserConfirm Filament is purging... J18");
@@ -606,7 +606,7 @@ void AnycubicTFTClass::GetCommandFromTFT() {
                 if (isMediaInserted())
                   SENDLINE(ui8tostr3rj(getProgress_percent()));
                 else
-                  SENDLINE_DBG_PGM("J02", "TFT Serial Debug: No SD Card mounted to return printing status... J02");
+                  SENDLINE_DBG_PGM("J02", "TFT Serial Debug: No SD Card mounted to return running job status... J02");
               }
               else
                 SENDLINE_PGM("A6V ---");
@@ -745,7 +745,7 @@ void AnycubicTFTClass::GetCommandFromTFT() {
             SENDLINE_PGM("");
             break;
 
-          case 20: // A20 read printing speed
+          case 20: // A20 read running job speed
             if (CodeSeen('S'))
               feedrate_percentage = constrain(CodeValue(), 40, 999);
             else
@@ -966,7 +966,7 @@ void AnycubicTFTClass::PausePrint() {
     if (isPrintingFromMedia() && mediaPrintingState != AMPRINTSTATE_STOP_REQUESTED && mediaPauseState == AMPAUSESTATE_NOT_PAUSED) {
       mediaPrintingState = AMPRINTSTATE_PAUSE_REQUESTED;
       mediaPauseState    = AMPAUSESTATE_NOT_PAUSED; // need the userconfirm method to update pause state
-      SENDLINE_DBG_PGM("J05", "TFT Serial Debug: SD print pause started... J05"); // J05 printing pause
+      SENDLINE_DBG_PGM("J05", "TFT Serial Debug: SD print pause started... J05"); // J05 running job pause
 
       // for some reason pausing the print doesn't retract the extruder so force a manual one here
       injectCommands(F("G91\nG1 E-2 F1800\nG90"));
@@ -996,7 +996,7 @@ void AnycubicTFTClass::ResumePrint() {
       mediaPauseState = AMPAUSESTATE_REHEATING;
       // TODO: JBA I don't think J05 just disables the continue button, i think it injects a rogue M25. So taking this out
       // // disable the continue button
-      // SENDLINE_DBG_PGM("J05", "TFT Serial Debug: Resume called with heater timeout... J05"); // J05 printing pause
+      // SENDLINE_DBG_PGM("J05", "TFT Serial Debug: Resume called with heater timeout... J05"); // J05 running job pause
 
       // reheat the nozzle
       setUserConfirmed();
@@ -1005,7 +1005,7 @@ void AnycubicTFTClass::ResumePrint() {
       mediaPrintingState = AMPRINTSTATE_PRINTING;
       mediaPauseState    = AMPAUSESTATE_NOT_PAUSED;
 
-      SENDLINE_DBG_PGM("J04", "TFT Serial Debug: SD print resumed... J04"); // J04 printing form sd card now
+      SENDLINE_DBG_PGM("J04", "TFT Serial Debug: SD print resumed... J04"); // J04 running job form sd card now
       resumePrint();
     }
   #endif

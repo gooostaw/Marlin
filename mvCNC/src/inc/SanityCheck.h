@@ -1903,8 +1903,8 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
 #if ENABLED(FILAMENT_WIDTH_SENSOR)
   #if !HAS_FILAMENT_WIDTH_SENSOR
     #error "FILAMENT_WIDTH_SENSOR requires a FILWIDTH_PIN to be defined."
-  #elif ENABLED(NO_VOLUMETRICS)
-    #error "FILAMENT_WIDTH_SENSOR requires NO_VOLUMETRICS to be disabled."
+#elif DISABLED(USE_VOLUMETRICS)
+#error "FILAMENT_WIDTH_SENSOR requires USE_VOLUMETRICS to be enabled."
   #endif
 #endif
 
@@ -1923,8 +1923,8 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
  * Volumetric Extruder Limit
  */
 #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
-  #if ENABLED(NO_VOLUMETRICS)
-    #error "VOLUMETRIC_EXTRUDER_LIMIT requires NO_VOLUMETRICS to be disabled."
+#if DISABLED(USE_VOLUMETRICS)
+#error "VOLUMETRIC_EXTRUDER_LIMIT requires USE_VOLUMETRICS to be enabled."
   #elif MIN_STEPS_PER_SEGMENT > 1
     #error "VOLUMETRIC_EXTRUDER_LIMIT is not compatible with MIN_STEPS_PER_SEGMENT greater than 1."
   #endif
@@ -3476,8 +3476,8 @@ static_assert(_PLUS_TEST(4), "HOMING_FEEDRATE_MM_M values must be positive.");
   #endif
 #endif
 
-#if ENABLED(PRINTCOUNTER) && DISABLED(EEPROM_SETTINGS)
-  #error "PRINTCOUNTER requires EEPROM_SETTINGS."
+  #if ENABLED(JOBCOUNTER) && DISABLED(EEPROM_SETTINGS)
+  #error "JOBCOUNTER requires EEPROM_SETTINGS."
 #endif
 
 #if ENABLED(USB_FLASH_DRIVE_SUPPORT) && !PINS_EXIST(USB_CS, USB_INTR) && DISABLED(USE_OTG_USB_HOST)
@@ -3536,9 +3536,9 @@ static_assert(_PLUS_TEST(4), "HOMING_FEEDRATE_MM_M values must be positive.");
 #endif
 
 /**
- * Advanced PRINTCOUNTER settings
+ * Advanced JOBCOUNTER settings
  */
-#if ENABLED(PRINTCOUNTER)
+  #if ENABLED(JOBCOUNTER)
   #if defined(SERVICE_INTERVAL_1) != defined(SERVICE_NAME_1)
     #error "Both SERVICE_NAME_1 and SERVICE_INTERVAL_1 are required."
   #elif defined(SERVICE_INTERVAL_2) != defined(SERVICE_NAME_2)

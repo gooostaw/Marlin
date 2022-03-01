@@ -34,13 +34,13 @@
 #include "../../module/planner.h"
 #include "../../module/probe.h"
 #include "../../module/temperature.h"
-#include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
 #include "../../libs/duration_t.h"
 #include "../../HAL/shared/Delay.h"
 #include "../../mvCNCCore.h"
 #include "../../sd/cardreader.h"
 
-#if ENABLED(PRINTCOUNTER)
+#if ENABLED(JOBCOUNTER)
   #include "../../core/utility.h"
   #include "../../libs/numtostr.h"
 #endif
@@ -151,12 +151,12 @@ namespace ExtUI {
   }
 
   void yield() {
-    if (!flags.cnc_killed) thermalManager.manage_heater();
+    if (!flags.cnc_killed) fanManager.manage_heater();
   }
 
   void enableHeater(const extruder_t extruder) {
     #if HAS_HOTEND && HEATER_IDLE_HANDLER
-      thermalManager.reset_hotend_idle_timer(extruder - E0);
+    fanManager.reset_hotend_idle_timer(extruder - E0);
     #else
       UNUSED(extruder);
     #endif
@@ -166,7 +166,7 @@ namespace ExtUI {
     #if HEATER_IDLE_HANDLER
       switch (heater) {
         #if HAS_HEATED_BED
-          case BED: thermalManager.reset_bed_idle_timer(); return;
+        case BED: fanManager.reset_bed_idle_timer(); return;
         #endif
         #if HAS_HEATED_CHAMBER
           case CHAMBER: return; // Chamber has no idle timer
@@ -175,7 +175,7 @@ namespace ExtUI {
           case COOLER: return;  // Cooler has no idle timer
         #endif
         default:
-          TERN_(HAS_HOTEND, thermalManager.reset_hotend_idle_timer(heater - H0));
+          TERN_(HAS_HOTEND, fanManager.reset_hotend_idle_timer(heater - H0));
           break;
       }
     #else
@@ -202,7 +202,7 @@ namespace ExtUI {
     }
 
     // Called by the polling routine in "joystick.cpp"
-    void _joystick_update(xyz_float_t &norm_jog) {
+    void _jogging_update(xyz_float_t &norm_jog) {
       if (flags.jogging) {
         #define OUT_OF_RANGE(VALUE) (VALUE < -1.0f || VALUE > 1.0f)
 
@@ -221,7 +221,7 @@ namespace ExtUI {
 
   bool isHeaterIdle(const extruder_t extruder) {
     #if HAS_HOTEND && HEATER_IDLE_HANDLER
-      return thermalManager.heater_idle[extruder - E0].timed_out;
+    return fanManager.heater_idle[extruder - E0].timed_out;
     #else
       UNUSED(extruder);
       return false;
@@ -232,13 +232,13 @@ namespace ExtUI {
     #if HEATER_IDLE_HANDLER
       switch (heater) {
         #if HAS_HEATED_BED
-          case BED: return thermalManager.heater_idle[thermalManager.IDLE_INDEX_BED].timed_out;
+        case BED: return fanManager.heater_idle[fanManager.IDLE_INDEX_BED].timed_out;
         #endif
         #if HAS_HEATED_CHAMBER
           case CHAMBER: return false; // Chamber has no idle timer
         #endif
         default:
-          return TERN0(HAS_HOTEND, thermalManager.heater_idle[heater - H0].timed_out);
+          return TERN0(HAS_HOTEND, fanManager.heater_idle[heater - H0].timed_out);
       }
     #else
       UNUSED(heater);
@@ -255,43 +255,43 @@ namespace ExtUI {
   celsius_float_t getActualTemp_celsius(const heater_t heater) {
     switch (heater) {
       #if HAS_HEATED_BED
-        case BED: return GET_TEMP_ADJUSTMENT(thermalManager.degBed());
+      case BED: return GET_TEMP_ADJUSTMENT(fanManager.degBed());
       #endif
       #if HAS_HEATED_CHAMBER
-        case CHAMBER: return GET_TEMP_ADJUSTMENT(thermalManager.degChamber());
+      case CHAMBER: return GET_TEMP_ADJUSTMENT(fanManager.degChamber());
       #endif
-      default: return GET_TEMP_ADJUSTMENT(thermalManager.degHotend(heater - H0));
+      default: return GET_TEMP_ADJUSTMENT(fanManager.degHotend(heater - H0));
     }
   }
 
   celsius_float_t getActualTemp_celsius(const extruder_t extruder) {
-    return GET_TEMP_ADJUSTMENT(thermalManager.degHotend(extruder - E0));
+    return GET_TEMP_ADJUSTMENT(fanManager.degHotend(extruder - E0));
   }
 
   celsius_float_t getTargetTemp_celsius(const heater_t heater) {
     switch (heater) {
       #if HAS_HEATED_BED
-        case BED: return GET_TEMP_ADJUSTMENT(thermalManager.degTargetBed());
+      case BED: return GET_TEMP_ADJUSTMENT(fanManager.degTargetBed());
       #endif
       #if HAS_HEATED_CHAMBER
-        case CHAMBER: return GET_TEMP_ADJUSTMENT(thermalManager.degTargetChamber());
+      case CHAMBER: return GET_TEMP_ADJUSTMENT(fanManager.degTargetChamber());
       #endif
-      default: return GET_TEMP_ADJUSTMENT(thermalManager.degTargetHotend(heater - H0));
+      default: return GET_TEMP_ADJUSTMENT(fanManager.degTargetHotend(heater - H0));
     }
   }
 
   celsius_float_t getTargetTemp_celsius(const extruder_t extruder) {
-    return GET_TEMP_ADJUSTMENT(thermalManager.degTargetHotend(extruder - E0));
+    return GET_TEMP_ADJUSTMENT(fanManager.degTargetHotend(extruder - E0));
   }
 
   float getTargetFan_percent(const fan_t fan) {
     UNUSED(fan);
-    return TERN0(HAS_FAN, thermalManager.fanSpeedPercent(fan - FAN0));
+    return TERN0(HAS_FAN, fanManager.fanSpeedPercent(fan - FAN0));
   }
 
   float getActualFan_percent(const fan_t fan) {
     UNUSED(fan);
-    return TERN0(HAS_FAN, thermalManager.scaledFanSpeedPercent(fan - FAN0));
+    return TERN0(HAS_FAN, fanManager.scaledFanSpeedPercent(fan - FAN0));
   }
 
   float getAxisPosition_mm(const axis_t axis) {
@@ -334,8 +334,8 @@ namespace ExtUI {
   void setActiveTool(const extruder_t extruder, bool no_move) {
     #if HAS_MULTI_EXTRUDER
       const uint8_t e = extruder - E0;
-      if (e != active_extruder) tool_change(e, no_move);
-      active_extruder = e;
+      if (e != active_tool) tool_change(e, no_move);
+      active_tool = e;
     #else
       UNUSED(extruder);
       UNUSED(no_move);
@@ -350,7 +350,7 @@ namespace ExtUI {
     }
   }
 
-  extruder_t getActiveTool() { return getTool(active_extruder); }
+  extruder_t getActiveTool() { return getTool(active_tool); }
 
   bool isMoving() { return planner.has_blocks_queued(); }
 
@@ -368,7 +368,7 @@ namespace ExtUI {
   }
 
   bool canMove(const extruder_t extruder) {
-    return !thermalManager.tooColdToExtrude(extruder - E0);
+    return !fanManager.tooColdToExtrude(extruder - E0);
   }
 
   GcodeSuite::mvCNCBusyState getHostKeepaliveState() { return TERN0(HOST_KEEPALIVE_FEATURE, gcode.busy_state); }
@@ -743,7 +743,7 @@ namespace ExtUI {
      * cnc can be babystepped independently of the others. This
      * lets the user to fine tune the Z-offset and Nozzle Offsets
      * while observing the first layer of a print, regardless of
-     * what nozzle is printing.
+     * what nozzle is running job.
      */
     void smartAdjustAxis_steps(const int16_t steps, const axis_t axis, bool linked_nozzles) {
       const float mm = steps * planner.mm_per_step[axis];
@@ -753,7 +753,7 @@ namespace ExtUI {
 
       #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
         // Make it so babystepping in Z adjusts the Z probe offset.
-        if (axis == Z && TERN1(HAS_MULTI_EXTRUDER, (linked_nozzles || active_extruder == 0)))
+      if (axis == Z && TERN1(HAS_MULTI_EXTRUDER, (linked_nozzles || active_tool == 0)))
           probe.offset.z += mm;
       #endif
 
@@ -765,7 +765,7 @@ namespace ExtUI {
          */
         if (!linked_nozzles) {
           HOTEND_LOOP()
-            if (e != active_extruder)
+            if (e != active_tool)
               hotend_offset[e][axis] += mm;
 
           normalizeNozzleOffset(X);
@@ -857,7 +857,7 @@ namespace ExtUI {
   #endif
 
   uint32_t getProgress_seconds_elapsed() {
-    const duration_t elapsed = print_job_timer.duration();
+    const duration_t elapsed = JobTimer.duration();
     return elapsed.value;
   }
 
@@ -912,14 +912,14 @@ namespace ExtUI {
     void setHostResponse(const uint8_t response) { hostui.handle_response(response); }
   #endif
 
-  #if ENABLED(PRINTCOUNTER)
-    char* getFailedPrints_str(char buffer[21])   { strcpy(buffer,i16tostr3left(print_job_timer.getStats().totalPrints - print_job_timer.getStats().finishedPrints)); return buffer; }
-    char* getTotalPrints_str(char buffer[21])    { strcpy(buffer,i16tostr3left(print_job_timer.getStats().totalPrints));    return buffer; }
-    char* getFinishedPrints_str(char buffer[21]) { strcpy(buffer,i16tostr3left(print_job_timer.getStats().finishedPrints)); return buffer; }
-    char* getTotalPrintTime_str(char buffer[21]) { return duration_t(print_job_timer.getStats().printTime).toString(buffer); }
-    char* getLongestPrint_str(char buffer[21])   { return duration_t(print_job_timer.getStats().longestPrint).toString(buffer); }
+  #if ENABLED(JOBCOUNTER)
+    char *getFailedPrints_str(char buffer[21]) { strcpy(buffer, i16tostr3left(JobTimer.getStats().totalPrints - JobTimer.getStats().finishedPrints)); return buffer; }
+    char *getTotalPrints_str(char buffer[21]) { strcpy(buffer, i16tostr3left(JobTimer.getStats().totalPrints));    return buffer; }
+    char *getFinishedPrints_str(char buffer[21]) { strcpy(buffer, i16tostr3left(JobTimer.getStats().finishedPrints)); return buffer; }
+    char *getTotalPrintTime_str(char buffer[21]) { return duration_t(JobTimer.getStats().printTime).toString(buffer); }
+    char *getLongestPrint_str(char buffer[21]) { return duration_t(JobTimer.getStats().longestPrint).toString(buffer); }
     char* getFilamentUsed_str(char buffer[21])   {
-      printStatistics stats = print_job_timer.getStats();
+      printStatistics stats = JobTimer.getStats();
       sprintf_P(buffer, PSTR("%ld.%im"), long(stats.filamentUsed / 1000), int16_t(stats.filamentUsed / 100) % 10);
       return buffer;
     }
@@ -933,31 +933,31 @@ namespace ExtUI {
     float getPIDValues_Kd(const extruder_t tool) { return unscalePID_d(PID_PARAM(Kd, tool)); }
 
     void setPIDValues(const_float_t p, const_float_t i, const_float_t d, extruder_t tool) {
-      thermalManager.temp_hotend[tool].pid.Kp = p;
-      thermalManager.temp_hotend[tool].pid.Ki = scalePID_i(i);
-      thermalManager.temp_hotend[tool].pid.Kd = scalePID_d(d);
-      thermalManager.updatePID();
+      fanManager.temp_hotend[tool].pid.Kp = p;
+      fanManager.temp_hotend[tool].pid.Ki = scalePID_i(i);
+      fanManager.temp_hotend[tool].pid.Kd = scalePID_d(d);
+      fanManager.updatePID();
     }
 
     void startPIDTune(const celsius_t temp, extruder_t tool) {
-      thermalManager.PID_autotune(temp, (heater_id_t)tool, 8, true);
+      fanManager.PID_autotune(temp, (heater_id_t)tool, 8, true);
     }
   #endif
 
   #if ENABLED(PIDTEMPBED)
-    float getBedPIDValues_Kp() { return thermalManager.temp_bed.pid.Kp; }
-    float getBedPIDValues_Ki() { return unscalePID_i(thermalManager.temp_bed.pid.Ki); }
-    float getBedPIDValues_Kd() { return unscalePID_d(thermalManager.temp_bed.pid.Kd); }
+    float getBedPIDValues_Kp() { return fanManager.temp_bed.pid.Kp; }
+    float getBedPIDValues_Ki() { return unscalePID_i(fanManager.temp_bed.pid.Ki); }
+    float getBedPIDValues_Kd() { return unscalePID_d(fanManager.temp_bed.pid.Kd); }
 
     void setBedPIDValues(const_float_t p, const_float_t i, const_float_t d) {
-      thermalManager.temp_bed.pid.Kp = p;
-      thermalManager.temp_bed.pid.Ki = scalePID_i(i);
-      thermalManager.temp_bed.pid.Kd = scalePID_d(d);
-      thermalManager.updatePID();
+      fanManager.temp_bed.pid.Kp = p;
+      fanManager.temp_bed.pid.Ki = scalePID_i(i);
+      fanManager.temp_bed.pid.Kd = scalePID_d(d);
+      fanManager.updatePID();
     }
 
     void startBedPIDTune(const celsius_t temp) {
-      thermalManager.PID_autotune(temp, H_BED, 4, true);
+      fanManager.PID_autotune(temp, H_BED, 4, true);
     }
   #endif
 
@@ -984,18 +984,18 @@ namespace ExtUI {
     enableHeater(heater);
     switch (heater) {
       #if HAS_HEATED_CHAMBER
-        case CHAMBER: thermalManager.setTargetChamber(LROUND(constrain(value, 0, CHAMBER_MAX_TARGET))); break;
+      case CHAMBER: fanManager.setTargetChamber(LROUND(constrain(value, 0, CHAMBER_MAX_TARGET))); break;
       #endif
       #if HAS_COOLER
-        case COOLER: thermalManager.setTargetCooler(LROUND(constrain(value, 0, COOLER_MAXTEMP))); break;
+      case COOLER: fanManager.setTargetCooler(LROUND(constrain(value, 0, COOLER_MAXTEMP))); break;
       #endif
       #if HAS_HEATED_BED
-        case BED: thermalManager.setTargetBed(LROUND(constrain(value, 0, BED_MAX_TARGET))); break;
+      case BED: fanManager.setTargetBed(LROUND(constrain(value, 0, BED_MAX_TARGET))); break;
       #endif
       default: {
         #if HAS_HOTEND
           const int16_t e = heater - H0;
-          thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.hotend_max_target(e))), e);
+          fanManager.setTargetHotend(LROUND(constrain(value, 0, fanManager.hotend_max_target(e))), e);
         #endif
       } break;
     }
@@ -1009,14 +1009,14 @@ namespace ExtUI {
     #if HAS_HOTEND
       const int16_t e = extruder - E0;
       enableHeater(extruder);
-      thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.hotend_max_target(e))), e);
+      fanManager.setTargetHotend(LROUND(constrain(value, 0, fanManager.hotend_max_target(e))), e);
     #endif
   }
 
   void setTargetFan_percent(const_float_t value, const fan_t fan) {
     #if HAS_FAN
       if (fan < FAN_COUNT)
-        thermalManager.set_fan_speed(fan - FAN0, map(constrain(value, 0, 100), 0, 100, 0, 255));
+        fanManager.set_fan_speed(fan - FAN0, map(constrain(value, 0, 100), 0, 100, 0, 255));
     #else
       UNUSED(value);
       UNUSED(fan);
@@ -1025,7 +1025,7 @@ namespace ExtUI {
 
   void setFeedrate_percent(const_float_t value) { feedrate_percentage = constrain(value, 10, 500); }
 
-  void coolDown() { thermalManager.cooldown(); }
+  void coolDown() { fanManager.cooldown(); }
 
   bool awaitingUserConfirm() {
     return TERN0(HAS_RESUME_CONTINUE, wait_for_user) || getHostKeepaliveIsPaused();
@@ -1046,19 +1046,19 @@ namespace ExtUI {
     return TERN0(SDSUPPORT, IS_SD_PAUSED());
   }
 
-  bool isPrintingFromMedia() { return TERN0(SDSUPPORT, IS_SD_PRINTING() || IS_SD_PAUSED()); }
+  bool isPrintingFromMedia() { return TERN0(SDSUPPORT, IS_SD_JOB_RUNNING() || IS_SD_PAUSED()); }
 
   bool isPrinting() {
-    return commandsInQueue() || isPrintingFromMedia() || printJobOngoing() || printingIsPaused();
+    return commandsInQueue() || isPrintingFromMedia() || jobIsOngoing() || jobIsPaused();
   }
 
   bool isPrintingPaused() {
-    return isPrinting() && (isPrintingFromMediaPaused() || print_job_timer.isPaused());
+    return isPrinting() && (isPrintingFromMediaPaused() || JobTimer.isPaused());
   }
 
   bool isMediaInserted() { return TERN0(SDSUPPORT, IS_SD_INSERTED()); }
 
-  void pausePrint()  { ui.pause_print(); }
+  void pausePrint() { ui.pause_job(); }
   void resumePrint() { ui.resume_print(); }
   void stopPrint()   { ui.abort_print(); }
 

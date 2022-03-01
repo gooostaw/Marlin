@@ -17,13 +17,12 @@
  *
  * Advanced settings can be found in Configuration_adv.h
  */
-#define CONFIGURATION_H_VERSION 02000903
+#define CONFIGURATION_H_VERSION 00000100
 
 // @section info
 
 // Author info of this build printed to the host during boot and M115
 #define STRING_CONFIG_H_AUTHOR "Edward Webber" // Who made the changes.
-#define CUSTOM_VERSION_FILE    Version.h       // Path from the root directory (no quotes)
 
 /**
  * *** VENDORS PLEASE READ ***
@@ -68,7 +67,7 @@
  * Set the baud rate defaults for additional serial ports below.
  *
  * 250000 works in most cases, but you might try a lower speed if
- * you commonly experience drop-outs during host printing.
+ * you commonly experience drop-outs during host running job.
  * You may try up to 1000000 to speed up SD file transfer.
  *
  * :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000]
@@ -531,7 +530,7 @@
 
 /**
  * Thermal Overshoot
- * During heatup (and printing) the temperature can often "overshoot" the target by many degrees
+ * During heatup (and cutting) the temperature can often "overshoot" the target by many degrees
  * (especially before PID tuning). Setting the target temperature too close to MAXTEMP guarantees
  * a MAXTEMP shutdown! Use these values to forbid temperatures being set too close to MAXTEMP.
  */
@@ -925,9 +924,9 @@
  *   M204 R    Retract Acceleration
  *   M204 T    Travel Acceleration
  */
-#define DEFAULT_ACCELERATION         482 // X, Y, Z and E acceleration for printing moves
+#define DEFAULT_ACCELERATION         482 // X, Y, Z and E acceleration for cutting moves
 #define DEFAULT_RETRACT_ACCELERATION 762 // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION  482 // X, Y, Z acceleration for travel (non printing) moves
+#define DEFAULT_TRAVEL_ACCELERATION  482 // X, Y, Z acceleration for travel (non cutting) moves
 
 /**
  * Default Jerk limits (mm/s)
@@ -972,7 +971,7 @@
 /**
  * S-Curve Acceleration
  *
- * This option eliminates vibration during printing by fitting a Bézier
+ * This option eliminates vibration during cutting by fitting a Bézier
  * curve to move acceleration, producing much smoother direction changes.
  *
  * See https://github.com/synthetos/TinyG/wiki/Jerk-Controlled-Motion-Explained
@@ -1408,9 +1407,9 @@
  * Filament Runout Sensors
  * Mechanical or opto endstops are used to check for the presence of filament.
  *
- * IMPORTANT: Runout will only trigger if mvCNC is aware that a print job is running.
- * mvCNC knows a print job is running when:
- *  1. Running a print job from media started with M24.
+ * IMPORTANT: Runout will only trigger if mvCNC is aware that a CNC job is running.
+ * mvCNC knows a CNC job is running when:
+ *  1. Running a CNC job from media started with M24.
  *  2. The CNC Job Timer has been started with M75.
  *  3. The heaters were turned on and PRINTJOB_TIMER_AUTOSTART is enabled.
  *
@@ -1953,8 +1952,8 @@
 /**
  * CNC Job Timer
  *
- * Automatically start and stop the print job timer on M104/M109/M140/M190/M141/M191.
- * The print job timer will only be stopped if the bed/chamber target temp is
+ * Automatically start and stop the CNC job timer on M104/M109/M140/M190/M141/M191.
+ * The CNC job timer will only be stopped if the bed/chamber target temp is
  * below BED_MINTEMP/CHAMBER_MINTEMP.
  *
  *   M104 (hotend, no wait)  - high temp = none,        low temp = stop timer
@@ -1970,9 +1969,9 @@
  *
  * The timer can also be controlled with the following commands:
  *
- *   M75 - Start the print job timer
- *   M76 - Pause the print job timer
- *   M77 - Stop the print job timer
+ *   M75 - Start the CNC job timer
+ *   M76 - Pause the CNC job timer
+ *   M77 - Stop the CNC job timer
  */
 #define PRINTJOB_TIMER_AUTOSTART
 
@@ -1981,16 +1980,16 @@
  *
  * Track statistical data such as:
  *
- *  - Total print jobs
- *  - Total successful print jobs
- *  - Total failed print jobs
- *  - Total time printing
+ *  - Total CNC jobs
+ *  - Total successful CNC jobs
+ *  - Total failed CNC jobs
+ *  - Total time running job
  *
  * View the current statistics with M78.
  */
-//#define PRINTCOUNTER
-#if ENABLED(PRINTCOUNTER)
-  #define PRINTCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print
+ //#define JOBCOUNTER
+#if ENABLED(JOBCOUNTER)
+#define JOBCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print
 #endif
 
 /**
@@ -2000,7 +1999,7 @@
  *
  *  - When the cnc boots up
  *  - Upon opening the 'CNC from Media' Menu
- *  - When SD printing is completed or aborted
+ *  - When SD job is completed or aborted
  *
  * The following G-codes can be used:
  *
@@ -2913,7 +2912,7 @@
 /**
  * CNC Event LEDs
  *
- * During printing, the LEDs will reflect the cnc status:
+ * During running job, the LEDs will reflect the cnc status:
  *
  *  - Gradually change from blue to violet as the heated bed gets to target temp
  *  - Gradually change from violet to red as the hotend gets to temperature

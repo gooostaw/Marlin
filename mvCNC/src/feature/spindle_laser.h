@@ -75,7 +75,7 @@ public:
   static bool isReady;                    // Ready to apply power setting from the UI to OCR
   static uint8_t power;
 
-  #if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
     static cutter_frequency_t frequency;  // Set PWM frequency; range: 2K-50K
   #endif
 
@@ -84,7 +84,7 @@ public:
 
   static void init();
 
-  #if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
     static void refresh_frequency() { set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), frequency); }
   #endif
 

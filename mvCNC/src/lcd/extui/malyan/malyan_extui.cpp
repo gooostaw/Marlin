@@ -19,7 +19,7 @@
 //#include "../../../module/stepper.h"
 //#include "../../../module/motion.h"
 //#include "../../../libs/duration_t.h"
-//#include "../../../module/printcounter.h"
+//#include "../../../module/jobcounter.h"
 //#include "../../../gcode/queue.h"
 
 namespace ExtUI {
@@ -61,7 +61,7 @@ namespace ExtUI {
       parse_lcd_byte((byte)LCD_SERIAL.read());
 
     #if ENABLED(SDSUPPORT)
-      // The way last printing status works is simple:
+    // The way last running job status works is simple:
       // The UI needs to see at least one TQ which is not 100%
       // and then when the print is complete, one which is.
       static uint8_t last_percent_done = 100;
@@ -69,13 +69,13 @@ namespace ExtUI {
       // If there was a print in progress, we need to emit the final
       // print status as {TQ:100}. Reset last percent done so a new print will
       // issue a percent of 0.
-      const uint8_t percent_done = (ExtUI::isPrinting() || ExtUI::isPrintingFromMediaPaused()) ? ExtUI::getProgress_percent() : last_printing_status ? 100 : 0;
+      const uint8_t percent_done = (ExtUI::isPrinting() || ExtUI::isPrintingFromMediaPaused()) ? ExtUI::getProgress_percent() : last_job_running_status ? 100 : 0;
       if (percent_done != last_percent_done) {
         char message_buffer[16];
         sprintf_P(message_buffer, PSTR("{TQ:%03i}"), percent_done);
         write_to_lcd(message_buffer);
         last_percent_done = percent_done;
-        last_printing_status = ExtUI::isPrinting();
+        last_job_running_status = ExtUI::isPrinting();
       }
     #endif
   }

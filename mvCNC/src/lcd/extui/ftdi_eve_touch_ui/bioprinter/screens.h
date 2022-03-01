@@ -100,6 +100,6 @@ enum {
 #include "bio_main_menu.h"
 #include "bio_tune_menu.h"
 #include "bio_advanced_settings.h"
-#include "bio_printing_dialog_box.h"
+#include "bio_job_running_dialog_box.h"
 #include "bio_confirm_home_xyz.h"
 #include "bio_confirm_home_e.h"

@@ -245,7 +245,7 @@ G29_TYPE GcodeSuite::G29() {
    */
   if (!g29_in_progress) {
 
-    TERN_(HAS_MULTI_HOTEND, if (active_extruder) tool_change(0));
+    TERN_(HAS_MULTI_HOTEND, if (active_tool) tool_change(0));
 
     #if EITHER(PROBE_MANUALLY, AUTO_BED_LEVELING_LINEAR)
       abl.abl_probe_index = -1;
@@ -633,9 +633,9 @@ G29_TYPE GcodeSuite::G29() {
             break; // Breaks out of both loops
           }
 
-          TERN_(PTC_BED,    ptc.compensate_measurement(TSI_BED,   thermalManager.degBed(),     abl.measured_z));
-          TERN_(PTC_PROBE,  ptc.compensate_measurement(TSI_PROBE, thermalManager.degProbe(),   abl.measured_z));
-          TERN_(PTC_HOTEND, ptc.compensate_measurement(TSI_EXT,   thermalManager.degHotend(0), abl.measured_z));
+          TERN_(PTC_BED, ptc.compensate_measurement(TSI_BED, fanManager.degBed(), abl.measured_z));
+          TERN_(PTC_PROBE, ptc.compensate_measurement(TSI_PROBE, fanManager.degProbe(), abl.measured_z));
+          TERN_(PTC_HOTEND, ptc.compensate_measurement(TSI_EXT, fanManager.degHotend(0), abl.measured_z));
 
           #if ENABLED(AUTO_BED_LEVELING_LINEAR)
 

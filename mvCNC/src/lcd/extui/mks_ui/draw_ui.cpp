@@ -52,7 +52,7 @@ bool gcode_preview_over, flash_preview_begin, default_preview_flg;
 uint32_t size = 809;
 uint16_t row;
 bool temps_update_flag;
-uint8_t printing_rate_update_flag;
+uint8_t job_running_rate_update_flag;
 
 extern bool once_flag;
 extern uint8_t sel_id;
@@ -434,7 +434,7 @@ char *getDispText(int index) {
       switch (disp_state_stack._disp_state[disp_state_stack._disp_index]) {
         IF_DISABLED(TFT35, case OPERATE_UI: case PAUSE_UI:)
         case PRINTING_UI:     strcpy(public_buf_l, common_menu.print_special_title); break;
-        default:              strcpy(public_buf_l, printing_menu.title); break;
+        default:              strcpy(public_buf_l, job_running_menu.title); break;
       }
       break;
     case MOVE_MOTOR_UI:       strcpy(public_buf_l, move_menu.title); break;
@@ -717,7 +717,7 @@ void print_time_run() {
 
 void GUI_RefreshPage() {
   if ((systick_uptime_millis % 1000) == 0) temps_update_flag = true;
-  if ((systick_uptime_millis % 3000) == 0) printing_rate_update_flag = true;
+  if ((systick_uptime_millis % 3000) == 0) job_running_rate_update_flag = true;
 
   switch (disp_state) {
     case MAIN_UI:
@@ -752,8 +752,8 @@ void GUI_RefreshPage() {
         disp_print_time();
         disp_fan_Zpos();
       }
-      if (printing_rate_update_flag || mvcnc_state == MF_SD_COMPLETE) {
-        printing_rate_update_flag = false;
+      if (job_running_rate_update_flag || mvcnc_state == MF_SD_COMPLETE) {
+        job_running_rate_update_flag = false;
         if (!gcode_preview_over) setProBarRate();
       }
       break;
@@ -800,9 +800,9 @@ void GUI_RefreshPage() {
     case HARDWARE_TEST_UI: break;
     case WIFI_LIST_UI:
       #if ENABLED(MKS_WIFI_MODULE)
-        if (printing_rate_update_flag) {
+      if (job_running_rate_update_flag) {
           disp_wifi_list();
-          printing_rate_update_flag = false;
+          job_running_rate_update_flag = false;
         }
       #endif
       break;
@@ -873,7 +873,7 @@ void clear_cur_ui() {
   switch (disp_state_stack._disp_state[disp_state_stack._disp_index]) {
     case PRINT_READY_UI:              lv_clear_ready_print(); break;
     case PRINT_FILE_UI:               lv_clear_print_file(); break;
-    case PRINTING_UI:                 lv_clear_printing(); break;
+    case PRINTING_UI:                 lv_clear_job_running(); break;
     case MOVE_MOTOR_UI:               lv_clear_move_motor(); break;
     #if ENABLED(PROBE_OFFSET_WIZARD)
       case Z_OFFSET_WIZARD_UI:        lv_clear_z_offset_wizard(); break;
@@ -982,7 +982,7 @@ void draw_return_ui() {
                                           flash_preview_begin = true;
                                         else
                                           default_preview_flg = true;
-                                        lv_draw_printing();
+        lv_draw_job_running();
                                         break;
 
       case MOVE_MOTOR_UI:               lv_draw_move_motor(); break;

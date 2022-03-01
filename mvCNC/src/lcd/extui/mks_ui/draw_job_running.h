@@ -18,8 +18,8 @@ enum {
   STOP
 };
 
-void lv_draw_printing();
-void lv_clear_printing();
+void lv_draw_job_running();
+void lv_clear_job_running();
 void disp_ext_temp();
 void disp_bed_temp();
 void disp_fan_speed();

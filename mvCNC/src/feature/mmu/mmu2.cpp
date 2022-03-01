@@ -478,7 +478,7 @@ static void mmu2_not_responding() {
 
       if (load_to_gears()) {
         extruder = index; // filament change is finished
-        active_extruder = 0;
+        active_tool = 0;
         stepper.enable_extruder();
         SERIAL_ECHO_MSG(STR_ACTIVE_EXTRUDER, extruder);
       }
@@ -504,7 +504,7 @@ static void mmu2_not_responding() {
         case '?': {
           #if ENABLED(MMU2_MENUS)
             const uint8_t index = mmu2_choose_filament();
-            while (!thermalManager.wait_for_hotend(active_extruder, false)) safe_delay(100);
+            while (!fanManager.wait_for_hotend(active_tool, false)) safe_delay(100);
             load_filament_to_nozzle(index);
           #else
             BUZZ(400, 40);
@@ -523,7 +523,7 @@ static void mmu2_not_responding() {
               mmu_loop();
               stepper.enable_extruder();
               extruder = index;
-              active_extruder = 0;
+              active_tool = 0;
             }
           #else
             BUZZ(400, 40);
@@ -531,7 +531,7 @@ static void mmu2_not_responding() {
         } break;
 
         case 'c': {
-          while (!thermalManager.wait_for_hotend(active_extruder, false)) safe_delay(100);
+          while (!fanManager.wait_for_hotend(active_tool, false)) safe_delay(100);
           load_to_nozzle();
         } break;
       }
@@ -564,7 +564,7 @@ static void mmu2_not_responding() {
       mmu_continue_loading();
       command(MMU_CMD_C0);
       extruder = index;
-      active_extruder = 0;
+      active_tool = 0;
 
       stepper.enable_extruder();
       SERIAL_ECHO_MSG(STR_ACTIVE_EXTRUDER, extruder);
@@ -592,7 +592,7 @@ static void mmu2_not_responding() {
         DEBUG_ECHOLNPGM("case ?\n");
         #if ENABLED(MMU2_MENUS)
           uint8_t index = mmu2_choose_filament();
-          while (!thermalManager.wait_for_hotend(active_extruder, false)) safe_delay(100);
+          while (!fanManager.wait_for_hotend(active_tool, false)) safe_delay(100);
           load_filament_to_nozzle(index);
         #else
           BUZZ(400, 40);
@@ -613,7 +613,7 @@ static void mmu2_not_responding() {
 
           stepper.enable_extruder();
           extruder = index;
-          active_extruder = 0;
+          active_tool = 0;
         #else
           BUZZ(400, 40);
         #endif
@@ -621,7 +621,7 @@ static void mmu2_not_responding() {
 
       case 'c': {
         DEBUG_ECHOLNPGM("case c\n");
-        while (!thermalManager.wait_for_hotend(active_extruder, false)) safe_delay(100);
+        while (!fanManager.wait_for_hotend(active_tool, false)) safe_delay(100);
         execute_extruder_sequence((const E_Step *)load_to_nozzle_sequence, COUNT(load_to_nozzle_sequence));
       } break;
     }
@@ -660,7 +660,7 @@ static void mmu2_not_responding() {
       manage_response(true, true);
       command(MMU_CMD_C0);
       extruder = index; //filament change is finished
-      active_extruder = 0;
+      active_tool = 0;
       stepper.enable_extruder();
       SERIAL_ECHO_MSG(STR_ACTIVE_EXTRUDER, extruder);
       ui.reset_status();
@@ -686,7 +686,7 @@ static void mmu2_not_responding() {
         DEBUG_ECHOLNPGM("case ?\n");
         #if ENABLED(MMU2_MENUS)
           uint8_t index = mmu2_choose_filament();
-          while (!thermalManager.wait_for_hotend(active_extruder, false)) safe_delay(100);
+          while (!fanManager.wait_for_hotend(active_tool, false)) safe_delay(100);
           load_filament_to_nozzle(index);
         #else
           BUZZ(400, 40);
@@ -706,7 +706,7 @@ static void mmu2_not_responding() {
 
           stepper.enable_extruder();
           extruder = index;
-          active_extruder = 0;
+          active_tool = 0;
         #else
           BUZZ(400, 40);
         #endif
@@ -714,7 +714,7 @@ static void mmu2_not_responding() {
 
       case 'c': {
         DEBUG_ECHOLNPGM("case c\n");
-        while (!thermalManager.wait_for_hotend(active_extruder, false)) safe_delay(100);
+        while (!fanManager.wait_for_hotend(active_tool, false)) safe_delay(100);
         execute_extruder_sequence((const E_Step *)load_to_nozzle_sequence, COUNT(load_to_nozzle_sequence));
       } break;
     }
@@ -759,7 +759,7 @@ void MMU2::manage_response(const bool move_axes, const bool turn_off_nozzle) {
   bool response = false;
   mmu_print_saved = false;
   xyz_pos_t resume_position;
-  celsius_t resume_hotend_temp = thermalManager.degTargetHotend(active_extruder);
+  celsius_t resume_hotend_temp = fanManager.degTargetHotend(active_tool);
 
   KEEPALIVE_STATE(PAUSED_FOR_USER);
 
@@ -776,13 +776,13 @@ void MMU2::manage_response(const bool move_axes, const bool turn_off_nozzle) {
 
         SERIAL_ECHOLNPGM("MMU not responding");
 
-        resume_hotend_temp = thermalManager.degTargetHotend(active_extruder);
+        resume_hotend_temp = fanManager.degTargetHotend(active_tool);
         resume_position = current_position;
 
         if (move_axes && all_axes_homed())
           nozzle.park(0, park_point /*= NOZZLE_PARK_POINT*/);
 
-        if (turn_off_nozzle) thermalManager.setTargetHotend(0, active_extruder);
+        if (turn_off_nozzle) fanManager.setTargetHotend(0, active_tool);
 
         mmu2_not_responding();
       }
@@ -791,11 +791,11 @@ void MMU2::manage_response(const bool move_axes, const bool turn_off_nozzle) {
       SERIAL_ECHOLNPGM("MMU starts responding\n");
 
       if (turn_off_nozzle && resume_hotend_temp) {
-        thermalManager.setTargetHotend(resume_hotend_temp, active_extruder);
+        fanManager.setTargetHotend(resume_hotend_temp, active_tool);
         LCD_MESSAGE(MSG_HEATING);
         BUZZ(200, 40);
 
-        while (!thermalManager.wait_for_hotend(active_extruder, false)) safe_delay(1000);
+        while (!fanManager.wait_for_hotend(active_tool, false)) safe_delay(1000);
       }
 
       if (move_axes && all_axes_homed()) {
@@ -890,7 +890,7 @@ bool MMU2::load_filament_to_nozzle(const uint8_t index) {
 
   if (!_enabled) return false;
 
-  if (thermalManager.tooColdToExtrude(active_extruder)) {
+  if (fanManager.tooColdToExtrude(active_tool)) {
     BUZZ(200, 404);
     LCD_ALERTMESSAGE(MSG_HOTEND_TOO_COLD);
     return false;
@@ -904,7 +904,7 @@ bool MMU2::load_filament_to_nozzle(const uint8_t index) {
   if (success) {
     mmu_loop();
     extruder = index;
-    active_extruder = 0;
+    active_tool = 0;
     load_to_nozzle();
     BUZZ(200, 404);
   }
@@ -926,7 +926,7 @@ bool MMU2::eject_filament(const uint8_t index, const bool recover) {
 
   if (!_enabled) return false;
 
-  if (thermalManager.tooColdToExtrude(active_extruder)) {
+  if (fanManager.tooColdToExtrude(active_tool)) {
     BUZZ(200, 404);
     LCD_ALERTMESSAGE(MSG_HOTEND_TOO_COLD);
     return false;
@@ -975,7 +975,7 @@ bool MMU2::unload() {
 
   if (!_enabled) return false;
 
-  if (thermalManager.tooColdToExtrude(active_extruder)) {
+  if (fanManager.tooColdToExtrude(active_tool)) {
     BUZZ(200, 404);
     LCD_ALERTMESSAGE(MSG_HOTEND_TOO_COLD);
     return false;

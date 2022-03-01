@@ -61,7 +61,7 @@ void GcodeSuite::M502() {
 
 #if ENABLED(EEPROM_SETTINGS)
 
-  #if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
     #include "../../libs/hex_print.h"
   #endif
 
@@ -69,7 +69,7 @@ void GcodeSuite::M502() {
    * M504: Validate EEPROM Contents
    */
   void GcodeSuite::M504() {
-    #if ENABLED(mvCNC_DEV_MODE)
+  #if ENABLED(MVCNC_DEV_MODE)
       const bool dowrite = parser.seenval('W');
       if (dowrite || parser.seenval('R')) {
         uint8_t val = 0;

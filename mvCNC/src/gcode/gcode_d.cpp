@@ -4,7 +4,7 @@
 
 #include "../inc/mvCNCConfigPre.h"
 
-#if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
 
 #include "gcode.h"
 
@@ -169,7 +169,7 @@ void GcodeSuite::D(const int16_t dcode) {
     case 100: { // D100 Disable heaters and attempt a hard hang (Watchdog Test)
       SERIAL_ECHOLNPGM("Disabling heaters and attempting to trigger Watchdog");
       SERIAL_ECHOLNPGM("(USE_WATCHDOG " TERN(USE_WATCHDOG, "ENABLED", "DISABLED") ")");
-      thermalManager.disable_all_heaters();
+      fanManager.disable_all_heaters();
       delay(1000); // Allow time to print
       DISABLE_ISRS();
       // Use a low-level delay that does not rely on interrupts to function
@@ -237,7 +237,7 @@ void GcodeSuite::D(const int16_t dcode) {
 
       case 451: { // Trigger all kind of faults to test exception catcher
         SERIAL_ECHOLNPGM("Disabling heaters");
-        thermalManager.disable_all_heaters();
+        fanManager.disable_all_heaters();
         delay(1000); // Allow time to print
         volatile uint8_t type[5] = { parser.byteval('T', 1) };
 
@@ -281,4 +281,4 @@ void GcodeSuite::D(const int16_t dcode) {
   }
 }
 
-#endif // mvCNC_DEV_MODE
+#endif // MVCNC_DEV_MODE

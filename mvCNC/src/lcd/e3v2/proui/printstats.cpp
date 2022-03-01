@@ -31,13 +31,13 @@
 
 #include "../../../inc/mvCNCConfigPre.h"
 
-#if BOTH(DWIN_CREALITY_LCD_ENHANCED, PRINTCOUNTER)
+#if BOTH(DWIN_CREALITY_LCD_ENHANCED, JOBCOUNTER)
 
 #include "printstats.h"
 
 #include "../../../core/types.h"
 #include "../../mvcncui.h"
-#include "../../../module/printcounter.h"
+#include "../../../module/jobcounter.h"
 #include "dwin_lcd.h"
 #include "dwinui.h"
 #include "dwin_popup.h"
@@ -54,16 +54,16 @@ void CNCStatsClass::Draw() {
   DWINUI::ClearMenuArea();
   Draw_Popup_Bkgd();
   DWINUI::Draw_Icon(ICON_Continue_E, 86, 250);
-  printStatistics ps = print_job_timer.getStats();
+  printStatistics ps = JobTimer.getStats();
 
   sprintf_P(buf, PSTR(S_FMT ": %i"), GET_TEXT(MSG_INFO_PRINT_COUNT), ps.totalPrints);
   DWINUI::Draw_String(MRG, 80, buf);
   sprintf_P(buf, PSTR(S_FMT ": %i"), GET_TEXT(MSG_INFO_COMPLETED_PRINTS), ps.finishedPrints);
   DWINUI::Draw_String(MRG, 100, buf);
-  duration_t(print_job_timer.getStats().printTime).toDigital(str, true);
+  duration_t(JobTimer.getStats().printTime).toDigital(str, true);
   sprintf_P(buf, PSTR(S_FMT ": %s"), GET_TEXT(MSG_INFO_PRINT_TIME), str);
   DWINUI::Draw_String(MRG, 120, buf);
-  duration_t(print_job_timer.getStats().longestPrint).toDigital(str, true);
+  duration_t(JobTimer.getStats().longestPrint).toDigital(str, true);
   sprintf_P(buf, PSTR(S_FMT ": %s"), GET_TEXT(MSG_INFO_PRINT_LONGEST), str);
   DWINUI::Draw_String(MRG, 140, buf);
   sprintf_P(buf, PSTR(S_FMT ": %s m"), GET_TEXT(MSG_INFO_PRINT_FILAMENT), dtostrf(ps.filamentUsed / 1000, 1, 2, str));
@@ -71,8 +71,8 @@ void CNCStatsClass::Draw() {
 }
 
 void CNCStatsClass::Reset() {
-  print_job_timer.initStats();
+  JobTimer.initStats();
   HMI_AudioFeedback();
 }
 
-#endif // DWIN_CREALITY_LCD_ENHANCED && PRINTCOUNTER
+#endif // DWIN_CREALITY_LCD_ENHANCED && JOBCOUNTER

@@ -45,16 +45,16 @@ void GcodeSuite::M301() {
 
     #if ENABLED(PID_EXTRUSION_SCALING)
       if (parser.seenval('C')) PID_PARAM(Kc, e) = parser.value_float();
-      if (parser.seenval('L')) thermalManager.lpq_len = parser.value_int();
-      NOMORE(thermalManager.lpq_len, LPQ_MAX_LEN);
-      NOLESS(thermalManager.lpq_len, 0);
+      if (parser.seenval('L')) fanManager.lpq_len = parser.value_int();
+      NOMORE(fanManager.lpq_len, LPQ_MAX_LEN);
+      NOLESS(fanManager.lpq_len, 0);
     #endif
 
     #if ENABLED(PID_FAN_SCALING)
       if (parser.seenval('F')) PID_PARAM(Kf, e) = parser.value_float();
     #endif
 
-    thermalManager.updatePID();
+      fanManager.updatePID();
   }
   else
     SERIAL_ERROR_MSG(STR_INVALID_EXTRUDER);
@@ -78,7 +78,7 @@ void GcodeSuite::M301_report(const bool forReplay/*=true*/ E_OPTARG(const int8_t
       );
       #if ENABLED(PID_EXTRUSION_SCALING)
         SERIAL_ECHOPGM_P(SP_C_STR, PID_PARAM(Kc, e));
-        if (e == 0) SERIAL_ECHOPGM(" L", thermalManager.lpq_len);
+        if (e == 0) SERIAL_ECHOPGM(" L", fanManager.lpq_len);
       #endif
       #if ENABLED(PID_FAN_SCALING)
         SERIAL_ECHOPGM(" F", PID_PARAM(Kf, e));

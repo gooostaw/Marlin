@@ -23,7 +23,7 @@
 #include "../../gcode/parser.h" // for units (and volumetric)
 
 #if ENABLED(LCD_SHOW_E_TOTAL)
-  #include "../../mvCNCCore.h" // for printingIsActive()
+#include "../../mvCNCCore.h" // for jobIsActive()
 #endif
 
 #if ENABLED(FILAMENT_LCD_DISPLAY)
@@ -56,7 +56,7 @@
 #endif
 
 #if HAS_PRINT_PROGRESS
-  #include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
 #endif
 
 #if HAS_DUAL_MIXING
@@ -215,8 +215,8 @@ FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, co
 
     const uint8_t tx = STATUS_HOTEND_TEXT_X(heater_id);
 
-    const celsius_t temp = thermalManager.wholeDegHotend(heater_id),
-                  target = thermalManager.degTargetHotend(heater_id);
+    const celsius_t temp = fanManager.wholeDegHotend(heater_id),
+      target = fanManager.degTargetHotend(heater_id);
 
     #if DISABLED(STATUS_HOTEND_ANIM)
       #define STATIC_HOTEND true
@@ -267,12 +267,12 @@ FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, co
         #if ENABLED(STATUS_HEAT_PERCENT)
           if (isHeat && tall <= BAR_TALL) {
             const uint8_t ph = STATUS_HEATERS_HEIGHT - 1 - tall;
-            u8g.drawBitmapP(hx, STATUS_HEATERS_Y, bw, ph, HOTEND_BITMAP(TERN(HAS_MMU, active_extruder, heater_id), false));
-            u8g.drawBitmapP(hx, STATUS_HEATERS_Y + ph, bw, tall + 1, HOTEND_BITMAP(TERN(HAS_MMU, active_extruder, heater_id), true) + ph * bw);
+            u8g.drawBitmapP(hx, STATUS_HEATERS_Y, bw, ph, HOTEND_BITMAP(TERN(HAS_MMU, active_tool, heater_id), false));
+            u8g.drawBitmapP(hx, STATUS_HEATERS_Y + ph, bw, tall + 1, HOTEND_BITMAP(TERN(HAS_MMU, active_tool, heater_id), true) + ph * bw);
           }
           else
         #endif
-            u8g.drawBitmapP(hx, STATUS_HEATERS_Y, bw, STATUS_HEATERS_HEIGHT, HOTEND_BITMAP(TERN(HAS_MMU, active_extruder, heater_id), isHeat));
+            u8g.drawBitmapP(hx, STATUS_HEATERS_Y, bw, STATUS_HEATERS_HEIGHT, HOTEND_BITMAP(TERN(HAS_MMU, active_tool, heater_id), isHeat));
 
       } // PAGE_CONTAINS
 
@@ -280,7 +280,7 @@ FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, co
 
     if (PAGE_UNDER(7)) {
       #if HEATER_IDLE_HANDLER
-        const bool dodraw = (blink || !thermalManager.heater_idle[heater_id].timed_out);
+      const bool dodraw = (blink || !fanManager.heater_idle[heater_id].timed_out);
       #else
         constexpr bool dodraw = true;
       #endif
@@ -310,8 +310,8 @@ FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, co
 
     const uint8_t tx = STATUS_BED_TEXT_X;
 
-    const celsius_t temp = thermalManager.wholeDegBed(),
-                  target = thermalManager.degTargetBed();
+    const celsius_t temp = fanManager.wholeDegBed(),
+      target = fanManager.degTargetBed();
 
     #if ENABLED(STATUS_HEAT_PERCENT) || DISABLED(STATUS_BED_ANIM)
       const bool isHeat = BED_ALT();
@@ -353,7 +353,7 @@ FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, co
 
     if (PAGE_UNDER(7)) {
       #if HEATER_IDLE_HANDLER
-        const bool dodraw = (blink || !thermalManager.heater_idle[thermalManager.IDLE_INDEX_BED].timed_out);
+      const bool dodraw = (blink || !fanManager.heater_idle[fanManager.IDLE_INDEX_BED].timed_out);
       #else
         constexpr bool dodraw = true;
       #endif
@@ -377,17 +377,17 @@ FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, co
   FORCE_INLINE void _draw_chamber_status() {
     #if HAS_HEATED_CHAMBER
       if (PAGE_UNDER(7))
-        _draw_centered_temp(thermalManager.degTargetChamber(), STATUS_CHAMBER_TEXT_X, 7);
+        _draw_centered_temp(fanManager.degTargetChamber(), STATUS_CHAMBER_TEXT_X, 7);
     #endif
     if (PAGE_CONTAINS(28 - INFO_FONT_ASCENT, 28 - 1))
-      _draw_centered_temp(thermalManager.wholeDegChamber(), STATUS_CHAMBER_TEXT_X, 28);
+      _draw_centered_temp(fanManager.wholeDegChamber(), STATUS_CHAMBER_TEXT_X, 28);
   }
 #endif
 
 #if DO_DRAW_COOLER
   FORCE_INLINE void _draw_cooler_status() {
     if (PAGE_CONTAINS(28 - INFO_FONT_ASCENT, 28 - 1))
-      _draw_centered_temp(thermalManager.wholeDegCooler(), STATUS_COOLER_TEXT_X, 28);
+      _draw_centered_temp(fanManager.wholeDegCooler(), STATUS_COOLER_TEXT_X, 28);
   }
 #endif
 
@@ -465,18 +465,18 @@ void mvCNCUI::draw_status_screen() {
     #endif
   #endif
 
-  const bool show_e_total = TERN0(LCD_SHOW_E_TOTAL, printingIsActive());
+        const bool show_e_total = TERN0(LCD_SHOW_E_TOTAL, jobIsActive());
 
   // At the first page, generate new display values
   if (first_page) {
     #if ANIM_HBCC
       uint8_t new_bits = 0;
       #if ANIM_HOTEND
-        HOTEND_LOOP() if (thermalManager.isHeatingHotend(e)) SBI(new_bits, DRAWBIT_HOTEND + e);
+      HOTEND_LOOP() if (fanManager.isHeatingHotend(e)) SBI(new_bits, DRAWBIT_HOTEND + e);
       #endif
-      if (TERN0(ANIM_BED, thermalManager.isHeatingBed())) SBI(new_bits, DRAWBIT_BED);
+        if (TERN0(ANIM_BED, fanManager.isHeatingBed())) SBI(new_bits, DRAWBIT_BED);
       #if DO_DRAW_CHAMBER && HAS_HEATED_CHAMBER
-        if (thermalManager.isHeatingChamber()) SBI(new_bits, DRAWBIT_CHAMBER);
+      if (fanManager.isHeatingChamber()) SBI(new_bits, DRAWBIT_CHAMBER);
       #endif
       if (TERN0(ANIM_CUTTER, cutter.enabled())) SBI(new_bits, DRAWBIT_CUTTER);
       draw_bits = new_bits;
@@ -505,7 +505,7 @@ void mvCNCUI::draw_status_screen() {
     // Progress / elapsed / estimation updates and string formatting to avoid float math on each LCD draw
     #if HAS_PRINT_PROGRESS
       const progress_t progress = TERN(HAS_PRINT_PROGRESS_PERMYRIAD, get_progress_permyriad, get_progress_percent)();
-      duration_t elapsed = print_job_timer.duration();
+      duration_t elapsed = JobTimer.duration();
       const uint8_t p = progress & 0xFF, ev = elapsed.value & 0xFF;
       if (p != lastProgress) {
         lastProgress = p;
@@ -622,7 +622,7 @@ void mvCNCUI::draw_status_screen() {
       static uint8_t fan_frame;
       if (old_blink != blink) {
         old_blink = blink;
-        if (!thermalManager.fan_speed[0] || ++fan_frame >= STATUS_FAN_FRAMES) fan_frame = 0;
+        if (!fanManager.fan_speed[0] || ++fan_frame >= STATUS_FAN_FRAMES) fan_frame = 0;
       }
     #endif
     if (PAGE_CONTAINS(STATUS_FAN_Y, STATUS_FAN_Y + STATUS_FAN_HEIGHT - 1))
@@ -634,7 +634,7 @@ void mvCNCUI::draw_status_screen() {
             fan_frame == 3 ? status_fan3_bmp :
           #endif
         #elif STATUS_FAN_FRAMES > 1
-          blink && thermalManager.fan_speed[0] ? status_fan1_bmp :
+        blink &&fanManager.fan_speed[0] ? status_fan1_bmp :
         #endif
         status_fan0_bmp
       );
@@ -707,15 +707,15 @@ void mvCNCUI::draw_status_screen() {
     #if DO_DRAW_FAN
       if (PAGE_CONTAINS(STATUS_FAN_TEXT_Y - INFO_FONT_ASCENT, STATUS_FAN_TEXT_Y - 1)) {
         char c = '%';
-        uint16_t spd = thermalManager.fan_speed[0];
+        uint16_t spd = fanManager.fan_speed[0];
         if (spd) {
           #if ENABLED(ADAPTIVE_FAN_SLOWING)
-            if (!blink && thermalManager.fan_speed_scaler[0] < 128) {
-              spd = thermalManager.scaledFanSpeed(0, spd);
+          if (!blink && fanManager.fan_speed_scaler[0] < 128) {
+            spd = fanManager.scaledFanSpeed(0, spd);
               c = '*';
             }
           #endif
-          lcd_put_u8str(STATUS_FAN_TEXT_X, STATUS_FAN_TEXT_Y, i16tostr3rj(thermalManager.pwmToPercent(spd)));
+            lcd_put_u8str(STATUS_FAN_TEXT_X, STATUS_FAN_TEXT_Y, i16tostr3rj(fanManager.pwmToPercent(spd)));
           lcd_put_wchar(c);
         }
       }

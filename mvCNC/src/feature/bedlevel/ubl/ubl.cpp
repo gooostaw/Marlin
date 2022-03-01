@@ -248,16 +248,16 @@ bool unified_bed_leveling::sanity_check() {
     #if HAS_HOTEND
       if (parser.seenval('H')) {                          // Handle H# parameter to set Hotend temp
         const celsius_t hotend_temp = parser.value_int(); // mvCNC never sends itself F or K, always C
-        thermalManager.setTargetHotend(hotend_temp, 0);
-        thermalManager.wait_for_hotend(false);
+        fanManager.setTargetHotend(hotend_temp, 0);
+        fanManager.wait_for_hotend(false);
       }
     #endif
 
     #if HAS_HEATED_BED
       if (parser.seenval('B')) {                        // Handle B# parameter to set Bed temp
         const celsius_t bed_temp = parser.value_int();  // mvCNC never sends itself F or K, always C
-        thermalManager.setTargetBed(bed_temp);
-        thermalManager.wait_for_bed(false);
+        fanManager.setTargetBed(bed_temp);
+        fanManager.wait_for_bed(false);
       }
     #endif
 

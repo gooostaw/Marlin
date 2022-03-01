@@ -18,8 +18,8 @@ GcodeSuite gcode;
 #include "queue.h"
 #include "../module/motion.h"
 
-#if ENABLED(PRINTCOUNTER)
-  #include "../module/printcounter.h"
+#if ENABLED(JOBCOUNTER)
+#include "../module/jobcounter.h"
 #endif
 
 #if ENABLED(HOST_ACTION_COMMANDS)
@@ -107,7 +107,7 @@ void GcodeSuite::say_units() {
 }
 
 /**
- * Get the target extruder from the T parameter or the active_extruder
+ * Get the target extruder from the T parameter or the active_tool
  * Return -1 if the T parameter is out of range
  */
 int8_t GcodeSuite::get_target_extruder_from_command() {
@@ -119,7 +119,7 @@ int8_t GcodeSuite::get_target_extruder_from_command() {
     SERIAL_ECHOLNPGM(" " STR_INVALID_EXTRUDER " ", e);
     return -1;
   }
-  return active_extruder;
+  return active_tool;
 }
 
 /**
@@ -182,16 +182,16 @@ void GcodeSuite::get_destination_from_command() {
 
   #if ENABLED(POWER_LOSS_RECOVERY) && !PIN_EXISTS(POWER_LOSS)
     // Only update power loss recovery on moves with E
-    if (recovery.enabled && IS_SD_PRINTING() && seen.e && (seen.x || seen.y))
+    if (recovery.enabled && IS_SD_JOB_RUNNING() && seen.e && (seen.x || seen.y))
       recovery.save();
   #endif
 
   if (parser.floatval('F') > 0)
     feedrate_mm_s = parser.value_feedrate();
 
-  #if ENABLED(PRINTCOUNTER)
+#if ENABLED(JOBCOUNTER)
     if (!DEBUGGING(DRYRUN) && !skip_move)
-      print_job_timer.incFilamentUsed(destination.e - current_position.e);
+      JobTimer.incFilamentUsed(destination.e - current_position.e);
   #endif
 
   // Get ABCDHI mixing factors
@@ -475,7 +475,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 12: M12(); break;                                    // M12: Synchronize and optionally force a CLC set
       #endif
 
-      #if ENABLED(EXPECTED_PRINTER_CHECK)
+        #if ENABLED(CNC_ID_CHECK)
         case 16: M16(); break;                                    // M16: Expected cnc check
       #endif
 
@@ -531,7 +531,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       case 76: M76(); break;                                      // M76: Pause print timer
       case 77: M77(); break;                                      // M77: Stop print timer
 
-      #if ENABLED(PRINTCOUNTER)
+      #if ENABLED(JOBCOUNTER)
         case 78: M78(); break;                                    // M78: Show print statistics
       #endif
 
@@ -663,11 +663,11 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         #endif
       #endif
 
-      #if DISABLED(NO_VOLUMETRICS)
+          #if ENABLED(USE_VOLUMETRICS)
         case 200: M200(); break;                                  // M200: Set filament diameter, E to cubic units
       #endif
 
-      case 201: M201(); break;                                    // M201: Set max acceleration for print moves (units/s^2)
+        case 201: M201(); break;                                    // M201: Set max acceleration for cutting moves (units/s^2)
 
       #if 0
         case 202: M202(); break;                                  // M202: Not used for Marlin/grbl gen6
@@ -860,11 +860,11 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       #if ENABLED(SDSUPPORT)
-        case 524: M524(); break;                                  // M524: Abort the current SD print job
+          case 524: M524(); break;                                  // M524: Abort the current SD CNC job
       #endif
 
       #if ENABLED(SD_ABORT_ON_ENDSTOP_HIT)
-        case 540: M540(); break;                                  // M540: Set abort on endstop hit for SD printing
+          case 540: M540(); break;                                  // M540: Set abort on endstop hit for SD job
       #endif
 
       #if HAS_ETHERNET
@@ -1005,7 +1005,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 422: M422(); break;                                  // M422: Set Z Stepper automatic alignment position using probe
       #endif
 
-      #if ALL(HAS_SPI_FLASH, SDSUPPORT, mvCNC_DEV_MODE)
+        #if ALL(HAS_SPI_FLASH, SDSUPPORT, MVCNC_DEV_MODE)
         case 993: M993(); break;                                  // M993: Backup SPI Flash to SD
         case 994: M994(); break;                                  // M994: Load a Backup from SD to SPI Flash
       #endif
@@ -1051,7 +1051,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
     case 'T': T(parser.codenum); break;                           // Tn: Tool Change
 
-    #if ENABLED(mvCNC_DEV_MODE)
+    #if ENABLED(MVCNC_DEV_MODE)
       case 'D': D(parser.codenum); break;                         // Dn: Debug codes
     #endif
 

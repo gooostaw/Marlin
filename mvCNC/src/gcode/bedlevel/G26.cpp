@@ -61,7 +61,7 @@
  *                    This works the same way that the UBL G29 P4 R parameter works.
  *
  *                    NOTE:  If you do not have an LCD, you -must- specify R. This is to ensure that you are
- *                    aware that there's some risk associated with printing without the ability to abort in
+ *                    aware that there's some risk associated with running job without the ability to abort in
  *                    cases where mesh point Z value may be inaccurate. As above, if you do not include a
  *                    parameter, every point will be printed.
  *
@@ -234,7 +234,7 @@ typedef struct {
    *
    * Note:  Although we assume the first set of coordinates is the start of the line and the second
    * set of coordinates is the end of the line, it does not always work out that way. This function
-   * optimizes the movement to minimize the travel distance before it can start printing. This saves
+   * optimizes the movement to minimize the travel distance before it can start running job. This saves
    * a lot of time and eliminates a lot of nonsensical movement of the nozzle. However, it does
    * cause a lot of very little short retracement of th nozzle when it draws the very first line
    * segment of a 'circle'. The time this requires is very short and is easily saved by the other
@@ -309,10 +309,10 @@ typedef struct {
           ui.quick_feedback();
           TERN_(HAS_MVCNCUI_MENU, ui.capture());
         #endif
-        thermalManager.setTargetBed(bed_temp);
+          fanManager.setTargetBed(bed_temp);
 
         // Wait for the temperature to stabilize
-        if (!thermalManager.wait_for_bed(true OPTARG(G26_CLICK_CAN_CANCEL, true)))
+          if (!fanManager.wait_for_bed(true OPTARG(G26_CLICK_CAN_CANCEL, true)))
           return G26_ERR;
       }
 
@@ -327,10 +327,10 @@ typedef struct {
       ui.set_status(GET_TEXT_F(MSG_G26_HEATING_NOZZLE), 99);
       ui.quick_feedback();
     #endif
-    thermalManager.setTargetHotend(hotend_temp, active_extruder);
+      fanManager.setTargetHotend(hotend_temp, active_tool);
 
     // Wait for the temperature to stabilize
-    if (!thermalManager.wait_for_hotend(active_extruder, true OPTARG(G26_CLICK_CAN_CANCEL, true)))
+      if (!fanManager.wait_for_hotend(active_tool, true OPTARG(G26_CLICK_CAN_CANCEL, true)))
       return G26_ERR;
 
     #if HAS_WIRED_LCD
@@ -650,7 +650,7 @@ void GcodeSuite::G26() {
 
   do_z_clearance(Z_CLEARANCE_BETWEEN_PROBES);
 
-  #if DISABLED(NO_VOLUMETRICS)
+#if ENABLED(USE_VOLUMETRICS)
     bool volumetric_was_enabled = parser.volumetric_enabled;
     parser.volumetric_enabled = false;
     planner.calculate_volumetric_multipliers();
@@ -843,7 +843,7 @@ void GcodeSuite::G26() {
   destination.z = Z_CLEARANCE_BETWEEN_PROBES;
   move_to(destination, 0);                                   // Raise the nozzle
 
-  #if DISABLED(NO_VOLUMETRICS)
+#if ENABLED(USE_VOLUMETRICS)
     parser.volumetric_enabled = volumetric_was_enabled;
     planner.calculate_volumetric_multipliers();
   #endif
@@ -851,8 +851,8 @@ void GcodeSuite::G26() {
   TERN_(HAS_MVCNCUI_MENU, ui.release()); // Give back control of the LCD
 
   if (!g26.keep_heaters_on) {
-    TERN_(HAS_HEATED_BED, thermalManager.setTargetBed(0));
-    thermalManager.setTargetHotend(active_extruder, 0);
+    TERN_(HAS_HEATED_BED, fanManager.setTargetBed(0));
+    fanManager.setTargetHotend(active_tool, 0);
   }
 }
 

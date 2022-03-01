@@ -4,7 +4,7 @@
 
 #include "../gcode.h"
 #include "../../core/serial.h"
-#include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
 #include "../../libs/duration_t.h"
 #include "../../lcd/mvcncui.h"
 
@@ -13,7 +13,7 @@
  */
 void GcodeSuite::M31() {
   char buffer[22];
-  duration_t(print_job_timer.duration()).toString(buffer);
+  duration_t(JobTimer.duration()).toString(buffer);
 
   ui.set_status(buffer);
 

@@ -127,7 +127,7 @@ void GCodeParser::parse(char *p) {
     starpos[1] = '\0';
   }
 
-  #if ANY(mvCNC_DEV_MODE, SWITCHING_TOOLHEAD, MAGNETIC_SWITCHING_TOOLHEAD, ELECTROMAGNETIC_SWITCHING_TOOLHEAD)
+#if ANY(MVCNC_DEV_MODE, SWITCHING_TOOLHEAD, MAGNETIC_SWITCHING_TOOLHEAD, ELECTROMAGNETIC_SWITCHING_TOOLHEAD)
     #define SIGNED_CODENUM 1
   #endif
 
@@ -155,7 +155,7 @@ void GCodeParser::parse(char *p) {
    * With Motion Modes enabled any axis letter can come first.
    */
   switch (letter) {
-    case 'G': case 'M': case 'T': TERN_(mvCNC_DEV_MODE, case 'D':) {
+    case 'G': case 'M': case 'T': TERN_(MVCNC_DEV_MODE, case 'D':) {
       // Skip spaces to get the numeric part
       while (*p == ' ') p++;
 
@@ -251,7 +251,7 @@ void GCodeParser::parse(char *p) {
   // Only use string_arg for these M codes
   if (letter == 'M') switch (codenum) {
     TERN_(GCODE_MACROS, case 810 ... 819:)
-    TERN_(EXPECTED_PRINTER_CHECK, case 16:)
+    TERN_(CNC_ID_CHECK, case 16:)
     case 23: case 28: case 30: case 117 ... 118: case 928:
       string_arg = unescape_string(p);
       return;

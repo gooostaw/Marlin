@@ -19,7 +19,7 @@
 
 #include "../../sd/cardreader.h"
 #include "../../module/temperature.h"
-#include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
 #include "../../module/planner.h"
 #include "../../module/motion.h"
 
@@ -506,10 +506,10 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
 FORCE_INLINE void _draw_heater_status(const heater_id_t heater_id, const char prefix, const bool blink) {
   #if HAS_HEATED_BED
     const bool isBed = TERN(HAS_HEATED_CHAMBER, heater_id == H_BED, heater_id < 0);
-    const celsius_t t1 = (isBed ? thermalManager.wholeDegBed()  : thermalManager.wholeDegHotend(heater_id)),
-                    t2 = (isBed ? thermalManager.degTargetBed() : thermalManager.degTargetHotend(heater_id));
+    const celsius_t t1 = (isBed ? fanManager.wholeDegBed() : fanManager.wholeDegHotend(heater_id)),
+      t2 = (isBed ? fanManager.degTargetBed() : fanManager.degTargetHotend(heater_id));
   #else
-    const celsius_t t1 = thermalManager.wholeDegHotend(heater_id), t2 = thermalManager.degTargetHotend(heater_id);
+  const celsius_t t1 = fanManager.wholeDegHotend(heater_id), t2 = fanManager.degTargetHotend(heater_id);
   #endif
 
   if (prefix >= 0) lcd_put_wchar(prefix);
@@ -520,7 +520,7 @@ FORCE_INLINE void _draw_heater_status(const heater_id_t heater_id, const char pr
   #if !HEATER_IDLE_HANDLER
     UNUSED(blink);
   #else
-    if (!blink && thermalManager.heater_idle[thermalManager.idle_index_for_id(heater_id)].timed_out) {
+  if (!blink && fanManager.heater_idle[fanManager.idle_index_for_id(heater_id)].timed_out) {
       lcd_put_wchar(' ');
       if (t2 >= 10) lcd_put_wchar(' ');
       if (t2 >= 100) lcd_put_wchar(' ');
@@ -538,17 +538,17 @@ FORCE_INLINE void _draw_heater_status(const heater_id_t heater_id, const char pr
 
 #if HAS_COOLER
 FORCE_INLINE void _draw_cooler_status(const char prefix, const bool blink) {
-  const celsius_t t2 = thermalManager.degTargetCooler();
+  const celsius_t t2 = fanManager.degTargetCooler();
 
   if (prefix >= 0) lcd_put_wchar(prefix);
 
-  lcd_put_u8str(i16tostr3rj(thermalManager.wholeDegCooler()));
+  lcd_put_u8str(i16tostr3rj(fanManager.wholeDegCooler()));
   lcd_put_wchar('/');
 
   #if !HEATER_IDLE_HANDLER
     UNUSED(blink);
   #else
-    if (!blink && thermalManager.heater_idle[thermalManager.idle_index_for_id(heater_id)].timed_out) {
+  if (!blink && fanManager.heater_idle[fanManager.idle_index_for_id(heater_id)].timed_out) {
       lcd_put_wchar(' ');
       if (t2 >= 10) lcd_put_wchar(' ');
       if (t2 >= 100) lcd_put_wchar(' ');
@@ -749,13 +749,13 @@ inline uint8_t draw_elapsed_or_remaining_time(uint8_t timepos, const bool blink)
   char buffer[14];
 
   #if ENABLED(SHOW_REMAINING_TIME)
-    const bool show_remain = TERN1(ROTATE_PROGRESS_DISPLAY, blink) && printingIsActive();
+  const bool show_remain = TERN1(ROTATE_PROGRESS_DISPLAY, blink) && jobIsActive();
     if (show_remain) {
       #if ENABLED(USE_M73_REMAINING_TIME)
         duration_t remaining = ui.get_remaining_time();
       #else
         uint8_t progress = ui.get_progress_percent();
-        uint32_t elapsed = print_job_timer.duration();
+        uint32_t elapsed = JobTimer.duration();
         duration_t remaining = (progress > 0) ? ((elapsed * 25600 / progress) >> 8) - elapsed : 0;
       #endif
       timepos -= remaining.toDigital(buffer);
@@ -766,7 +766,7 @@ inline uint8_t draw_elapsed_or_remaining_time(uint8_t timepos, const bool blink)
   #endif
 
   if (!show_remain) {
-    duration_t elapsed = print_job_timer.duration();
+    duration_t elapsed = JobTimer.duration();
     timepos -= elapsed.toDigital(buffer);
     lcd_put_wchar(timepos, 2, LCD_STR_CLOCK[0]);
   }
@@ -880,7 +880,7 @@ void mvCNCUI::draw_status_screen() {
 
           #else // !HAS_DUAL_MIXING
 
-            const bool show_e_total = TERN0(LCD_SHOW_E_TOTAL, printingIsActive());
+        const bool show_e_total = TERN0(LCD_SHOW_E_TOTAL, jobIsActive());
 
             if (show_e_total) {
               #if ENABLED(LCD_SHOW_E_TOTAL)
@@ -932,15 +932,15 @@ void mvCNCUI::draw_status_screen() {
           #if HAS_FAN0
             if (true
               #if EXTRUDERS && ENABLED(ADAPTIVE_FAN_SLOWING)
-                && (blink || thermalManager.fan_speed_scaler[0] < 128)
+              && (blink || fanManager.fan_speed_scaler[0] < 128)
               #endif
             ) {
-              uint16_t spd = thermalManager.fan_speed[0];
+              uint16_t spd = fanManager.fan_speed[0];
               if (blink) c = 'F';
               #if ENABLED(ADAPTIVE_FAN_SLOWING)
-                else { c = '*'; spd = thermalManager.scaledFanSpeed(0, spd); }
+              else { c = '*'; spd = fanManager.scaledFanSpeed(0, spd); }
               #endif
-              per = thermalManager.pwmToPercent(spd);
+              per = fanManager.pwmToPercent(spd);
             }
             else
           #endif
@@ -1128,22 +1128,22 @@ void mvCNCUI::draw_status_screen() {
       static uint8_t ledsprev = 0;
       uint8_t leds = 0;
 
-      if (TERN0(HAS_HEATED_BED, thermalManager.degTargetBed() > 0)) leds |= LED_A;
-      if (TERN0(HAS_HOTEND, thermalManager.degTargetHotend(0) > 0)) leds |= LED_B;
+      if (TERN0(HAS_HEATED_BED, fanManager.degTargetBed() > 0)) leds |= LED_A;
+      if (TERN0(HAS_HOTEND, fanManager.degTargetHotend(0) > 0)) leds |= LED_B;
 
       #if HAS_FAN
-        if ( TERN0(HAS_FAN0, thermalManager.fan_speed[0])
-          || TERN0(HAS_FAN1, thermalManager.fan_speed[1])
-          || TERN0(HAS_FAN2, thermalManager.fan_speed[2])
-          || TERN0(HAS_FAN3, thermalManager.fan_speed[3])
-          || TERN0(HAS_FAN4, thermalManager.fan_speed[4])
-          || TERN0(HAS_FAN5, thermalManager.fan_speed[5])
-          || TERN0(HAS_FAN6, thermalManager.fan_speed[6])
-          || TERN0(HAS_FAN7, thermalManager.fan_speed[7])
+      if (TERN0(HAS_FAN0, fanManager.fan_speed[0])
+        || TERN0(HAS_FAN1, fanManager.fan_speed[1])
+        || TERN0(HAS_FAN2, fanManager.fan_speed[2])
+        || TERN0(HAS_FAN3, fanManager.fan_speed[3])
+        || TERN0(HAS_FAN4, fanManager.fan_speed[4])
+        || TERN0(HAS_FAN5, fanManager.fan_speed[5])
+        || TERN0(HAS_FAN6, fanManager.fan_speed[6])
+        || TERN0(HAS_FAN7, fanManager.fan_speed[7])
         ) leds |= LED_C;
       #endif // HAS_FAN
 
-      if (TERN0(HAS_MULTI_HOTEND, thermalManager.degTargetHotend(1) > 0)) leds |= LED_C;
+        if (TERN0(HAS_MULTI_HOTEND, fanManager.degTargetHotend(1) > 0)) leds |= LED_C;
 
       if (leds != ledsprev) {
         lcd.setBacklight(leds);

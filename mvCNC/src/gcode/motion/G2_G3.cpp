@@ -252,7 +252,7 @@ void plan_arc(
 
   for (uint16_t i = 1; i < segments; i++) { // Iterate (segments-1) times
 
-    thermalManager.manage_heater();
+    fanManager.manage_heater();
     const millis_t ms = millis();
     if (ELAPSED(ms, next_idle_ms)) {
       next_idle_ms = ms + 200UL;
@@ -300,7 +300,7 @@ void plan_arc(
       planner.apply_leveling(raw);
     #endif
 
-    if (!planner.buffer_line(raw, scaled_fr_mm_s, active_extruder, 0 OPTARG(SCARA_FEEDRATE_SCALING, inv_duration)))
+      if (!planner.buffer_line(raw, scaled_fr_mm_s, active_tool, 0 OPTARG(SCARA_FEEDRATE_SCALING, inv_duration)))
       break;
   }
 
@@ -316,7 +316,7 @@ void plan_arc(
     planner.apply_leveling(raw);
   #endif
 
-  planner.buffer_line(raw, scaled_fr_mm_s, active_extruder, 0 OPTARG(SCARA_FEEDRATE_SCALING, inv_duration));
+    planner.buffer_line(raw, scaled_fr_mm_s, active_tool, 0 OPTARG(SCARA_FEEDRATE_SCALING, inv_duration));
 
   #if ENABLED(AUTO_BED_LEVELING_UBL)
     ARC_LIJK_CODE(raw[axis_l] = start_L, raw.i = start_I, raw.j = start_J, raw.k = start_K);

@@ -521,7 +521,7 @@ typedef struct SettingsDataStruct {
 
 } SettingsData;
 
-//static_assert(sizeof(SettingsData) <= mvCNC_EEPROM_SIZE, "EEPROM too small to contain SettingsData!");
+//static_assert(sizeof(SettingsData) <= MVCNC_EEPROM_SIZE, "EEPROM too small to contain SettingsData!");
 
 mvCNCSettings settings;
 
@@ -545,9 +545,9 @@ void mvCNCSettings::postprocess() {
   // planner position so the stepper counts will be set correctly.
   TERN_(DELTA, recalc_delta_settings());
 
-  TERN_(PIDTEMP, thermalManager.updatePID());
+  TERN_(PIDTEMP, fanManager.updatePID());
 
-  #if DISABLED(NO_VOLUMETRICS)
+#if ENABLED(USE_VOLUMETRICS)
     planner.calculate_volumetric_multipliers();
   #elif EXTRUDERS
     for (uint8_t i = COUNT(planner.e_factor); i--;)
@@ -587,8 +587,8 @@ void mvCNCSettings::postprocess() {
   TERN_(HAS_LCD_BRIGHTNESS, ui.refresh_brightness());
 }
 
-#if BOTH(PRINTCOUNTER, EEPROM_SETTINGS)
-  #include "printcounter.h"
+#if BOTH(JOBCOUNTER, EEPROM_SETTINGS)
+#include "jobcounter.h"
   static_assert(
     !WITHIN(STATS_EEPROM_ADDRESS, EEPROM_OFFSET, EEPROM_OFFSET + sizeof(SettingsData)) &&
     !WITHIN(STATS_EEPROM_ADDRESS + sizeof(printStatistics), EEPROM_OFFSET, EEPROM_OFFSET + sizeof(SettingsData)),
@@ -664,7 +664,7 @@ void mvCNCSettings::postprocess() {
   bool mvCNCSettings::size_error(const uint16_t size) {
     if (size != datasize()) {
       DEBUG_ERROR_MSG("EEPROM datasize error."
-        #if ENABLED(mvCNC_DEV_MODE)
+      #if ENABLED(MVCNC_DEV_MODE)
           " (Actual:", size, " Expected:", datasize(), ")"
         #endif
       );
@@ -1003,7 +1003,7 @@ void mvCNCSettings::postprocess() {
       #if DISABLED(PID_EXTRUSION_SCALING)
         const int16_t lpq_len = 20;
       #endif
-      EEPROM_WRITE(TERN(PID_EXTRUSION_SCALING, thermalManager.lpq_len, lpq_len));
+        EEPROM_WRITE(TERN(PID_EXTRUSION_SCALING, fanManager.lpq_len, lpq_len));
     }
 
     //
@@ -1017,9 +1017,9 @@ void mvCNCSettings::postprocess() {
           NAN, NAN, NAN
         #else
           // Store the unscaled PID values
-          thermalManager.temp_bed.pid.Kp,
-          unscalePID_i(thermalManager.temp_bed.pid.Ki),
-          unscalePID_d(thermalManager.temp_bed.pid.Kd)
+          fanManager.temp_bed.pid.Kp,
+          unscalePID_i(fanManager.temp_bed.pid.Ki),
+          unscalePID_d(fanManager.temp_bed.pid.Kd)
         #endif
       };
       EEPROM_WRITE(bed_pid);
@@ -1036,9 +1036,9 @@ void mvCNCSettings::postprocess() {
           NAN, NAN, NAN
         #else
           // Store the unscaled PID values
-          thermalManager.temp_chamber.pid.Kp,
-          unscalePID_i(thermalManager.temp_chamber.pid.Ki),
-          unscalePID_d(thermalManager.temp_chamber.pid.Kd)
+          fanManager.temp_chamber.pid.Kp,
+          unscalePID_i(fanManager.temp_chamber.pid.Ki),
+          unscalePID_d(fanManager.temp_chamber.pid.Kd)
         #endif
       };
       EEPROM_WRITE(chamber_pid);
@@ -1050,7 +1050,7 @@ void mvCNCSettings::postprocess() {
     #if HAS_USER_THERMISTORS
     {
       _FIELD_TEST(user_thermistor);
-      EEPROM_WRITE(thermalManager.user_thermistor);
+      EEPROM_WRITE(fanManager.user_thermistor);
     }
     #endif
 
@@ -1129,7 +1129,7 @@ void mvCNCSettings::postprocess() {
     {
       _FIELD_TEST(parser_volumetric_enabled);
 
-      #if DISABLED(NO_VOLUMETRICS)
+    #if ENABLED(USE_VOLUMETRICS)
 
         EEPROM_WRITE(parser.volumetric_enabled);
         EEPROM_WRITE(planner.filament_size);
@@ -1907,7 +1907,7 @@ void mvCNCSettings::postprocess() {
       {
         _FIELD_TEST(lpq_len);
         #if ENABLED(PID_EXTRUSION_SCALING)
-          const int16_t &lpq_len = thermalManager.lpq_len;
+        const int16_t &lpq_len = fanManager.lpq_len;
         #else
           int16_t lpq_len;
         #endif
@@ -1923,9 +1923,9 @@ void mvCNCSettings::postprocess() {
         #if ENABLED(PIDTEMPBED)
           if (!validating && !isnan(pid.Kp)) {
             // Scale PID values since EEPROM values are unscaled
-            thermalManager.temp_bed.pid.Kp = pid.Kp;
-            thermalManager.temp_bed.pid.Ki = scalePID_i(pid.Ki);
-            thermalManager.temp_bed.pid.Kd = scalePID_d(pid.Kd);
+            fanManager.temp_bed.pid.Kp = pid.Kp;
+            fanManager.temp_bed.pid.Ki = scalePID_i(pid.Ki);
+            fanManager.temp_bed.pid.Kd = scalePID_d(pid.Kd);
           }
         #endif
       }
@@ -1939,9 +1939,9 @@ void mvCNCSettings::postprocess() {
         #if ENABLED(PIDTEMPCHAMBER)
           if (!validating && !isnan(pid.Kp)) {
             // Scale PID values since EEPROM values are unscaled
-            thermalManager.temp_chamber.pid.Kp = pid.Kp;
-            thermalManager.temp_chamber.pid.Ki = scalePID_i(pid.Ki);
-            thermalManager.temp_chamber.pid.Kd = scalePID_d(pid.Kd);
+            fanManager.temp_chamber.pid.Kp = pid.Kp;
+            fanManager.temp_chamber.pid.Ki = scalePID_i(pid.Ki);
+            fanManager.temp_chamber.pid.Kd = scalePID_d(pid.Kd);
           }
         #endif
       }
@@ -1954,7 +1954,7 @@ void mvCNCSettings::postprocess() {
         user_thermistor_t user_thermistor[USER_THERMISTORS];
         _FIELD_TEST(user_thermistor);
         EEPROM_READ(user_thermistor);
-        if (!validating) COPY(thermalManager.user_thermistor, user_thermistor);
+        if (!validating) COPY(fanManager.user_thermistor, user_thermistor);
       }
       #endif
 
@@ -2039,7 +2039,7 @@ void mvCNCSettings::postprocess() {
         _FIELD_TEST(parser_volumetric_enabled);
         EEPROM_READ(storage);
 
-        #if DISABLED(NO_VOLUMETRICS)
+      #if ENABLED(USE_VOLUMETRICS)
           if (!validating) {
             parser.volumetric_enabled = storage.volumetric_enabled;
             COPY(planner.filament_size, storage.filament_size);
@@ -2970,16 +2970,16 @@ void mvCNCSettings::reset() {
   //
   // PID Extrusion Scaling
   //
-  TERN_(PID_EXTRUSION_SCALING, thermalManager.lpq_len = 20); // Default last-position-queue size
+    TERN_(PID_EXTRUSION_SCALING, fanManager.lpq_len = 20); // Default last-position-queue size
 
   //
   // Heated Bed PID
   //
 
   #if ENABLED(PIDTEMPBED)
-    thermalManager.temp_bed.pid.Kp = DEFAULT_bedKp;
-    thermalManager.temp_bed.pid.Ki = scalePID_i(DEFAULT_bedKi);
-    thermalManager.temp_bed.pid.Kd = scalePID_d(DEFAULT_bedKd);
+    fanManager.temp_bed.pid.Kp = DEFAULT_bedKp;
+    fanManager.temp_bed.pid.Ki = scalePID_i(DEFAULT_bedKi);
+    fanManager.temp_bed.pid.Kd = scalePID_d(DEFAULT_bedKd);
   #endif
 
   //
@@ -2987,15 +2987,15 @@ void mvCNCSettings::reset() {
   //
 
   #if ENABLED(PIDTEMPCHAMBER)
-    thermalManager.temp_chamber.pid.Kp = DEFAULT_chamberKp;
-    thermalManager.temp_chamber.pid.Ki = scalePID_i(DEFAULT_chamberKi);
-    thermalManager.temp_chamber.pid.Kd = scalePID_d(DEFAULT_chamberKd);
+    fanManager.temp_chamber.pid.Kp = DEFAULT_chamberKp;
+    fanManager.temp_chamber.pid.Ki = scalePID_i(DEFAULT_chamberKi);
+    fanManager.temp_chamber.pid.Kd = scalePID_d(DEFAULT_chamberKd);
   #endif
 
   //
   // User-Defined Thermistors
   //
-  TERN_(HAS_USER_THERMISTORS, thermalManager.reset_user_thermistors());
+    TERN_(HAS_USER_THERMISTORS, fanManager.reset_user_thermistors());
 
   //
   // Power Monitor
@@ -3031,7 +3031,7 @@ void mvCNCSettings::reset() {
   // Volumetric & Filament Size
   //
 
-  #if DISABLED(NO_VOLUMETRICS)
+#if ENABLED(USE_VOLUMETRICS)
     parser.volumetric_enabled = ENABLED(VOLUMETRIC_DEFAULT_ON);
     LOOP_L_N(q, COUNT(planner.filament_size))
       planner.filament_size[q] = DEFAULT_NOMINAL_FILAMENT_DIA;
@@ -3167,7 +3167,7 @@ void mvCNCSettings::reset() {
     //
     // M200 Volumetric Extrusion
     //
-    IF_DISABLED(NO_VOLUMETRICS, gcode.M200_report(forReplay));
+      TERN_(USE_VOLUMETRICS, gcode.M200_report(forReplay));
 
     //
     // M92 Steps per Unit
@@ -3296,7 +3296,7 @@ void mvCNCSettings::reset() {
 
     #if HAS_USER_THERMISTORS
       LOOP_L_N(i, USER_THERMISTORS)
-        thermalManager.M305_report(i, forReplay);
+        fanManager.M305_report(i, forReplay);
     #endif
 
     //

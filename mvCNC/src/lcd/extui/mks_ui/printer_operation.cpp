@@ -189,7 +189,7 @@ void filament_check() {
     else
       default_preview_flg = true;
 
-    lv_draw_printing();
+    lv_draw_job_running();
   }
 }
 

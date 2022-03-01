@@ -63,7 +63,7 @@
           if (parser.seen('X')) duplicate_extruder_x_offset = _MAX(parser.value_linear_units(), (X2_MIN_POS) - (X1_MIN_POS));
           if (parser.seen('R')) duplicate_extruder_temp_offset = parser.value_celsius_diff();
           // Always switch back to tool 0
-          if (active_extruder != 0) tool_change(0);
+          if (active_tool != 0) tool_change(0);
           break;
 
         case DXC_MIRRORED_MODE: {
@@ -109,11 +109,11 @@
           case DXC_DUPLICATION_MODE:  DEBUG_ECHOPGM("DUPLICATION");  break;
           case DXC_MIRRORED_MODE:     DEBUG_ECHOPGM("MIRRORED");     break;
         }
-        DEBUG_ECHOPGM("\nActive Ext: ", active_extruder);
-        if (!active_extruder_parked) DEBUG_ECHOPGM(" NOT ");
+        DEBUG_ECHOPGM("\nActive Ext: ", active_tool);
+        if (!active_tool_parked) DEBUG_ECHOPGM(" NOT ");
         DEBUG_ECHOPGM(" parked.");
-        DEBUG_ECHOPGM("\nactive_extruder_x_pos: ", current_position.x);
-        DEBUG_ECHOPGM("\ninactive_extruder_x: ", inactive_extruder_x);
+        DEBUG_ECHOPGM("\nactive_tool_x_pos: ", current_position.x);
+        DEBUG_ECHOPGM("\ninactive_tool_x: ", inactive_tool_x);
         DEBUG_ECHOPGM("\nextruder_duplication_enabled: ", extruder_duplication_enabled);
         DEBUG_ECHOPGM("\nduplicate_extruder_x_offset: ", duplicate_extruder_x_offset);
         DEBUG_ECHOPGM("\nduplicate_extruder_temp_offset: ", duplicate_extruder_temp_offset);

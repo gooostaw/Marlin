@@ -32,7 +32,7 @@ extern celsius_t mks_min_extrusion_temp;
 
 void MKS_reset_settings(); // Restore persistent settings to defaults
 
-void MKS_pause_print_move();
+void MKS_pause_job_move();
 void MKS_resume_print_move();
 
 extern float z_offset_add;

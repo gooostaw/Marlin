@@ -27,7 +27,7 @@ void HotendIdleProtection::check_hotends(const millis_t &ms) {
   bool do_prot = false;
   HOTEND_LOOP() {
     const bool busy = (TERN0(HAS_RESUME_CONTINUE, wait_for_user) || planner.has_blocks_queued());
-    if (thermalManager.degHotend(e) >= (HOTEND_IDLE_MIN_TRIGGER) && !busy) {
+    if (fanManager.degHotend(e) >= (HOTEND_IDLE_MIN_TRIGGER) && !busy) {
       do_prot = true; break;
     }
   }
@@ -61,12 +61,12 @@ void HotendIdleProtection::timed_out() {
   SERIAL_ECHOLNPGM("Hotend Idle Timeout");
   LCD_MESSAGE(MSG_HOTEND_IDLE_TIMEOUT);
   HOTEND_LOOP() {
-    if ((HOTEND_IDLE_NOZZLE_TARGET) < thermalManager.degTargetHotend(e))
-      thermalManager.setTargetHotend(HOTEND_IDLE_NOZZLE_TARGET, e);
+    if ((HOTEND_IDLE_NOZZLE_TARGET) < fanManager.degTargetHotend(e))
+      fanManager.setTargetHotend(HOTEND_IDLE_NOZZLE_TARGET, e);
   }
   #if HAS_HEATED_BED
-    if ((HOTEND_IDLE_BED_TARGET) < thermalManager.degTargetBed())
-      thermalManager.setTargetBed(HOTEND_IDLE_BED_TARGET);
+  if ((HOTEND_IDLE_BED_TARGET) < fanManager.degTargetBed())
+    fanManager.setTargetBed(HOTEND_IDLE_BED_TARGET);
   #endif
 }
 

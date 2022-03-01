@@ -27,18 +27,18 @@
 void GcodeSuite::M302() {
   const bool seen_S = parser.seen('S');
   if (seen_S) {
-    thermalManager.extrude_min_temp = parser.value_celsius();
-    thermalManager.allow_cold_extrude = (thermalManager.extrude_min_temp == 0);
+    fanManager.extrude_min_temp = parser.value_celsius();
+    fanManager.allow_cold_extrude = (fanManager.extrude_min_temp == 0);
   }
 
   if (parser.seen('P'))
-    thermalManager.allow_cold_extrude = (thermalManager.extrude_min_temp == 0) || parser.value_bool();
+    fanManager.allow_cold_extrude = (fanManager.extrude_min_temp == 0) || parser.value_bool();
   else if (!seen_S) {
     // Report current state
     SERIAL_ECHO_START();
     SERIAL_ECHOPGM("Cold extrudes are ");
-    SERIAL_ECHOF(thermalManager.allow_cold_extrude ? F("en") : F("dis"));
-    SERIAL_ECHOLNPGM("abled (min temp ", thermalManager.extrude_min_temp, "C)");
+    SERIAL_ECHOF(fanManager.allow_cold_extrude ? F("en") : F("dis"));
+    SERIAL_ECHOLNPGM("abled (min temp ", fanManager.extrude_min_temp, "C)");
   }
 }
 

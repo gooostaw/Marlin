@@ -105,7 +105,7 @@ void cubic_b_spline(
 
   for (float t = 0; t < 1;) {
 
-    thermalManager.manage_heater();
+    fanManager.manage_heater();
     millis_t now = millis();
     if (ELAPSED(now, next_idle_ms)) {
       next_idle_ms = now + 200UL;
@@ -182,7 +182,7 @@ void cubic_b_spline(
       const xyze_pos_t &pos = bez_target;
     #endif
 
-    if (!planner.buffer_line(pos, scaled_fr_mm_s, active_extruder, step))
+      if (!planner.buffer_line(pos, scaled_fr_mm_s, active_tool, step))
       break;
   }
 }

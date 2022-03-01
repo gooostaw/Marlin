@@ -10,11 +10,11 @@
 #include "../../sd/cardreader.h"
 
 /**
- * M524: Abort the current SD print job (started with M24)
+ * M524: Abort the current SD CNC job (started with M24)
  */
 void GcodeSuite::M524() {
 
-  if (IS_SD_PRINTING())
+  if (IS_SD_JOB_RUNNING())
     card.abortFilePrintSoon();
   else if (card.isMounted())
     card.closefile();

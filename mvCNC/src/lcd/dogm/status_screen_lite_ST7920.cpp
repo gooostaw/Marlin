@@ -51,7 +51,7 @@
 #include "../lcdprint.h"
 #include "../../libs/duration_t.h"
 #include "../../module/motion.h"
-#include "../../module/printcounter.h"
+#include "../../module/jobcounter.h"
 #include "../../module/temperature.h"
 
 #if ENABLED(SDSUPPORT)
@@ -59,7 +59,7 @@
 #endif
 
 #if ENABLED(LCD_SHOW_E_TOTAL)
-  #include "../../mvCNCCore.h" // for printingIsActive
+#include "../../mvCNCCore.h" // for jobIsActive
 #endif
 
 #define TEXT_MODE_LCD_WIDTH 16
@@ -672,7 +672,7 @@ void ST7920_Lite_Status_Screen::draw_position(const xyze_pos_t &pos, const bool 
   // If position is unknown, flash the labels.
   const unsigned char alt_label = position_trusted ? 0 : (ui.get_blink() ? ' ' : 0);
 
-  if (TERN0(LCD_SHOW_E_TOTAL, printingIsActive())) {
+  if (TERN0(LCD_SHOW_E_TOTAL, jobIsActive())) {
     #if ENABLED(LCD_SHOW_E_TOTAL)
       char tmp[15];
       const uint8_t escale = e_move_accumulator >= 100000.0f ? 10 : 1; // After 100m switch to cm
@@ -698,13 +698,13 @@ bool ST7920_Lite_Status_Screen::indicators_changed() {
   // them only during blinks we gain a bit of stability.
   const bool blink = ui.get_blink();
   const uint16_t feedrate_perc = feedrate_percentage;
-  const uint16_t fs = thermalManager.scaledFanSpeed(0);
-  const celsius_t extruder_1_target = thermalManager.degTargetHotend(0);
+  const uint16_t fs = fanManager.scaledFanSpeed(0);
+  const celsius_t extruder_1_target = fanManager.degTargetHotend(0);
   #if HAS_MULTI_HOTEND
-    const celsius_t extruder_2_target = thermalManager.degTargetHotend(1);
+  const celsius_t extruder_2_target = fanManager.degTargetHotend(1);
   #endif
   #if HAS_HEATED_BED
-    const celsius_t bed_target = thermalManager.degTargetBed();
+    const celsius_t bed_target = fanManager.degTargetBed();
   #endif
   static uint16_t last_checksum = 0;
   const uint16_t checksum = blink ^ feedrate_perc ^ fs ^ extruder_1_target
@@ -718,30 +718,30 @@ bool ST7920_Lite_Status_Screen::indicators_changed() {
 void ST7920_Lite_Status_Screen::update_indicators(const bool forceUpdate) {
   if (forceUpdate || indicators_changed()) {
     const bool       blink              = ui.get_blink();
-    const duration_t elapsed            = print_job_timer.duration();
+    const duration_t elapsed = JobTimer.duration();
     duration_t       remaining          = TERN0(USE_M73_REMAINING_TIME, ui.get_remaining_time());
     const uint16_t   feedrate_perc      = feedrate_percentage;
-    const celsius_t  extruder_1_temp    = thermalManager.wholeDegHotend(0),
-                     extruder_1_target  = thermalManager.degTargetHotend(0);
+    const celsius_t  extruder_1_temp = fanManager.wholeDegHotend(0),
+      extruder_1_target = fanManager.degTargetHotend(0);
     #if HAS_MULTI_HOTEND
-      const celsius_t extruder_2_temp   = thermalManager.wholeDegHotend(1),
-                      extruder_2_target = thermalManager.degTargetHotend(1);
+    const celsius_t extruder_2_temp = fanManager.wholeDegHotend(1),
+      extruder_2_target = fanManager.degTargetHotend(1);
     #endif
     #if HAS_HEATED_BED
-      const celsius_t bed_temp          = thermalManager.wholeDegBed(),
-                      bed_target        = thermalManager.degTargetBed();
+      const celsius_t bed_temp = fanManager.wholeDegBed(),
+        bed_target = fanManager.degTargetBed();
     #endif
 
     draw_extruder_1_temp(extruder_1_temp, extruder_1_target, forceUpdate);
     TERN_(HAS_MULTI_HOTEND, draw_extruder_2_temp(extruder_2_temp, extruder_2_target, forceUpdate));
     TERN_(HAS_HEATED_BED, draw_bed_temp(bed_temp, bed_target, forceUpdate));
 
-    uint8_t spd = thermalManager.fan_speed[0];
+    uint8_t spd = fanManager.fan_speed[0];
     #if ENABLED(ADAPTIVE_FAN_SLOWING)
-      if (!blink && thermalManager.fan_speed_scaler[0] < 128)
-        spd = thermalManager.scaledFanSpeed(0, spd);
+    if (!blink && fanManager.fan_speed_scaler[0] < 128)
+      spd = fanManager.scaledFanSpeed(0, spd);
     #endif
-    draw_fan_speed(thermalManager.pwmToPercent(spd));
+      draw_fan_speed(fanManager.pwmToPercent(spd));
 
     // Draw elapsed/remaining time
     const bool show_remaining = ENABLED(SHOW_REMAINING_TIME) && (DISABLED(ROTATE_PROGRESS_DISPLAY) || blink);

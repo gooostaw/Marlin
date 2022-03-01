@@ -32,7 +32,7 @@ uint32_t CNCJobRecovery::cmd_sdpos, // = 0
 #include "../gcode/gcode.h"
 #include "../module/motion.h"
 #include "../module/planner.h"
-#include "../module/printcounter.h"
+#include "../module/jobcounter.h"
 #include "../module/temperature.h"
 #include "../core/serial.h"
 
@@ -77,7 +77,7 @@ void CNCJobRecovery::enable(const bool onoff) {
 void CNCJobRecovery::changed() {
   if (!enabled)
     purge();
-  else if (IS_SD_PRINTING())
+  else if (IS_SD_JOB_RUNNING())
     save(true);
 }
 
@@ -128,7 +128,7 @@ void CNCJobRecovery::prepare() {
  */
 void CNCJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER_LOSS_ZRAISE*/, const bool raised/*=false*/) {
 
-  // We don't check IS_SD_PRINTING here so a save may occur during a pause
+  // We don't check IS_SD_JOB_RUNNING here so a save may occur during a pause
 
   #if SAVE_INFO_INTERVAL_MS > 0
     static millis_t next_save_ms; // = 0
@@ -156,7 +156,7 @@ void CNCJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER
 
     // Set Head and Foot to matching non-zero values
     if (!++info.valid_head) ++info.valid_head; // non-zero in sequence
-    //if (!IS_SD_PRINTING()) info.valid_head = 0;
+    //if (!IS_SD_JOB_RUNNING()) info.valid_head = 0;
     info.valid_foot = info.valid_head;
 
     // Machine state
@@ -168,25 +168,25 @@ void CNCJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER
     TERN_(GCODE_REPEAT_MARKERS, info.stored_repeat = repeat);
     TERN_(HAS_HOME_OFFSET, info.home_offset = home_offset);
     TERN_(HAS_POSITION_SHIFT, info.position_shift = position_shift);
-    E_TERN_(info.active_extruder = active_extruder);
+    E_TERN_(info.active_tool = active_tool);
 
-    #if DISABLED(NO_VOLUMETRICS)
+  #if ENABLED(USE_VOLUMETRICS)
       info.flag.volumetric_enabled = parser.volumetric_enabled;
       #if HAS_MULTI_EXTRUDER
         for (int8_t e = 0; e < EXTRUDERS; e++) info.filament_size[e] = planner.filament_size[e];
       #else
-        if (parser.volumetric_enabled) info.filament_size[0] = planner.filament_size[active_extruder];
+      if (parser.volumetric_enabled) info.filament_size[0] = planner.filament_size[active_tool];
       #endif
     #endif
 
     #if HAS_EXTRUDERS
-      HOTEND_LOOP() info.target_temperature[e] = thermalManager.degTargetHotend(e);
+      HOTEND_LOOP() info.target_temperature[e] = fanManager.degTargetHotend(e);
     #endif
 
-    TERN_(HAS_HEATED_BED, info.target_temperature_bed = thermalManager.degTargetBed());
+      TERN_(HAS_HEATED_BED, info.target_temperature_bed = fanManager.degTargetBed());
 
     #if HAS_FAN
-      COPY(info.fan_speed, thermalManager.fan_speed);
+      COPY(info.fan_speed, fanManager.fan_speed);
     #endif
 
     #if HAS_LEVELING
@@ -201,15 +201,15 @@ void CNCJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER
       info.retract_hop = fwretract.current_hop;
     #endif
 
-    // Elapsed print job time
-    info.print_job_elapsed = print_job_timer.duration();
+      // Elapsed CNC job time
+      info.print_job_elapsed = JobTimer.duration();
 
     // Relative axis modes
     info.axis_relative = gcode.axis_relative;
 
     // Misc. mvCNC flags
-    info.flag.dryrun = !!(mvcnc_debug_flags & mvCNC_DEBUG_DRYRUN);
-    info.flag.allow_cold_extrusion = TERN0(PREVENT_COLD_EXTRUSION, thermalManager.allow_cold_extrude);
+    info.flag.dryrun = !!(mvcnc_debug_flags & MVCNC_DEBUG_DRYRUN);
+    info.flag.allow_cold_extrusion = TERN0(PREVENT_COLD_EXTRUSION, fanManager.allow_cold_extrude);
 
     write();
   }
@@ -249,7 +249,7 @@ void CNCJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER
 
   /**
    * An outage was detected by a sensor pin.
-   *  - If not SD printing, let the machine turn off on its own with no "KILL" screen
+   *  - If not running SD job, let the machine turn off on its own with no "KILL" screen
    *  - Disable all heaters first to save energy
    *  - Save the recovery data for the current instant
    *  - If backup power is available Retract E and Raise Z
@@ -271,10 +271,10 @@ void CNCJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER
 
     // Save the current position, distance that Z was (or should be) raised,
     // and a flag whether the raise was already done here.
-    if (IS_SD_PRINTING()) save(true, zraise, ENABLED(BACKUP_POWER_SUPPLY));
+      if (IS_SD_JOB_RUNNING()) save(true, zraise, ENABLED(BACKUP_POWER_SUPPLY));
 
     // Disable all heaters to reduce power loss
-    thermalManager.disable_all_heaters();
+      fanManager.disable_all_heaters();
 
     #if ENABLED(BACKUP_POWER_SUPPLY)
       // Do a hard-stop of the steppers (with possibly a loud thud)
@@ -303,7 +303,7 @@ void CNCJobRecovery::write() {
 }
 
 /**
- * Resume the saved print job
+ * Resume the saved CNC job
  */
 void CNCJobRecovery::resume() {
 
@@ -312,10 +312,10 @@ void CNCJobRecovery::resume() {
   const uint32_t resume_sdpos = info.sdpos; // Get here before the stepper ISR overwrites it
 
   // Apply the dry-run flag if enabled
-  if (info.flag.dryrun) mvcnc_debug_flags |= mvCNC_DEBUG_DRYRUN;
+  if (info.flag.dryrun) mvcnc_debug_flags |= MVCNC_DEBUG_DRYRUN;
 
   // Restore cold extrusion permission
-  TERN_(PREVENT_COLD_EXTRUSION, thermalManager.allow_cold_extrude = info.flag.allow_cold_extrusion);
+  TERN_(PREVENT_COLD_EXTRUSION, fanManager.allow_cold_extrude = info.flag.allow_cold_extrusion);
 
   #if HAS_LEVELING
     // Make sure leveling is off before any G92 and G28
@@ -428,14 +428,14 @@ void CNCJobRecovery::resume() {
   #endif
 
   // Recover volumetric extrusion state
-  #if DISABLED(NO_VOLUMETRICS)
+  #if ENABLED(USE_VOLUMETRICS)
     #if HAS_MULTI_EXTRUDER
       for (int8_t e = 0; e < EXTRUDERS; e++) {
         sprintf_P(cmd, PSTR("M200T%iD%s"), e, dtostrf(info.filament_size[e], 1, 3, str_1));
         gcode.process_subcommands_now(cmd);
       }
       if (!info.flag.volumetric_enabled) {
-        sprintf_P(cmd, PSTR("M200T%iD0"), info.active_extruder);
+        sprintf_P(cmd, PSTR("M200T%iD0"), info.active_tool);
         gcode.process_subcommands_now(cmd);
       }
     #else
@@ -463,7 +463,7 @@ void CNCJobRecovery::resume() {
 
   // Restore the previously active tool (with no_move)
   #if HAS_MULTI_EXTRUDER || HAS_MULTI_HOTEND
-    sprintf_P(cmd, PSTR("T%i S"), info.active_extruder);
+    sprintf_P(cmd, PSTR("T%i S"), info.active_tool);
     gcode.process_subcommands_now(cmd);
   #endif
 
@@ -515,7 +515,7 @@ void CNCJobRecovery::resume() {
   );
   gcode.process_subcommands_now(cmd);
 
-  // Move back down to the saved Z for printing
+  // Move back down to the saved Z for running job
   sprintf_P(cmd, PSTR("G1Z%sF600"), dtostrf(z_print, 1, 3, str_1));
   gcode.process_subcommands_now(cmd);
 
@@ -539,7 +539,7 @@ void CNCJobRecovery::resume() {
 
   #if ENABLED(DEBUG_POWER_LOSS_RECOVERY)
     const uint8_t old_flags = mvcnc_debug_flags;
-    mvcnc_debug_flags |= mvCNC_DEBUG_ECHO;
+    mvcnc_debug_flags |= MVCNC_DEBUG_ECHO;
   #endif
 
   // Continue to apply PLR when a file is resumed!
@@ -598,10 +598,10 @@ void CNCJobRecovery::resume() {
         #endif
 
         #if HAS_MULTI_EXTRUDER
-          DEBUG_ECHOLNPGM("active_extruder: ", info.active_extruder);
+          DEBUG_ECHOLNPGM("active_tool: ", info.active_tool);
         #endif
 
-        #if DISABLED(NO_VOLUMETRICS)
+        #if ENABLED(USE_VOLUMETRICS)
           DEBUG_ECHOPGM("filament_size:");
           LOOP_L_N(i, EXTRUDERS) DEBUG_ECHOLNPGM(" ", info.filament_size[i]);
           DEBUG_EOL();

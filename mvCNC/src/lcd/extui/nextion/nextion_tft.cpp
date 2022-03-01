@@ -310,7 +310,7 @@ void NextionTFT::PanelInfo(uint8_t req) {
     break;
 
   case 27: // CNCcounter
-    #if ENABLED(PRINTCOUNTER)
+  #if ENABLED(JOBCOUNTER)
       char buffer[21];
       #define SEND_PRINT_INFO(A, B) SEND_VALasTXT(A, B(buffer))
     #else
@@ -618,10 +618,10 @@ void NextionTFT::UpdateOnChange() {
   }
 
   // tmppage Tool
-  static uint8_t last_active_extruder = 99;
-  if (last_active_extruder != getActiveTool()) {
+  static uint8_t last_active_tool = 99;
+  if (last_active_tool != getActiveTool()) {
     SEND_VALasTXT("tmppage.tool", getActiveTool());
-    last_active_extruder = getActiveTool();
+    last_active_tool = getActiveTool();
   }
 
   // tmppage Fan Speed

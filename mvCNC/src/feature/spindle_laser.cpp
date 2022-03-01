@@ -29,7 +29,7 @@ bool SpindleLaser::isReady;                                           // Ready t
 cutter_power_t SpindleLaser::menuPower,                               // Power set via LCD menu in PWM, PERCENT, or RPM
                SpindleLaser::unitPower;                               // LCD status power in PWM, PERCENT, or RPM
 
-#if ENABLED(mvCNC_DEV_MODE)
+#if ENABLED(MVCNC_DEV_MODE)
   cutter_frequency_t SpindleLaser::frequency;                         // PWM frequency setting; range: 2K - 50K
 #endif
 #define SPINDLE_LASER_PWM_OFF TERN(SPINDLE_LASER_PWM_INVERT, 255, 0)
@@ -52,7 +52,7 @@ void SpindleLaser::init() {
   #endif
   #if ENABLED(HAL_CAN_SET_PWM_FREQ) && SPINDLE_LASER_FREQUENCY
     set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), SPINDLE_LASER_FREQUENCY);
-    TERN_(mvCNC_DEV_MODE, frequency = SPINDLE_LASER_FREQUENCY);
+    TERN_(MVCNC_DEV_MODE, frequency = SPINDLE_LASER_FREQUENCY);
   #endif
   #if ENABLED(AIR_EVACUATION)
     OUT_WRITE(AIR_EVACUATION_PIN, !AIR_EVACUATION_ACTIVE);            // Init Vacuum/Blower OFF
@@ -71,7 +71,7 @@ void SpindleLaser::init() {
    */
   void SpindleLaser::_set_ocr(const uint8_t ocr) {
     #if ENABLED(HAL_CAN_SET_PWM_FREQ) && SPINDLE_LASER_FREQUENCY
-      set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), TERN(mvCNC_DEV_MODE, frequency, SPINDLE_LASER_FREQUENCY));
+    set_pwm_frequency(pin_t(SPINDLE_LASER_PWM_PIN), TERN(MVCNC_DEV_MODE, frequency, SPINDLE_LASER_FREQUENCY));
     #endif
     set_pwm_duty(pin_t(SPINDLE_LASER_PWM_PIN), ocr ^ SPINDLE_LASER_PWM_OFF);
   }

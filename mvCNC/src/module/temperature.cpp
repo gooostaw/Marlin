@@ -16,7 +16,7 @@
 #include "temperature.h"
 #include "endstops.h"
 #include "planner.h"
-#include "printcounter.h"
+#include "jobcounter.h"
 
 #if EITHER(HAS_COOLER, LASER_COOLANT_FLOW_METER)
   #include "../feature/cooler.h"
@@ -175,7 +175,7 @@
   static constexpr uint8_t heater_ttbllen_map[HOTENDS] = ARRAY_BY_HOTENDS(TEMPTABLE_0_LEN REPEAT_S(1, HOTENDS, NEXT_TEMPTABLE_LEN));
 #endif
 
-Temperature thermalManager;
+  Temperature fanManager;
 
 PGMSTR(str_t_thermal_runaway, STR_T_THERMAL_RUNAWAY);
 PGMSTR(str_t_temp_malfunction, STR_T_MALFUNCTION);
@@ -364,7 +364,7 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
     NOMORE(speed, 255U);
 
     #if ENABLED(SINGLENOZZLE_STANDBY_FAN)
-      if (fan != active_extruder) {
+    if (fan != active_tool) {
         if (fan < EXTRUDERS) singlenozzle_fan_speed[fan] = speed;
         return;
       }
@@ -395,7 +395,7 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 
   #if EITHER(PROBING_FANS_OFF, ADVANCED_PAUSE_FANS_PAUSE)
 
-    void Temperature::set_fans_paused(const bool p) {
+    void Temperature::fanPause(const bool p) {
       if (p != fans_paused) {
         fans_paused = p;
         if (p)
@@ -707,7 +707,7 @@ volatile bool Temperature::raw_temps_ready = false;
       // Report heater states every 2 seconds
       if (ELAPSED(ms, next_temp_ms)) {
         #if HAS_TEMP_SENSOR
-          print_heater_states(ischamber ? active_extruder : (isbed ? active_extruder : heater_id));
+        print_heater_states(ischamber ? active_tool : (isbed ? active_tool : heater_id));
           SERIAL_EOL();
         #endif
         next_temp_ms = ms + 2000UL;
@@ -956,7 +956,7 @@ int16_t Temperature::getHeaterPower(const heater_id_t heater_id) {
 
 inline void loud_kill(FSTR_P const lcd_msg, const heater_id_t heater_id) {
   mvcnc_state = MF_KILLED;
-  thermalManager.disable_all_heaters();
+  fanManager.disable_all_heaters();
   #if USE_BEEPER
     for (uint8_t i = 20; i--;) {
       WRITE(BEEPER_PIN, HIGH);
@@ -1098,7 +1098,7 @@ void Temperature::min_temp_error(const heater_id_t heater_id) {
             #if HOTENDS == 1
               constexpr bool this_hotend = true;
             #else
-              const bool this_hotend = (ee == active_extruder);
+          const bool this_hotend = (ee == active_tool);
             #endif
             work_pid[ee].Kc = 0;
             if (this_hotend) {
@@ -1116,8 +1116,8 @@ void Temperature::min_temp_error(const heater_id_t heater_id) {
             }
           #endif // PID_EXTRUSION_SCALING
           #if ENABLED(PID_FAN_SCALING)
-            if (fan_speed[active_extruder] > PID_FAN_SCALING_MIN_SPEED) {
-              work_pid[ee].Kf = PID_PARAM(Kf, ee) + (PID_FAN_SCALING_LIN_FACTOR) * fan_speed[active_extruder];
+            if (fan_speed[active_tool] > PID_FAN_SCALING_MIN_SPEED) {
+              work_pid[ee].Kf = PID_PARAM(Kf, ee) + (PID_FAN_SCALING_LIN_FACTOR)*fan_speed[active_tool];
               pid_output += work_pid[ee].Kf;
             }
             //pid_output -= work_pid[ee].Ki;
@@ -1134,7 +1134,7 @@ void Temperature::min_temp_error(const heater_id_t heater_id) {
       #endif // PID_OPENLOOP
 
       #if ENABLED(PID_DEBUG)
-        if (ee == active_extruder && pid_debug_flag) {
+        if (ee == active_tool && pid_debug_flag) {
           SERIAL_ECHO_MSG(STR_PID_DEBUG, ee, STR_PID_DEBUG_INPUT, temp_hotend[ee].celsius, STR_PID_DEBUG_OUTPUT, pid_output
             #if DISABLED(PID_OPENLOOP)
               , STR_PID_DEBUG_PTERM, work_pid[ee].Kp
@@ -1630,7 +1630,7 @@ void Temperature::manage_heater() {
       temp_cooler.soft_pwm_amount = 0;
       if (flag_cooler_state) {
         flag_cooler_state = false;
-        thermalManager.set_fan_speed(COOLER_FAN_INDEX, 0);
+        fanManager.set_fan_speed(COOLER_FAN_INDEX, 0);
       }
       WRITE_HEATER_COOLER(LOW);
     }
@@ -2690,7 +2690,7 @@ void Temperature::disable_all_heaters() {
       if (can_start) startOrResumeJob();
     }
     else if (can_stop) {
-      print_job_timer.stop();
+      JobTimer.stop();
       ui.reset_status();
     }
   }
@@ -3646,7 +3646,7 @@ void Temperature::isr() {
 
   #if ENABLED(AUTO_REPORT_TEMPERATURES)
     AutoReporter<Temperature::AutoReportTemp> Temperature::auto_reporter;
-    void Temperature::AutoReportTemp::report() { print_heater_states(active_extruder); SERIAL_EOL(); }
+    void Temperature::AutoReportTemp::report() { print_heater_states(active_tool); SERIAL_EOL(); }
   #endif
 
   #if HAS_HOTEND && HAS_STATUS_MESSAGE
@@ -3778,7 +3778,7 @@ void Temperature::isr() {
         wait_for_heatup = false;
         #if HAS_DWIN_E3V2_BASIC
           HMI_flag.heat_flag = 0;
-          duration_t elapsed = print_job_timer.duration();  // print timer
+          duration_t elapsed = JobTimer.duration();  // print timer
           dwin_heat_time = elapsed.value;
         #else
           ui.reset_status();
@@ -3851,7 +3851,7 @@ void Temperature::isr() {
         now = millis();
         if (ELAPSED(now, next_temp_ms)) { //CNC Temp Reading every 1 second while heating up.
           next_temp_ms = now + 1000UL;
-          print_heater_states(active_extruder);
+          print_heater_states(active_tool);
           #if TEMP_BED_RESIDENCY_TIME > 0
             SERIAL_ECHOPGM(" W:");
             if (residency_start_ms)
@@ -3961,7 +3961,7 @@ void Temperature::isr() {
         millis_t now = millis();
         if (!next_temp_ms || ELAPSED(now, next_temp_ms)) {
           next_temp_ms = now + 10000UL;
-          print_heater_states(active_extruder);
+          print_heater_states(active_tool);
           SERIAL_EOL();
         }
 
@@ -4044,7 +4044,7 @@ void Temperature::isr() {
         now = millis();
         if (ELAPSED(now, next_temp_ms)) { // CNC Temp Reading every 1 second while heating up.
           next_temp_ms = now + 1000UL;
-          print_heater_states(active_extruder);
+          print_heater_states(active_tool);
           #if TEMP_CHAMBER_RESIDENCY_TIME > 0
             SERIAL_ECHOPGM(" W:");
             if (residency_start_ms)
@@ -4142,7 +4142,7 @@ void Temperature::isr() {
         now = millis();
         if (ELAPSED(now, next_temp_ms)) { // CNC Temp Reading every 1 second while heating up.
           next_temp_ms = now + 1000UL;
-          print_heater_states(active_extruder);
+          print_heater_states(active_tool);
           #if TEMP_COOLER_RESIDENCY_TIME > 0
             SERIAL_ECHOPGM(" W:");
             if (residency_start_ms)

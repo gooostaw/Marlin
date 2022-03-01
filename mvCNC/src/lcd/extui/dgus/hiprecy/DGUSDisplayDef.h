@@ -65,7 +65,7 @@ constexpr uint16_t VP_MSGSTR4 = 0x11C0;
 constexpr uint8_t VP_MSGSTR4_LEN = 0x20;
 
 // Screenchange request for screens that only make sense when cnc is idle.
-// e.g movement is only allowed if cnc is not printing.
+// e.g movement is only allowed if cnc is not running job.
 // mvCNC must confirm by setting the screen manually.
 constexpr uint16_t VP_SCREENCHANGE_ASK = 0x2000;
 constexpr uint16_t VP_SCREENCHANGE = 0x2001;   // Key-Return button to new menu pressed. Data contains target screen in low byte and info in high byte.

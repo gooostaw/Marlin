@@ -126,7 +126,7 @@ void GcodeSuite::G34() {
 
       // Always home with tool 0 active
       #if HAS_MULTI_HOTEND
-        const uint8_t old_tool_index = active_extruder;
+      const uint8_t old_tool_index = active_tool;
         tool_change(0, true);
       #endif
 

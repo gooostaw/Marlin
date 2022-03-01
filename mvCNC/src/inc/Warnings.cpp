@@ -31,8 +31,8 @@
 // Warnings! Located here so they will appear just once in the build output.
 //
 
-#if ENABLED(mvCNC_DEV_MODE)
-  #warning "WARNING! Disable mvCNC_DEV_MODE for the final build!"
+#if ENABLED(MVCNC_DEV_MODE)
+#warning "WARNING! Disable MVCNC_DEV_MODE for the final build!"
 #endif
 
 // Safety Features

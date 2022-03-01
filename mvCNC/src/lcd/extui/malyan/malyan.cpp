@@ -38,7 +38,7 @@
 #include "../../../module/stepper.h"
 #include "../../../module/motion.h"
 #include "../../../libs/duration_t.h"
-#include "../../../module/printcounter.h"
+#include "../../../module/jobcounter.h"
 #include "../../../gcode/queue.h"
 
 #define DEBUG_OUT ENABLED(DEBUG_MALYAN_LCD)
@@ -53,7 +53,7 @@
 uint16_t inbound_count;
 
 // For sending print completion messages
-bool last_printing_status = false;
+bool last_job_running_status = false;
 
 // Everything written needs the high bit set.
 void write_to_lcd(FSTR_P const fmsg) {
@@ -117,8 +117,8 @@ void process_lcd_c_command(const char *command) {
 
     case 'T':
       // Sometimes the LCD will send commands to turn off both extruder and bed, though
-      // this should not happen since the printing screen is up. Better safe than sorry.
-      if (!print_job_timer.isRunning() || target_val > 0)
+      // this should not happen since the running job screen is up. Better safe than sorry.
+      if (!JobTimer.isRunning() || target_val > 0)
         ExtUI::setTargetTemp_celsius(target_val, ExtUI::extruder_t::E0);
       break;
 
@@ -143,11 +143,11 @@ void process_lcd_eb_command(const char *command) {
   duration_t elapsed;
   switch (command[0]) {
     case '0': {
-      elapsed = print_job_timer.duration();
+      elapsed = JobTimer.duration();
       sprintf_P(elapsed_buffer, PSTR("%02u%02u%02u"), uint16_t(elapsed.hour()), uint16_t(elapsed.minute()) % 60, uint16_t(elapsed.second()) % 60);
 
       char message_buffer[MAX_CURLY_COMMAND];
-      uint8_t done_pct = print_job_timer.isRunning() ? (iteration * 10) : 100;
+      uint8_t done_pct = JobTimer.isRunning() ? (iteration * 10) : 100;
       iteration = (iteration + 1) % 10; // Provide progress animation
       #if ENABLED(SDSUPPORT)
         if (ExtUI::isPrintingFromMedia() || ExtUI::isPrintingFromMediaPaused())
@@ -156,9 +156,9 @@ void process_lcd_eb_command(const char *command) {
 
       sprintf_P(message_buffer,
         PSTR("{T0:%03i/%03i}{T1:000/000}{TP:%03i/%03i}{TQ:%03i}{TT:%s}"),
-        thermalManager.wholeDegHotend(0), thermalManager.degTargetHotend(0),
+        fanManager.wholeDegHotend(0), fanManager.degTargetHotend(0),
         #if HAS_HEATED_BED
-          thermalManager.wholeDegBed(), thermalManager.degTargetBed(),
+        fanManager.wholeDegBed(), fanManager.degTargetBed(),
         #else
           0, 0,
         #endif
@@ -200,7 +200,7 @@ void process_lcd_j_command(const char *command) {
 }
 
 /**
- * Process an LCD 'P' command, related to homing and printing.
+ * Process an LCD 'P' command, related to homing and running job.
  * Cancel:
  * {P:X}
  *
@@ -287,9 +287,9 @@ void process_lcd_s_command(const char *command) {
       // temperature information
       char message_buffer[MAX_CURLY_COMMAND];
       sprintf_P(message_buffer, PSTR("{T0:%03i/%03i}{T1:000/000}{TP:%03i/%03i}"),
-        thermalManager.wholeDegHotend(0), thermalManager.degTargetHotend(0),
+        fanManager.wholeDegHotend(0), fanManager.degTargetHotend(0),
         #if HAS_HEATED_BED
-          thermalManager.wholeDegBed(), thermalManager.degTargetBed()
+        fanManager.wholeDegBed(), fanManager.degTargetBed()
         #else
           0, 0
         #endif
@@ -305,7 +305,7 @@ void process_lcd_s_command(const char *command) {
         // implement a callback in the ls_SerialPrint code, but
         // that requires changes to the core cardreader class that
         // would not benefit the majority of users. Since one can't
-        // select a file for printing during a print, there's
+        // select a file for running job during a print, there's
         // little reason not to do it this way.
         char message_buffer[MAX_CURLY_COMMAND];
         uint16_t file_count = card.get_num_Files();
