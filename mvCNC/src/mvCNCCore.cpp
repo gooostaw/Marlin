@@ -107,7 +107,7 @@
 #include "feature/joystick.h"
 #endif
 
-#if ENABLED(WII_NUNCHUCK_JOGGING)
+#if ENABLED(WII_NUNCHUCK)
 #include "feature/wii_i2c.h"
 #endif
 
@@ -275,7 +275,7 @@ bool wait_for_heatup = false;
  * Sensitive pin test for M42, M226
  */
 
-#include "pins/sensitive_pins.h"
+#include "src/pins/sensitive_pins.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnarrowing"
@@ -838,7 +838,7 @@ void idle(bool no_stepper_sleep/*=false*/) {
   TERN_(JOYSTICK, joystick.injectJogMoves());
 
   // Handle Wii Nunchuck jogging
-  TERN_(WII_NUNCHUCK_JOGGING, wii.injectJogMoves());
+  TERN_(WII_NUNCHUCK, wii.injectJogMoves());
 
   // Direct Stepping
   TERN_(DIRECT_STEPPING, page_manager.write_responses());
@@ -1500,6 +1500,11 @@ void setup() {
     i2c.onReceive(i2c_on_receive);
     i2c.onRequest(i2c_on_request);
   #endif
+
+  #if ENABLED(WII_NUNCHUCK)
+    SETUP_RUN(wii.connect());
+  #endif
+
 
   #if DO_SWITCH_EXTRUDER
     SETUP_RUN(move_extruder_servo(0));  // Initialize extruder servo

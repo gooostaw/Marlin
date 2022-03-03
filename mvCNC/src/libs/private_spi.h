@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include "src/inc/mvCNCConfig.h"
+
 #include "softspi.h"
 #include <stdint.h>
 

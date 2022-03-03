@@ -3920,7 +3920,7 @@
 #endif
 
 // Custom Menu: Configuration Menu
-//#define CUSTOM_MENU_CONFIG
+#define CUSTOM_MENU_CONFIG
 #if ENABLED(CUSTOM_MENU_CONFIG)
   //#define CUSTOM_MENU_CONFIG_TITLE "Custom Commands"
   #define CUSTOM_MENU_CONFIG_SCRIPT_DONE "M117 Wireless Script Done"
@@ -4095,12 +4095,15 @@
 /**
  * Analog Joystick(s)
  */
-//#define JOYSTICK
+ // #define JOYSTICK
 #if ENABLED(JOYSTICK)
   #define JOY_X_PIN    5  // RAMPS: Suggested pin A5  on AUX2
   #define JOY_Y_PIN   10  // RAMPS: Suggested pin A10 on AUX2
   #define JOY_Z_PIN   12  // RAMPS: Suggested pin A12 on AUX2
-  #define JOY_EN_PIN  44  // RAMPS: Suggested pin D44 on AUX2
+ // #define JOYSTICK_ENABLED // Enable joystick by default (Use M258 N[0/1] to disable/enable)
+#define JOY_EN_PIN  44   // Pin sent HIGH when enabled via `M258 W1`
+                         // RAMPS: Suggested pin D44 on AUX2
+
 
   //#define INVERT_JOY_X  // Enable if X direction is reversed
   //#define INVERT_JOY_Y  // Enable if Y direction is reversed
@@ -4114,24 +4117,27 @@
 #endif
 
 /**
- * Wii Nunchuck (joystick controller) jogging support
+ * Wii Nunchuck jogging support
+ *
+ * Press button C to speed up moves
+ * Press button Z to move Z axis
+ *   - While Z is pressed, joyX moves Z slowly, joyY moves Z faster.
  */
-#define WII_NUNCHUCK_JOGGING
-#if ENABLED(WII_NUNCHUCK_JOGGING)
- // #define WII_SDA_PIN    5
- // #define WII_SCL_PIN    10
- // #define WII_EN_PIN     44
+ // #define WII_NUNCHUCK
+#if ENABLED(WII_NUNCHUCK)
+ // #define WII_NUNCHUCK_ENABLED // Enable nunchuck by default (Use M258 W[0/1] to disable/enable)
+// #define WII_EN_PIN     P0_10 // Pin sent HIGH when enabled via `M258 W1`
 
  // Pressing the C button enables full speed movements up to max_feed_rate for each respective axis
-#define WII_SLOW_DIVISER 3 // Divide all speeds by value for standard (C unpressed) movements
+#define WII_SLOW_DIVISER 3 // Divide all speeds by value for slow (C unpressed) movements
 
 //#define INVERT_WII_X  // Enable to reverse X axis jogging
 //#define INVERT_WII_Y  // Enable to reverse Y axis jogging
 //#define INVERT_WII_Z  // Enable to reverse Z axis jogging
 
 // Use M119 with WII_NUNCHUCK_DEBUG to find reasonable values after connecting:
-#define WII_X_LIMITS { 0, 128-10, 128+10, 255 } // min, deadzone start, deadzone end, max
-#define WII_Y_LIMITS { 0, 128-10, 128+10, 255 }
+#define WII_X_LIMITS { 0, 128-7, 128+7, 255 } // min, deadzone start, deadzone end, max
+#define WII_Y_LIMITS { 0, 128-7, 128+7, 255 }
 #define WII_NUNCHUCK_DEBUG
 #endif
 
@@ -4382,6 +4388,7 @@
    * To help diagnose print quality issues stemming from empty command buffers.
    */
   //#define BUFFER_MONITORING
+  //#define SHOW_DEBUG_MESSAGES
 #endif
 
 /**

@@ -7,7 +7,7 @@
  * fwretract.h - Define firmware-based retraction interface
  */
 
-#include "../inc/mvCNCConfigPre.h"
+#include "src/inc/mvCNCConfig.h"
 
 typedef struct {
        float retract_length;                      // M207 S - G10 Retract length

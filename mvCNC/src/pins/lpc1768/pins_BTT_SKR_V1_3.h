@@ -1,11 +1,13 @@
 /**
- * Modern Vintage CNC Firmware
+* Modern Vintage CNC Firmware
 */
 #pragma once
+// Include common SKR pins
+#include "pins_BTT_SKR_common.h"
 
 /**
- * BigTreeTech SKR 1.3 pin assignments
- */
+* BigTreeTech SKR 1.3 pin assignments
+*/
 
 #define BOARD_INFO_NAME "BTT SKR V1.3"
 
@@ -75,30 +77,37 @@
   #endif
 #endif
 
-//
-// Servos
-//
+/**
+* Override default I2C data pins
+* Defaults to SDA: P0_00, SCL: P0_01 (Normally E1 pins)
+*/
+// #define I2C_SDA_PIN                     P0_00
+// #define I2C_SCL_PIN                     P0_01
+
+/**
+* Servos
+*/
 #ifndef SERVO0_PIN
   #define SERVO0_PIN                       P2_00
 #endif
 
-//
-// Z Probe (when not Z_MIN_PIN)
-//
+/**
+* Z Probe (when not Z_MIN_PIN)
+*/
 #ifndef Z_MIN_PROBE_PIN
   #define Z_MIN_PROBE_PIN                  P1_24
 #endif
 
-//
-// Filament Runout Sensor
-//
+/**
+* Filament Runout Sensor
+*/
 #ifndef FIL_RUNOUT_PIN
   #define FIL_RUNOUT_PIN                   P1_28
 #endif
 
-//
-// Steppers
-//
+/**
+* Steppers
+*/
 #define X_STEP_PIN                         P2_02
 #define X_DIR_PIN                          P2_06
 #define X_ENABLE_PIN                       P2_01
@@ -145,6 +154,11 @@
     #define Y2_CS_PIN                      P1_08
   #endif
 #endif
+
+#if ENABLED(WII_NUNCHUCK) && !defined(E1_DRIVER_TYPE) && !defined(WII_EN_PIN)
+#define WII_EN_PIN     P0_10
+#endif
+
 
 //
 // Software SPI pins for TMC2130 stepper drivers
@@ -487,6 +501,3 @@
  *   P0_27  (57) (Open collector)
  *   P0_28  (58) (Open collector)
  */
-
-// Include common SKR pins
-#include "pins_BTT_SKR_common.h"

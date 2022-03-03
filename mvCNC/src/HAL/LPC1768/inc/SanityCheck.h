@@ -173,7 +173,7 @@ static_assert(DISABLED(BAUD_RATE_GCODE), "BAUD_RATE_GCODE is not yet supported o
 //
 // Flag any i2c pin conflicts
 //
-#if ANY(HAS_MOTOR_CURRENT_I2C, HAS_MOTOR_CURRENT_DAC, EXPERIMENTAL_I2CBUS, I2C_POSITION_ENCODERS, PCA9632, I2C_EEPROM)
+#if ANY(WII_NUNCHUCK, HAS_MOTOR_CURRENT_I2C, HAS_MOTOR_CURRENT_DAC, EXPERIMENTAL_I2CBUS, I2C_POSITION_ENCODERS, PCA9632, I2C_EEPROM)
   #define USEDI2CDEV_M 1  // <Arduino>/Wire.cpp
 
   #if USEDI2CDEV_M == 0         // P0_27 [D57] (AUX-1) .......... P0_28 [D58] (AUX-1)
@@ -194,7 +194,7 @@ static_assert(DISABLED(BAUD_RATE_GCODE), "BAUD_RATE_GCODE is not yet supported o
     #endif
     #undef PIN_IS_SDA0
     #undef IS_SCL0
-  #elif USEDI2CDEV_M == 1       // P0_00 [D20] (SCA) ............ P0_01 [D21] (SCL)
+#elif USEDI2CDEV_M == 1       // P0_00 [D20] (SDA) ............ P0_01 [D21] (SCL)
     #define PIN_IS_SDA1(P) (PIN_EXISTS(P) && P##_PIN == P0_00)
     #define PIN_IS_SCL1(P) (P##_PIN == P0_01)
     #if PIN_IS_SDA1(X_MIN) || PIN_IS_SCL1(X_MAX)

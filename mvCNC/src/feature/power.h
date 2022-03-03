@@ -2,6 +2,7 @@
  * Modern Vintage CNC Firmware
 */
 #pragma once
+#include "src/inc/mvCNCConfigPre.h"
 
 /**
  * power.h - power control

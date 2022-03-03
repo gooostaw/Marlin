@@ -4,7 +4,7 @@
 #pragma once
 
 #if !defined(__has_include)
-  #define __has_include(...) 1
+#define __has_include(...) 1
 #endif
 
 #define ABCE 4
@@ -61,12 +61,12 @@
 #define IS_CONSTEXPR(...) __builtin_constant_p(__VA_ARGS__) // Only valid solution with C++14. Should use std::is_constant_evaluated() in C++20 instead
 
 #ifndef UNUSED
-  #define UNUSED(x) ((void)(x))
+#define UNUSED(x) ((void)(x))
 #endif
 
 // Clock speed factors
 #if !defined(CYCLES_PER_MICROSECOND) && !defined(__STM32F1__)
-  #define CYCLES_PER_MICROSECOND (F_CPU / 1000000UL) // 16 or 20 on AVR
+#define CYCLES_PER_MICROSECOND (F_CPU / 1000000UL) // 16 or 20 on AVR
 #endif
 
 // Nanoseconds per cycle
@@ -85,10 +85,10 @@
 #define TEST(n,b) (!!((n)&_BV(b)))
 #define SET_BIT_TO(N,B,TF) do{ if (TF) SBI(N,B); else CBI(N,B); }while(0)
 #ifndef SBI
-  #define SBI(A,B) (A |= _BV(B))
+#define SBI(A,B) (A |= _BV(B))
 #endif
 #ifndef CBI
-  #define CBI(A,B) (A &= ~_BV(B))
+#define CBI(A,B) (A &= ~_BV(B))
 #endif
 #define TBI(N,B) (N ^= _BV(B))
 #define _BV32(b) (1UL << (b))
@@ -113,32 +113,32 @@
 #ifdef __cplusplus
 
   // C++11 solution that is standards compliant.
-  template <class V, class N> static constexpr void NOLESS(V& v, const N n) {
-    if (n > v) v = n;
-  }
-  template <class V, class N> static constexpr void NOMORE(V& v, const N n) {
-    if (n < v) v = n;
-  }
-  template <class V, class N1, class N2> static constexpr void LIMIT(V& v, const N1 n1, const N2 n2) {
-    if (n1 > v) v = n1;
-    else if (n2 < v) v = n2;
-  }
+template <class V, class N> static constexpr void NOLESS(V &v, const N n) {
+  if (n > v) v = n;
+}
+template <class V, class N> static constexpr void NOMORE(V &v, const N n) {
+  if (n < v) v = n;
+}
+template <class V, class N1, class N2> static constexpr void LIMIT(V &v, const N1 n1, const N2 n2) {
+  if (n1 > v) v = n1;
+  else if (n2 < v) v = n2;
+}
 
 #else
 
-  #define NOLESS(v, n) \
+#define NOLESS(v, n) \
     do{ \
       __typeof__(v) _n = (n); \
       if (_n > v) v = _n; \
     }while(0)
 
-  #define NOMORE(v, n) \
+#define NOMORE(v, n) \
     do{ \
       __typeof__(v) _n = (n); \
       if (_n < v) v = _n; \
     }while(0)
 
-  #define LIMIT(v, n1, n2) \
+#define LIMIT(v, n1, n2) \
     do{ \
       __typeof__(v) _n1 = (n1); \
       __typeof__(v) _n2 = (n2); \
@@ -350,9 +350,9 @@
 
 #undef ABS
 #ifdef __cplusplus
-  template <class T> static constexpr const T ABS(const T v) { return v >= 0 ? v : -v; }
+template <class T> static constexpr const T ABS(const T v) { return v >= 0 ? v : -v; }
 #else
-  #define ABS(a) ({__typeof__(a) _a = (a); _a >= 0 ? _a : -_a;})
+#define ABS(a) ({__typeof__(a) _a = (a); _a >= 0 ? _a : -_a;})
 #endif
 
 #define UNEAR_ZERO(x) ((x) < 0.000001f)
@@ -387,27 +387,27 @@
 
 #ifdef __cplusplus
 
-  #ifndef _MINMAX_H_
-  #define _MINMAX_H_
+#ifndef _MINMAX_H_
+#define _MINMAX_H_
 
-    extern "C++" {
+extern "C++" {
 
-      // C++11 solution that is standards compliant. Return type is deduced automatically
-      template <class L, class R> static constexpr auto _MIN(const L lhs, const R rhs) -> decltype(lhs + rhs) {
-        return lhs < rhs ? lhs : rhs;
-      }
-      template <class L, class R> static constexpr auto _MAX(const L lhs, const R rhs) -> decltype(lhs + rhs) {
-        return lhs > rhs ? lhs : rhs;
-      }
-      template<class T, class ... Ts> static constexpr const T _MIN(T V, Ts... Vs) { return _MIN(V, _MIN(Vs...)); }
-      template<class T, class ... Ts> static constexpr const T _MAX(T V, Ts... Vs) { return _MAX(V, _MAX(Vs...)); }
+  // C++11 solution that is standards compliant. Return type is deduced automatically
+  template <class L, class R> static constexpr auto _MIN(const L lhs, const R rhs) -> decltype(lhs + rhs) {
+    return lhs < rhs ? lhs : rhs;
+  }
+  template <class L, class R> static constexpr auto _MAX(const L lhs, const R rhs) -> decltype(lhs + rhs) {
+    return lhs > rhs ? lhs : rhs;
+  }
+  template<class T, class ... Ts> static constexpr const T _MIN(T V, Ts... Vs) { return _MIN(V, _MIN(Vs...)); }
+  template<class T, class ... Ts> static constexpr const T _MAX(T V, Ts... Vs) { return _MAX(V, _MAX(Vs...)); }
 
-    }
+}
 
-  #endif
+#endif
 
-  // Allow manipulating enumeration value like flags without ugly cast everywhere
-  #define ENUM_FLAGS(T) \
+// Allow manipulating enumeration value like flags without ugly cast everywhere
+#define ENUM_FLAGS(T) \
     FORCE_INLINE constexpr T operator&(T x, T y) { return static_cast<T>(static_cast<int>(x) & static_cast<int>(y)); } \
     FORCE_INLINE constexpr T operator|(T x, T y) { return static_cast<T>(static_cast<int>(x) | static_cast<int>(y)); } \
     FORCE_INLINE constexpr T operator^(T x, T y) { return static_cast<T>(static_cast<int>(x) ^ static_cast<int>(y)); } \
@@ -417,19 +417,19 @@
     FORCE_INLINE T & operator^=(T &x, T y) { return x ^= y; }
 
   // C++11 solution that is standard compliant. <type_traits> is not available on all platform
-  namespace Private {
-    template<bool, typename _Tp = void> struct enable_if { };
-    template<typename _Tp>              struct enable_if<true, _Tp> { typedef _Tp type; };
+namespace Private {
+  template<bool, typename _Tp = void> struct enable_if {};
+  template<typename _Tp>              struct enable_if<true, _Tp> { typedef _Tp type; };
 
-    template<typename T, typename U> struct is_same { enum { value = false }; };
-    template<typename T> struct is_same<T, T> { enum { value = true }; };
+  template<typename T, typename U> struct is_same { enum { value = false }; };
+  template<typename T> struct is_same<T, T> { enum { value = true }; };
 
-    template <typename T, typename ... Args> struct first_type_of { typedef T type; };
-    template <typename T> struct first_type_of<T> { typedef T type; };
-  }
-  // C++11 solution using SFINAE to detect the existence of a member in a class at compile time.
-  // It creates a HasMember<Type> structure containing 'value' set to true if the member exists
-  #define HAS_MEMBER_IMPL(Member) \
+  template <typename T, typename ... Args> struct first_type_of { typedef T type; };
+  template <typename T> struct first_type_of<T> { typedef T type; };
+}
+// C++11 solution using SFINAE to detect the existence of a member in a class at compile time.
+// It creates a HasMember<Type> structure containing 'value' set to true if the member exists
+#define HAS_MEMBER_IMPL(Member) \
     namespace Private { \
       template <typename Type, typename Yes=char, typename No=long> struct HasMember_ ## Member { \
         template <typename C> static Yes& test( decltype(&C::Member) ) ; \
@@ -439,75 +439,75 @@
 
   // Call the method if it exists, but do nothing if it does not. The method is detected at compile time.
   // If the method exists, this is inlined and does not cost anything. Else, an "empty" wrapper is created, returning a default value
-  #define CALL_IF_EXISTS_IMPL(Return, Method, ...) \
+#define CALL_IF_EXISTS_IMPL(Return, Method, ...) \
     HAS_MEMBER_IMPL(Method) \
     namespace Private { \
       template <typename T, typename ... Args> FORCE_INLINE typename enable_if<HasMember_ ## Method <T>::value, Return>::type Call_ ## Method(T * t, Args... a) { return static_cast<Return>(t->Method(a...)); } \
                                                       _UNUSED static                                                  Return  Call_ ## Method(...) { return __VA_ARGS__; } \
     }
-  #define CALL_IF_EXISTS(Return, That, Method, ...) \
+#define CALL_IF_EXISTS(Return, That, Method, ...) \
     static_cast<Return>(Private::Call_ ## Method(That, ##__VA_ARGS__))
 
   // Compile-time string manipulation
-  namespace CompileTimeString {
-    // Simple compile-time parser to find the position of the end of a string
-    constexpr const char* findStringEnd(const char *str) {
-      return *str ? findStringEnd(str + 1) : str;
-    }
-
-    // Check whether a string contains a specific character
-    constexpr bool contains(const char *str, const char ch) {
-      return *str == ch ? true : (*str ? contains(str + 1, ch) : false);
-    }
-    // Find the last position of the specific character (should be called with findStringEnd)
-    constexpr const char* findLastPos(const char *str, const char ch) {
-      return *str == ch ? (str + 1) : findLastPos(str - 1, ch);
-    }
-    // Compile-time evaluation of the last part of a file path
-    // Typically used to shorten the path to file in compiled strings
-    // CompileTimeString::baseName(__FILE__) returns "macros.h" and not /path/to/mvCNC/src/core/macros.h
-    constexpr const char* baseName(const char *str) {
-      return contains(str, '/') ? findLastPos(findStringEnd(str), '/') : str;
-    }
-
-    // Find the first occurrence of a character in a string (or return the last position in the string)
-    constexpr const char* findFirst(const char *str, const char ch) {
-      return *str == ch || *str == 0 ? (str + 1) : findFirst(str + 1, ch);
-    }
-    // Compute the string length at compile time
-    constexpr unsigned stringLen(const char *str) {
-      return *str == 0 ? 0 : 1 + stringLen(str + 1);
-    }
+namespace CompileTimeString {
+  // Simple compile-time parser to find the position of the end of a string
+  constexpr const char *findStringEnd(const char *str) {
+    return *str ? findStringEnd(str + 1) : str;
   }
 
-  #define ONLY_FILENAME CompileTimeString::baseName(__FILE__)
-  /** Get the templated type name. This does not depends on RTTI, but on the preprocessor, so it should be quite safe to use even on old compilers.
-      WARNING: DO NOT RENAME THIS FUNCTION (or change the text inside the function to match what the preprocessor will generate)
-      The name is chosen very short since the binary will store "const char* gtn(T*) [with T = YourTypeHere]" so avoid long function name here */
-  template <typename T>
-  inline const char* gtn(T*) {
-    // It works on GCC by instantiating __PRETTY_FUNCTION__ and parsing the result. So the syntax here is very limited to GCC output
-    constexpr unsigned verboseChatLen = sizeof("const char* gtn(T*) [with T = ") - 1;
-    static char templateType[sizeof(__PRETTY_FUNCTION__) - verboseChatLen] = {};
-    __builtin_memcpy(templateType, __PRETTY_FUNCTION__ + verboseChatLen, sizeof(__PRETTY_FUNCTION__) - verboseChatLen - 2);
-    return templateType;
+  // Check whether a string contains a specific character
+  constexpr bool contains(const char *str, const char ch) {
+    return *str == ch ? true : (*str ? contains(str + 1, ch) : false);
   }
+  // Find the last position of the specific character (should be called with findStringEnd)
+  constexpr const char *findLastPos(const char *str, const char ch) {
+    return *str == ch ? (str + 1) : findLastPos(str - 1, ch);
+  }
+  // Compile-time evaluation of the last part of a file path
+  // Typically used to shorten the path to file in compiled strings
+  // CompileTimeString::baseName(__FILE__) returns "macros.h" and not /path/to/mvCNC/src/core/macros.h
+  constexpr const char *baseName(const char *str) {
+    return contains(str, '/') ? findLastPos(findStringEnd(str), '/') : str;
+  }
+
+  // Find the first occurrence of a character in a string (or return the last position in the string)
+  constexpr const char *findFirst(const char *str, const char ch) {
+    return *str == ch || *str == 0 ? (str + 1) : findFirst(str + 1, ch);
+  }
+  // Compute the string length at compile time
+  constexpr unsigned stringLen(const char *str) {
+    return *str == 0 ? 0 : 1 + stringLen(str + 1);
+  }
+}
+
+#define ONLY_FILENAME CompileTimeString::baseName(__FILE__)
+/** Get the templated type name. This does not depends on RTTI, but on the preprocessor, so it should be quite safe to use even on old compilers.
+    WARNING: DO NOT RENAME THIS FUNCTION (or change the text inside the function to match what the preprocessor will generate)
+    The name is chosen very short since the binary will store "const char* gtn(T*) [with T = YourTypeHere]" so avoid long function name here */
+template <typename T>
+inline const char *gtn(T *) {
+  // It works on GCC by instantiating __PRETTY_FUNCTION__ and parsing the result. So the syntax here is very limited to GCC output
+  constexpr unsigned verboseChatLen = sizeof("const char* gtn(T*) [with T = ") - 1;
+  static char templateType[sizeof(__PRETTY_FUNCTION__) - verboseChatLen] = {};
+  __builtin_memcpy(templateType, __PRETTY_FUNCTION__ + verboseChatLen, sizeof(__PRETTY_FUNCTION__) - verboseChatLen - 2);
+  return templateType;
+}
 
 #else
 
-  #define __MIN_N(N,V...) MIN_##N(V)
-  #define _MIN_N(N,V...)  __MIN_N(N,V)
-  #define _MIN_N_REF()    _MIN_N
-  #define _MIN(V...)      EVAL(_MIN_N(TWO_ARGS(V),V))
-  #define MIN_2(a,b)      ((a)<(b)?(a):(b))
-  #define MIN_3(a,V...)   MIN_2(a,DEFER2(_MIN_N_REF)()(TWO_ARGS(V),V))
+#define __MIN_N(N,V...) MIN_##N(V)
+#define _MIN_N(N,V...)  __MIN_N(N,V)
+#define _MIN_N_REF()    _MIN_N
+#define _MIN(V...)      EVAL(_MIN_N(TWO_ARGS(V),V))
+#define MIN_2(a,b)      ((a)<(b)?(a):(b))
+#define MIN_3(a,V...)   MIN_2(a,DEFER2(_MIN_N_REF)()(TWO_ARGS(V),V))
 
-  #define __MAX_N(N,V...) MAX_##N(V)
-  #define _MAX_N(N,V...)  __MAX_N(N,V)
-  #define _MAX_N_REF()    _MAX_N
-  #define _MAX(V...)      EVAL(_MAX_N(TWO_ARGS(V),V))
-  #define MAX_2(a,b)      ((a)>(b)?(a):(b))
-  #define MAX_3(a,V...)   MAX_2(a,DEFER2(_MAX_N_REF)()(TWO_ARGS(V),V))
+#define __MAX_N(N,V...) MAX_##N(V)
+#define _MAX_N(N,V...)  __MAX_N(N,V)
+#define _MAX_N_REF()    _MAX_N
+#define _MAX(V...)      EVAL(_MAX_N(TWO_ARGS(V),V))
+#define MAX_2(a,b)      ((a)>(b)?(a):(b))
+#define MAX_3(a,V...)   MAX_2(a,DEFER2(_MAX_N_REF)()(TWO_ARGS(V),V))
 
 #endif
 

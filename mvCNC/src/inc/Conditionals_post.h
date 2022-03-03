@@ -2459,7 +2459,7 @@
   #endif
 #endif
 
-#if ENABLED(WII_NUNCHUCK_JOGGING)
+#if ENABLED(WII_NUNCHUCK)
 #if PIN_EXISTS(WII_EN)
 #define HAS_WII_EN 1
 #endif

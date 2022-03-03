@@ -6,13 +6,13 @@
  * Wii Nunchuck input / jogging
  */
 
-#include "../inc/mvCNCConfigPre.h"
+#include "src/inc/mvCNCConfigPre.h"
 
-#if ENABLED(WII_NUNCHUCK_JOGGING)
+#if ENABLED(WII_NUNCHUCK)
 
 #include "wii_i2c.h"
-#include "../inc/mvCNCConfig.h"  // for pins
-#include "../module/planner.h"
+#include "src/inc/mvCNCConfig.h"  // for pins
+#include "src/module/planner.h"
 #if HAS_CUTTER
 #include "spindle_laser.h"
 #endif
@@ -21,7 +21,7 @@
 WiiNunchuck wii;
 
 #if ENABLED(EXTENSIBLE_UI)
-#include "../lcd/extui/ui_api.h"
+#include "src/lcd/extui/ui_api.h"
 #endif
 
 #if ENABLED(INVERT_WII_X)
@@ -45,10 +45,13 @@ WiiNunchuck wii;
 #define NUNCHUK_DEVICE_ID 0x52
 
 void WiiNunchuck::connect() {
-  // Do nothing if enable pin (active-low) is not LOW
-#if HAS_WII_EN
-  if (READ(WII_EN_PIN)) return;
+#if PIN_EXISTS(WII_EN)
+  pinMode(WII_EN_PIN, OUTPUT);
+#else
+  enabled = false;
 #endif
+  // Do nothing if disabled (via M458 W0 or WII_NUNCHUCK_ENABLED is not set)
+  if (enabled) extDigitalWrite(WII_EN_PIN, HIGH); else return;
 
   // Delay reconnection attempts to save CPU time and prevent job stuttering
   const millis_t _reconnection_delay = 15000;  // delay in ms
@@ -91,65 +94,66 @@ char WiiNunchuck::decodeByte(const char b) {
   return (b ^ 0x17) + 0x17;
 }
 
+void WiiNunchuck::normalize(float &axis_jog, const int16_t joy_value, const int16_t(&wii_limits)[4], const bool is_z_axis/* = false */) {
+  if (WITHIN(joy_value, wii_limits[0], wii_limits[3])) {
+    // Within limits? Ignore if within deadzone
+    if (joy_value > wii_limits[2])
+      axis_jog = (joy_value - wii_limits[2]) / float(wii_limits[3] - wii_limits[2]);  // positive value
+    else if (joy_value < wii_limits[1])
+      axis_jog = (joy_value - wii_limits[1]) / float(wii_limits[1] - wii_limits[0]);  // negative value
+
+      // If C button is not pressed, reduce the speed of the movement
+    if (axis_jog != 0.0f && !cPressed()) { axis_jog = axis_jog / WII_SLOW_DIVISER; }
+
+    // Map normal to jog value via quadratic relationship
+    axis_jog = SIGN(axis_jog) * sq(axis_jog);
+  }
+};
+
+
+// Built-in normalizing function (converts arbitrary input range to -1 -> 1 range, adjusting for dead zones)
 void WiiNunchuck::calculate(xyz_float_t &joy_value_normalized) {
-
-  // Built-in normalizing function (converts arbitrary input range to -1 -> 1 range, adjusting for dead zones)
-  auto _normalizeInputValue = [](float &axis_jog, const int16_t joy_value, const int16_t(&wii_limits)[4],
-    const bool is_z_axis = false) {
-      if (WITHIN(joy_value, wii_limits[0], wii_limits[3])) {
-        // Within limits? Ignore if within deadzone
-        if (joy_value > wii_limits[2])
-          axis_jog = (joy_value - wii_limits[2]) / float(wii_limits[3] - wii_limits[2]);  // positive value
-        else if (joy_value < wii_limits[1])
-          axis_jog = (joy_value - wii_limits[1]) / float(wii_limits[1] - wii_limits[0]);  // negative value
-
-        // If C button is not pressed, reduce the speed of the movement
-        if (axis_jog != 0.0f && !wii.cPressed()) { axis_jog = axis_jog / WII_SLOW_DIVISER; }
-
-        // Map normal to jog value via quadratic relationship
-        axis_jog = SIGN(axis_jog) * sq(axis_jog);
-      }
-  };
 
   static constexpr int16_t wii_x_limits[4] = WII_X_LIMITS;
   static constexpr int16_t wii_y_limits[4] = WII_Y_LIMITS;
 
-  if (wii.zPressed()) {  // Move Z axis if Z button pressed
+  if (zPressed()) {  // Move Z axis if Z button pressed
 
-    if (wii.joyX() < wii_x_limits[1] || wii.joyX() > wii_x_limits[2]) {
+    if (joyX() < wii_x_limits[1] || joyX() > wii_x_limits[2]) {
       // joyX moves the Z axis at half adjusted speed.
-      float _half_joy_speed = wii.joyX() + (128 - wii.joyX()) / 2;
-      _normalizeInputValue(joy_value_normalized.z, WII_Z(_half_joy_speed), wii_x_limits, true);
+      float _half_joy_speed = joyX() + (128 - joyX()) / 2;
+      normalize(joy_value_normalized.z, WII_Z(_half_joy_speed), wii_x_limits, true);
     } else {
       // joyY moves the Z axis at normal adjusted speed.
-      _normalizeInputValue(joy_value_normalized.z, WII_Z(wii.joyY()), wii_y_limits, true);
+      normalize(joy_value_normalized.z, WII_Z(joyY()), wii_y_limits, true);
     }
 
   } else {  // Move X/Y axis
-    _normalizeInputValue(joy_value_normalized.x, WII_X(wii.joyX()), wii_x_limits);
-    _normalizeInputValue(joy_value_normalized.y, WII_Y(wii.joyY()), wii_y_limits);
+    normalize(joy_value_normalized.x, WII_X(joyX()), wii_x_limits);
+    normalize(joy_value_normalized.y, WII_Y(joyY()), wii_y_limits);
   }
 }
 
 void WiiNunchuck::injectJogMoves() {
-  // Do nothing if enable pin (active-low) is not LOW
-#if HAS_WII_EN
-  if (READ(WII_EN_PIN)) return;
-#endif
+  // Do nothing if disabled (via M458 W0 or WII_NUNCHUCK_ENABLED is not set)
+  if (!enabled) return;
 
   // Recursion barrier
   static bool injecting_now;  // = false;
-  if (injecting_now || jobIsOngoing()) return;
-#if HAS_CUTTER
-  if (cutter.enabled()) return;
-#endif
+  if (injecting_now || jobIsOngoing() || TERN0(HAS_CUTTER, cutter.enabled())) {
+    SERIAL_ERROR_MSG("Cannot jog while job in progress");
+    return;
+  }
 
 #if ENABLED(NO_MOTION_BEFORE_HOMING)
   if (axis_should_home()) return;
 #endif
 
   // Attempt a connection if not currently connected
-  if (!wii.update()) { wii.connect(); return; }
+  if (!update()) {
+    connect();
+    return;
+  }
 
   static constexpr int QUEUE_DEPTH = 5;      // Insert up to this many movements
   static constexpr float target_lag = 0.25f,  // Aim for 1/4 second lag
@@ -170,9 +174,9 @@ void WiiNunchuck::injectJogMoves() {
   xyz_float_t joy_value_normalized{0};
 
   // Use ADC values and defined limits. The active zone is normalized: -1..0 (dead) 0..1
-  wii.calculate(joy_value_normalized);
+  calculate(joy_value_normalized);
 #if ENABLED(WII_NUNCHUCK_DEBUG)
-  wii.report();
+  report();
 #endif
 
   // Other non-wiinunchuck poll-based jogging could be implemented here
@@ -208,15 +212,15 @@ void WiiNunchuck::report() {
     if (PENDING(millis(), next_run)) return;
     next_run = millis() + _report_delay;
 
-    const char cPrint = wii.cPressed() ? 'C' : 'c';
-    const char zPrint = wii.zPressed() ? 'Z' : 'z';
+    const char cPrint = cPressed() ? 'C' : 'c';
+    const char zPrint = zPressed() ? 'Z' : 'z';
 
     SERIAL_ECHOPGM("Wii Nunchuck");
   #if HAS_WII_EN
     SERIAL_ECHO_TERNARY(READ(WII_EN_PIN), " EN=", "HIGH (dis", "LOW (en", "abled)");
   #endif
-    SERIAL_ECHOPGM_P(SP_X_STR, WII_X(wii.joyX()));
-    SERIAL_ECHOPGM_P(SP_Y_STR, WII_Y(wii.joyY()));
+    SERIAL_ECHOPGM_P(SP_X_STR, WII_X(joyX()));
+    SERIAL_ECHOPGM_P(SP_Y_STR, WII_Y(joyY()));
     SERIAL_ECHOLNPGM_P("Buttons: ", cPrint + zPrint);
   }
 }

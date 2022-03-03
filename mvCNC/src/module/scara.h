@@ -8,6 +8,8 @@
  */
 
 #include "../core/macros.h"
+#include "../core/types.h"
+#include "Arduino.h"
 
 extern float segments_per_second;
 

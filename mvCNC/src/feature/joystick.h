@@ -9,26 +9,29 @@
 
 #include "../inc/mvCNCConfigPre.h"
 #include "../core/types.h"
-#include "../module/temperature.h"
+
+#if PIN_EXISTS(JOY_EN)
+pinMode(JOY_EN_PIN, OUTPUT);
+#endif
 
 class Joystick {
-  friend class Temperature;
   private:
     #if HAS_JOY_ADC_X
-      static temp_info_t x;
+  xyz_float_t x;
     #endif
     #if HAS_JOY_ADC_Y
-      static temp_info_t y;
+  xyz_float_t y;
     #endif
     #if HAS_JOY_ADC_Z
-      static temp_info_t z;
+    xyz_float_t z;
     #endif
   public:
+  bool enabled = ENABLED(JOYSTICK_ENABLED);
     #if ENABLED(JOYSTICK_DEBUG)
-      static void report();
+  void report();
     #endif
-    static void calculate(xyz_float_t &norm_jog);
-    static void injectJogMoves();
+    void calculate(xyz_float_t &norm_jog);
+    void injectJogMoves();
 };
 
 extern Joystick joystick;

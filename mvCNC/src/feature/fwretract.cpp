@@ -6,7 +6,7 @@
  * fwretract.cpp - Implement firmware-based retraction
  */
 
-#include "../inc/mvCNCConfig.h"
+#include "../inc/mvCNCConfigPre.h"
 
 #if ENABLED(FWRETRACT)
 

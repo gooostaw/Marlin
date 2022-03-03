@@ -8,6 +8,7 @@
  * Defines that depend on advanced configuration.
  */
 
+
 #ifndef AXIS_RELATIVE_MODES
   #define AXIS_RELATIVE_MODES {}
 #endif
@@ -659,6 +660,13 @@
   #define _CUTTER_POWER_RPM     3
   #define _CUTTER_POWER(V)      _CAT(_CUTTER_POWER_, V)
   #define CUTTER_UNIT_IS(V)    (_CUTTER_POWER(CUTTER_POWER_UNIT) == _CUTTER_POWER(V))
+#endif
+
+//
+// Accessory devices which can be enabled/disabled via gCode M258
+//
+#if ANY(JOYSTICK, WII_NUNCHUCK)
+#define HAS_ACCESSORY_DEVICES 1
 #endif
 
 #if !defined(__AVR__) || !defined(USBCON)

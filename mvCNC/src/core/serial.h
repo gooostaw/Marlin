@@ -10,6 +10,9 @@
   #include "../feature/meatpack.h"
 #endif
 
+#define DEBUG_OUT 0
+#include "../core/debug_out.h"
+
 // Commonly-used strings in serial output
 extern const char NUL_STR[],
                   SP_X_STR[], SP_Y_STR[], SP_Z_STR[],

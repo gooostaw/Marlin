@@ -22,7 +22,7 @@ Joystick joystick;
 #endif
 
 #if HAS_JOY_ADC_X
-temp_info_t Joystick::x; // = { 0 }
+xyz_float_t Joystick::x; // = { 0 }
 #if ENABLED(INVERT_JOY_X)
 #define JOY_X(N) (16383 - (N))
 #else
@@ -30,7 +30,7 @@ temp_info_t Joystick::x; // = { 0 }
 #endif
 #endif
 #if HAS_JOY_ADC_Y
-temp_info_t Joystick::y; // = { 0 }
+xyz_float_t Joystick::y; // = { 0 }
 #if ENABLED(INVERT_JOY_Y)
 #define JOY_Y(N) (16383 - (N))
 #else
@@ -38,7 +38,7 @@ temp_info_t Joystick::y; // = { 0 }
 #endif
 #endif
 #if HAS_JOY_ADC_Z
-temp_info_t Joystick::z; // = { 0 }
+xyz_float_t Joystick::z; // = { 0 }
 #if ENABLED(INVERT_JOY_Z)
 #define JOY_Z(N) (16383 - (N))
 #else
@@ -50,17 +50,15 @@ temp_info_t Joystick::z; // = { 0 }
 void Joystick::report() {
   SERIAL_ECHOPGM("Joystick");
 #if HAS_JOY_ADC_X
-  SERIAL_ECHOPGM_P(SP_X_STR, JOY_X(x.raw));
+  SERIAL_ECHOPGM_P(SP_X_STR, JOY_X(x));
 #endif
 #if HAS_JOY_ADC_Y
-  SERIAL_ECHOPGM_P(SP_Y_STR, JOY_Y(y.raw));
+  SERIAL_ECHOPGM_P(SP_Y_STR, JOY_Y(y));
 #endif
 #if HAS_JOY_ADC_Z
-  SERIAL_ECHOPGM_P(SP_Z_STR, JOY_Z(z.raw));
+  SERIAL_ECHOPGM_P(SP_Z_STR, JOY_Z(z));
 #endif
-#if HAS_JOY_ADC_EN
-  SERIAL_ECHO_TERNARY(READ(JOY_EN_PIN), " EN=", "HIGH (dis", "LOW (en", "abled)");
-#endif
+  SERIAL_ECHO_TERNARY(enabled, "Enable pin is ", "HIGH (dis", "LOW (en", "abled)");
   SERIAL_EOL();
 }
 #endif
@@ -68,10 +66,8 @@ void Joystick::report() {
 #if HAS_JOY_ADC_X || HAS_JOY_ADC_Y || HAS_JOY_ADC_Z
 
 void Joystick::calculate(xyz_float_t &norm_jog) {
-  // Do nothing if enable pin (active-low) is not LOW
-#if HAS_JOY_ADC_EN
-  if (READ(JOY_EN_PIN)) return;
-#endif
+  // Do nothing if disabled (via M458 J0 or JOYSTICK_ENABLED is not set)
+  if (enabled) extDigitalWrite(JOY_EN_PIN, HIGH); else return;
 
   auto _normalize_joy = [](float &axis_jog, const int16_t raw, const int16_t(&joy_limits)[4]) {
     if (WITHIN(raw, joy_limits[0], joy_limits[3])) {
@@ -87,15 +83,15 @@ void Joystick::calculate(xyz_float_t &norm_jog) {
 
 #if HAS_JOY_ADC_X
   static constexpr int16_t joy_x_limits[4] = JOY_X_LIMITS;
-  _normalize_joy(norm_jog.x, JOY_X(x.raw), joy_x_limits);
+  _normalize_joy(norm_jog.x, JOY_X(x), joy_x_limits);
 #endif
 #if HAS_JOY_ADC_Y
   static constexpr int16_t joy_y_limits[4] = JOY_Y_LIMITS;
-  _normalize_joy(norm_jog.y, JOY_Y(y.raw), joy_y_limits);
+  _normalize_joy(norm_jog.y, JOY_Y(y), joy_y_limits);
 #endif
 #if HAS_JOY_ADC_Z
   static constexpr int16_t joy_z_limits[4] = JOY_Z_LIMITS;
-  _normalize_joy(norm_jog.z, JOY_Z(z.raw), joy_z_limits);
+  _normalize_joy(norm_jog.z, JOY_Z(z), joy_z_limits);
 #endif
 }
 

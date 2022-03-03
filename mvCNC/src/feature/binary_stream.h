@@ -3,7 +3,8 @@
 */
 #pragma once
 
-#include "../inc/mvCNCConfig.h"
+#include "src/mvCNCCore.h"
+#include "src/sd/cardreader.h"
 
 #define BINARY_STREAM_COMPRESSION
 #if ENABLED(BINARY_STREAM_COMPRESSION)

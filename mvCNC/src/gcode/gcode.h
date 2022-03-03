@@ -586,6 +586,10 @@ private:
     static void M256_report(const bool forReplay=true);
   #endif
 
+  #if ANY(WII_NUNCHUCK, JOYSTICK)
+    static void M258();
+  #endif
+
   #if ENABLED(EXPERIMENTAL_I2CBUS)
     static void M260();
     static void M261();

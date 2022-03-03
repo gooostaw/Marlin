@@ -8,8 +8,8 @@
  * Stepper driver indirection for L64XX drivers
  */
 
-#include "../../inc/mvCNCConfig.h"
-#include "../../libs/L64XX/L64XX_mvCNC.h"
+#include "src/inc/mvCNCConfig.h"
+#include "src/libs/L64XX/L64XX_mvCNC.h"
 
 // Convert option names to L64XX classes
 #define CLASS_L6470       L6470
