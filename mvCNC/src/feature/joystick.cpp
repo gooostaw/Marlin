@@ -58,7 +58,6 @@ void Joystick::report() {
 #if HAS_JOY_ADC_Z
   SERIAL_ECHOPGM_P(SP_Z_STR, JOY_Z(z));
 #endif
-  SERIAL_ECHO_TERNARY(enabled, "Enable pin is ", "HIGH (dis", "LOW (en", "abled)");
   SERIAL_EOL();
 }
 #endif
@@ -67,7 +66,7 @@ void Joystick::report() {
 
 void Joystick::calculate(xyz_float_t &norm_jog) {
   // Do nothing if disabled (via M458 J0 or JOYSTICK_ENABLED is not set)
-  if (enabled) extDigitalWrite(JOY_EN_PIN, HIGH); else return;
+  if (!enabled) return;
 
   auto _normalize_joy = [](float &axis_jog, const int16_t raw, const int16_t(&joy_limits)[4]) {
     if (WITHIN(raw, joy_limits[0], joy_limits[3])) {
@@ -98,6 +97,13 @@ void Joystick::calculate(xyz_float_t &norm_jog) {
 #endif
 
 void Joystick::injectJogMoves() {
+  // Do nothing if disabled (via M458 W0 or WII_NUNCHUCK_ENABLED is not set)
+  if (!enabled) return;
+#if PIN_EXISTS(JOY_EN)
+  pinMode(JOY_EN_PIN, OUTPUT);
+  extDigitalWrite(JOY_EN_PIN, HIGH);
+#endif
+
   // Recursion barrier
   static bool injecting_now; // = false;
   if (injecting_now) return;

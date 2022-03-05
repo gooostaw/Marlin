@@ -590,6 +590,8 @@ private:
     static void M258();
   #endif
 
+    static void M259();
+
   #if ENABLED(EXPERIMENTAL_I2CBUS)
     static void M260();
     static void M261();
@@ -928,8 +930,7 @@ private:
     static void M710_report(const bool forReplay=true);
   #endif
 
-  static void T(const int8_t tool_index);
-
+    static void T(const int8_t tool_index);
 };
 
 extern GcodeSuite gcode;

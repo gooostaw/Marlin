@@ -78,11 +78,9 @@
 #endif
 
 /**
-* Override default I2C data pins
-* Defaults to SDA: P0_00, SCL: P0_01 (Normally E1 pins)
-*/
-// #define I2C_SDA_PIN                     P0_00
-// #define I2C_SCL_PIN                     P0_01
+ * I2C data pins
+ * Defaults to SDA: P0_00, SCL: P0_01 (Normally E1 pins, and cannot be changed)
+ */
 
 /**
 * Servos
@@ -156,7 +154,7 @@
 #endif
 
 #if ENABLED(WII_NUNCHUCK) && !defined(E1_DRIVER_TYPE) && !defined(WII_EN_PIN)
-#define WII_EN_PIN     P0_10
+// #define WII_EN_PIN     P0_10
 #endif
 
 

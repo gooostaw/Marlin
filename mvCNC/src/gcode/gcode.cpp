@@ -759,6 +759,10 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 258: M258(); break;                                  // M258: Enable/Disable accessory devices
         #endif
 
+        case 259:
+          M259();
+          break;  // M258: Scan for connected i2c accessory devices
+
       #if ENABLED(EXPERIMENTAL_I2CBUS)
         case 260: M260(); break;                                  // M260: Send data to an i2c slave
         case 261: M261(); break;                                  // M261: Request data from an i2c slave

@@ -1402,7 +1402,7 @@
   // Enable this option and set to HIGH if your SD cards are incorrectly detected.
   //#define SD_DETECT_STATE HIGH
 
-  //#define SD_IGNORE_AT_STARTUP            // Don't mount the SD card when starting up
+  #define SD_IGNORE_AT_STARTUP            // Don't mount the SD card when starting up
   //#define SDCARD_READONLY                 // Read-only SD card (to save over 2K of flash)
 
   //#define GCODE_REPEAT_MARKERS            // Enable G-code M808 to set repeat markers and do looping
@@ -1603,296 +1603,27 @@
    *
    * :[ 'LCD', 'ONBOARD', 'CUSTOM_CABLE' ]
    */
-  //#define SDCARD_CONNECTION LCD
+  #define SDCARD_CONNECTION ONBOARD
 
-  // Enable if SD detect is rendered useless (e.g., by using an SD extender)
-  //#define NO_SD_DETECT
+    // Enable if SD detect is rendered useless (e.g., by using an SD extender)
+    //#define NO_SD_DETECT
 
-  // Multiple volume support - EXPERIMENTAL.
-  //#define MULTI_VOLUME
+    // Multiple volume support - EXPERIMENTAL.
+    //#define MULTI_VOLUME
   #if ENABLED(MULTI_VOLUME)
     #define VOLUME_SD_ONBOARD
     #define VOLUME_USB_FLASH_DRIVE
-    #define DEFAULT_VOLUME SV_SD_ONBOARD
+    #define DEFAULT_VOLUME        SV_SD_ONBOARD
     #define DEFAULT_SHARED_VOLUME SV_USB_FLASH_DRIVE
   #endif
 
-#endif // SDSUPPORT
+#endif  // SDSUPPORT
 
 /**
  * By default an onboard SD card reader may be shared as a USB mass-
  * storage device. This option hides the SD card from the host PC.
  */
 //#define NO_SD_HOST_DRIVE   // Disable SD Card access over USB (for security).
-
-/**
- * Additional options for Graphical Displays
- *
- * Use the optimizations here to improve cutting performance,
- * which can be adversely affected by graphical display drawing,
- * especially when doing several short moves, and when cutting
- * on DELTA and SCARA machines.
- *
- * Some of these options may result in the display lagging behind
- * controller events, as there is a trade-off between reliable
- * running job performance versus fast display updates.
- */
-#if HAS_MVCNCUI_U8GLIB
-  // Save many cycles by drawing a hollow frame or no frame on the Info Screen
-  #define XYZ_NO_FRAME
-  // #define XYZ_HOLLOW_FRAME
-
-  // A bigger font is available for edit items. Costs 3120 bytes of PROGMEM.
-  // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
-  //#define USE_BIG_EDIT_FONT
-
-  // A smaller font may be used on the Info Screen. Costs 2434 bytes of PROGMEM.
-  // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
-  //#define USE_SMALL_INFOFONT
-
-  /**
-   * ST7920-based LCDs can emulate a 16 x 4 character display using
-   * the ST7920 character-generator for very fast screen updates.
-   * Enable LIGHTWEIGHT_UI to use this special display mode.
-   *
-   * Since LIGHTWEIGHT_UI has limited space, the position and status
-   * message occupy the same line. Set STATUS_EXPIRE_SECONDS to the
-   * length of time to display the status message before clearing.
-   *
-   * Set STATUS_EXPIRE_SECONDS to zero to never clear the status.
-   * This will prevent position updates from being displayed.
-   */
-  #if IS_U8GLIB_ST7920
-    // Enable this option and reduce the value to optimize screen updates.
-    // The normal delay is 10µs. Use the lowest value that still gives a reliable display.
-    //#define DOGM_SPI_DELAY_US 5
-
-    //#define LIGHTWEIGHT_UI
-    #if ENABLED(LIGHTWEIGHT_UI)
-      #define STATUS_EXPIRE_SECONDS 20
-    #endif
-  #endif
-
-  /**
-   * Status (Info) Screen customizations
-   * These options may affect code size and screen render time.
-   * Custom status screens can forcibly override these settings.
-   */
-  //#define STATUS_COMBINE_HEATERS    // Use combined heater images instead of separate ones
-  //#define STATUS_HOTEND_NUMBERLESS  // Use plain hotend icons instead of numbered ones (with 2+ hotends)
-  // #define STATUS_HOTEND_INVERTED      // Show solid nozzle bitmaps when heating (Requires STATUS_HOTEND_ANIM for numbered hotends)
-  // #define STATUS_HOTEND_ANIM          // Use a second bitmap to indicate hotend heating
-  // #define STATUS_BED_ANIM             // Use a second bitmap to indicate bed heating
-  // #define STATUS_CHAMBER_ANIM         // Use a second bitmap to indicate chamber heating
-  //#define STATUS_CUTTER_ANIM        // Use a second bitmap to indicate spindle / laser active
-  //#define STATUS_COOLER_ANIM        // Use a second bitmap to indicate laser cooling
-  //#define STATUS_FLOWMETER_ANIM     // Use multiple bitmaps to indicate coolant flow
-  //#define STATUS_ALT_BED_BITMAP     // Use the alternative bed bitmap
-  //#define STATUS_ALT_FAN_BITMAP     // Use the alternative fan bitmap
-  //#define STATUS_FAN_FRAMES 3       // :[0,1,2,3,4] Number of fan animation frames
-  //#define STATUS_HEAT_PERCENT       // Show heating in a progress bar
-  //#define BOOT_MVCNC_LOGO_ANIMATED // Animated mvCNC logo. Costs ~3260 (or ~940) bytes of PROGMEM.
-
-  // Frivolous Game Options
-  //#define MVCNC_BRICKOUT
-  //#define MVCNC_INVADERS
-  //#define MVCNC_SNAKE
-  //#define GAMES_EASTER_EGG          // Add extra blank lines above the "Games" sub-menu
-
-#endif // HAS_MVCNCUI_U8GLIB
-
-#if HAS_MVCNCUI_U8GLIB || IS_DWIN_MVCNCUI
-  // Show SD percentage next to the progress bar
-  #define SHOW_SD_PERCENT
-
-  // Enable to save many cycles by drawing a hollow frame on Menu Screens
-  #define MENU_HOLLOW_FRAME
-
-  // Swap the CW/CCW indicators in the graphics overlay
-  //#define OVERLAY_GFX_REVERSE
-#endif
-
-//
-// Additional options for DGUS / DWIN displays
-//
-#if HAS_DGUS_LCD
-  #define LCD_SERIAL_PORT 3
-  #define LCD_BAUDRATE 115200
-
-  #define DGUS_RX_BUFFER_SIZE 128
-  #define DGUS_TX_BUFFER_SIZE 48
-  //#define SERIAL_STATS_RX_BUFFER_OVERRUNS  // Fix Rx overrun situation (Currently only for AVR)
-
-  #define DGUS_UPDATE_INTERVAL_MS  500    // (ms) Interval between automatic screen updates
-
-  #if ANY(DGUS_LCD_UI_FYSETC, DGUS_LCD_UI_MKS, DGUS_LCD_UI_HIPRECY)
-#define DGUS_PRINT_FILENAME           // Display the filename during running job
-    #define DGUS_PREHEAT_UI               // Display a preheat screen during heatup
-
-    #if EITHER(DGUS_LCD_UI_FYSETC, DGUS_LCD_UI_MKS)
-      //#define DGUS_UI_MOVE_DIS_OPTION   // Disabled by default for FYSETC and MKS
-    #else
-      #define DGUS_UI_MOVE_DIS_OPTION     // Enabled by default for UI_HIPRECY
-    #endif
-
-    #define DGUS_FILAMENT_LOADUNLOAD
-    #if ENABLED(DGUS_FILAMENT_LOADUNLOAD)
-      #define DGUS_FILAMENT_PURGE_LENGTH 10
-      #define DGUS_FILAMENT_LOAD_LENGTH_PER_TIME 0.5 // (mm) Adjust in proportion to DGUS_UPDATE_INTERVAL_MS
-    #endif
-
-    #define DGUS_UI_WAITING               // Show a "waiting" screen between some screens
-    #if ENABLED(DGUS_UI_WAITING)
-      #define DGUS_UI_WAITING_STATUS 10
-      #define DGUS_UI_WAITING_STATUS_PERIOD 8 // Increase to slower waiting status looping
-    #endif
-  #endif
-#endif // HAS_DGUS_LCD
-
-//
-// Additional options for AnyCubic Chiron TFT displays
-//
-#if ENABLED(ANYCUBIC_LCD_CHIRON)
-  // By default the type of panel is automatically detected.
-  // Enable one of these options if you know the panel type.
-  //#define CHIRON_TFT_STANDARD
-  //#define CHIRON_TFT_NEW
-
-  // Enable the longer Anycubic powerup startup tune
-  //#define AC_DEFAULT_STARTUP_TUNE
-
-  /**
-   * Display Folders
-   * By default the file browser lists all G-code files (including those in subfolders) in a flat list.
-   * Enable this option to display a hierarchical file browser.
-   *
-   * NOTES:
-   * - Without this option it helps to enable SDCARD_SORT_ALPHA so files are sorted before/after folders.
-   * - When used with the "new" panel, folder names will also have '.gcode' appended to their names.
-   *   This hack is currently required to force the panel to show folders.
-   */
-  #define AC_SD_FOLDER_VIEW
-#endif
-
-//
-// Specify additional languages for the UI. Default specified by LCD_LANGUAGE.
-//
-#if ANY(DOGLCD, TFT_COLOR_UI, TOUCH_UI_FTDI_EVE, IS_DWIN_MVCNCUI)
-  //#define LCD_LANGUAGE_2 fr
-  //#define LCD_LANGUAGE_3 de
-  //#define LCD_LANGUAGE_4 es
-  //#define LCD_LANGUAGE_5 it
-  #ifdef LCD_LANGUAGE_2
-    //#define LCD_LANGUAGE_AUTO_SAVE // Automatically save language to EEPROM on change
-  #endif
-#endif
-
-//
-// Touch UI for the FTDI Embedded Video Engine (EVE)
-//
-#if ENABLED(TOUCH_UI_FTDI_EVE)
-  // Display board used
-  //#define LCD_FTDI_VM800B35A        // FTDI 3.5" with FT800 (320x240)
-  //#define LCD_4DSYSTEMS_4DLCD_FT843 // 4D Systems 4.3" (480x272)
-  //#define LCD_HAOYU_FT800CB         // Haoyu with 4.3" or 5" (480x272)
-  //#define LCD_HAOYU_FT810CB         // Haoyu with 5" (800x480)
-  //#define LCD_LULZBOT_CLCD_UI       // LulzBot Color LCD UI
-  //#define LCD_FYSETC_TFT81050       // FYSETC with 5" (800x480)
-  //#define LCD_EVE3_50G              // Matrix Orbital 5.0", 800x480, BT815
-  //#define LCD_EVE2_50G              // Matrix Orbital 5.0", 800x480, FT813
-
-  // Correct the resolution if not using the stock TFT panel.
-  //#define TOUCH_UI_320x240
-  //#define TOUCH_UI_480x272
-  //#define TOUCH_UI_800x480
-
-  // Mappings for boards with a standard RepRapDiscount Display connector
-  //#define AO_EXP1_PINMAP      // LulzBot CLCD UI EXP1 mapping
-  //#define AO_EXP2_PINMAP      // LulzBot CLCD UI EXP2 mapping
-  //#define CR10_TFT_PINMAP     // Rudolph Riedel's CR10 pin mapping
-  //#define S6_TFT_PINMAP       // FYSETC S6 pin mapping
-  //#define F6_TFT_PINMAP       // FYSETC F6 pin mapping
-
-  //#define OTHER_PIN_LAYOUT  // Define pins manually below
-  #if ENABLED(OTHER_PIN_LAYOUT)
-    // Pins for CS and MOD_RESET (PD) must be chosen
-    #define CLCD_MOD_RESET  9
-    #define CLCD_SPI_CS    10
-
-    // If using software SPI, specify pins for SCLK, MOSI, MISO
-    //#define CLCD_USE_SOFT_SPI
-    #if ENABLED(CLCD_USE_SOFT_SPI)
-      #define CLCD_SOFT_SPI_MOSI 11
-      #define CLCD_SOFT_SPI_MISO 12
-      #define CLCD_SOFT_SPI_SCLK 13
-    #endif
-  #endif
-
-  // Display Orientation. An inverted (i.e. upside-down) display
-  // is supported on the FT800. The FT810 and beyond also support
-  // portrait and mirrored orientations.
-  //#define TOUCH_UI_INVERTED
-  //#define TOUCH_UI_PORTRAIT
-  //#define TOUCH_UI_MIRRORED
-
-  // UTF8 processing and rendering.
-  // Unsupported characters are shown as '?'.
-  //#define TOUCH_UI_USE_UTF8
-  #if ENABLED(TOUCH_UI_USE_UTF8)
-    // Western accents support. These accented characters use
-    // combined bitmaps and require relatively little storage.
-    #define TOUCH_UI_UTF8_WESTERN_CHARSET
-    #if ENABLED(TOUCH_UI_UTF8_WESTERN_CHARSET)
-      // Additional character groups. These characters require
-      // full bitmaps and take up considerable storage:
-      //#define TOUCH_UI_UTF8_SUPERSCRIPTS  // ¹ ² ³
-      //#define TOUCH_UI_UTF8_COPYRIGHT     // © ®
-      //#define TOUCH_UI_UTF8_GERMANIC      // ß
-      //#define TOUCH_UI_UTF8_SCANDINAVIAN  // Æ Ð Ø Þ æ ð ø þ
-      //#define TOUCH_UI_UTF8_PUNCTUATION   // « » ¿ ¡
-      //#define TOUCH_UI_UTF8_CURRENCY      // ¢ £ ¤ ¥
-      //#define TOUCH_UI_UTF8_ORDINALS      // º ª
-      //#define TOUCH_UI_UTF8_MATHEMATICS   // ± × ÷
-      //#define TOUCH_UI_UTF8_FRACTIONS     // ¼ ½ ¾
-      //#define TOUCH_UI_UTF8_SYMBOLS       // µ ¶ ¦ § ¬
-    #endif
-
-    // Cyrillic character set, costs about 27KiB of flash
-    //#define TOUCH_UI_UTF8_CYRILLIC_CHARSET
-  #endif
-
-  // Use a smaller font when labels don't fit buttons
-  #define TOUCH_UI_FIT_TEXT
-
-  // Use a numeric passcode for "Screen lock" keypad.
-  // (recommended for smaller displays)
-  //#define TOUCH_UI_PASSCODE
-
-  // Output extra debug info for Touch UI events
-  //#define TOUCH_UI_DEBUG
-
-  // Developer menu (accessed by touching "About CNC" copyright text)
-  //#define TOUCH_UI_DEVELOPER_MENU
-#endif
-
-//
-// Classic UI Options
-//
-#if TFT_SCALED_DOGLCD
-  //#define TFT_mvCNCUI_COLOR 0xFFFF // White
-  //#define TFT_mvCNCBG_COLOR 0x0000 // Black
-  //#define TFT_DISABLED_COLOR 0x0003 // Almost black
-  //#define TFT_BTCANCEL_COLOR 0xF800 // Red
-  //#define TFT_BTARROWS_COLOR 0xDEE6 // 11011 110111 00110 Yellow
-  //#define TFT_BTOKMENU_COLOR 0x145F // 00010 100010 11111 Cyan
-#endif
-
-//
-// ADC Button Debounce
-//
-#if HAS_ADC_BUTTONS
-  #define ADC_BUTTON_DEBOUNCE_DELAY 16  // Increase if buttons bounce or repeat too fast
-#endif
 
 // @section safety
 
@@ -1907,7 +1638,7 @@
  */
 #define USE_WATCHDOG
 #if ENABLED(USE_WATCHDOG)
-  //#define WATCHDOG_RESET_MANUAL
+//#define WATCHDOG_RESET_MANUAL
 #endif
 
 // @section lcd
@@ -1924,28 +1655,28 @@
   //#define INTEGRATED_BABYSTEPPING         // EXPERIMENTAL integration of babystepping into the Stepper ISR
   #define BABYSTEP_WITHOUT_HOMING
   //#define BABYSTEP_ALWAYS_AVAILABLE       // Allow babystepping at all times (not just during movement).
-  #define BABYSTEP_XY                     // Also enable X/Y Babystepping. Not supported on DELTA!
-  #define BABYSTEP_INVERT_Z false           // Change if Z babysteps should go the other way
-  #define BABYSTEP_MILLIMETER_UNITS       // Specify BABYSTEP_MULTIPLICATOR_(XY|Z) in mm instead of micro-steps
-  #define BABYSTEP_MULTIPLICATOR_Z  .1       // (steps or mm) Steps or millimeter distance for each Z babystep
-  #define BABYSTEP_MULTIPLICATOR_XY .25       // (steps or mm) Steps or millimeter distance for each XY babystep
+  #define BABYSTEP_XY                    // Also enable X/Y Babystepping. Not supported on DELTA!
+  #define BABYSTEP_INVERT_Z false        // Change if Z babysteps should go the other way
+  #define BABYSTEP_MILLIMETER_UNITS      // Specify BABYSTEP_MULTIPLICATOR_(XY|Z) in mm instead of micro-steps
+  #define BABYSTEP_MULTIPLICATOR_Z  .1   // (steps or mm) Steps or millimeter distance for each Z babystep
+  #define BABYSTEP_MULTIPLICATOR_XY .25  // (steps or mm) Steps or millimeter distance for each XY babystep
 
   #define DOUBLECLICK_FOR_Z_BABYSTEPPING  // Double-click on the Status Screen for Z Babystepping.
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
-    #define DOUBLECLICK_MAX_INTERVAL 1750   // Maximum interval between clicks, in milliseconds.
-                                            // Note: Extra time may be added to mitigate controller latency.
-    #define MOVE_Z_WHEN_IDLE              // Jump to the move Z menu on doubleclick when cnc is idle.
+    #define DOUBLECLICK_MAX_INTERVAL 1750  // Maximum interval between clicks, in milliseconds.
+                                           // Note: Extra time may be added to mitigate controller latency.
+    #define MOVE_Z_WHEN_IDLE               // Jump to the move Z menu on doubleclick when cnc is idle.
     #if ENABLED(MOVE_Z_WHEN_IDLE)
-      #define MOVE_Z_IDLE_MULTIPLICATOR 1   // Multiply 1mm by this factor for the move step size.
+      #define MOVE_Z_IDLE_MULTIPLICATOR 1  // Multiply 1mm by this factor for the move step size.
     #endif
   #endif
 
-  #define BABYSTEP_DISPLAY_TOTAL          // Display total babysteps since last G28
+  #define BABYSTEP_DISPLAY_TOTAL  // Display total babysteps since last G28
 
   //#define BABYSTEP_ZPROBE_OFFSET          // Combine M851 Z and Babystepping
   #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
-    //#define BABYSTEP_HOTEND_Z_OFFSET      // For multiple hotends, babystep relative Z offsets
-    //#define BABYSTEP_ZPROBE_GFX_OVERLAY   // Enable graphical overlay on Z-offset editor
+  //#define BABYSTEP_HOTEND_Z_OFFSET      // For multiple hotends, babystep relative Z offsets
+  //#define BABYSTEP_ZPROBE_GFX_OVERLAY   // Enable graphical overlay on Z-offset editor
   #endif
 #endif
 
@@ -1969,10 +1700,10 @@
 //#define LIN_ADVANCE
 #if ENABLED(LIN_ADVANCE)
   //#define EXTRA_LIN_ADVANCE_K // Enable for second linear advance constants
-  #define LIN_ADVANCE_K 0.22    // Unit: mm compression per 1mm/s extruder speed
-  //#define LA_DEBUG            // If enabled, this will generate debug information output over USB.
-  //#define EXPERIMENTAL_SCURVE // Enable this option to permit S-Curve Acceleration
-  //#define ALLOW_LOW_EJERK     // Allow a DEFAULT_EJERK value of <10. Recommended for direct drive hotends.
+  #define LIN_ADVANCE_K 0.22  // Unit: mm compression per 1mm/s extruder speed
+//#define LA_DEBUG            // If enabled, this will generate debug information output over USB.
+//#define EXPERIMENTAL_SCURVE // Enable this option to permit S-Curve Acceleration
+//#define ALLOW_LOW_EJERK     // Allow a DEFAULT_EJERK value of <10. Recommended for direct drive hotends.
 #endif
 
 // @section leveling
@@ -1982,12 +1713,12 @@
  * Override if the automatically selected points are inadequate.
  */
 #if EITHER(AUTO_BED_LEVELING_3POINT, AUTO_BED_LEVELING_UBL)
-  //#define PROBE_PT_1_X 15
-  //#define PROBE_PT_1_Y 180
-  //#define PROBE_PT_2_X 15
-  //#define PROBE_PT_2_Y 20
-  //#define PROBE_PT_3_X 170
-  //#define PROBE_PT_3_Y 20
+//#define PROBE_PT_1_X 15
+//#define PROBE_PT_1_Y 180
+//#define PROBE_PT_2_X 15
+//#define PROBE_PT_2_Y 20
+//#define PROBE_PT_3_X 170
+//#define PROBE_PT_3_Y 20
 #endif
 
 /**
@@ -2010,22 +1741,22 @@
  * the probe to be unable to reach any points.
  */
 #if PROBE_SELECTED && !IS_KINEMATIC
-  //#define PROBING_MARGIN_LEFT PROBING_MARGIN
-  //#define PROBING_MARGIN_RIGHT PROBING_MARGIN
-  //#define PROBING_MARGIN_FRONT PROBING_MARGIN
-  //#define PROBING_MARGIN_BACK PROBING_MARGIN
+//#define PROBING_MARGIN_LEFT PROBING_MARGIN
+//#define PROBING_MARGIN_RIGHT PROBING_MARGIN
+//#define PROBING_MARGIN_FRONT PROBING_MARGIN
+//#define PROBING_MARGIN_BACK PROBING_MARGIN
 #endif
 
 #if EITHER(MESH_BED_LEVELING, AUTO_BED_LEVELING_UBL)
-  // Override the mesh area if the automatic (max) area is too large
-  //#define MESH_MIN_X MESH_INSET
-  //#define MESH_MIN_Y MESH_INSET
-  //#define MESH_MAX_X X_BED_SIZE - (MESH_INSET)
-  //#define MESH_MAX_Y Y_BED_SIZE - (MESH_INSET)
+// Override the mesh area if the automatic (max) area is too large
+//#define MESH_MIN_X MESH_INSET
+//#define MESH_MIN_Y MESH_INSET
+//#define MESH_MAX_X X_BED_SIZE - (MESH_INSET)
+//#define MESH_MAX_Y Y_BED_SIZE - (MESH_INSET)
 #endif
 
 #if BOTH(AUTO_BED_LEVELING_UBL, EEPROM_SETTINGS)
-  //#define OPTIMIZED_MESH_STORAGE  // Store mesh with less precision to save EEPROM space
+//#define OPTIMIZED_MESH_STORAGE  // Store mesh with less precision to save EEPROM space
 #endif
 
 /**
@@ -2061,83 +1792,88 @@
 //#define PTC_HOTEND   // Compensate based on hotend temperature
 
 #if ANY(PTC_PROBE, PTC_BED, PTC_HOTEND)
-  /**
-   * If the probe is outside the defined range, use linear extrapolation with the closest
-   * point and the point with index PTC_LINEAR_EXTRAPOLATION. e.g., If set to 4 it will use the
-   * linear extrapolation between data[0] and data[4] for values below PTC_PROBE_START.
-   */
-  //#define PTC_LINEAR_EXTRAPOLATION 4
+/**
+ * If the probe is outside the defined range, use linear extrapolation with the closest
+ * point and the point with index PTC_LINEAR_EXTRAPOLATION. e.g., If set to 4 it will use the
+ * linear extrapolation between data[0] and data[4] for values below PTC_PROBE_START.
+ */
+//#define PTC_LINEAR_EXTRAPOLATION 4
 
   #if ENABLED(PTC_PROBE)
     // Probe temperature calibration generates a table of values starting at PTC_PROBE_START
     // (e.g., 30), in steps of PTC_PROBE_RES (e.g., 5) with PTC_PROBE_COUNT (e.g., 10) samples.
-    #define PTC_PROBE_START   30    // (°C)
-    #define PTC_PROBE_RES      5    // (°C)
-    #define PTC_PROBE_COUNT   10
-    #define PTC_PROBE_ZOFFS   { 0 } // (µm) Z adjustments per sample
+    #define PTC_PROBE_START 30  // (°C)
+    #define PTC_PROBE_RES   5   // (°C)
+    #define PTC_PROBE_COUNT 10
+    #define PTC_PROBE_ZOFFS \
+      { 0 }  // (µm) Z adjustments per sample
   #endif
 
   #if ENABLED(PTC_BED)
     // Bed temperature calibration builds a similar table.
-    #define PTC_BED_START     60    // (°C)
-    #define PTC_BED_RES        5    // (°C)
-    #define PTC_BED_COUNT     10
-    #define PTC_BED_ZOFFS     { 0 } // (µm) Z adjustments per sample
+    #define PTC_BED_START 60  // (°C)
+    #define PTC_BED_RES   5   // (°C)
+    #define PTC_BED_COUNT 10
+    #define PTC_BED_ZOFFS \
+      { 0 }  // (µm) Z adjustments per sample
   #endif
 
   #if ENABLED(PTC_HOTEND)
     // Note: There is no automatic calibration for the hotend. Use M871.
-    #define PTC_HOTEND_START 180    // (°C)
-    #define PTC_HOTEND_RES     5    // (°C)
-    #define PTC_HOTEND_COUNT  20
-    #define PTC_HOTEND_ZOFFS  { 0 } // (µm) Z adjustments per sample
+    #define PTC_HOTEND_START 180  // (°C)
+    #define PTC_HOTEND_RES   5    // (°C)
+    #define PTC_HOTEND_COUNT 20
+    #define PTC_HOTEND_ZOFFS \
+      { 0 }  // (µm) Z adjustments per sample
   #endif
 
   // G76 options
   #if BOTH(PTC_PROBE, PTC_BED)
     // Park position to wait for probe cooldown
-    #define PTC_PARK_POS   { 0, 0, 100 }
+    #define PTC_PARK_POS \
+      { 0, 0, 100 }
 
     // Probe position to probe and wait for probe to reach target temperature
     //#define PTC_PROBE_POS  { 12.0f, 7.3f } // Example: MK52 magnetic heatbed
-    #define PTC_PROBE_POS  { 90, 100 }
+    #define PTC_PROBE_POS \
+      { 90, 100 }
 
     // The temperature the probe should be at while taking measurements during
     // bed temperature calibration.
-    #define PTC_PROBE_TEMP    30  // (°C)
+    #define PTC_PROBE_TEMP 30  // (°C)
 
     // Height above Z=0.0 to raise the nozzle. Lowering this can help the probe to heat faster.
     // Note: The Z=0.0 offset is determined by the probe Z offset (e.g., as set with M851 Z).
     #define PTC_PROBE_HEATING_OFFSET 0.5
   #endif
-#endif // PTC_PROBE || PTC_BED || PTC_HOTEND
+#endif  // PTC_PROBE || PTC_BED || PTC_HOTEND
 
 // @section extras
 
 //
 // G60/G61 Position Save and Return
 //
-#define SAVED_POSITIONS 1         // Each saved position slot costs 12 bytes
+#define SAVED_POSITIONS 1  // Each saved position slot costs 12 bytes
 
 //
 // G2/G3 Arc Support
 //
-#define ARC_SUPPORT                   // Requires ~3226 bytes
+#define ARC_SUPPORT  // Requires ~3226 bytes
 #if ENABLED(ARC_SUPPORT)
-  #define MIN_ARC_SEGMENT_MM      0.1 // (mm) Minimum length of each arc segment
-  #define MAX_ARC_SEGMENT_MM      1.0 // (mm) Maximum length of each arc segment
-  #define MIN_CIRCLE_SEGMENTS    72   // Minimum number of segments in a complete circle
+  #define MIN_ARC_SEGMENT_MM  0.1  // (mm) Minimum length of each arc segment
+  #define MAX_ARC_SEGMENT_MM  1.0  // (mm) Maximum length of each arc segment
+  #define MIN_CIRCLE_SEGMENTS 72   // Minimum number of segments in a complete circle
   //#define ARC_SEGMENTS_PER_SEC 50   // Use the feedrate to choose the segment length
-  #define N_ARC_CORRECTION       25   // Number of interpolated segments between corrections
-  #define ARC_P_CIRCLES             // Enable the 'P' parameter to specify complete circles
-  //#define SF_ARC_FIX                // Enable only if using SkeinForge with "Arc Point" fillet procedure
+  #define N_ARC_CORRECTION 25  // Number of interpolated segments between corrections
+  #define ARC_P_CIRCLES        // Enable the 'P' parameter to specify complete circles
+//#define SF_ARC_FIX                // Enable only if using SkeinForge with "Arc Point" fillet procedure
 #endif
 
 // G5 Bézier Curve Support with XYZE destination and IJPQ offsets
-#define BEZIER_CURVE_SUPPORT        // Requires ~2666 bytes
+#define BEZIER_CURVE_SUPPORT  // Requires ~2666 bytes
 
 #if EITHER(ARC_SUPPORT, BEZIER_CURVE_SUPPORT)
-  #define CNC_WORKSPACE_PLANES      // Allow G2/G3/G5 to operate in XY, ZX, or YZ planes
+  #define CNC_WORKSPACE_PLANES  // Allow G2/G3/G5 to operate in XY, ZX, or YZ planes
 #endif
 
 /**
@@ -2160,7 +1896,7 @@
 #define G38_PROBE_TARGET
 #if ENABLED(G38_PROBE_TARGET)
   //#define G38_PROBE_AWAY        // Include G38.4 and G38.5 to probe away from target
-  #define G38_MINIMUM_MOVE 0.0275 // (mm) Minimum distance that will produce a move.
+  #define G38_MINIMUM_MOVE 0.0275  // (mm) Minimum distance that will produce a move.
 #endif
 
 // Moves (or segments) with fewer steps than this will be joined with the next move
@@ -2223,7 +1959,7 @@
 // The number of linear moves that can be in the planner at once.
 // The value of BLOCK_BUFFER_SIZE must be a power of 2 (e.g., 8, 16, 32)
 #if BOTH(SDSUPPORT, DIRECT_STEPPING)
-  #define BLOCK_BUFFER_SIZE  8
+  #define BLOCK_BUFFER_SIZE 8
 #elif ENABLED(SDSUPPORT)
   #define BLOCK_BUFFER_SIZE 8
 #else
@@ -2234,7 +1970,7 @@
 
 // The ASCII buffer for serial input
 #define MAX_CMD_SIZE 128
-#define BUFSIZE 8
+#define BUFSIZE      8
 
 // Transmission to Host Buffer Size
 // To save 386 bytes of PROGMEM (and TX_BUFFER_SIZE+3 bytes of RAM) set to 0.
@@ -2258,13 +1994,13 @@
 #endif
 
 #if ENABLED(SDSUPPORT)
-  // Enable this option to collect and display the maximum
-  // RX queue usage after transferring a file to SD.
-  //#define SERIAL_STATS_MAX_RX_QUEUED
+// Enable this option to collect and display the maximum
+// RX queue usage after transferring a file to SD.
+//#define SERIAL_STATS_MAX_RX_QUEUED
 
-  // Enable this option to collect and display the number
-  // of dropped bytes after a file transfer to SD.
-  //#define SERIAL_STATS_DROPPED_RX
+// Enable this option to collect and display the number
+// of dropped bytes after a file transfer to SD.
+//#define SERIAL_STATS_DROPPED_RX
 #endif
 
 // Monitor RX buffer usage
@@ -2295,26 +2031,26 @@
  */
 // #define REALTIME_COMMANDS
 
-  /**
-   * Send machine status updates to host (Useful for CNC/Laser)
-   *
-   * - Auto-report state of the machine (like GRBL does) in numerical format.
-   * - Auto-report position during long moves.
-   *
-   * Possible mvCNC statuses (GRBL-compatible equivalent)
-   * 0: MF_INITIALIZING    (M_INIT)
-   * 1: MF_SD_COMPLETE     (M_ALARM)
-   * 2: MF_WAITING         (M_IDLE)
-   * 3: MF_STOPPED         (M_END)
-   * 4: MF_RUNNING         (M_RUNNING)
-   * 5: MF_PAUSED          (M_HOLD)
-   * 6: MF_KILLED          (M_ERROR)
-   */
-  // #define REPORT_STATUS_TO_HOST // Send regular machine status updates to host in GRBL format ("S_XYZ: #")
-  #if ENABLED(REPORT_STATUS_TO_HOST)
-  // Report status during long moves
-  // Only enable if needed, it is very verbose and will cause the console to scroll quickly
-  // #define REPORT_STATUS_DURING_MOVES
+/**
+ * Send machine status updates to host (Useful for CNC/Laser)
+ *
+ * - Auto-report state of the machine (like GRBL does) in numerical format.
+ * - Auto-report position during long moves.
+ *
+ * Possible mvCNC statuses (GRBL-compatible equivalent)
+ * 0: MF_INITIALIZING    (M_INIT)
+ * 1: MF_SD_COMPLETE     (M_ALARM)
+ * 2: MF_WAITING         (M_IDLE)
+ * 3: MF_STOPPED         (M_END)
+ * 4: MF_RUNNING         (M_RUNNING)
+ * 5: MF_PAUSED          (M_HOLD)
+ * 6: MF_KILLED          (M_ERROR)
+ */
+// #define REPORT_STATUS_TO_HOST // Send regular machine status updates to host in GRBL format ("S_XYZ: #")
+#if ENABLED(REPORT_STATUS_TO_HOST)
+// Report status during long moves
+// Only enable if needed, it is very verbose and will cause the console to scroll quickly
+// #define REPORT_STATUS_DURING_MOVES
 #endif
 
 /**
@@ -2333,10 +2069,10 @@
 // #define COMPACT_STATUS_REPORTS
 #if ENABLED(COMPACT_STATUS_REPORTS)
 
-  // M114 will return compact reports instead of the usual verbose report
-  // #define M114_USES_COMPACT_REPORTS // CAUTION - May break host UI's which look for M114's verbose output
+// M114 will return compact reports instead of the usual verbose report
+// #define M114_USES_COMPACT_REPORTS // CAUTION - May break host UI's which look for M114's verbose output
 
-  // #define GRBL_COMPATIBLE_STATES    // Report GRBL-equivalent states instead of mvCNC states
+// #define GRBL_COMPATIBLE_STATES    // Report GRBL-equivalent states instead of mvCNC states
 #endif
 
 /**
@@ -2361,7 +2097,7 @@
 // Bad serial connections can cause a sent command to be missed, therefore some clients will abort after 30 seconds in a timeout.
 // Supporting clients will resume sending commands if they receive a "wait" (waiting for command) message.
 // This "wait" message is only sent when the buffer is empty. Every 1000 milliseconds (1 sec) is a good value here.
-#define TIMEOUT_PREVENTION_DELAY 20000 // "wait" message delay in Milliseconds
+#define TIMEOUT_PREVENTION_DELAY 20000  // "wait" message delay in Milliseconds
 
 // Some clients will have this feature soon. This will make the "wait" (TIMEOUT_PREVENTION_DELAY) message unnecessary.
 //#define ADVANCED_OK
@@ -2400,21 +2136,21 @@
  */
 //#define FWRETRACT
 #if ENABLED(FWRETRACT)
-  #define FWRETRACT_AUTORETRACT             // Override slicer retractions
+  #define FWRETRACT_AUTORETRACT  // Override slicer retractions
   #if ENABLED(FWRETRACT_AUTORETRACT)
-    #define MIN_AUTORETRACT             0.1 // (mm) Don't convert E moves under this length
-    #define MAX_AUTORETRACT            10.0 // (mm) Don't convert E moves over this length
+    #define MIN_AUTORETRACT 0.1   // (mm) Don't convert E moves under this length
+    #define MAX_AUTORETRACT 10.0  // (mm) Don't convert E moves over this length
   #endif
   #define RETRACT_LENGTH                3   // (mm) Default retract length (positive value)
-  #define RETRACT_LENGTH_SWAP          13   // (mm) Default swap retract length (positive value)
-  #define RETRACT_FEEDRATE             45   // (mm/s) Default feedrate for retracting
+  #define RETRACT_LENGTH_SWAP           13  // (mm) Default swap retract length (positive value)
+  #define RETRACT_FEEDRATE              45  // (mm/s) Default feedrate for retracting
   #define RETRACT_ZRAISE                0   // (mm) Default retract Z-raise
   #define RETRACT_RECOVER_LENGTH        0   // (mm) Default additional recover length (added to retract length on recover)
   #define RETRACT_RECOVER_LENGTH_SWAP   0   // (mm) Default additional swap recover length (added to retract length on recover from toolchange)
   #define RETRACT_RECOVER_FEEDRATE      8   // (mm/s) Default feedrate for recovering from retraction
   #define RETRACT_RECOVER_FEEDRATE_SWAP 8   // (mm/s) Default feedrate for recovering from swap retraction
   #if ENABLED(MIXING_EXTRUDER)
-    //#define RETRACT_SYNC_MIXING           // Retract and restore all mixing steppers simultaneously
+  //#define RETRACT_SYNC_MIXING           // Retract and restore all mixing steppers simultaneously
   #endif
 #endif
 
@@ -2424,11 +2160,11 @@
  */
 #if HAS_MULTI_EXTRUDER
   // Z raise distance for tool-change, as needed for some extruders
-  #define TOOLCHANGE_ZRAISE                 2 // (mm)
+  #define TOOLCHANGE_ZRAISE 2  // (mm)
   //#define TOOLCHANGE_ZRAISE_BEFORE_RETRACT  // Apply raise before swap retraction (if enabled)
   //#define TOOLCHANGE_NO_RETURN              // Never return to previous position on tool-change
   #if ENABLED(TOOLCHANGE_NO_RETURN)
-    //#define EVENT_GCODE_AFTER_TOOLCHANGE "G12X"   // Extra G-code to run after tool-change
+  //#define EVENT_GCODE_AFTER_TOOLCHANGE "G12X"   // Extra G-code to run after tool-change
   #endif
 
   /**
@@ -2452,20 +2188,20 @@
   //#define TOOLCHANGE_FILAMENT_SWAP
   #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
     // Load / Unload
-    #define TOOLCHANGE_FS_LENGTH              12  // (mm) Load / Unload length
-    #define TOOLCHANGE_FS_EXTRA_RESUME_LENGTH  0  // (mm) Extra length for better restart, fine tune by LCD/Gcode)
-    #define TOOLCHANGE_FS_RETRACT_SPEED   (50*60) // (mm/min) (Unloading)
-    #define TOOLCHANGE_FS_UNRETRACT_SPEED (25*60) // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
+    #define TOOLCHANGE_FS_LENGTH              12         // (mm) Load / Unload length
+    #define TOOLCHANGE_FS_EXTRA_RESUME_LENGTH 0          // (mm) Extra length for better restart, fine tune by LCD/Gcode)
+    #define TOOLCHANGE_FS_RETRACT_SPEED       (50 * 60)  // (mm/min) (Unloading)
+    #define TOOLCHANGE_FS_UNRETRACT_SPEED     (25 * 60)  // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
 
     // Longer prime to clean out a SINGLENOZZLE
-    #define TOOLCHANGE_FS_EXTRA_PRIME          0  // (mm) Extra priming length
-    #define TOOLCHANGE_FS_PRIME_SPEED    (4.6*60) // (mm/min) Extra priming feedrate
-    #define TOOLCHANGE_FS_WIPE_RETRACT         0  // (mm) Retract before cooling for less stringing, better wipe, etc.
+    #define TOOLCHANGE_FS_EXTRA_PRIME  0           // (mm) Extra priming length
+    #define TOOLCHANGE_FS_PRIME_SPEED  (4.6 * 60)  // (mm/min) Extra priming feedrate
+    #define TOOLCHANGE_FS_WIPE_RETRACT 0           // (mm) Retract before cooling for less stringing, better wipe, etc.
 
     // Cool after prime to reduce stringing
-    #define TOOLCHANGE_FS_FAN                 -1  // Fan index or -1 to skip
-    #define TOOLCHANGE_FS_FAN_SPEED          255  // 0-255
-    #define TOOLCHANGE_FS_FAN_TIME            10  // (seconds)
+    #define TOOLCHANGE_FS_FAN       -1   // Fan index or -1 to skip
+    #define TOOLCHANGE_FS_FAN_SPEED 255  // 0-255
+    #define TOOLCHANGE_FS_FAN_TIME  10   // (seconds)
 
     // Swap uninitialized extruder with TOOLCHANGE_FS_PRIME_SPEED for all lengths (recover + prime)
     // (May break filament if not retracted beforehand.)
@@ -2495,12 +2231,13 @@
    */
   //#define TOOLCHANGE_PARK
   #if ENABLED(TOOLCHANGE_PARK)
-    #define TOOLCHANGE_PARK_XY    { X_MIN_POS + 10, Y_MIN_POS + 10 }
+    #define TOOLCHANGE_PARK_XY \
+      { X_MIN_POS + 10, Y_MIN_POS + 10 }
     #define TOOLCHANGE_PARK_XY_FEEDRATE 6000  // (mm/min)
-    //#define TOOLCHANGE_PARK_X_ONLY          // X axis only move
-    //#define TOOLCHANGE_PARK_Y_ONLY          // Y axis only move
+  //#define TOOLCHANGE_PARK_X_ONLY          // X axis only move
+  //#define TOOLCHANGE_PARK_Y_ONLY          // Y axis only move
   #endif
-#endif // HAS_MULTI_EXTRUDER
+#endif  // HAS_MULTI_EXTRUDER
 
 /**
  * Advanced Pause for Filament Change
@@ -2515,49 +2252,49 @@
  */
 //#define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #define PAUSE_PARK_RETRACT_FEEDRATE         60  // (mm/s) Initial retract feedrate.
-  #define PAUSE_PARK_RETRACT_LENGTH            2  // (mm) Initial retract.
-                                                  // This short retract is done immediately, before parking the nozzle.
-  #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     10  // (mm/s) Unload filament feedrate. This can be pretty fast.
-  #define FILAMENT_CHANGE_UNLOAD_ACCEL        25  // (mm/s^2) Lower acceleration may allow a faster feedrate.
-  #define FILAMENT_CHANGE_UNLOAD_LENGTH      100  // (mm) The length of filament for a complete unload.
-                                                  //   For Bowden, the full length of the tube and nozzle.
-                                                  //   For direct drive, the full length of the nozzle.
-                                                  //   Set to 0 for manual unloading.
-  #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   6  // (mm/s) Slow move when starting load.
-  #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH     0  // (mm) Slow length, to allow time to insert material.
-                                                  // 0 to disable start loading and skip to fast load only
-  #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE   6  // (mm/s) Load filament feedrate. This can be pretty fast.
-  #define FILAMENT_CHANGE_FAST_LOAD_ACCEL     25  // (mm/s^2) Lower acceleration may allow a faster feedrate.
-  #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     0  // (mm) Load length of filament, from extruder gear to nozzle.
-                                                  //   For Bowden, the full length of the tube and nozzle.
-                                                  //   For direct drive, the full length of the nozzle.
+  #define PAUSE_PARK_RETRACT_FEEDRATE 60         // (mm/s) Initial retract feedrate.
+  #define PAUSE_PARK_RETRACT_LENGTH   2          // (mm) Initial retract.
+                                                 // This short retract is done immediately, before parking the nozzle.
+  #define FILAMENT_CHANGE_UNLOAD_FEEDRATE 10     // (mm/s) Unload filament feedrate. This can be pretty fast.
+  #define FILAMENT_CHANGE_UNLOAD_ACCEL    25     // (mm/s^2) Lower acceleration may allow a faster feedrate.
+  #define FILAMENT_CHANGE_UNLOAD_LENGTH   100    // (mm) The length of filament for a complete unload.
+                                                 //   For Bowden, the full length of the tube and nozzle.
+                                                 //   For direct drive, the full length of the nozzle.
+                                                 //   Set to 0 for manual unloading.
+  #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE 6   // (mm/s) Slow move when starting load.
+  #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH   0   // (mm) Slow length, to allow time to insert material.
+                                                 // 0 to disable start loading and skip to fast load only
+  #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE 6   // (mm/s) Load filament feedrate. This can be pretty fast.
+  #define FILAMENT_CHANGE_FAST_LOAD_ACCEL    25  // (mm/s^2) Lower acceleration may allow a faster feedrate.
+  #define FILAMENT_CHANGE_FAST_LOAD_LENGTH   0   // (mm) Load length of filament, from extruder gear to nozzle.
+                                                 //   For Bowden, the full length of the tube and nozzle.
+                                                 //   For direct drive, the full length of the nozzle.
   //#define ADVANCED_PAUSE_CONTINUOUS_PURGE       // Purge continuously up to the purge length until interrupted.
-  #define ADVANCED_PAUSE_PURGE_FEEDRATE        3  // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
-  #define ADVANCED_PAUSE_PURGE_LENGTH         50  // (mm) Length to extrude after loading.
-                                                  //   Set to 0 for manual extrusion.
-                                                  //   Filament can be extruded repeatedly from the Filament Change menu
-                                                  //   until extrusion is consistent, and to purge old filament.
-  #define ADVANCED_PAUSE_RESUME_PRIME          0  // (mm) Extra distance to prime nozzle after returning from park.
-  //#define ADVANCED_PAUSE_FANS_PAUSE             // Turn off print-cooling fans while the machine is paused.
+  #define ADVANCED_PAUSE_PURGE_FEEDRATE 3   // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
+  #define ADVANCED_PAUSE_PURGE_LENGTH   50  // (mm) Length to extrude after loading.
+                                            //   Set to 0 for manual extrusion.
+                                            //   Filament can be extruded repeatedly from the Filament Change menu
+                                            //   until extrusion is consistent, and to purge old filament.
+  #define ADVANCED_PAUSE_RESUME_PRIME 0     // (mm) Extra distance to prime nozzle after returning from park.
+                                            //#define ADVANCED_PAUSE_FANS_PAUSE             // Turn off print-cooling fans while the machine is paused.
 
-                                                  // Filament Unload does a Retract, Delay, and Purge first:
-  #define FILAMENT_UNLOAD_PURGE_RETRACT       13  // (mm) Unload initial retract length.
-  #define FILAMENT_UNLOAD_PURGE_DELAY       5000  // (ms) Delay for the filament to cool after retract.
-  #define FILAMENT_UNLOAD_PURGE_LENGTH         8  // (mm) An unretract is done, then this length is purged.
-  #define FILAMENT_UNLOAD_PURGE_FEEDRATE      25  // (mm/s) feedrate to purge before unload
+// Filament Unload does a Retract, Delay, and Purge first:
+  #define FILAMENT_UNLOAD_PURGE_RETRACT  13    // (mm) Unload initial retract length.
+  #define FILAMENT_UNLOAD_PURGE_DELAY    5000  // (ms) Delay for the filament to cool after retract.
+  #define FILAMENT_UNLOAD_PURGE_LENGTH   8     // (mm) An unretract is done, then this length is purged.
+  #define FILAMENT_UNLOAD_PURGE_FEEDRATE 25    // (mm/s) feedrate to purge before unload
 
-  #define PAUSE_PARK_NOZZLE_TIMEOUT           45  // (seconds) Time limit before the nozzle is turned off for safety.
-  #define FILAMENT_CHANGE_ALERT_BEEPS         10  // Number of alert beeps to play when a response is needed.
-  #define PAUSE_PARK_NO_STEPPER_TIMEOUT           // Enable for XYZ steppers to stay powered on during filament change.
-  //#define FILAMENT_CHANGE_RESUME_ON_INSERT      // Automatically continue / load filament when runout sensor is triggered again.
-  //#define PAUSE_REHEAT_FAST_RESUME              // Reduce number of waits by not prompting again post-timeout before continuing.
+  #define PAUSE_PARK_NOZZLE_TIMEOUT   45  // (seconds) Time limit before the nozzle is turned off for safety.
+  #define FILAMENT_CHANGE_ALERT_BEEPS 10  // Number of alert beeps to play when a response is needed.
+  #define PAUSE_PARK_NO_STEPPER_TIMEOUT   // Enable for XYZ steppers to stay powered on during filament change.
+//#define FILAMENT_CHANGE_RESUME_ON_INSERT      // Automatically continue / load filament when runout sensor is triggered again.
+//#define PAUSE_REHEAT_FAST_RESUME              // Reduce number of waits by not prompting again post-timeout before continuing.
 
-  //#define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
-  //#define HOME_BEFORE_FILAMENT_CHANGE           // If needed, home before parking for filament change
+//#define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
+//#define HOME_BEFORE_FILAMENT_CHANGE           // If needed, home before parking for filament change
 
-  //#define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
-  //#define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Allow M702 to unload all extruders above a minimum target temp (as set by M302)
+//#define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
+//#define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Allow M702 to unload all extruders above a minimum target temp (as set by M302)
 #endif
 
 // @section tmc
@@ -2571,120 +2308,120 @@
 #if HAS_DRIVER(TMC26X)
 
   #if AXIS_DRIVER_TYPE_X(TMC26X)
-    #define X_MAX_CURRENT     1000  // (mA)
-    #define X_SENSE_RESISTOR    91  // (mOhms)
-    #define X_MICROSTEPS        16  // Number of microsteps
+    #define X_MAX_CURRENT    1000  // (mA)
+    #define X_SENSE_RESISTOR 91    // (mOhms)
+    #define X_MICROSTEPS     16    // Number of microsteps
   #endif
 
   #if AXIS_DRIVER_TYPE_X2(TMC26X)
     #define X2_MAX_CURRENT    1000
-    #define X2_SENSE_RESISTOR   91
-    #define X2_MICROSTEPS       X_MICROSTEPS
+    #define X2_SENSE_RESISTOR 91
+    #define X2_MICROSTEPS     X_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_Y(TMC26X)
-    #define Y_MAX_CURRENT     1000
-    #define Y_SENSE_RESISTOR    91
-    #define Y_MICROSTEPS        16
+    #define Y_MAX_CURRENT    1000
+    #define Y_SENSE_RESISTOR 91
+    #define Y_MICROSTEPS     16
   #endif
 
   #if AXIS_DRIVER_TYPE_Y2(TMC26X)
     #define Y2_MAX_CURRENT    1000
-    #define Y2_SENSE_RESISTOR   91
-    #define Y2_MICROSTEPS       Y_MICROSTEPS
+    #define Y2_SENSE_RESISTOR 91
+    #define Y2_MICROSTEPS     Y_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_Z(TMC26X)
-    #define Z_MAX_CURRENT     1000
-    #define Z_SENSE_RESISTOR    91
-    #define Z_MICROSTEPS        16
+    #define Z_MAX_CURRENT    1000
+    #define Z_SENSE_RESISTOR 91
+    #define Z_MICROSTEPS     16
   #endif
 
   #if AXIS_DRIVER_TYPE_Z2(TMC26X)
     #define Z2_MAX_CURRENT    1000
-    #define Z2_SENSE_RESISTOR   91
-    #define Z2_MICROSTEPS       Z_MICROSTEPS
+    #define Z2_SENSE_RESISTOR 91
+    #define Z2_MICROSTEPS     Z_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_Z3(TMC26X)
     #define Z3_MAX_CURRENT    1000
-    #define Z3_SENSE_RESISTOR   91
-    #define Z3_MICROSTEPS       Z_MICROSTEPS
+    #define Z3_SENSE_RESISTOR 91
+    #define Z3_MICROSTEPS     Z_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_Z4(TMC26X)
     #define Z4_MAX_CURRENT    1000
-    #define Z4_SENSE_RESISTOR   91
-    #define Z4_MICROSTEPS       Z_MICROSTEPS
+    #define Z4_SENSE_RESISTOR 91
+    #define Z4_MICROSTEPS     Z_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_I(TMC26X)
     #define I_MAX_CURRENT    1000
-    #define I_SENSE_RESISTOR   91
-    #define I_MICROSTEPS       16
+    #define I_SENSE_RESISTOR 91
+    #define I_MICROSTEPS     16
   #endif
 
   #if AXIS_DRIVER_TYPE_J(TMC26X)
     #define J_MAX_CURRENT    1000
-    #define J_SENSE_RESISTOR   91
-    #define J_MICROSTEPS       16
+    #define J_SENSE_RESISTOR 91
+    #define J_MICROSTEPS     16
   #endif
 
   #if AXIS_DRIVER_TYPE_K(TMC26X)
     #define K_MAX_CURRENT    1000
-    #define K_SENSE_RESISTOR   91
-    #define K_MICROSTEPS       16
+    #define K_SENSE_RESISTOR 91
+    #define K_MICROSTEPS     16
   #endif
 
   #if AXIS_DRIVER_TYPE_E0(TMC26X)
     #define E0_MAX_CURRENT    1000
-    #define E0_SENSE_RESISTOR   91
-    #define E0_MICROSTEPS       16
+    #define E0_SENSE_RESISTOR 91
+    #define E0_MICROSTEPS     16
   #endif
 
   #if AXIS_DRIVER_TYPE_E1(TMC26X)
     #define E1_MAX_CURRENT    1000
-    #define E1_SENSE_RESISTOR   91
-    #define E1_MICROSTEPS       E0_MICROSTEPS
+    #define E1_SENSE_RESISTOR 91
+    #define E1_MICROSTEPS     E0_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_E2(TMC26X)
     #define E2_MAX_CURRENT    1000
-    #define E2_SENSE_RESISTOR   91
-    #define E2_MICROSTEPS       E0_MICROSTEPS
+    #define E2_SENSE_RESISTOR 91
+    #define E2_MICROSTEPS     E0_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_E3(TMC26X)
     #define E3_MAX_CURRENT    1000
-    #define E3_SENSE_RESISTOR   91
-    #define E3_MICROSTEPS       E0_MICROSTEPS
+    #define E3_SENSE_RESISTOR 91
+    #define E3_MICROSTEPS     E0_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_E4(TMC26X)
     #define E4_MAX_CURRENT    1000
-    #define E4_SENSE_RESISTOR   91
-    #define E4_MICROSTEPS       E0_MICROSTEPS
+    #define E4_SENSE_RESISTOR 91
+    #define E4_MICROSTEPS     E0_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_E5(TMC26X)
     #define E5_MAX_CURRENT    1000
-    #define E5_SENSE_RESISTOR   91
-    #define E5_MICROSTEPS       E0_MICROSTEPS
+    #define E5_SENSE_RESISTOR 91
+    #define E5_MICROSTEPS     E0_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_E6(TMC26X)
     #define E6_MAX_CURRENT    1000
-    #define E6_SENSE_RESISTOR   91
-    #define E6_MICROSTEPS       E0_MICROSTEPS
+    #define E6_SENSE_RESISTOR 91
+    #define E6_MICROSTEPS     E0_MICROSTEPS
   #endif
 
   #if AXIS_DRIVER_TYPE_E7(TMC26X)
     #define E7_MAX_CURRENT    1000
-    #define E7_SENSE_RESISTOR   91
-    #define E7_MICROSTEPS       E0_MICROSTEPS
+    #define E7_SENSE_RESISTOR 91
+    #define E7_MICROSTEPS     E0_MICROSTEPS
   #endif
 
-#endif // TMC26X
+#endif  // TMC26X
 
 // @section tmc_smart
 
@@ -2706,194 +2443,194 @@
  */
 #if HAS_TRINAMIC_CONFIG
 
-  #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
+  #define HOLD_MULTIPLIER 0.5  // Scales down the holding current from run current
 
   /**
    * Interpolate microsteps to 256
    * Override for each driver with <driver>_INTERPOLATE settings below
    */
-  #define INTERPOLATE      true
+  #define INTERPOLATE true
 
   #if AXIS_IS_TMC(X)
-    #define X_CURRENT       800        // (mA) RMS current. Multiply by 1.414 for peak current.
-    #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
-    #define X_MICROSTEPS     16        // 0..256
-    #define X_RSENSE          0.11
-    #define X_CHAIN_POS      -1        // -1..0: Not chained. 1: MCU MOSI connected. 2: Next in chain, ...
-    //#define X_INTERPOLATE  true      // Enable to override 'INTERPOLATE' for the X axis
-    //#define X_HOLD_MULTIPLIER 0.5    // Enable to override 'HOLD_MULTIPLIER' for the X axis
+    #define X_CURRENT      800        // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_CURRENT_HOME X_CURRENT  // (mA) RMS current for sensorless homing
+    #define X_MICROSTEPS   16         // 0..256
+    #define X_RSENSE       0.11
+    #define X_CHAIN_POS    -1  // -1..0: Not chained. 1: MCU MOSI connected. 2: Next in chain, ...
+  //#define X_INTERPOLATE  true      // Enable to override 'INTERPOLATE' for the X axis
+  //#define X_HOLD_MULTIPLIER 0.5    // Enable to override 'HOLD_MULTIPLIER' for the X axis
   #endif
 
   #if AXIS_IS_TMC(X2)
     #define X2_CURRENT      800
     #define X2_CURRENT_HOME X2_CURRENT
-    #define X2_MICROSTEPS    X_MICROSTEPS
-    #define X2_RSENSE         0.11
-    #define X2_CHAIN_POS     -1
-    //#define X2_INTERPOLATE true
-    //#define X2_HOLD_MULTIPLIER 0.5
+    #define X2_MICROSTEPS   X_MICROSTEPS
+    #define X2_RSENSE       0.11
+    #define X2_CHAIN_POS    -1
+  //#define X2_INTERPOLATE true
+  //#define X2_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(Y)
-    #define Y_CURRENT       800
-    #define Y_CURRENT_HOME  Y_CURRENT
-    #define Y_MICROSTEPS     16
-    #define Y_RSENSE          0.11
-    #define Y_CHAIN_POS      -1
-    //#define Y_INTERPOLATE  true
-    //#define Y_HOLD_MULTIPLIER 0.5
+    #define Y_CURRENT      800
+    #define Y_CURRENT_HOME Y_CURRENT
+    #define Y_MICROSTEPS   16
+    #define Y_RSENSE       0.11
+    #define Y_CHAIN_POS    -1
+  //#define Y_INTERPOLATE  true
+  //#define Y_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(Y2)
     #define Y2_CURRENT      800
     #define Y2_CURRENT_HOME Y2_CURRENT
-    #define Y2_MICROSTEPS    Y_MICROSTEPS
-    #define Y2_RSENSE         0.11
-    #define Y2_CHAIN_POS     -1
-    //#define Y2_INTERPOLATE true
-    //#define Y2_HOLD_MULTIPLIER 0.5
+    #define Y2_MICROSTEPS   Y_MICROSTEPS
+    #define Y2_RSENSE       0.11
+    #define Y2_CHAIN_POS    -1
+  //#define Y2_INTERPOLATE true
+  //#define Y2_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT       800
-    #define Z_CURRENT_HOME  Z_CURRENT
-    #define Z_MICROSTEPS     16
-    #define Z_RSENSE          0.11
-    #define Z_CHAIN_POS      -1
-    //#define Z_INTERPOLATE  true
-    //#define Z_HOLD_MULTIPLIER 0.5
+    #define Z_CURRENT      800
+    #define Z_CURRENT_HOME Z_CURRENT
+    #define Z_MICROSTEPS   16
+    #define Z_RSENSE       0.11
+    #define Z_CHAIN_POS    -1
+  //#define Z_INTERPOLATE  true
+  //#define Z_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(Z2)
     #define Z2_CURRENT      800
     #define Z2_CURRENT_HOME Z2_CURRENT
-    #define Z2_MICROSTEPS    Z_MICROSTEPS
-    #define Z2_RSENSE         0.11
-    #define Z2_CHAIN_POS     -1
-    //#define Z2_INTERPOLATE true
-    //#define Z2_HOLD_MULTIPLIER 0.5
+    #define Z2_MICROSTEPS   Z_MICROSTEPS
+    #define Z2_RSENSE       0.11
+    #define Z2_CHAIN_POS    -1
+  //#define Z2_INTERPOLATE true
+  //#define Z2_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(Z3)
     #define Z3_CURRENT      800
     #define Z3_CURRENT_HOME Z3_CURRENT
-    #define Z3_MICROSTEPS    Z_MICROSTEPS
-    #define Z3_RSENSE         0.11
-    #define Z3_CHAIN_POS     -1
-    //#define Z3_INTERPOLATE true
-    //#define Z3_HOLD_MULTIPLIER 0.5
+    #define Z3_MICROSTEPS   Z_MICROSTEPS
+    #define Z3_RSENSE       0.11
+    #define Z3_CHAIN_POS    -1
+  //#define Z3_INTERPOLATE true
+  //#define Z3_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(Z4)
     #define Z4_CURRENT      800
     #define Z4_CURRENT_HOME Z4_CURRENT
-    #define Z4_MICROSTEPS    Z_MICROSTEPS
-    #define Z4_RSENSE         0.11
-    #define Z4_CHAIN_POS     -1
-    //#define Z4_INTERPOLATE true
-    //#define Z4_HOLD_MULTIPLIER 0.5
+    #define Z4_MICROSTEPS   Z_MICROSTEPS
+    #define Z4_RSENSE       0.11
+    #define Z4_CHAIN_POS    -1
+  //#define Z4_INTERPOLATE true
+  //#define Z4_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(I)
     #define I_CURRENT      800
     #define I_CURRENT_HOME I_CURRENT
-    #define I_MICROSTEPS    16
-    #define I_RSENSE         0.11
-    #define I_CHAIN_POS     -1
-    //#define I_INTERPOLATE  true
-    //#define I_HOLD_MULTIPLIER 0.5
+    #define I_MICROSTEPS   16
+    #define I_RSENSE       0.11
+    #define I_CHAIN_POS    -1
+  //#define I_INTERPOLATE  true
+  //#define I_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(J)
     #define J_CURRENT      800
     #define J_CURRENT_HOME J_CURRENT
-    #define J_MICROSTEPS    16
-    #define J_RSENSE         0.11
-    #define J_CHAIN_POS     -1
-    //#define J_INTERPOLATE  true
-    //#define J_HOLD_MULTIPLIER 0.5
+    #define J_MICROSTEPS   16
+    #define J_RSENSE       0.11
+    #define J_CHAIN_POS    -1
+  //#define J_INTERPOLATE  true
+  //#define J_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(K)
     #define K_CURRENT      800
     #define K_CURRENT_HOME K_CURRENT
-    #define K_MICROSTEPS    16
-    #define K_RSENSE         0.11
-    #define K_CHAIN_POS     -1
-    //#define K_INTERPOLATE  true
-    //#define K_HOLD_MULTIPLIER 0.5
+    #define K_MICROSTEPS   16
+    #define K_RSENSE       0.11
+    #define K_CHAIN_POS    -1
+  //#define K_INTERPOLATE  true
+  //#define K_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT      800
-    #define E0_MICROSTEPS    16
-    #define E0_RSENSE         0.11
-    #define E0_CHAIN_POS     -1
-    //#define E0_INTERPOLATE true
-    //#define E0_HOLD_MULTIPLIER 0.5
+    #define E0_CURRENT    800
+    #define E0_MICROSTEPS 16
+    #define E0_RSENSE     0.11
+    #define E0_CHAIN_POS  -1
+  //#define E0_INTERPOLATE true
+  //#define E0_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(E1)
-    #define E1_CURRENT      800
-    #define E1_MICROSTEPS   E0_MICROSTEPS
-    #define E1_RSENSE         0.11
-    #define E1_CHAIN_POS     -1
-    //#define E1_INTERPOLATE true
-    //#define E1_HOLD_MULTIPLIER 0.5
+    #define E1_CURRENT    800
+    #define E1_MICROSTEPS E0_MICROSTEPS
+    #define E1_RSENSE     0.11
+    #define E1_CHAIN_POS  -1
+  //#define E1_INTERPOLATE true
+  //#define E1_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(E2)
-    #define E2_CURRENT      800
-    #define E2_MICROSTEPS   E0_MICROSTEPS
-    #define E2_RSENSE         0.11
-    #define E2_CHAIN_POS     -1
-    //#define E2_INTERPOLATE true
-    //#define E2_HOLD_MULTIPLIER 0.5
+    #define E2_CURRENT    800
+    #define E2_MICROSTEPS E0_MICROSTEPS
+    #define E2_RSENSE     0.11
+    #define E2_CHAIN_POS  -1
+  //#define E2_INTERPOLATE true
+  //#define E2_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(E3)
-    #define E3_CURRENT      800
-    #define E3_MICROSTEPS   E0_MICROSTEPS
-    #define E3_RSENSE         0.11
-    #define E3_CHAIN_POS     -1
-    //#define E3_INTERPOLATE true
-    //#define E3_HOLD_MULTIPLIER 0.5
+    #define E3_CURRENT    800
+    #define E3_MICROSTEPS E0_MICROSTEPS
+    #define E3_RSENSE     0.11
+    #define E3_CHAIN_POS  -1
+  //#define E3_INTERPOLATE true
+  //#define E3_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(E4)
-    #define E4_CURRENT      800
-    #define E4_MICROSTEPS   E0_MICROSTEPS
-    #define E4_RSENSE         0.11
-    #define E4_CHAIN_POS     -1
-    //#define E4_INTERPOLATE true
-    //#define E4_HOLD_MULTIPLIER 0.5
+    #define E4_CURRENT    800
+    #define E4_MICROSTEPS E0_MICROSTEPS
+    #define E4_RSENSE     0.11
+    #define E4_CHAIN_POS  -1
+  //#define E4_INTERPOLATE true
+  //#define E4_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(E5)
-    #define E5_CURRENT      800
-    #define E5_MICROSTEPS   E0_MICROSTEPS
-    #define E5_RSENSE         0.11
-    #define E5_CHAIN_POS     -1
-    //#define E5_INTERPOLATE true
-    //#define E5_HOLD_MULTIPLIER 0.5
+    #define E5_CURRENT    800
+    #define E5_MICROSTEPS E0_MICROSTEPS
+    #define E5_RSENSE     0.11
+    #define E5_CHAIN_POS  -1
+  //#define E5_INTERPOLATE true
+  //#define E5_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(E6)
-    #define E6_CURRENT      800
-    #define E6_MICROSTEPS   E0_MICROSTEPS
-    #define E6_RSENSE         0.11
-    #define E6_CHAIN_POS     -1
-    //#define E6_INTERPOLATE true
-    //#define E6_HOLD_MULTIPLIER 0.5
+    #define E6_CURRENT    800
+    #define E6_MICROSTEPS E0_MICROSTEPS
+    #define E6_RSENSE     0.11
+    #define E6_CHAIN_POS  -1
+  //#define E6_INTERPOLATE true
+  //#define E6_HOLD_MULTIPLIER 0.5
   #endif
 
   #if AXIS_IS_TMC(E7)
-    #define E7_CURRENT      800
-    #define E7_MICROSTEPS   E0_MICROSTEPS
-    #define E7_RSENSE         0.11
-    #define E7_CHAIN_POS     -1
-    //#define E7_INTERPOLATE true
-    //#define E7_HOLD_MULTIPLIER 0.5
+    #define E7_CURRENT    800
+    #define E7_MICROSTEPS E0_MICROSTEPS
+    #define E7_RSENSE     0.11
+    #define E7_CHAIN_POS  -1
+  //#define E7_INTERPOLATE true
+  //#define E7_HOLD_MULTIPLIER 0.5
   #endif
 
   /**
@@ -2997,101 +2734,101 @@
    * Define your own with:
    * { <off_time[1..15]>, <hysteresis_end[-3..12]>, hysteresis_start[1..8] }
    */
-  #define CHOPPER_TIMING CHOPPER_DEFAULT_12V        // All axes (override below)
-  //#define CHOPPER_TIMING_X  CHOPPER_TIMING        // For X Axes (override below)
-  //#define CHOPPER_TIMING_X2 CHOPPER_TIMING_X
-  //#define CHOPPER_TIMING_Y  CHOPPER_TIMING        // For Y Axes (override below)
-  //#define CHOPPER_TIMING_Y2 CHOPPER_TIMING_Y
-  //#define CHOPPER_TIMING_Z  CHOPPER_TIMING        // For Z Axes (override below)
-  //#define CHOPPER_TIMING_Z2 CHOPPER_TIMING_Z
-  //#define CHOPPER_TIMING_Z3 CHOPPER_TIMING_Z
-  //#define CHOPPER_TIMING_Z4 CHOPPER_TIMING_Z
-  //#define CHOPPER_TIMING_I  CHOPPER_TIMING
-  //#define CHOPPER_TIMING_J  CHOPPER_TIMING
-  //#define CHOPPER_TIMING_K  CHOPPER_TIMING
-  //#define CHOPPER_TIMING_E  CHOPPER_TIMING        // For Extruders (override below)
-  //#define CHOPPER_TIMING_E1 CHOPPER_TIMING_E
-  //#define CHOPPER_TIMING_E2 CHOPPER_TIMING_E
-  //#define CHOPPER_TIMING_E3 CHOPPER_TIMING_E
-  //#define CHOPPER_TIMING_E4 CHOPPER_TIMING_E
-  //#define CHOPPER_TIMING_E5 CHOPPER_TIMING_E
-  //#define CHOPPER_TIMING_E6 CHOPPER_TIMING_E
-  //#define CHOPPER_TIMING_E7 CHOPPER_TIMING_E
+  #define CHOPPER_TIMING CHOPPER_DEFAULT_12V  // All axes (override below)
+                                              //#define CHOPPER_TIMING_X  CHOPPER_TIMING        // For X Axes (override below)
+                                              //#define CHOPPER_TIMING_X2 CHOPPER_TIMING_X
+                                              //#define CHOPPER_TIMING_Y  CHOPPER_TIMING        // For Y Axes (override below)
+                                              //#define CHOPPER_TIMING_Y2 CHOPPER_TIMING_Y
+                                              //#define CHOPPER_TIMING_Z  CHOPPER_TIMING        // For Z Axes (override below)
+                                              //#define CHOPPER_TIMING_Z2 CHOPPER_TIMING_Z
+                                              //#define CHOPPER_TIMING_Z3 CHOPPER_TIMING_Z
+                                              //#define CHOPPER_TIMING_Z4 CHOPPER_TIMING_Z
+                                              //#define CHOPPER_TIMING_I  CHOPPER_TIMING
+                                              //#define CHOPPER_TIMING_J  CHOPPER_TIMING
+                                              //#define CHOPPER_TIMING_K  CHOPPER_TIMING
+                                              //#define CHOPPER_TIMING_E  CHOPPER_TIMING        // For Extruders (override below)
+                                              //#define CHOPPER_TIMING_E1 CHOPPER_TIMING_E
+                                              //#define CHOPPER_TIMING_E2 CHOPPER_TIMING_E
+                                              //#define CHOPPER_TIMING_E3 CHOPPER_TIMING_E
+                                              //#define CHOPPER_TIMING_E4 CHOPPER_TIMING_E
+                                              //#define CHOPPER_TIMING_E5 CHOPPER_TIMING_E
+                                              //#define CHOPPER_TIMING_E6 CHOPPER_TIMING_E
+                                              //#define CHOPPER_TIMING_E7 CHOPPER_TIMING_E
 
-  /**
-   * Monitor Trinamic drivers
-   * for error conditions like overtemperature and short to ground.
-   * To manage over-temp mvCNC can decrease the driver current until the error condition clears.
-   * Other detected conditions can be used to stop the current print.
-   * Relevant G-codes:
-   * M906 - Set or get motor current in milliamps using axis codes X, Y, Z, E. Report values if no axis codes given.
-   * M911 - Report stepper driver overtemperature pre-warn condition.
-   * M912 - Clear stepper driver overtemperature pre-warn condition flag.
-   * M122 - Report driver parameters (Requires TMC_DEBUG)
-   */
-  //#define MONITOR_DRIVER_STATUS
+/**
+ * Monitor Trinamic drivers
+ * for error conditions like overtemperature and short to ground.
+ * To manage over-temp mvCNC can decrease the driver current until the error condition clears.
+ * Other detected conditions can be used to stop the current print.
+ * Relevant G-codes:
+ * M906 - Set or get motor current in milliamps using axis codes X, Y, Z, E. Report values if no axis codes given.
+ * M911 - Report stepper driver overtemperature pre-warn condition.
+ * M912 - Clear stepper driver overtemperature pre-warn condition flag.
+ * M122 - Report driver parameters (Requires TMC_DEBUG)
+ */
+//#define MONITOR_DRIVER_STATUS
 
   #if ENABLED(MONITOR_DRIVER_STATUS)
-    #define CURRENT_STEP_DOWN     50  // [mA]
+    #define CURRENT_STEP_DOWN 50  // [mA]
     #define REPORT_CURRENT_CHANGE
     #define STOP_ON_ERROR
   #endif
 
-  /**
-   * TMC2130, TMC2160, TMC2208, TMC2209, TMC5130 and TMC5160 only
-   * The driver will switch to spreadCycle when stepper speed is over HYBRID_THRESHOLD.
-   * This mode allows for faster movements at the expense of higher noise levels.
-   * STEALTHCHOP_(XY|Z|E) must be enabled to use HYBRID_THRESHOLD.
-   * M913 X/Y/Z/E to live tune the setting
-   */
-  //#define HYBRID_THRESHOLD
+/**
+ * TMC2130, TMC2160, TMC2208, TMC2209, TMC5130 and TMC5160 only
+ * The driver will switch to spreadCycle when stepper speed is over HYBRID_THRESHOLD.
+ * This mode allows for faster movements at the expense of higher noise levels.
+ * STEALTHCHOP_(XY|Z|E) must be enabled to use HYBRID_THRESHOLD.
+ * M913 X/Y/Z/E to live tune the setting
+ */
+//#define HYBRID_THRESHOLD
 
-  #define X_HYBRID_THRESHOLD     100  // [mm/s]
-  #define X2_HYBRID_THRESHOLD    100
-  #define Y_HYBRID_THRESHOLD     100
-  #define Y2_HYBRID_THRESHOLD    100
-  #define Z_HYBRID_THRESHOLD       3
-  #define Z2_HYBRID_THRESHOLD      3
-  #define Z3_HYBRID_THRESHOLD      3
-  #define Z4_HYBRID_THRESHOLD      3
-  #define I_HYBRID_THRESHOLD       3
-  #define J_HYBRID_THRESHOLD       3
-  #define K_HYBRID_THRESHOLD       3
-  #define E0_HYBRID_THRESHOLD     30
-  #define E1_HYBRID_THRESHOLD     30
-  #define E2_HYBRID_THRESHOLD     30
-  #define E3_HYBRID_THRESHOLD     30
-  #define E4_HYBRID_THRESHOLD     30
-  #define E5_HYBRID_THRESHOLD     30
-  #define E6_HYBRID_THRESHOLD     30
-  #define E7_HYBRID_THRESHOLD     30
+  #define X_HYBRID_THRESHOLD  100  // [mm/s]
+  #define X2_HYBRID_THRESHOLD 100
+  #define Y_HYBRID_THRESHOLD  100
+  #define Y2_HYBRID_THRESHOLD 100
+  #define Z_HYBRID_THRESHOLD  3
+  #define Z2_HYBRID_THRESHOLD 3
+  #define Z3_HYBRID_THRESHOLD 3
+  #define Z4_HYBRID_THRESHOLD 3
+  #define I_HYBRID_THRESHOLD  3
+  #define J_HYBRID_THRESHOLD  3
+  #define K_HYBRID_THRESHOLD  3
+  #define E0_HYBRID_THRESHOLD 30
+  #define E1_HYBRID_THRESHOLD 30
+  #define E2_HYBRID_THRESHOLD 30
+  #define E3_HYBRID_THRESHOLD 30
+  #define E4_HYBRID_THRESHOLD 30
+  #define E5_HYBRID_THRESHOLD 30
+  #define E6_HYBRID_THRESHOLD 30
+  #define E7_HYBRID_THRESHOLD 30
 
-  /**
-   * Use StallGuard to home / probe X, Y, Z.
-   *
-   * TMC2130, TMC2160, TMC2209, TMC2660, TMC5130, and TMC5160 only
-   * Connect the stepper driver's DIAG1 pin to the X/Y endstop pin.
-   * X, Y, and Z homing will always be done in spreadCycle mode.
-   *
-   * X/Y/Z_STALL_SENSITIVITY is the default stall threshold.
-   * Use M914 X Y Z to set the stall threshold at runtime:
-   *
-   *  Sensitivity   TMC2209   Others
-   *    HIGHEST       255      -64    (Too sensitive => False positive)
-   *    LOWEST         0        63    (Too insensitive => No trigger)
-   *
-   * It is recommended to set HOMING_BUMP_MM to { 0, 0, 0 }.
-   *
-   * SPI_ENDSTOPS  *** Beta feature! *** TMC2130/TMC5160 Only ***
-   * Poll the driver through SPI to determine load when homing.
-   * Removes the need for a wire from DIAG1 to an endstop pin.
-   *
-   * IMPROVE_HOMING_RELIABILITY tunes acceleration and jerk when
-   * homing and adds a guard period for endstop triggering.
-   *
-   * Comment *_STALL_SENSITIVITY to disable sensorless homing for that axis.
-   */
-  //#define SENSORLESS_HOMING // StallGuard capable drivers only
+/**
+ * Use StallGuard to home / probe X, Y, Z.
+ *
+ * TMC2130, TMC2160, TMC2209, TMC2660, TMC5130, and TMC5160 only
+ * Connect the stepper driver's DIAG1 pin to the X/Y endstop pin.
+ * X, Y, and Z homing will always be done in spreadCycle mode.
+ *
+ * X/Y/Z_STALL_SENSITIVITY is the default stall threshold.
+ * Use M914 X Y Z to set the stall threshold at runtime:
+ *
+ *  Sensitivity   TMC2209   Others
+ *    HIGHEST       255      -64    (Too sensitive => False positive)
+ *    LOWEST         0        63    (Too insensitive => No trigger)
+ *
+ * It is recommended to set HOMING_BUMP_MM to { 0, 0, 0 }.
+ *
+ * SPI_ENDSTOPS  *** Beta feature! *** TMC2130/TMC5160 Only ***
+ * Poll the driver through SPI to determine load when homing.
+ * Removes the need for a wire from DIAG1 to an endstop pin.
+ *
+ * IMPROVE_HOMING_RELIABILITY tunes acceleration and jerk when
+ * homing and adds a guard period for endstop triggering.
+ *
+ * Comment *_STALL_SENSITIVITY to disable sensorless homing for that axis.
+ */
+//#define SENSORLESS_HOMING // StallGuard capable drivers only
 
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
     // TMC2209: 0...255. TMC2130: -64...63
@@ -3099,28 +2836,28 @@
     #define X2_STALL_SENSITIVITY X_STALL_SENSITIVITY
     #define Y_STALL_SENSITIVITY  8
     #define Y2_STALL_SENSITIVITY Y_STALL_SENSITIVITY
-    //#define Z_STALL_SENSITIVITY  8
-    //#define Z2_STALL_SENSITIVITY Z_STALL_SENSITIVITY
-    //#define Z3_STALL_SENSITIVITY Z_STALL_SENSITIVITY
-    //#define Z4_STALL_SENSITIVITY Z_STALL_SENSITIVITY
-    //#define I_STALL_SENSITIVITY  8
-    //#define J_STALL_SENSITIVITY  8
-    //#define K_STALL_SENSITIVITY  8
-    //#define SPI_ENDSTOPS              // TMC2130 only
-    //#define IMPROVE_HOMING_RELIABILITY
+  //#define Z_STALL_SENSITIVITY  8
+  //#define Z2_STALL_SENSITIVITY Z_STALL_SENSITIVITY
+  //#define Z3_STALL_SENSITIVITY Z_STALL_SENSITIVITY
+  //#define Z4_STALL_SENSITIVITY Z_STALL_SENSITIVITY
+  //#define I_STALL_SENSITIVITY  8
+  //#define J_STALL_SENSITIVITY  8
+  //#define K_STALL_SENSITIVITY  8
+  //#define SPI_ENDSTOPS              // TMC2130 only
+  //#define IMPROVE_HOMING_RELIABILITY
   #endif
 
-  /**
-   * TMC Homing stepper phase.
-   *
-   * Improve homing repeatability by homing to stepper coil's nearest absolute
-   * phase position. Trinamic drivers use a stepper phase table with 1024 values
-   * spanning 4 full steps with 256 positions each (ergo, 1024 positions).
-   * Full step positions (128, 384, 640, 896) have the highest holding torque.
-   *
-   * Values from 0..1023, -1 to disable homing phase for that axis.
-   */
-   //#define TMC_HOME_PHASE { 896, 896, 896 }
+/**
+ * TMC Homing stepper phase.
+ *
+ * Improve homing repeatability by homing to stepper coil's nearest absolute
+ * phase position. Trinamic drivers use a stepper phase table with 1024 values
+ * spanning 4 full steps with 256 positions each (ergo, 1024 positions).
+ * Full step positions (128, 384, 640, 896) have the highest holding torque.
+ *
+ * Values from 0..1023, -1 to disable homing phase for that axis.
+ */
+//#define TMC_HOME_PHASE { 896, 896, 896 }
 
   /**
    * Beta feature!
@@ -3145,9 +2882,10 @@
    *   stepperY.intpol(0); \
    * }
    */
-  #define TMC_ADV() {  }
+  #define TMC_ADV() \
+    {}
 
-#endif // HAS_TRINAMIC_CONFIG
+#endif  // HAS_TRINAMIC_CONFIG
 
 // @section L64XX
 
@@ -3167,249 +2905,208 @@
 
 #if HAS_L64XX
 
-  //#define L6470_CHITCHAT        // Display additional status info
+//#define L6470_CHITCHAT        // Display additional status info
 
   #if AXIS_IS_L64XX(X)
-    #define X_MICROSTEPS       128  // Number of microsteps (VALID: 1, 2, 4, 8, 16, 32, 128) - L6474 max is 16
-    #define X_OVERCURRENT     2000  // (mA) Current where the driver detects an over current
-                                    //   L6470 & L6474 - VALID: 375 x (1 - 16) - 6A max - rounds down
-                                    //   POWERSTEP01: VALID: 1000 x (1 - 32) - 32A max - rounds down
-    #define X_STALLCURRENT    1500  // (mA) Current where the driver detects a stall (VALID: 31.25 * (1-128) -  4A max - rounds down)
-                                    //   L6470 & L6474 - VALID: 31.25 * (1-128) -  4A max - rounds down
-                                    //   POWERSTEP01: VALID: 200 x (1 - 32) - 6.4A max - rounds down
-                                    //   L6474 - STALLCURRENT setting is used to set the nominal (TVAL) current
-    #define X_MAX_VOLTAGE      127  // 0-255, Maximum effective voltage seen by stepper - not used by L6474
-    #define X_CHAIN_POS         -1  // Position in SPI chain, 0=Not in chain, 1=Nearest MOSI
-    #define X_SLEW_RATE          1  // 0-3, Slew 0 is slowest, 3 is fastest
+    #define X_MICROSTEPS  128    // Number of microsteps (VALID: 1, 2, 4, 8, 16, 32, 128) - L6474 max is 16
+    #define X_OVERCURRENT 2000   // (mA) Current where the driver detects an over current
+                                 //   L6470 & L6474 - VALID: 375 x (1 - 16) - 6A max - rounds down
+                                 //   POWERSTEP01: VALID: 1000 x (1 - 32) - 32A max - rounds down
+    #define X_STALLCURRENT 1500  // (mA) Current where the driver detects a stall (VALID: 31.25 * (1-128) -  4A max - rounds down)
+                                 //   L6470 & L6474 - VALID: 31.25 * (1-128) -  4A max - rounds down
+                                 //   POWERSTEP01: VALID: 200 x (1 - 32) - 6.4A max - rounds down
+                                 //   L6474 - STALLCURRENT setting is used to set the nominal (TVAL) current
+    #define X_MAX_VOLTAGE 127    // 0-255, Maximum effective voltage seen by stepper - not used by L6474
+    #define X_CHAIN_POS   -1     // Position in SPI chain, 0=Not in chain, 1=Nearest MOSI
+    #define X_SLEW_RATE   1      // 0-3, Slew 0 is slowest, 3 is fastest
   #endif
 
   #if AXIS_IS_L64XX(X2)
-    #define X2_MICROSTEPS     X_MICROSTEPS
-    #define X2_OVERCURRENT            2000
-    #define X2_STALLCURRENT           1500
-    #define X2_MAX_VOLTAGE             127
-    #define X2_CHAIN_POS                -1
-    #define X2_SLEW_RATE                 1
+    #define X2_MICROSTEPS   X_MICROSTEPS
+    #define X2_OVERCURRENT  2000
+    #define X2_STALLCURRENT 1500
+    #define X2_MAX_VOLTAGE  127
+    #define X2_CHAIN_POS    -1
+    #define X2_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(Y)
-    #define Y_MICROSTEPS               128
-    #define Y_OVERCURRENT             2000
-    #define Y_STALLCURRENT            1500
-    #define Y_MAX_VOLTAGE              127
-    #define Y_CHAIN_POS                 -1
-    #define Y_SLEW_RATE                  1
+    #define Y_MICROSTEPS   128
+    #define Y_OVERCURRENT  2000
+    #define Y_STALLCURRENT 1500
+    #define Y_MAX_VOLTAGE  127
+    #define Y_CHAIN_POS    -1
+    #define Y_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(Y2)
-    #define Y2_MICROSTEPS     Y_MICROSTEPS
-    #define Y2_OVERCURRENT            2000
-    #define Y2_STALLCURRENT           1500
-    #define Y2_MAX_VOLTAGE             127
-    #define Y2_CHAIN_POS                -1
-    #define Y2_SLEW_RATE                 1
+    #define Y2_MICROSTEPS   Y_MICROSTEPS
+    #define Y2_OVERCURRENT  2000
+    #define Y2_STALLCURRENT 1500
+    #define Y2_MAX_VOLTAGE  127
+    #define Y2_CHAIN_POS    -1
+    #define Y2_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(Z)
-    #define Z_MICROSTEPS               128
-    #define Z_OVERCURRENT             2000
-    #define Z_STALLCURRENT            1500
-    #define Z_MAX_VOLTAGE              127
-    #define Z_CHAIN_POS                 -1
-    #define Z_SLEW_RATE                  1
+    #define Z_MICROSTEPS   128
+    #define Z_OVERCURRENT  2000
+    #define Z_STALLCURRENT 1500
+    #define Z_MAX_VOLTAGE  127
+    #define Z_CHAIN_POS    -1
+    #define Z_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(Z2)
-    #define Z2_MICROSTEPS     Z_MICROSTEPS
-    #define Z2_OVERCURRENT            2000
-    #define Z2_STALLCURRENT           1500
-    #define Z2_MAX_VOLTAGE             127
-    #define Z2_CHAIN_POS                -1
-    #define Z2_SLEW_RATE                 1
+    #define Z2_MICROSTEPS   Z_MICROSTEPS
+    #define Z2_OVERCURRENT  2000
+    #define Z2_STALLCURRENT 1500
+    #define Z2_MAX_VOLTAGE  127
+    #define Z2_CHAIN_POS    -1
+    #define Z2_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(Z3)
-    #define Z3_MICROSTEPS     Z_MICROSTEPS
-    #define Z3_OVERCURRENT            2000
-    #define Z3_STALLCURRENT           1500
-    #define Z3_MAX_VOLTAGE             127
-    #define Z3_CHAIN_POS                -1
-    #define Z3_SLEW_RATE                 1
+    #define Z3_MICROSTEPS   Z_MICROSTEPS
+    #define Z3_OVERCURRENT  2000
+    #define Z3_STALLCURRENT 1500
+    #define Z3_MAX_VOLTAGE  127
+    #define Z3_CHAIN_POS    -1
+    #define Z3_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(Z4)
-    #define Z4_MICROSTEPS     Z_MICROSTEPS
-    #define Z4_OVERCURRENT            2000
-    #define Z4_STALLCURRENT           1500
-    #define Z4_MAX_VOLTAGE             127
-    #define Z4_CHAIN_POS                -1
-    #define Z4_SLEW_RATE                 1
+    #define Z4_MICROSTEPS   Z_MICROSTEPS
+    #define Z4_OVERCURRENT  2000
+    #define Z4_STALLCURRENT 1500
+    #define Z4_MAX_VOLTAGE  127
+    #define Z4_CHAIN_POS    -1
+    #define Z4_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(I)
-    #define I_MICROSTEPS      128
-    #define I_OVERCURRENT    2000
-    #define I_STALLCURRENT   1500
-    #define I_MAX_VOLTAGE     127
-    #define I_CHAIN_POS        -1
-    #define I_SLEW_RATE         1
+    #define I_MICROSTEPS   128
+    #define I_OVERCURRENT  2000
+    #define I_STALLCURRENT 1500
+    #define I_MAX_VOLTAGE  127
+    #define I_CHAIN_POS    -1
+    #define I_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(J)
-    #define J_MICROSTEPS      128
-    #define J_OVERCURRENT    2000
-    #define J_STALLCURRENT   1500
-    #define J_MAX_VOLTAGE     127
-    #define J_CHAIN_POS        -1
-    #define J_SLEW_RATE         1
+    #define J_MICROSTEPS   128
+    #define J_OVERCURRENT  2000
+    #define J_STALLCURRENT 1500
+    #define J_MAX_VOLTAGE  127
+    #define J_CHAIN_POS    -1
+    #define J_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(K)
-    #define K_MICROSTEPS      128
-    #define K_OVERCURRENT    2000
-    #define K_STALLCURRENT   1500
-    #define K_MAX_VOLTAGE     127
-    #define K_CHAIN_POS        -1
-    #define K_SLEW_RATE         1
+    #define K_MICROSTEPS   128
+    #define K_OVERCURRENT  2000
+    #define K_STALLCURRENT 1500
+    #define K_MAX_VOLTAGE  127
+    #define K_CHAIN_POS    -1
+    #define K_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(E0)
-    #define E0_MICROSTEPS              128
-    #define E0_OVERCURRENT            2000
-    #define E0_STALLCURRENT           1500
-    #define E0_MAX_VOLTAGE             127
-    #define E0_CHAIN_POS                -1
-    #define E0_SLEW_RATE                 1
+    #define E0_MICROSTEPS   128
+    #define E0_OVERCURRENT  2000
+    #define E0_STALLCURRENT 1500
+    #define E0_MAX_VOLTAGE  127
+    #define E0_CHAIN_POS    -1
+    #define E0_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(E1)
-    #define E1_MICROSTEPS    E0_MICROSTEPS
-    #define E1_OVERCURRENT            2000
-    #define E1_STALLCURRENT           1500
-    #define E1_MAX_VOLTAGE             127
-    #define E1_CHAIN_POS                -1
-    #define E1_SLEW_RATE                 1
+    #define E1_MICROSTEPS   E0_MICROSTEPS
+    #define E1_OVERCURRENT  2000
+    #define E1_STALLCURRENT 1500
+    #define E1_MAX_VOLTAGE  127
+    #define E1_CHAIN_POS    -1
+    #define E1_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(E2)
-    #define E2_MICROSTEPS    E0_MICROSTEPS
-    #define E2_OVERCURRENT            2000
-    #define E2_STALLCURRENT           1500
-    #define E2_MAX_VOLTAGE             127
-    #define E2_CHAIN_POS                -1
-    #define E2_SLEW_RATE                 1
+    #define E2_MICROSTEPS   E0_MICROSTEPS
+    #define E2_OVERCURRENT  2000
+    #define E2_STALLCURRENT 1500
+    #define E2_MAX_VOLTAGE  127
+    #define E2_CHAIN_POS    -1
+    #define E2_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(E3)
-    #define E3_MICROSTEPS    E0_MICROSTEPS
-    #define E3_OVERCURRENT            2000
-    #define E3_STALLCURRENT           1500
-    #define E3_MAX_VOLTAGE             127
-    #define E3_CHAIN_POS                -1
-    #define E3_SLEW_RATE                 1
+    #define E3_MICROSTEPS   E0_MICROSTEPS
+    #define E3_OVERCURRENT  2000
+    #define E3_STALLCURRENT 1500
+    #define E3_MAX_VOLTAGE  127
+    #define E3_CHAIN_POS    -1
+    #define E3_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(E4)
-    #define E4_MICROSTEPS    E0_MICROSTEPS
-    #define E4_OVERCURRENT            2000
-    #define E4_STALLCURRENT           1500
-    #define E4_MAX_VOLTAGE             127
-    #define E4_CHAIN_POS                -1
-    #define E4_SLEW_RATE                 1
+    #define E4_MICROSTEPS   E0_MICROSTEPS
+    #define E4_OVERCURRENT  2000
+    #define E4_STALLCURRENT 1500
+    #define E4_MAX_VOLTAGE  127
+    #define E4_CHAIN_POS    -1
+    #define E4_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(E5)
-    #define E5_MICROSTEPS    E0_MICROSTEPS
-    #define E5_OVERCURRENT            2000
-    #define E5_STALLCURRENT           1500
-    #define E5_MAX_VOLTAGE             127
-    #define E5_CHAIN_POS                -1
-    #define E5_SLEW_RATE                 1
+    #define E5_MICROSTEPS   E0_MICROSTEPS
+    #define E5_OVERCURRENT  2000
+    #define E5_STALLCURRENT 1500
+    #define E5_MAX_VOLTAGE  127
+    #define E5_CHAIN_POS    -1
+    #define E5_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(E6)
-    #define E6_MICROSTEPS    E0_MICROSTEPS
-    #define E6_OVERCURRENT            2000
-    #define E6_STALLCURRENT           1500
-    #define E6_MAX_VOLTAGE             127
-    #define E6_CHAIN_POS                -1
-    #define E6_SLEW_RATE                 1
+    #define E6_MICROSTEPS   E0_MICROSTEPS
+    #define E6_OVERCURRENT  2000
+    #define E6_STALLCURRENT 1500
+    #define E6_MAX_VOLTAGE  127
+    #define E6_CHAIN_POS    -1
+    #define E6_SLEW_RATE    1
   #endif
 
   #if AXIS_IS_L64XX(E7)
-    #define E7_MICROSTEPS    E0_MICROSTEPS
-    #define E7_OVERCURRENT            2000
-    #define E7_STALLCURRENT           1500
-    #define E7_MAX_VOLTAGE             127
-    #define E7_CHAIN_POS                -1
-    #define E7_SLEW_RATE                 1
+    #define E7_MICROSTEPS   E0_MICROSTEPS
+    #define E7_OVERCURRENT  2000
+    #define E7_STALLCURRENT 1500
+    #define E7_MAX_VOLTAGE  127
+    #define E7_CHAIN_POS    -1
+    #define E7_SLEW_RATE    1
   #endif
-
-  /**
-   * Monitor L6470 drivers for error conditions like over temperature and over current.
-   * In the case of over temperature mvCNC can decrease the drive until the error condition clears.
-   * Other detected conditions can be used to stop the current print.
-   * Relevant G-codes:
-   * M906 - I1/2/3/4/5  Set or get motor drive level using axis codes X, Y, Z, E. Report values if no axis codes given.
-   *         I not present or I0 or I1 - X, Y, Z or E0
-   *         I2 - X2, Y2, Z2 or E1
-   *         I3 - Z3 or E3
-   *         I4 - Z4 or E4
-   *         I5 - E5
-   * M916 - Increase drive level until get thermal warning
-   * M917 - Find minimum current thresholds
-   * M918 - Increase speed until max or error
-   * M122 S0/1 - Report driver parameters
-   */
-  //#define MONITOR_L6470_DRIVER_STATUS
-
-  #if ENABLED(MONITOR_L6470_DRIVER_STATUS)
-    #define KVAL_HOLD_STEP_DOWN     1
-    //#define L6470_STOP_ON_ERROR
-  #endif
-
-#endif // HAS_L64XX
-
-// @section i2cbus
-
-//
-// I2C Master ID for LPC176x LCD and Digital Current control
-// Does not apply to other peripherals based on the Wire library.
-//
-//#define I2C_MASTER_ID  1  // Set a value from 0 to 2
 
 /**
- * TWI/I2C BUS
- *
- * This feature is an EXPERIMENTAL feature so it shall not be used on production
- * machines. Enabling this will allow you to send and receive I2C data from slave
- * devices on the bus.
- *
- * ; Example #1
- * ; This macro send the string "mvCNC" to the slave device with address 0x63 (99)
- * ; It uses multiple M260 commands with one B<base 10> arg
- * M260 A99  ; Target slave address
- * M260 B77  ; M
- * M260 B97  ; a
- * M260 B114 ; r
- * M260 B108 ; l
- * M260 B105 ; i
- * M260 B110 ; n
- * M260 S1   ; Send the current buffer
- *
- * ; Example #2
- * ; Request 6 bytes from slave device with address 0x63 (99)
- * M261 A99 B5
- *
- * ; Example #3
- * ; Example serial output of a M261 request
- * echo:i2c-reply: from:99 bytes:5 data:hello
+ * Monitor L6470 drivers for error conditions like over temperature and over current.
+ * In the case of over temperature mvCNC can decrease the drive until the error condition clears.
+ * Other detected conditions can be used to stop the current print.
+ * Relevant G-codes:
+ * M906 - I1/2/3/4/5  Set or get motor drive level using axis codes X, Y, Z, E. Report values if no axis codes given.
+ *         I not present or I0 or I1 - X, Y, Z or E0
+ *         I2 - X2, Y2, Z2 or E1
+ *         I3 - Z3 or E3
+ *         I4 - Z4 or E4
+ *         I5 - E5
+ * M916 - Increase drive level until get thermal warning
+ * M917 - Find minimum current thresholds
+ * M918 - Increase speed until max or error
+ * M122 S0/1 - Report driver parameters
  */
+//#define MONITOR_L6470_DRIVER_STATUS
 
-//#define EXPERIMENTAL_I2CBUS
-#if ENABLED(EXPERIMENTAL_I2CBUS)
-  #define I2C_SLAVE_ADDRESS  0  // Set a value from 8 to 127 to act as a slave
-#endif
+  #if ENABLED(MONITOR_L6470_DRIVER_STATUS)
+    #define KVAL_HOLD_STEP_DOWN 1
+  //#define L6470_STOP_ON_ERROR
+  #endif
+
+#endif  // HAS_L64XX
 
 // @section extras
 
@@ -3450,7 +3147,7 @@
    */
   //#define PHOTO_PULSES_US { 2000, 27850, 400, 1580, 400, 3580, 400 }  // (µs) Durations for each 48.4kHz oscillation
   #ifdef PHOTO_PULSES_US
-    #define PHOTO_PULSE_DELAY_US 13 // (µs) Approximate duration of each HIGH and LOW pulse in the oscillation
+    #define PHOTO_PULSE_DELAY_US 13  // (µs) Approximate duration of each HIGH and LOW pulse in the oscillation
   #endif
 #endif
 
@@ -3472,30 +3169,30 @@
 #define SPINDLE_FEATURE
 //#define LASER_FEATURE
 #if EITHER(SPINDLE_FEATURE, LASER_FEATURE)
-  #define SPINDLE_LASER_ACTIVE_STATE    LOW    // Set to "HIGH" if SPINDLE_LASER_ENA_PIN is active HIGH
+  #define SPINDLE_LASER_ACTIVE_STATE LOW  // Set to "HIGH" if SPINDLE_LASER_ENA_PIN is active HIGH
 
-  #define SPINDLE_LASER_USE_PWM                // Enable if your controller supports setting the speed/power
+  #define SPINDLE_LASER_USE_PWM  // Enable if your controller supports setting the speed/power
   #if ENABLED(SPINDLE_LASER_USE_PWM)
-    #define SPINDLE_LASER_PWM_INVERT    false  // Set to "true" if the speed/power goes up when you want it to go slower
-    // #define SPINDLE_LASER_FREQUENCY     2500   // (Hz) Spindle/laser frequency (only on supported HALs: AVR and LPC)
+    #define SPINDLE_LASER_PWM_INVERT false  // Set to "true" if the speed/power goes up when you want it to go slower
+  // #define SPINDLE_LASER_FREQUENCY     2500   // (Hz) Spindle/laser frequency (only on supported HALs: AVR and LPC)
   #endif
 
   //#define AIR_EVACUATION                     // Cutter Vacuum / Laser Blower motor control with G-codes M10-M11
   #if ENABLED(AIR_EVACUATION)
-    #define AIR_EVACUATION_ACTIVE       LOW    // Set to "HIGH" if the on/off function is active HIGH
-    //#define AIR_EVACUATION_PIN        42     // Override the default Cutter Vacuum or Laser Blower pin
+    #define AIR_EVACUATION_ACTIVE LOW  // Set to "HIGH" if the on/off function is active HIGH
+  //#define AIR_EVACUATION_PIN        42     // Override the default Cutter Vacuum or Laser Blower pin
   #endif
 
   //#define AIR_ASSIST                         // Air Assist control with G-codes M8-M9
   #if ENABLED(AIR_ASSIST)
-    #define AIR_ASSIST_ACTIVE           LOW    // Active state on air assist pin
-    //#define AIR_ASSIST_PIN            44     // Override the default Air Assist pin
+    #define AIR_ASSIST_ACTIVE LOW  // Active state on air assist pin
+  //#define AIR_ASSIST_PIN            44     // Override the default Air Assist pin
   #endif
 
   //#define SPINDLE_SERVO                      // A servo converting an angle to spindle power
   #ifdef SPINDLE_SERVO
-    #define SPINDLE_SERVO_NR   0               // Index of servo used for spindle control
-    #define SPINDLE_SERVO_MIN 10               // Minimum angle for servo spindle
+    #define SPINDLE_SERVO_NR  0   // Index of servo used for spindle control
+    #define SPINDLE_SERVO_MIN 10  // Minimum angle for servo spindle
   #endif
 
   /**
@@ -3507,23 +3204,23 @@
    */
   #define CUTTER_POWER_UNIT PERCENT
 
-  /**
-   * Relative Cutter Power
-   * Normally, 'M3 O<power>' sets
-   * OCR power is relative to the range SPEED_POWER_MIN...SPEED_POWER_MAX.
-   * so input powers of 0...255 correspond to SPEED_POWER_MIN...SPEED_POWER_MAX
-   * instead of normal range (0 to SPEED_POWER_MAX).
-   * Best used with (e.g.) SuperPID router controller: S0 = 5,000 RPM and S255 = 30,000 RPM
-   */
-  //#define CUTTER_POWER_RELATIVE              // Set speed proportional to [SPEED_POWER_MIN...SPEED_POWER_MAX]
+/**
+ * Relative Cutter Power
+ * Normally, 'M3 O<power>' sets
+ * OCR power is relative to the range SPEED_POWER_MIN...SPEED_POWER_MAX.
+ * so input powers of 0...255 correspond to SPEED_POWER_MIN...SPEED_POWER_MAX
+ * instead of normal range (0 to SPEED_POWER_MAX).
+ * Best used with (e.g.) SuperPID router controller: S0 = 5,000 RPM and S255 = 30,000 RPM
+ */
+//#define CUTTER_POWER_RELATIVE              // Set speed proportional to [SPEED_POWER_MIN...SPEED_POWER_MAX]
 
   #if ENABLED(SPINDLE_FEATURE)
     //#define SPINDLE_CHANGE_DIR               // Enable if your spindle controller can change spindle direction
-    #define SPINDLE_CHANGE_DIR_STOP            // Enable if the spindle should stop before changing spin direction
-    #define SPINDLE_INVERT_DIR          false  // Set to "true" if the spin direction is reversed
+    #define SPINDLE_CHANGE_DIR_STOP   // Enable if the spindle should stop before changing spin direction
+    #define SPINDLE_INVERT_DIR false  // Set to "true" if the spin direction is reversed
 
-    #define SPINDLE_LASER_POWERUP_DELAY   5000 // (ms) Delay to allow the spindle/laser to come up to speed/power
-    #define SPINDLE_LASER_POWERDOWN_DELAY 5000 // (ms) Delay to allow the spindle to stop
+    #define SPINDLE_LASER_POWERUP_DELAY   5000  // (ms) Delay to allow the spindle/laser to come up to speed/power
+    #define SPINDLE_LASER_POWERDOWN_DELAY 5000  // (ms) Delay to allow the spindle to stop
 
     /**
      * M3/M4 Power Equation
@@ -3535,34 +3232,34 @@
      * PWMDC = (spdpwr - SPEED_POWER_MIN) / (SPEED_POWER_MAX - SPEED_POWER_MIN) / SPEED_POWER_SLOPE
      */
     #if ENABLED(SPINDLE_LASER_USE_PWM)
-      #define SPEED_POWER_INTERCEPT 100   // (%) 0-100 i.e., Minimum power percentage
-      #define SPEED_POWER_MIN       18000 // (RPM)
-      #define SPEED_POWER_MAX       30000 // (RPM) SuperPID router controller 0 - 30,000 RPM
-      #define SPEED_POWER_STARTUP   30000 // (RPM) M3/M4 speed/power default (with no arguments)
+      #define SPEED_POWER_INTERCEPT 100    // (%) 0-100 i.e., Minimum power percentage
+      #define SPEED_POWER_MIN       18000  // (RPM)
+      #define SPEED_POWER_MAX       30000  // (RPM) SuperPID router controller 0 - 30,000 RPM
+      #define SPEED_POWER_STARTUP   30000  // (RPM) M3/M4 speed/power default (with no arguments)
     #endif
 
   #else
 
     #if ENABLED(SPINDLE_LASER_USE_PWM)
-      #define SPEED_POWER_INTERCEPT       0    // (%) 0-100 i.e., Minimum power percentage
-      #define SPEED_POWER_MIN             0    // (%) 0-100
-      #define SPEED_POWER_MAX           100    // (%) 0-100
-      #define SPEED_POWER_STARTUP        80    // (%) M3/M4 speed/power default (with no arguments)
+      #define SPEED_POWER_INTERCEPT 0    // (%) 0-100 i.e., Minimum power percentage
+      #define SPEED_POWER_MIN       0    // (%) 0-100
+      #define SPEED_POWER_MAX       100  // (%) 0-100
+      #define SPEED_POWER_STARTUP   80   // (%) M3/M4 speed/power default (with no arguments)
     #endif
 
     // Define the minimum and maximum test pulse time values for a laser test fire function
-    #define LASER_TEST_PULSE_MIN           1   // Used with Laser Control Menu
-    #define LASER_TEST_PULSE_MAX         999   // Caution: Menu may not show more than 3 characters
+    #define LASER_TEST_PULSE_MIN 1    // Used with Laser Control Menu
+    #define LASER_TEST_PULSE_MAX 999  // Caution: Menu may not show more than 3 characters
 
-    /**
-     * Enable inline laser power to be handled in the planner / stepper routines.
-     * Inline power is specified by the I (inline) flag in an M3 command (e.g., M3 S20 I)
-     * or by the 'S' parameter in G0/G1/G2/G3 moves (see LASER_MOVE_POWER).
-     *
-     * This allows the laser to keep in perfect sync with the planner and removes
-     * the powerup/down delay since lasers require negligible time.
-     */
-    //#define LASER_POWER_INLINE
+  /**
+   * Enable inline laser power to be handled in the planner / stepper routines.
+   * Inline power is specified by the I (inline) flag in an M3 command (e.g., M3 S20 I)
+   * or by the 'S' parameter in G0/G1/G2/G3 moves (see LASER_MOVE_POWER).
+   *
+   * This allows the laser to keep in perfect sync with the planner and removes
+   * the powerup/down delay since lasers require negligible time.
+   */
+  //#define LASER_POWER_INLINE
 
     #if ENABLED(LASER_POWER_INLINE)
       /**
@@ -3574,58 +3271,58 @@
        */
       #define LASER_POWER_INLINE_TRAPEZOID
 
-      /**
-       * Continuously calculate the current power (nominal_power * current_rate / nominal_rate).
-       * Required for accurate power with non-trapezoidal acceleration (e.g., S_CURVE_ACCELERATION).
-       * This is a costly calculation so this option is discouraged on 8-bit AVR boards.
-       *
-       * LASER_POWER_INLINE_TRAPEZOID_CONT_PER defines how many step cycles there are between power updates. If your
-       * board isn't able to generate steps fast enough (and you are using LASER_POWER_INLINE_TRAPEZOID_CONT), increase this.
-       * Note that when this is zero it means it occurs every cycle; 1 means a delay wait one cycle then run, etc.
-       */
-      //#define LASER_POWER_INLINE_TRAPEZOID_CONT
+    /**
+     * Continuously calculate the current power (nominal_power * current_rate / nominal_rate).
+     * Required for accurate power with non-trapezoidal acceleration (e.g., S_CURVE_ACCELERATION).
+     * This is a costly calculation so this option is discouraged on 8-bit AVR boards.
+     *
+     * LASER_POWER_INLINE_TRAPEZOID_CONT_PER defines how many step cycles there are between power updates. If your
+     * board isn't able to generate steps fast enough (and you are using LASER_POWER_INLINE_TRAPEZOID_CONT), increase this.
+     * Note that when this is zero it means it occurs every cycle; 1 means a delay wait one cycle then run, etc.
+     */
+    //#define LASER_POWER_INLINE_TRAPEZOID_CONT
 
-      /**
-       * Stepper iterations between power updates. Increase this value if the board
-       * can't keep up with the processing demands of LASER_POWER_INLINE_TRAPEZOID_CONT.
-       * Disable (or set to 0) to recalculate power on every stepper iteration.
-       */
-      //#define LASER_POWER_INLINE_TRAPEZOID_CONT_PER 10
+    /**
+     * Stepper iterations between power updates. Increase this value if the board
+     * can't keep up with the processing demands of LASER_POWER_INLINE_TRAPEZOID_CONT.
+     * Disable (or set to 0) to recalculate power on every stepper iteration.
+     */
+    //#define LASER_POWER_INLINE_TRAPEZOID_CONT_PER 10
 
-      /**
-       * Include laser power in G0/G1/G2/G3/G5 commands with the 'S' parameter
-       */
-      //#define LASER_MOVE_POWER
+    /**
+     * Include laser power in G0/G1/G2/G3/G5 commands with the 'S' parameter
+     */
+    //#define LASER_MOVE_POWER
 
       #if ENABLED(LASER_MOVE_POWER)
-        // Turn off the laser on G0 moves with no power parameter.
-        // If a power parameter is provided, use that instead.
-        //#define LASER_MOVE_G0_OFF
+      // Turn off the laser on G0 moves with no power parameter.
+      // If a power parameter is provided, use that instead.
+      //#define LASER_MOVE_G0_OFF
 
-        // Turn off the laser on G28 homing.
-        //#define LASER_MOVE_G28_OFF
+      // Turn off the laser on G28 homing.
+      //#define LASER_MOVE_G28_OFF
       #endif
 
-      /**
-       * Inline flag inverted
-       *
-       * WARNING: M5 will NOT turn off the laser unless another move
-       *          is done (so G-code files must end with 'M5 I').
-       */
-      //#define LASER_POWER_INLINE_INVERT
+    /**
+     * Inline flag inverted
+     *
+     * WARNING: M5 will NOT turn off the laser unless another move
+     *          is done (so G-code files must end with 'M5 I').
+     */
+    //#define LASER_POWER_INLINE_INVERT
 
-      /**
-       * Continuously apply inline power. ('M3 S3' == 'G1 S3' == 'M3 S3 I')
-       *
-       * The laser might do some weird things, so only enable this
-       * feature if you understand the implications.
-       */
-      //#define LASER_POWER_INLINE_CONTINUOUS
+    /**
+     * Continuously apply inline power. ('M3 S3' == 'G1 S3' == 'M3 S3 I')
+     *
+     * The laser might do some weird things, so only enable this
+     * feature if you understand the implications.
+     */
+    //#define LASER_POWER_INLINE_CONTINUOUS
 
     #else
 
-      #define SPINDLE_LASER_POWERUP_DELAY     50 // (ms) Delay to allow the spindle/laser to come up to speed/power
-      #define SPINDLE_LASER_POWERDOWN_DELAY   50 // (ms) Delay to allow the spindle to stop
+      #define SPINDLE_LASER_POWERUP_DELAY   50  // (ms) Delay to allow the spindle/laser to come up to speed/power
+      #define SPINDLE_LASER_POWERDOWN_DELAY 50  // (ms) Delay to allow the spindle to stop
 
     #endif
 
@@ -3634,12 +3331,12 @@
     //
     //#define I2C_AMMETER
     #if ENABLED(I2C_AMMETER)
-      #define I2C_AMMETER_IMAX            0.1    // (Amps) Calibration value for the expected current range
-      #define I2C_AMMETER_SHUNT_RESISTOR  0.1    // (Ohms) Calibration shunt resistor value
+      #define I2C_AMMETER_IMAX           0.1  // (Amps) Calibration value for the expected current range
+      #define I2C_AMMETER_SHUNT_RESISTOR 0.1  // (Ohms) Calibration shunt resistor value
     #endif
 
   #endif
-#endif // SPINDLE_FEATURE || LASER_FEATURE
+#endif  // SPINDLE_FEATURE || LASER_FEATURE
 
 /**
  * Synchronous Laser Control with M106/M107
@@ -3689,16 +3386,16 @@
 //#define FILAMENT_WIDTH_SENSOR
 
 #if ENABLED(FILAMENT_WIDTH_SENSOR)
-  #define FILAMENT_SENSOR_EXTRUDER_NUM 0    // Index of the extruder that has the filament sensor. :[0,1,2,3,4]
-  #define MEASUREMENT_DELAY_CM        14    // (cm) The distance from the filament sensor to the melting chamber
+  #define FILAMENT_SENSOR_EXTRUDER_NUM 0   // Index of the extruder that has the filament sensor. :[0,1,2,3,4]
+  #define MEASUREMENT_DELAY_CM         14  // (cm) The distance from the filament sensor to the melting chamber
 
-  #define FILWIDTH_ERROR_MARGIN        1.0  // (mm) If a measurement differs too much from nominal width ignore it
-  #define MAX_MEASUREMENT_DELAY       20    // (bytes) Buffer size for stored measurements (1 byte per cm). Must be larger than MEASUREMENT_DELAY_CM.
+  #define FILWIDTH_ERROR_MARGIN 1.0  // (mm) If a measurement differs too much from nominal width ignore it
+  #define MAX_MEASUREMENT_DELAY 20   // (bytes) Buffer size for stored measurements (1 byte per cm). Must be larger than MEASUREMENT_DELAY_CM.
 
-  #define DEFAULT_MEASURED_FILAMENT_DIA DEFAULT_NOMINAL_FILAMENT_DIA // Set measured to nominal initially
+  #define DEFAULT_MEASURED_FILAMENT_DIA DEFAULT_NOMINAL_FILAMENT_DIA  // Set measured to nominal initially
 
-  // Display filament width on the LCD status line. Status messages will expire after 5 seconds.
-  //#define FILAMENT_LCD_DISPLAY
+// Display filament width on the LCD status line. Status messages will expire after 5 seconds.
+//#define FILAMENT_LCD_DISPLAY
 #endif
 
 /**
@@ -3714,14 +3411,14 @@
 //#define POWER_MONITOR_VOLTAGE   // Monitor the system voltage
 
 #if ENABLED(POWER_MONITOR_CURRENT)
-  #define POWER_MONITOR_VOLTS_PER_AMP    0.05000  // Input voltage to the MCU analog pin per amp  - DO NOT apply more than ADC_VREF!
-  #define POWER_MONITOR_CURRENT_OFFSET   0        // Offset (in amps) applied to the calculated current
-  #define POWER_MONITOR_FIXED_VOLTAGE   13.6      // Voltage for a current sensor with no voltage sensor (for power display)
+  #define POWER_MONITOR_VOLTS_PER_AMP  0.05000  // Input voltage to the MCU analog pin per amp  - DO NOT apply more than ADC_VREF!
+  #define POWER_MONITOR_CURRENT_OFFSET 0        // Offset (in amps) applied to the calculated current
+  #define POWER_MONITOR_FIXED_VOLTAGE  13.6     // Voltage for a current sensor with no voltage sensor (for power display)
 #endif
 
 #if ENABLED(POWER_MONITOR_VOLTAGE)
-  #define POWER_MONITOR_VOLTS_PER_VOLT  0.077933  // Input voltage to the MCU analog pin per volt - DO NOT apply more than ADC_VREF!
-  #define POWER_MONITOR_VOLTAGE_OFFSET  0         // Offset (in volts) applied to the calculated voltage
+  #define POWER_MONITOR_VOLTS_PER_VOLT 0.077933  // Input voltage to the MCU analog pin per volt - DO NOT apply more than ADC_VREF!
+  #define POWER_MONITOR_VOLTAGE_OFFSET 0         // Offset (in volts) applied to the calculated voltage
 #endif
 
 /**
@@ -3739,8 +3436,8 @@
  */
 #define EXTENDED_CAPABILITIES_REPORT
 #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
-  //#define M115_GEOMETRY_REPORT    // Display bed size and axis limits in the report
-  //#define MINIMAL_CAP_LINES       // Don't mention the disabled features
+//#define M115_GEOMETRY_REPORT    // Display bed size and axis limits in the report
+//#define MINIMAL_CAP_LINES       // Don't mention the disabled features
 
 #endif
 
@@ -3749,12 +3446,12 @@
  * Add the M16 G-code to compare a string to the MACHINE_NAME.
  * M16 with a non-matching string causes the cnc to halt.
  */
- //#define CNC_ID_CHECK
+//#define CNC_ID_CHECK
 
 /**
  * Enable Volumetric extrusion options
  */
- //#define USE_VOLUMETRICS
+//#define USE_VOLUMETRICS
 
 #if ENABLED(USE_VOLUMETRICS)
   /**
@@ -3775,7 +3472,7 @@
      * Use 'M200 [T<extruder>] L<limit>' to override and 'M502' to reset.
      * A non-zero value activates Volume-based Extrusion Limiting.
      */
-    #define DEFAULT_VOLUMETRIC_EXTRUDER_LIMIT 0.00      // (mm^3/sec)
+    #define DEFAULT_VOLUMETRIC_EXTRUDER_LIMIT 0.00  // (mm^3/sec)
   #endif
 #endif
 
@@ -3789,10 +3486,10 @@
 //#define NO_WORKSPACE_OFFSETS
 
 // Extra options for the M114 "Current Position" report
-#define M114_DETAIL             // Enable 'M114 D' for highly detailed position reports and to check planner calculations
-#define M114_REALTIME           // Calculate Real-time current position based on forward kinematics
+#define M114_DETAIL    // Enable 'M114 D' for highly detailed position reports and to check planner calculations
+#define M114_REALTIME  // Calculate Real-time current position based on forward kinematics
 // #define M114_LEGACY          // Calling M114 will force a planner synchronize. May cause stuttering, enable only if needed.
-#define M114_RAPID_REPORTING    // Outputs M114 position report to host after every G0 (rapid) move (for faster host UI updates), requires G0_FEEDRATE
+#define M114_RAPID_REPORTING  // Outputs M114 position report to host after every G0 (rapid) move (for faster host UI updates), requires G0_FEEDRATE
 
 /**
  * CNC Coordinate Systems
@@ -3803,7 +3500,7 @@
 #define CNC_COORDINATE_SYSTEMS
 
 #if ENABLED(CNC_COORDINATE_SYSTEMS)
-  #define REPORT_MACHINE_POSITION // Returns both Work and Machine coordinates in default M114 report, similar to GRBL.
+  #define REPORT_MACHINE_POSITION  // Returns both Work and Machine coordinates in default M114 report, similar to GRBL.
 #endif
 
 /**
@@ -3822,7 +3519,7 @@
  */
 // #define AUTO_REPORT_POSITION
 
-#define REPORT_FAN_CHANGE // Report the new fan speed when changed by M106 (and others)
+#define REPORT_FAN_CHANGE  // Report the new fan speed when changed by M106 (and others)
 
 /**
  * Set the number of proportional font spaces required to fill up a typical character space.
@@ -3860,9 +3557,9 @@
 #define GCODE_MOTION_MODES  // Remember the motion mode (G0 G1 G2 G3 G5 G38.X) and apply for X Y Z E F, etc.
 
 // Enable and set a (default) feedrate for all G0 moves
-#define G0_FEEDRATE (100 * 60) // (mm/min)
+#define G0_FEEDRATE (100 * 60)  // (mm/min)
 #ifdef G0_FEEDRATE
-  #define VARIABLE_G0_FEEDRATE // The G0 feedrate is set by F in G0 motion mode
+  #define VARIABLE_G0_FEEDRATE  // The G0 feedrate is set by F in G0 motion mode
 #endif
 
 /**
@@ -3880,8 +3577,8 @@
  */
 //#define GCODE_MACROS
 #if ENABLED(GCODE_MACROS)
-  #define GCODE_MACROS_SLOTS       5  // Up to 10 may be used
-  #define GCODE_MACROS_SLOT_SIZE  50  // Maximum length of a single macro
+  #define GCODE_MACROS_SLOTS     5   // Up to 10 may be used
+  #define GCODE_MACROS_SLOT_SIZE 50  // Maximum length of a single macro
 #endif
 
 /**
@@ -3896,27 +3593,27 @@
   #define CUSTOM_MENU_MAIN_SCRIPT_DONE "M117 User Script Done"
   #define CUSTOM_MENU_MAIN_SCRIPT_AUDIBLE_FEEDBACK
   //#define CUSTOM_MENU_MAIN_SCRIPT_RETURN   // Return to status screen after a script
-  #define CUSTOM_MENU_MAIN_ONLY_IDLE         // Only show custom menu when the machine is idle
+  #define CUSTOM_MENU_MAIN_ONLY_IDLE  // Only show custom menu when the machine is idle
 
-  #define MAIN_MENU_ITEM_1_DESC "Home & UBL Info"
+  #define MAIN_MENU_ITEM_1_DESC  "Home & UBL Info"
   #define MAIN_MENU_ITEM_1_GCODE "G28\nG29 W"
-  //#define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
+//#define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
 
-  #define MAIN_MENU_ITEM_2_DESC "Preheat for " PREHEAT_1_LABEL
+  #define MAIN_MENU_ITEM_2_DESC  "Preheat for " PREHEAT_1_LABEL
   #define MAIN_MENU_ITEM_2_GCODE "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
-  //#define MAIN_MENU_ITEM_2_CONFIRM
+//#define MAIN_MENU_ITEM_2_CONFIRM
 
-  //#define MAIN_MENU_ITEM_3_DESC "Preheat for " PREHEAT_2_LABEL
-  //#define MAIN_MENU_ITEM_3_GCODE "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
-  //#define MAIN_MENU_ITEM_3_CONFIRM
+//#define MAIN_MENU_ITEM_3_DESC "Preheat for " PREHEAT_2_LABEL
+//#define MAIN_MENU_ITEM_3_GCODE "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
+//#define MAIN_MENU_ITEM_3_CONFIRM
 
-  //#define MAIN_MENU_ITEM_4_DESC "Heat Bed/Home/Level"
-  //#define MAIN_MENU_ITEM_4_GCODE "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nG28\nG29"
-  //#define MAIN_MENU_ITEM_4_CONFIRM
+//#define MAIN_MENU_ITEM_4_DESC "Heat Bed/Home/Level"
+//#define MAIN_MENU_ITEM_4_GCODE "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nG28\nG29"
+//#define MAIN_MENU_ITEM_4_CONFIRM
 
-  //#define MAIN_MENU_ITEM_5_DESC "Home & Info"
-  //#define MAIN_MENU_ITEM_5_GCODE "G28\nM503"
-  //#define MAIN_MENU_ITEM_5_CONFIRM
+//#define MAIN_MENU_ITEM_5_DESC "Home & Info"
+//#define MAIN_MENU_ITEM_5_GCODE "G28\nM503"
+//#define MAIN_MENU_ITEM_5_CONFIRM
 #endif
 
 // Custom Menu: Configuration Menu
@@ -3926,27 +3623,27 @@
   #define CUSTOM_MENU_CONFIG_SCRIPT_DONE "M117 Wireless Script Done"
   #define CUSTOM_MENU_CONFIG_SCRIPT_AUDIBLE_FEEDBACK
   //#define CUSTOM_MENU_CONFIG_SCRIPT_RETURN  // Return to status screen after a script
-  #define CUSTOM_MENU_CONFIG_ONLY_IDLE        // Only show custom menu when the machine is idle
+  #define CUSTOM_MENU_CONFIG_ONLY_IDLE  // Only show custom menu when the machine is idle
 
-  #define CONFIG_MENU_ITEM_1_DESC "Wifi ON"
+  #define CONFIG_MENU_ITEM_1_DESC  "Wifi ON"
   #define CONFIG_MENU_ITEM_1_GCODE "M118 [ESP110] WIFI-STA pwd=12345678"
-  //#define CONFIG_MENU_ITEM_1_CONFIRM        // Show a confirmation dialog before this action
+//#define CONFIG_MENU_ITEM_1_CONFIRM        // Show a confirmation dialog before this action
 
-  #define CONFIG_MENU_ITEM_2_DESC "Bluetooth ON"
+  #define CONFIG_MENU_ITEM_2_DESC  "Bluetooth ON"
   #define CONFIG_MENU_ITEM_2_GCODE "M118 [ESP110] BT pwd=12345678"
-  //#define CONFIG_MENU_ITEM_2_CONFIRM
+//#define CONFIG_MENU_ITEM_2_CONFIRM
 
-  //#define CONFIG_MENU_ITEM_3_DESC "Radio OFF"
-  //#define CONFIG_MENU_ITEM_3_GCODE "M118 [ESP110] OFF pwd=12345678"
-  //#define CONFIG_MENU_ITEM_3_CONFIRM
+//#define CONFIG_MENU_ITEM_3_DESC "Radio OFF"
+//#define CONFIG_MENU_ITEM_3_GCODE "M118 [ESP110] OFF pwd=12345678"
+//#define CONFIG_MENU_ITEM_3_CONFIRM
 
-  //#define CONFIG_MENU_ITEM_4_DESC "Wifi ????"
-  //#define CONFIG_MENU_ITEM_4_GCODE "M118 ????"
-  //#define CONFIG_MENU_ITEM_4_CONFIRM
+//#define CONFIG_MENU_ITEM_4_DESC "Wifi ????"
+//#define CONFIG_MENU_ITEM_4_GCODE "M118 ????"
+//#define CONFIG_MENU_ITEM_4_CONFIRM
 
-  //#define CONFIG_MENU_ITEM_5_DESC "Wifi ????"
-  //#define CONFIG_MENU_ITEM_5_GCODE "M118 ????"
-  //#define CONFIG_MENU_ITEM_5_CONFIRM
+//#define CONFIG_MENU_ITEM_5_DESC "Wifi ????"
+//#define CONFIG_MENU_ITEM_5_GCODE "M118 ????"
+//#define CONFIG_MENU_ITEM_5_CONFIRM
 #endif
 
 /**
@@ -3957,26 +3654,26 @@
 #if ENABLED(CUSTOM_USER_BUTTONS)
   //#define BUTTON1_PIN -1
   #if PIN_EXISTS(BUTTON1)
-    #define BUTTON1_HIT_STATE     LOW       // State of the triggered button. NC=LOW. NO=HIGH.
-#define BUTTON1_WHEN_CUTTING false     // Button allowed to trigger during running job?
-    #define BUTTON1_GCODE         "G28"
-    #define BUTTON1_DESC          "Homing"  // Optional string to set the LCD status
+    #define BUTTON1_HIT_STATE    LOW    // State of the triggered button. NC=LOW. NO=HIGH.
+    #define BUTTON1_WHEN_CUTTING false  // Button allowed to trigger during running job?
+    #define BUTTON1_GCODE        "G28"
+    #define BUTTON1_DESC         "Homing"  // Optional string to set the LCD status
   #endif
 
   //#define BUTTON2_PIN -1
   #if PIN_EXISTS(BUTTON2)
-    #define BUTTON2_HIT_STATE     LOW
-#define BUTTON2_WHEN_CUTTING false
-    #define BUTTON2_GCODE         "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
-    #define BUTTON2_DESC          "Preheat for " PREHEAT_1_LABEL
+    #define BUTTON2_HIT_STATE    LOW
+    #define BUTTON2_WHEN_CUTTING false
+    #define BUTTON2_GCODE        "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
+    #define BUTTON2_DESC         "Preheat for " PREHEAT_1_LABEL
   #endif
 
   //#define BUTTON3_PIN -1
   #if PIN_EXISTS(BUTTON3)
-    #define BUTTON3_HIT_STATE     LOW
-#define BUTTON3_WHEN_CUTTING false
-    #define BUTTON3_GCODE         "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
-    #define BUTTON3_DESC          "Preheat for " PREHEAT_2_LABEL
+    #define BUTTON3_HIT_STATE    LOW
+    #define BUTTON3_WHEN_CUTTING false
+    #define BUTTON3_GCODE        "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
+    #define BUTTON3_DESC         "Preheat for " PREHEAT_2_LABEL
   #endif
 #endif
 
@@ -3998,8 +3695,8 @@
 #if ENABLED(HOST_ACTION_COMMANDS)
   #define HOST_PAUSE_M76
   #define HOST_PROMPT_SUPPORT
-  //#define HOST_START_MENU_ITEM      // Add a menu item that tells the host to start
-  //#define HOST_SHUTDOWN_MENU_ITEM   // Add a menu item that tells the host to shut down
+//#define HOST_START_MENU_ITEM      // Add a menu item that tells the host to start
+//#define HOST_SHUTDOWN_MENU_ITEM   // Add a menu item that tells the host to shut down
 #endif
 
 /**
@@ -4009,7 +3706,101 @@
  */
 //#define CANCEL_OBJECTS
 #if ENABLED(CANCEL_OBJECTS)
-  #define CANCEL_OBJECTS_REPORTING // Emit the current object as a status message
+  #define CANCEL_OBJECTS_REPORTING  // Emit the current object as a status message
+#endif
+
+// @section i2cbus
+
+//
+// I2C Master ID for LPC176x LCD and Digital Current control
+// Does not apply to other peripherals based on the Wire library.
+//
+//#define I2C_MASTER_ID  1  // Set a value from 0 to 2
+
+/**
+ * TWI/I2C BUS
+ *
+ * This feature is an EXPERIMENTAL feature so it shall not be used on production
+ * machines. Enabling this will allow you to send and receive I2C data from slave
+ * devices on the bus.
+ *
+ * ; Example #1
+ * ; This macro send the string "mvCNC" to the slave device with address 0x63 (99)
+ * ; It uses multiple M260 commands with one B<base 10> arg
+ * M260 A99  ; Target slave address
+ * M260 B77  ; M
+ * M260 B97  ; a
+ * M260 B114 ; r
+ * M260 B108 ; l
+ * M260 B105 ; i
+ * M260 B110 ; n
+ * M260 S1   ; Send the current buffer
+ *
+ * ; Example #2
+ * ; Request 6 bytes from slave device with address 0x63 (99)
+ * M261 A99 B5
+ *
+ * ; Example #3
+ * ; Example serial output of a M261 request
+ * echo:i2c-reply: from:99 bytes:5 data:hello
+ */
+
+#define EXPERIMENTAL_I2CBUS
+#if ENABLED(EXPERIMENTAL_I2CBUS)
+  #define I2C_SLAVE_ADDRESS 0  // Set a value from 8 to 127 to act as a slave
+#endif
+
+/**
+ * Analog Joystick(s)
+ */
+// #define JOYSTICK
+#if ENABLED(JOYSTICK)
+// #define JOYSTICK_ENABLED // Enable joystick by default (Use M258 N[0/1] to disable/enable)
+  #define JOY_EN_PIN 44  // Pin sent HIGH when enabled via `M258 W1`
+                         // RAMPS: Suggested pin D44 on AUX2
+  #define JOY_X_PIN 5    // RAMPS: Suggested pin A5  on AUX2
+  #define JOY_Y_PIN 10   // RAMPS: Suggested pin A10 on AUX2
+  #define JOY_Z_PIN 12   // RAMPS: Suggested pin A12 on AUX2
+
+  //#define INVERT_JOY_X  // Enable if X direction is reversed
+  //#define INVERT_JOY_Y  // Enable if Y direction is reversed
+  //#define INVERT_JOY_Z  // Enable if Z direction is reversed
+
+  // Use M119 with JOYSTICK_DEBUG to find reasonable values after connecting:
+  #define JOY_X_LIMITS \
+    { 5600, 8190 - 100, 8190 + 100, 10800 }  // min, deadzone start, deadzone end, max
+  #define JOY_Y_LIMITS \
+    { 5600, 8250 - 100, 8250 + 100, 11000 }
+  #define JOY_Z_LIMITS \
+    { 4800, 8080 - 100, 8080 + 100, 11550 }
+//#define JOYSTICK_DEBUG
+#endif
+
+/**
+ * Wii Nunchuck jogging support
+ *
+ * Press button C to speed up moves
+ * Press button Z to move Z axis
+ *   - While Z is pressed, joyX moves Z slowly, joyY moves Z faster.
+ */
+#define WII_NUNCHUCK
+#if ENABLED(WII_NUNCHUCK)
+// #define WII_NUNCHUCK_ENABLED // Enable nunchuck by default (Use M258 W[0/1] to disable/enable)
+// #define WII_EN_PIN     P0_10 // Pin sent HIGH when enabled via `M258 W1`
+
+// Pressing the C button enables full speed movements up to max_feed_rate for each respective axis
+  #define WII_SLOW_DIVISER 3  // Divide all speeds by value for slow (C unpressed) movements
+
+  //#define INVERT_WII_X  // Enable to reverse X axis jogging
+  //#define INVERT_WII_Y  // Enable to reverse Y axis jogging
+  //#define INVERT_WII_Z  // Enable to reverse Z axis jogging
+
+  // Use M119 with WII_NUNCHUCK_DEBUG to find reasonable values after connecting:
+  #define WII_X_LIMITS \
+    { 0, 128 - 7, 128 + 7, 255 }  // min, deadzone start, deadzone end, max
+  #define WII_Y_LIMITS \
+    { 0, 128 - 7, 128 + 7, 255 }
+  #define WII_NUNCHUCK_DEBUG
 #endif
 
 /**
@@ -4028,119 +3819,69 @@
 //#define I2C_POSITION_ENCODERS
 #if ENABLED(I2C_POSITION_ENCODERS)
 
-  #define I2CPE_ENCODER_CNT         1                       // The number of encoders installed; max of 5
-                                                            // encoders supported currently.
+  #define I2CPE_ENCODER_CNT 1  // The number of encoders installed; max of 5
+                               // encoders supported currently.
 
-  #define I2CPE_ENC_1_ADDR          I2CPE_PRESET_ADDR_X     // I2C address of the encoder. 30-200.
-  #define I2CPE_ENC_1_AXIS          X_AXIS                  // Axis the encoder module is installed on.  <X|Y|Z|E>_AXIS.
-  #define I2CPE_ENC_1_TYPE          I2CPE_ENC_TYPE_LINEAR   // Type of encoder:  I2CPE_ENC_TYPE_LINEAR -or-
-                                                            // I2CPE_ENC_TYPE_ROTARY.
-  #define I2CPE_ENC_1_TICKS_UNIT    2048                    // 1024 for magnetic strips with 2mm poles; 2048 for
-                                                            // 1mm poles. For linear encoders this is ticks / mm,
-                                                            // for rotary encoders this is ticks / revolution.
+  #define I2CPE_ENC_1_ADDR I2CPE_PRESET_ADDR_X    // I2C address of the encoder. 30-200.
+  #define I2CPE_ENC_1_AXIS X_AXIS                 // Axis the encoder module is installed on.  <X|Y|Z|E>_AXIS.
+  #define I2CPE_ENC_1_TYPE I2CPE_ENC_TYPE_LINEAR  // Type of encoder:  I2CPE_ENC_TYPE_LINEAR -or-
+                                                  // I2CPE_ENC_TYPE_ROTARY.
+  #define I2CPE_ENC_1_TICKS_UNIT 2048             // 1024 for magnetic strips with 2mm poles; 2048 for
+                                                  // 1mm poles. For linear encoders this is ticks / mm,
+                                                  // for rotary encoders this is ticks / revolution.
   //#define I2CPE_ENC_1_TICKS_REV     (16 * 200)            // Only needed for rotary encoders; number of stepper
-                                                            // steps per full revolution (motor steps/rev * microstepping)
+  // steps per full revolution (motor steps/rev * microstepping)
   //#define I2CPE_ENC_1_INVERT                              // Invert the direction of axis travel.
-  #define I2CPE_ENC_1_EC_METHOD     I2CPE_ECM_MICROSTEP     // Type of error error correction.
-  #define I2CPE_ENC_1_EC_THRESH     0.10                    // Threshold size for error (in mm) above which the
-                                                            // cnc will attempt to correct the error; errors
-                                                            // smaller than this are ignored to minimize effects of
-                                                            // measurement noise / latency (filter).
+  #define I2CPE_ENC_1_EC_METHOD I2CPE_ECM_MICROSTEP  // Type of error error correction.
+  #define I2CPE_ENC_1_EC_THRESH 0.10                 // Threshold size for error (in mm) above which the
+                                                     // cnc will attempt to correct the error; errors
+                                                     // smaller than this are ignored to minimize effects of
+                                                     // measurement noise / latency (filter).
 
-  #define I2CPE_ENC_2_ADDR          I2CPE_PRESET_ADDR_Y     // Same as above, but for encoder 2.
-  #define I2CPE_ENC_2_AXIS          Y_AXIS
-  #define I2CPE_ENC_2_TYPE          I2CPE_ENC_TYPE_LINEAR
-  #define I2CPE_ENC_2_TICKS_UNIT    2048
+  #define I2CPE_ENC_2_ADDR       I2CPE_PRESET_ADDR_Y  // Same as above, but for encoder 2.
+  #define I2CPE_ENC_2_AXIS       Y_AXIS
+  #define I2CPE_ENC_2_TYPE       I2CPE_ENC_TYPE_LINEAR
+  #define I2CPE_ENC_2_TICKS_UNIT 2048
   //#define I2CPE_ENC_2_TICKS_REV   (16 * 200)
   //#define I2CPE_ENC_2_INVERT
-  #define I2CPE_ENC_2_EC_METHOD     I2CPE_ECM_MICROSTEP
-  #define I2CPE_ENC_2_EC_THRESH     0.10
+  #define I2CPE_ENC_2_EC_METHOD I2CPE_ECM_MICROSTEP
+  #define I2CPE_ENC_2_EC_THRESH 0.10
 
-  #define I2CPE_ENC_3_ADDR          I2CPE_PRESET_ADDR_Z     // Encoder 3.  Add additional configuration options
-  #define I2CPE_ENC_3_AXIS          Z_AXIS                  // as above, or use defaults below.
+  #define I2CPE_ENC_3_ADDR I2CPE_PRESET_ADDR_Z  // Encoder 3.  Add additional configuration options
+  #define I2CPE_ENC_3_AXIS Z_AXIS               // as above, or use defaults below.
 
-  #define I2CPE_ENC_4_ADDR          I2CPE_PRESET_ADDR_E     // Encoder 4.
-  #define I2CPE_ENC_4_AXIS          E_AXIS
+  #define I2CPE_ENC_4_ADDR I2CPE_PRESET_ADDR_E  // Encoder 4.
+  #define I2CPE_ENC_4_AXIS E_AXIS
 
-  #define I2CPE_ENC_5_ADDR          34                      // Encoder 5.
-  #define I2CPE_ENC_5_AXIS          E_AXIS
+  #define I2CPE_ENC_5_ADDR 34  // Encoder 5.
+  #define I2CPE_ENC_5_AXIS E_AXIS
 
   // Default settings for encoders which are enabled, but without settings configured above.
-  #define I2CPE_DEF_TYPE            I2CPE_ENC_TYPE_LINEAR
-  #define I2CPE_DEF_ENC_TICKS_UNIT  2048
-  #define I2CPE_DEF_TICKS_REV       (16 * 200)
-  #define I2CPE_DEF_EC_METHOD       I2CPE_ECM_NONE
-  #define I2CPE_DEF_EC_THRESH       0.1
+  #define I2CPE_DEF_TYPE           I2CPE_ENC_TYPE_LINEAR
+  #define I2CPE_DEF_ENC_TICKS_UNIT 2048
+  #define I2CPE_DEF_TICKS_REV      (16 * 200)
+  #define I2CPE_DEF_EC_METHOD      I2CPE_ECM_NONE
+  #define I2CPE_DEF_EC_THRESH      0.1
 
-  //#define I2CPE_ERR_THRESH_ABORT  100.0                   // Threshold size for error (in mm) error on any given
-                                                            // axis after which the cnc will abort. Comment out to
-                                                            // disable abort behavior.
+//#define I2CPE_ERR_THRESH_ABORT  100.0                   // Threshold size for error (in mm) error on any given
+// axis after which the cnc will abort. Comment out to
+// disable abort behavior.
 
-  #define I2CPE_TIME_TRUSTED        10000                   // After an encoder fault, there must be no further fault
-                                                            // for this amount of time (in ms) before the encoder
-                                                            // is trusted again.
+  #define I2CPE_TIME_TRUSTED 10000  // After an encoder fault, there must be no further fault
+                                    // for this amount of time (in ms) before the encoder
+                                    // is trusted again.
 
   /**
    * Position is checked every time a new command is executed from the buffer but during long moves,
    * this setting determines the minimum update time between checks. A value of 100 works well with
    * error rolling average when attempting to correct only for skips and not for vibration.
    */
-  #define I2CPE_MIN_UPD_TIME_MS     4                       // (ms) Minimum time between encoder checks.
+  #define I2CPE_MIN_UPD_TIME_MS 4  // (ms) Minimum time between encoder checks.
 
   // Use a rolling average to identify persistent errors that indicate skips, as opposed to vibration and noise.
   #define I2CPE_ERR_ROLLING_AVERAGE
 
-#endif // I2C_POSITION_ENCODERS
-
-/**
- * Analog Joystick(s)
- */
- // #define JOYSTICK
-#if ENABLED(JOYSTICK)
-  #define JOY_X_PIN    5  // RAMPS: Suggested pin A5  on AUX2
-  #define JOY_Y_PIN   10  // RAMPS: Suggested pin A10 on AUX2
-  #define JOY_Z_PIN   12  // RAMPS: Suggested pin A12 on AUX2
- // #define JOYSTICK_ENABLED // Enable joystick by default (Use M258 N[0/1] to disable/enable)
-#define JOY_EN_PIN  44   // Pin sent HIGH when enabled via `M258 W1`
-                         // RAMPS: Suggested pin D44 on AUX2
-
-
-  //#define INVERT_JOY_X  // Enable if X direction is reversed
-  //#define INVERT_JOY_Y  // Enable if Y direction is reversed
-  //#define INVERT_JOY_Z  // Enable if Z direction is reversed
-
-  // Use M119 with JOYSTICK_DEBUG to find reasonable values after connecting:
-  #define JOY_X_LIMITS { 5600, 8190-100, 8190+100, 10800 } // min, deadzone start, deadzone end, max
-  #define JOY_Y_LIMITS { 5600, 8250-100, 8250+100, 11000 }
-  #define JOY_Z_LIMITS { 4800, 8080-100, 8080+100, 11550 }
-  //#define JOYSTICK_DEBUG
-#endif
-
-/**
- * Wii Nunchuck jogging support
- *
- * Press button C to speed up moves
- * Press button Z to move Z axis
- *   - While Z is pressed, joyX moves Z slowly, joyY moves Z faster.
- */
- // #define WII_NUNCHUCK
-#if ENABLED(WII_NUNCHUCK)
- // #define WII_NUNCHUCK_ENABLED // Enable nunchuck by default (Use M258 W[0/1] to disable/enable)
-// #define WII_EN_PIN     P0_10 // Pin sent HIGH when enabled via `M258 W1`
-
- // Pressing the C button enables full speed movements up to max_feed_rate for each respective axis
-#define WII_SLOW_DIVISER 3 // Divide all speeds by value for slow (C unpressed) movements
-
-//#define INVERT_WII_X  // Enable to reverse X axis jogging
-//#define INVERT_WII_Y  // Enable to reverse Y axis jogging
-//#define INVERT_WII_Z  // Enable to reverse Z axis jogging
-
-// Use M119 with WII_NUNCHUCK_DEBUG to find reasonable values after connecting:
-#define WII_X_LIMITS { 0, 128-7, 128+7, 255 } // min, deadzone start, deadzone end, max
-#define WII_Y_LIMITS { 0, 128-7, 128+7, 255 }
-#define WII_NUNCHUCK_DEBUG
-#endif
-
+#endif  // I2C_POSITION_ENCODERS
 
 /**
  * Mechanical Gantry Calibration
@@ -4169,6 +3910,275 @@
 //#define FREEZE_FEATURE
 #if ENABLED(FREEZE_FEATURE)
   //#define FREEZE_PIN 41   // Override the default (KILL) pin here
+#endif
+
+/**
+ * Additional options for Graphical Displays
+ *
+ * Use the optimizations here to improve cutting performance,
+ * which can be adversely affected by graphical display drawing,
+ * especially when doing several short moves, and when cutting
+ * on DELTA and SCARA machines.
+ *
+ * Some of these options may result in the display lagging behind
+ * controller events, as there is a trade-off between reliable
+ * running job performance versus fast display updates.
+ */
+#if HAS_MVCNCUI_U8GLIB
+  // Save many cycles by drawing a hollow frame or no frame on the Info Screen
+  #define XYZ_NO_FRAME
+  // #define XYZ_HOLLOW_FRAME
+
+  // A bigger font is available for edit items. Costs 3120 bytes of PROGMEM.
+  // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
+  //#define USE_BIG_EDIT_FONT
+
+  // A smaller font may be used on the Info Screen. Costs 2434 bytes of PROGMEM.
+  // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
+  //#define USE_SMALL_INFOFONT
+
+  /**
+   * ST7920-based LCDs can emulate a 16 x 4 character display using
+   * the ST7920 character-generator for very fast screen updates.
+   * Enable LIGHTWEIGHT_UI to use this special display mode.
+   *
+   * Since LIGHTWEIGHT_UI has limited space, the position and status
+   * message occupy the same line. Set STATUS_EXPIRE_SECONDS to the
+   * length of time to display the status message before clearing.
+   *
+   * Set STATUS_EXPIRE_SECONDS to zero to never clear the status.
+   * This will prevent position updates from being displayed.
+   */
+  #if IS_U8GLIB_ST7920
+    // Enable this option and reduce the value to optimize screen updates.
+    // The normal delay is 10µs. Use the lowest value that still gives a reliable display.
+    //#define DOGM_SPI_DELAY_US 5
+
+    //#define LIGHTWEIGHT_UI
+    #if ENABLED(LIGHTWEIGHT_UI)
+      #define STATUS_EXPIRE_SECONDS 20
+    #endif
+  #endif
+
+/**
+ * Status (Info) Screen customizations
+ * These options may affect code size and screen render time.
+ * Custom status screens can forcibly override these settings.
+ */
+//#define STATUS_COMBINE_HEATERS    // Use combined heater images instead of separate ones
+//#define STATUS_HOTEND_NUMBERLESS  // Use plain hotend icons instead of numbered ones (with 2+ hotends)
+// #define STATUS_HOTEND_INVERTED      // Show solid nozzle bitmaps when heating (Requires STATUS_HOTEND_ANIM for numbered hotends)
+// #define STATUS_HOTEND_ANIM          // Use a second bitmap to indicate hotend heating
+// #define STATUS_BED_ANIM             // Use a second bitmap to indicate bed heating
+// #define STATUS_CHAMBER_ANIM         // Use a second bitmap to indicate chamber heating
+//#define STATUS_CUTTER_ANIM        // Use a second bitmap to indicate spindle / laser active
+//#define STATUS_COOLER_ANIM        // Use a second bitmap to indicate laser cooling
+//#define STATUS_FLOWMETER_ANIM     // Use multiple bitmaps to indicate coolant flow
+//#define STATUS_ALT_BED_BITMAP     // Use the alternative bed bitmap
+//#define STATUS_ALT_FAN_BITMAP     // Use the alternative fan bitmap
+//#define STATUS_FAN_FRAMES 3       // :[0,1,2,3,4] Number of fan animation frames
+//#define STATUS_HEAT_PERCENT       // Show heating in a progress bar
+//#define BOOT_MVCNC_LOGO_ANIMATED // Animated mvCNC logo. Costs ~3260 (or ~940) bytes of PROGMEM.
+
+// Frivolous Game Options
+//#define MVCNC_BRICKOUT
+//#define MVCNC_INVADERS
+//#define MVCNC_SNAKE
+//#define GAMES_EASTER_EGG          // Add extra blank lines above the "Games" sub-menu
+
+#endif  // HAS_MVCNCUI_U8GLIB
+
+#if HAS_MVCNCUI_U8GLIB || IS_DWIN_MVCNCUI
+  // Show SD percentage next to the progress bar
+  #define SHOW_SD_PERCENT
+
+  // Enable to save many cycles by drawing a hollow frame on Menu Screens
+  #define MENU_HOLLOW_FRAME
+
+// Swap the CW/CCW indicators in the graphics overlay
+//#define OVERLAY_GFX_REVERSE
+#endif
+
+//
+// Additional options for DGUS / DWIN displays
+//
+#if HAS_DGUS_LCD
+  #define LCD_SERIAL_PORT 3
+  #define LCD_BAUDRATE    115200
+
+  #define DGUS_RX_BUFFER_SIZE 128
+  #define DGUS_TX_BUFFER_SIZE 48
+//#define SERIAL_STATS_RX_BUFFER_OVERRUNS  // Fix Rx overrun situation (Currently only for AVR)
+
+  #define DGUS_UPDATE_INTERVAL_MS 500  // (ms) Interval between automatic screen updates
+
+  #if ANY(DGUS_LCD_UI_FYSETC, DGUS_LCD_UI_MKS, DGUS_LCD_UI_HIPRECY)
+    #define DGUS_PRINT_FILENAME  // Display the filename during running job
+    #define DGUS_PREHEAT_UI      // Display a preheat screen during heatup
+
+    #if EITHER(DGUS_LCD_UI_FYSETC, DGUS_LCD_UI_MKS)
+    //#define DGUS_UI_MOVE_DIS_OPTION   // Disabled by default for FYSETC and MKS
+    #else
+      #define DGUS_UI_MOVE_DIS_OPTION  // Enabled by default for UI_HIPRECY
+    #endif
+
+    #define DGUS_FILAMENT_LOADUNLOAD
+    #if ENABLED(DGUS_FILAMENT_LOADUNLOAD)
+      #define DGUS_FILAMENT_PURGE_LENGTH         10
+      #define DGUS_FILAMENT_LOAD_LENGTH_PER_TIME 0.5  // (mm) Adjust in proportion to DGUS_UPDATE_INTERVAL_MS
+    #endif
+
+    #define DGUS_UI_WAITING  // Show a "waiting" screen between some screens
+    #if ENABLED(DGUS_UI_WAITING)
+      #define DGUS_UI_WAITING_STATUS        10
+      #define DGUS_UI_WAITING_STATUS_PERIOD 8  // Increase to slower waiting status looping
+    #endif
+  #endif
+#endif  // HAS_DGUS_LCD
+
+//
+// Additional options for AnyCubic Chiron TFT displays
+//
+#if ENABLED(ANYCUBIC_LCD_CHIRON)
+  // By default the type of panel is automatically detected.
+  // Enable one of these options if you know the panel type.
+  //#define CHIRON_TFT_STANDARD
+  //#define CHIRON_TFT_NEW
+
+  // Enable the longer Anycubic powerup startup tune
+  //#define AC_DEFAULT_STARTUP_TUNE
+
+  /**
+   * Display Folders
+   * By default the file browser lists all G-code files (including those in subfolders) in a flat list.
+   * Enable this option to display a hierarchical file browser.
+   *
+   * NOTES:
+   * - Without this option it helps to enable SDCARD_SORT_ALPHA so files are sorted before/after folders.
+   * - When used with the "new" panel, folder names will also have '.gcode' appended to their names.
+   *   This hack is currently required to force the panel to show folders.
+   */
+  #define AC_SD_FOLDER_VIEW
+#endif
+
+//
+// Specify additional languages for the UI. Default specified by LCD_LANGUAGE.
+//
+#if ANY(DOGLCD, TFT_COLOR_UI, TOUCH_UI_FTDI_EVE, IS_DWIN_MVCNCUI)
+  //#define LCD_LANGUAGE_2 fr
+  //#define LCD_LANGUAGE_3 de
+  //#define LCD_LANGUAGE_4 es
+  //#define LCD_LANGUAGE_5 it
+  #ifdef LCD_LANGUAGE_2
+  //#define LCD_LANGUAGE_AUTO_SAVE // Automatically save language to EEPROM on change
+  #endif
+#endif
+
+//
+// Touch UI for the FTDI Embedded Video Engine (EVE)
+//
+#if ENABLED(TOUCH_UI_FTDI_EVE)
+  // Display board used
+  //#define LCD_FTDI_VM800B35A        // FTDI 3.5" with FT800 (320x240)
+  //#define LCD_4DSYSTEMS_4DLCD_FT843 // 4D Systems 4.3" (480x272)
+  //#define LCD_HAOYU_FT800CB         // Haoyu with 4.3" or 5" (480x272)
+  //#define LCD_HAOYU_FT810CB         // Haoyu with 5" (800x480)
+  //#define LCD_LULZBOT_CLCD_UI       // LulzBot Color LCD UI
+  //#define LCD_FYSETC_TFT81050       // FYSETC with 5" (800x480)
+  //#define LCD_EVE3_50G              // Matrix Orbital 5.0", 800x480, BT815
+  //#define LCD_EVE2_50G              // Matrix Orbital 5.0", 800x480, FT813
+
+  // Correct the resolution if not using the stock TFT panel.
+  //#define TOUCH_UI_320x240
+  //#define TOUCH_UI_480x272
+  //#define TOUCH_UI_800x480
+
+  // Mappings for boards with a standard RepRapDiscount Display connector
+  //#define AO_EXP1_PINMAP      // LulzBot CLCD UI EXP1 mapping
+  //#define AO_EXP2_PINMAP      // LulzBot CLCD UI EXP2 mapping
+  //#define CR10_TFT_PINMAP     // Rudolph Riedel's CR10 pin mapping
+  //#define S6_TFT_PINMAP       // FYSETC S6 pin mapping
+  //#define F6_TFT_PINMAP       // FYSETC F6 pin mapping
+
+  //#define OTHER_PIN_LAYOUT  // Define pins manually below
+  #if ENABLED(OTHER_PIN_LAYOUT)
+    // Pins for CS and MOD_RESET (PD) must be chosen
+    #define CLCD_MOD_RESET 9
+    #define CLCD_SPI_CS    10
+
+    // If using software SPI, specify pins for SCLK, MOSI, MISO
+    //#define CLCD_USE_SOFT_SPI
+    #if ENABLED(CLCD_USE_SOFT_SPI)
+      #define CLCD_SOFT_SPI_MOSI 11
+      #define CLCD_SOFT_SPI_MISO 12
+      #define CLCD_SOFT_SPI_SCLK 13
+    #endif
+  #endif
+
+  // Display Orientation. An inverted (i.e. upside-down) display
+  // is supported on the FT800. The FT810 and beyond also support
+  // portrait and mirrored orientations.
+  //#define TOUCH_UI_INVERTED
+  //#define TOUCH_UI_PORTRAIT
+  //#define TOUCH_UI_MIRRORED
+
+  // UTF8 processing and rendering.
+  // Unsupported characters are shown as '?'.
+  //#define TOUCH_UI_USE_UTF8
+  #if ENABLED(TOUCH_UI_USE_UTF8)
+    // Western accents support. These accented characters use
+    // combined bitmaps and require relatively little storage.
+    #define TOUCH_UI_UTF8_WESTERN_CHARSET
+    #if ENABLED(TOUCH_UI_UTF8_WESTERN_CHARSET)
+    // Additional character groups. These characters require
+    // full bitmaps and take up considerable storage:
+    //#define TOUCH_UI_UTF8_SUPERSCRIPTS  // ¹ ² ³
+    //#define TOUCH_UI_UTF8_COPYRIGHT     // © ®
+    //#define TOUCH_UI_UTF8_GERMANIC      // ß
+    //#define TOUCH_UI_UTF8_SCANDINAVIAN  // Æ Ð Ø Þ æ ð ø þ
+    //#define TOUCH_UI_UTF8_PUNCTUATION   // « » ¿ ¡
+    //#define TOUCH_UI_UTF8_CURRENCY      // ¢ £ ¤ ¥
+    //#define TOUCH_UI_UTF8_ORDINALS      // º ª
+    //#define TOUCH_UI_UTF8_MATHEMATICS   // ± × ÷
+    //#define TOUCH_UI_UTF8_FRACTIONS     // ¼ ½ ¾
+    //#define TOUCH_UI_UTF8_SYMBOLS       // µ ¶ ¦ § ¬
+    #endif
+
+  // Cyrillic character set, costs about 27KiB of flash
+  //#define TOUCH_UI_UTF8_CYRILLIC_CHARSET
+  #endif
+
+  // Use a smaller font when labels don't fit buttons
+  #define TOUCH_UI_FIT_TEXT
+
+// Use a numeric passcode for "Screen lock" keypad.
+// (recommended for smaller displays)
+//#define TOUCH_UI_PASSCODE
+
+// Output extra debug info for Touch UI events
+//#define TOUCH_UI_DEBUG
+
+// Developer menu (accessed by touching "About CNC" copyright text)
+//#define TOUCH_UI_DEVELOPER_MENU
+#endif
+
+//
+// Classic UI Options
+//
+#if TFT_SCALED_DOGLCD
+//#define TFT_mvCNCUI_COLOR 0xFFFF // White
+//#define TFT_mvCNCBG_COLOR 0x0000 // Black
+//#define TFT_DISABLED_COLOR 0x0003 // Almost black
+//#define TFT_BTCANCEL_COLOR 0xF800 // Red
+//#define TFT_BTARROWS_COLOR 0xDEE6 // 11011 110111 00110 Yellow
+//#define TFT_BTOKMENU_COLOR 0x145F // 00010 100010 11111 Cyan
+#endif
+
+//
+// ADC Button Debounce
+//
+#if HAS_ADC_BUTTONS
+  #define ADC_BUTTON_DEBOUNCE_DELAY 16  // Increase if buttons bounce or repeat too fast
 #endif
 
 /**
@@ -4387,8 +4397,7 @@
    * D576 - Buffer Monitoring
    * To help diagnose print quality issues stemming from empty command buffers.
    */
-  //#define BUFFER_MONITORING
-  //#define SHOW_DEBUG_MESSAGES
+//#define BUFFER_MONITORING
 #endif
 
 /**
@@ -4396,7 +4405,7 @@
  * When running in the debugger it will break for debugging. This is useful to help understand
  * a crash from a remote location. Requires ~400 bytes of SRAM and 5Kb of flash.
  */
-//#define POSTMORTEM_DEBUGGING
+// #define POSTMORTEM_DEBUGGING
 
 /**
  * Software Reset options

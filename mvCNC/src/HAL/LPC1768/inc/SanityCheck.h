@@ -173,82 +173,74 @@ static_assert(DISABLED(BAUD_RATE_GCODE), "BAUD_RATE_GCODE is not yet supported o
 //
 // Flag any i2c pin conflicts
 //
-#if ANY(WII_NUNCHUCK, HAS_MOTOR_CURRENT_I2C, HAS_MOTOR_CURRENT_DAC, EXPERIMENTAL_I2CBUS, I2C_POSITION_ENCODERS, PCA9632, I2C_EEPROM)
-  #define USEDI2CDEV_M 1  // <Arduino>/Wire.cpp
-
-  #if USEDI2CDEV_M == 0         // P0_27 [D57] (AUX-1) .......... P0_28 [D58] (AUX-1)
-    #define PIN_IS_SDA0(P) (P##_PIN == P0_27)
-    #define IS_SCL0(P)     (P == P0_28)
-    #if ENABLED(SDSUPPORT) && PIN_IS_SDA0(SD_DETECT)
-      #error "SDA0 overlaps with SD_DETECT_PIN!"
-    #elif PIN_IS_SDA0(E0_AUTO_FAN)
-      #error "SDA0 overlaps with E0_AUTO_FAN_PIN!"
-    #elif PIN_IS_SDA0(BEEPER)
-      #error "SDA0 overlaps with BEEPER_PIN!"
-    #elif IS_SCL0(BTN_ENC)
-      #error "SCL0 overlaps with Encoder Button!"
-    #elif IS_SCL0(SD_SS_PIN)
-      #error "SCL0 overlaps with SD_SS_PIN!"
-    #elif IS_SCL0(LCD_SDSS)
-      #error "SCL0 overlaps with LCD_SDSS!"
+#if ANY(WII_NUNCHUCK, HAS_MOTOR_CURRENT_I2C, HAS_MOTOR_CURRENT_DAC, EXPERIMENTAL_I2CBUS, I2C_POSITION_ENCODERS, PCA9632, I2C_EEPROM) && !defined(USEDI2CDEV_M)
+  // Automatically finds and sets available i2c pins for <Arduino>/Wire.cpp
+  #ifndef USEDI2CDEV_M
+    // Try Pins P0_27 [SD Detect] (SDA) and P0_28 [??] (SCL)
+    #if ENABLED(SDSUPPORT)
+      #define I2CCONFLICT = "i2c SDA0 pin conflicts with SD_DETECT_PIN!"
+    #else
+      static_assert("Autoassigned i2c to Pins P0_27 [SD Detect] (SDA) and P0_28 [??] (SCL)");
+      #define USEDI2CDEV_M 0  // Sets i2c pins for <Arduino>/Wire.cpp
     #endif
-    #undef PIN_IS_SDA0
-    #undef IS_SCL0
-#elif USEDI2CDEV_M == 1       // P0_00 [D20] (SDA) ............ P0_01 [D21] (SCL)
-    #define PIN_IS_SDA1(P) (PIN_EXISTS(P) && P##_PIN == P0_00)
-    #define PIN_IS_SCL1(P) (P##_PIN == P0_01)
-    #if PIN_IS_SDA1(X_MIN) || PIN_IS_SCL1(X_MAX)
-      #error "One or more i2c (1) pins overlaps with X endstop pins! Disable i2c peripherals."
-    #elif PIN_IS_SDA1(X2_DIR) || PIN_IS_SCL1(X2_STEP)
-      #error "One or more i2c (1) pins overlaps with X2 pins! Disable i2c peripherals."
-    #elif PIN_IS_SDA1(Y2_DIR) || PIN_IS_SCL1(Y2_STEP)
-      #error "One or more i2c (1) pins overlaps with Y2 pins! Disable i2c peripherals."
-    #elif PIN_IS_SDA1(Z2_DIR) || PIN_IS_SCL1(Z2_STEP)
-      #error "One or more i2c (1) pins overlaps with Z2 pins! Disable i2c peripherals."
-    #elif PIN_IS_SDA1(Z3_DIR) || PIN_IS_SCL1(Z3_STEP)
-      #error "One or more i2c (1) pins overlaps with Z3 pins! Disable i2c peripherals."
-    #elif PIN_IS_SDA1(Z4_DIR) || PIN_IS_SCL1(Z4_STEP)
-      #error "One or more i2c (1) pins overlaps with Z4 pins! Disable i2c peripherals."
-    #elif HAS_MULTI_EXTRUDER && (PIN_IS_SDA1(E1_DIR) || PIN_IS_SCL1(E1_STEP))
-      #error "One or more i2c (1) pins overlaps with E1 pins! Disable i2c peripherals."
+    // Try Pins P0_00 [E1_DIR] (SDA) and P0_01 [E1_STEP] (SCL)
+    #if defined(I2CCONFLICT)
+      #undef I2CCONFLICT
+      #define PIN_IS_SDA1(P) (PIN_EXISTS(P) && P##_PIN == P0_00)
+      #define PIN_IS_SCL1(P) (P##_PIN == P0_01)
+      #if HAS_MULTI_EXTRUDER && (PIN_IS_SDA1(E1_DIR) || PIN_IS_SCL1(E1_STEP))
+        #define I2CCONFLICT = "I2C pins overlap with E1 pins!"
+      #else
+        static_assert("Autoassigned i2c to Pins P0_00 [E1_DIR] (SDA) and P0_01 [E1_STEP] (SCL)");
+        #define USEDI2CDEV_M 1  // Sets i2c pins for <Arduino>/Wire.cpp
+      #endif
+      #undef PIN_IS_SDA1
+      #undef PIN_IS_SCL1
     #endif
-    #undef PIN_IS_SDA1
-    #undef PIN_IS_SCL1
-  #elif USEDI2CDEV_M == 2     // P0_10 [D38] (X_ENABLE_PIN) ... P0_11 [D55] (X_DIR_PIN)
-    #define PIN_IS_SDA2(P) (P##_PIN == P0_10)
-    #define PIN_IS_SCL2(P) (P##_PIN == P0_11)
-    #if PIN_IS_SDA2(Y_STOP)
-      #error "i2c SDA2 overlaps with Y endstop pin!"
-    #elif USES_Z_MIN_PROBE_PIN && PIN_IS_SDA2(Z_MIN_PROBE)
-      #error "i2c SDA2 overlaps with Z probe pin!"
-    #elif PIN_IS_SDA2(X_ENABLE) || PIN_IS_SDA2(Y_ENABLE)
-      #error "i2c SDA2 overlaps with X/Y ENABLE pin!"
-    #elif AXIS_HAS_SPI(X) && PIN_IS_SDA2(X_CS)
-      #error "i2c SDA2 overlaps with X CS pin!"
-    #elif PIN_IS_SDA2(X2_ENABLE)
-      #error "i2c SDA2 overlaps with X2 enable pin! Disable i2c peripherals."
-    #elif PIN_IS_SDA2(Y2_ENABLE)
-      #error "i2c SDA2 overlaps with Y2 enable pin! Disable i2c peripherals."
-    #elif PIN_IS_SDA2(Z2_ENABLE)
-      #error "i2c SDA2 overlaps with Z2 enable pin! Disable i2c peripherals."
-    #elif PIN_IS_SDA2(Z3_ENABLE)
-      #error "i2c SDA2 overlaps with Z3 enable pin! Disable i2c peripherals."
-    #elif PIN_IS_SDA2(Z4_ENABLE)
-      #error "i2c SDA2 overlaps with Z4 enable pin! Disable i2c peripherals."
-    #elif HAS_MULTI_EXTRUDER && PIN_IS_SDA2(E1_ENABLE)
-      #error "i2c SDA2 overlaps with E1 enable pin! Disable i2c peripherals."
-    #elif HAS_MULTI_EXTRUDER && AXIS_HAS_SPI(E1) && PIN_IS_SDA2(E1_CS)
-      #error "i2c SDA2 overlaps with E1 CS pin! Disable i2c peripherals."
-    #elif EXTRUDERS && (PIN_IS_SDA2(E0_STEP) || PIN_IS_SDA2(E0_DIR))
-      #error "i2c SCL2 overlaps with E0 STEP/DIR pin! Disable i2c peripherals."
-    #elif PIN_IS_SDA2(X_DIR) || PIN_IS_SDA2(Y_DIR)
-      #error "One or more i2c pins overlaps with X/Y DIR pin! Disable i2c peripherals."
+    #if defined(I2CCONFLICT)  // Try Pins P0_10 and P0_11
+      #undef I2CCONFLICT
+      #define PIN_IS_SDA2(P) (P##_PIN == P0_10)
+      #define PIN_IS_SCL2(P) (P##_PIN == P0_11)
+      #if PIN_IS_SDA2(Y_STOP)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with Y endstop pin!"
+      #elif USES_Z_MIN_PROBE_PIN && PIN_IS_SDA2(Z_MIN_PROBE)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with Z probe pin!"
+      #elif PIN_IS_SDA2(X_ENABLE) || PIN_IS_SDA2(Y_ENABLE)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with X/Y ENABLE pin!"
+      #elif AXIS_HAS_SPI(X) && PIN_IS_SDA2(X_CS)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with X CS pin!"
+      #elif PIN_IS_SDA2(X2_ENABLE)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with X2 enable pin! Disable i2c peripherals."
+      #elif PIN_IS_SDA2(Y2_ENABLE)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with Y2 enable pin! Disable i2c peripherals."
+      #elif PIN_IS_SDA2(Z2_ENABLE)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with Z2 enable pin! Disable i2c peripherals."
+      #elif PIN_IS_SDA2(Z3_ENABLE)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with Z3 enable pin! Disable i2c peripherals."
+      #elif PIN_IS_SDA2(Z4_ENABLE)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with Z4 enable pin! Disable i2c peripherals."
+      #elif HAS_MULTI_EXTRUDER && PIN_IS_SDA2(E1_ENABLE)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with E1 enable pin! Disable i2c peripherals."
+      #elif HAS_MULTI_EXTRUDER && PIN_IS_SDA2(E1_DIR)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with E1 direction pin! Disable i2c peripherals."
+      #elif HAS_MULTI_EXTRUDER && AXIS_HAS_SPI(E1) && PIN_IS_SDA2(E1_CS)
+        #define I2CCONFLICT = "i2c SDA2 pin conflicts with E1 CS pin! Disable i2c peripherals."
+      #elif EXTRUDERS && (PIN_IS_SDA2(E0_STEP) || PIN_IS_SDA2(E0_DIR))
+        #define I2CCONFLICT = "i2c SCL2 pin conflicts with E0 STEP/DIR pin! Disable i2c peripherals."
+      #elif PIN_IS_SDA2(X_DIR) || PIN_IS_SDA2(Y_DIR)
+        #define I2CCONFLICT = "One or more i2c pins pin conflicts with X/Y DIR pin! Disable i2c peripherals."
+      #else
+        #undef I2CCONFLICT
+        static_assert("Autoassigned i2c to Pins P0_10 [E1_EN] (SDA) and P0_11 [E0_DIR] (SCL)");
+        #define USEDI2CDEV_M 2  // Sets i2c pins for <Arduino>/Wire.cpp
+      #endif
+      #undef PIN_IS_SDA2
+      #undef PIN_IS_SCL2
     #endif
-    #undef PIN_IS_SDA2
-    #undef PIN_IS_SCL2
+    #if defined(I2CCONFLICT)  // All i2c pins are taken, abort.
+      #error I2CCONFLICT
+    #endif
   #endif
-
-  #undef USEDI2CDEV_M
 #endif
 
 #if ENABLED(SERIAL_STATS_MAX_RX_QUEUED)
