@@ -34,7 +34,7 @@
 #include "../../ui_api.h"
 #include "../../../../module/probe.h"
 #include "../../../../module/motion.h"
-#include "../../../../module/temperature.h"
+  #include "../../../../module/pwm_temp_io.h"
 
 const char DGUS_MACHINENAME[] PROGMEM = MACHINE_NAME;
 const char DGUS_mvCNCVERSION[] PROGMEM = SHORT_BUILD_VERSION;

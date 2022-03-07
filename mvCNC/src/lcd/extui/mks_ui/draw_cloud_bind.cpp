@@ -10,9 +10,9 @@
 #include "draw_ui.h"
 
 #include "../../../mvCNCCore.h"
-#include "../../../module/temperature.h"
+  #include "../../../module/pwm_temp_io.h"
 
-#include "QR_Encode.h"
+  #include "QR_Encode.h"
 
 extern lv_group_t * g;
 static lv_obj_t * scr;

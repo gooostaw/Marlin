@@ -14,20 +14,20 @@
 
 #include <lvgl.h>
 
-#include "../../../module/temperature.h"
-#include "../../../inc/mvCNCConfig.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../inc/mvCNCConfig.h"
 
-#if ENABLED(TOUCH_SCREEN_CALIBRATION)
-  #include "../../tft_io/touch_calibration.h"
-  #include "draw_touch_calibration.h"
-#endif
+  #if ENABLED(TOUCH_SCREEN_CALIBRATION)
+    #include "../../tft_io/touch_calibration.h"
+    #include "draw_touch_calibration.h"
+  #endif
 
-#include "mks_hardware.h"
-#include <stdio.h>
+  #include "mks_hardware.h"
+  #include <stdio.h>
 
-#define ICON_POS_Y          260
-#define TARGET_LABEL_MOD_Y -36
-#define LABEL_MOD_Y         30
+  #define ICON_POS_Y         260
+  #define TARGET_LABEL_MOD_Y -36
+  #define LABEL_MOD_Y        30
 
 extern lv_group_t*  g;
 static lv_obj_t *scr;

@@ -19,45 +19,45 @@
 #include "../module/planner.h"
 #include "../module/stepper.h"
 #include "../module/jobcounter.h"
-#include "../module/temperature.h"
+  #include "../module/pwm_temp_io.h"
 
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  #include "bedlevel/bedlevel.h"
-#endif
+  #if ENABLED(AUTO_BED_LEVELING_UBL)
+    #include "bedlevel/bedlevel.h"
+  #endif
 
-#if ENABLED(FWRETRACT)
-  #include "fwretract.h"
-#endif
+  #if ENABLED(FWRETRACT)
+    #include "fwretract.h"
+  #endif
 
-#if HAS_FILAMENT_SENSOR
-  #include "runout.h"
-#endif
+  #if HAS_FILAMENT_SENSOR
+    #include "runout.h"
+  #endif
 
-#if ENABLED(HOST_ACTION_COMMANDS)
-  #include "host_actions.h"
-#endif
+  #if ENABLED(HOST_ACTION_COMMANDS)
+    #include "host_actions.h"
+  #endif
 
-#if ENABLED(EXTENSIBLE_UI)
-  #include "../lcd/extui/ui_api.h"
-#elif ENABLED(DWIN_CREALITY_LCD_ENHANCED)
-  #include "../lcd/e3v2/proui/dwin.h"
-#endif
+  #if ENABLED(EXTENSIBLE_UI)
+    #include "../lcd/extui/ui_api.h"
+  #elif ENABLED(DWIN_CREALITY_LCD_ENHANCED)
+    #include "../lcd/e3v2/proui/dwin.h"
+  #endif
 
-#include "../lcd/mvcncui.h"
+  #include "../lcd/mvcncui.h"
 
-#if HAS_BUZZER
-  #include "../libs/buzzer.h"
-#endif
+  #if HAS_BUZZER
+    #include "../libs/buzzer.h"
+  #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "powerloss.h"
+  #endif
 
-#include "../libs/nozzle.h"
-#include "pause.h"
+  #include "../libs/nozzle.h"
+  #include "pause.h"
 
-#define DEBUG_OUT ENABLED(DEBUG_PAUSE_RESUME)
-#include "../core/debug_out.h"
+  #define DEBUG_OUT ENABLED(DEBUG_PAUSE_RESUME)
+  #include "../core/debug_out.h"
 
 // private:
 

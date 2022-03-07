@@ -13,23 +13,23 @@
 #if HAS_EXTRUDERS
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
-#include "../../module/motion.h"
-#include "../../module/planner.h"
-#include "../../lcd/mvcncui.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../module/motion.h"
+  #include "../../module/planner.h"
+  #include "../../lcd/mvcncui.h"
 
-#include "../../mvCNCCore.h" // for startOrResumeJob, etc.
+  #include "../../mvCNCCore.h"  // for startOrResumeJob, etc.
 
-#if ENABLED(PRINTJOB_TIMER_AUTOSTART)
-#include "../../module/jobcounter.h"
-  #if ENABLED(CANCEL_OBJECTS)
-    #include "../../feature/cancel_object.h"
+  #if ENABLED(PRINTJOB_TIMER_AUTOSTART)
+    #include "../../module/jobcounter.h"
+    #if ENABLED(CANCEL_OBJECTS)
+      #include "../../feature/cancel_object.h"
+    #endif
   #endif
-#endif
 
-#if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
-  #include "../../module/tool_change.h"
-#endif
+  #if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
+    #include "../../module/tool_change.h"
+  #endif
 
 /**
  * M104: Set Hotend Temperature target and return immediately

@@ -7,7 +7,7 @@
 #if HAS_USER_THERMISTORS
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
 /**
  * M305: Set (or report) custom thermistor parameters

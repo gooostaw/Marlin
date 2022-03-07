@@ -34,92 +34,93 @@
 #include "../../../mvCNCCore.h"
 
 #include "../../../gcode/gcode.h"
-#include "../../../module/temperature.h"
-#include "../../../module/planner.h"
-#include "../../../module/settings.h"
-#include "../../../libs/buzzer.h"
-#include "../../../inc/Conditionals_post.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/planner.h"
+  #include "../../../module/settings.h"
+  #include "../../../libs/buzzer.h"
+  #include "../../../inc/Conditionals_post.h"
 
-//#define DEBUG_OUT 1
-#include "../../../core/debug_out.h"
+  //#define DEBUG_OUT 1
+  #include "../../../core/debug_out.h"
 
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #include "../../../feature/pause.h"
-#endif
-
-#if ENABLED(FILAMENT_RUNOUT_SENSOR)
-  #include "../../../feature/runout.h"
-#endif
-
-#if ENABLED(HOST_ACTION_COMMANDS)
-  #include "../../../feature/host_actions.h"
-#endif
-
-#if ANY(BABYSTEPPING, HAS_BED_PROBE, HAS_WORKSPACE_OFFSET)
-  #define HAS_ZOFFSET_ITEM 1
-#endif
-
-#ifndef strcasecmp_P
-  #define strcasecmp_P(a, b) strcasecmp((a), (b))
-#endif
-
-#if HAS_LEVELING
-  #include "../../../feature/bedlevel/bedlevel.h"
-#endif
-
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  #include "../../../libs/least_squares_fit.h"
-  #include "../../../libs/vector_3.h"
-#endif
-
-#if HAS_BED_PROBE
-  #include "../../../module/probe.h"
-#endif
-
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../feature/powerloss.h"
-#endif
-
-#define MACHINE_SIZE STRINGIFY(X_BED_SIZE) "x" STRINGIFY(Y_BED_SIZE) "x" STRINGIFY(Z_MAX_POS)
-
-#define DWIN_FONT_MENU font8x16
-#define DWIN_FONT_STAT font10x20
-#define DWIN_FONT_HEAD font10x20
-
-#define MENU_CHAR_LIMIT  24
-#define STATUS_Y 352
-
-#define MAX_PRINT_SPEED   500
-#define MIN_PRINT_SPEED   10
-
-#if HAS_FAN
-  #define MAX_FAN_SPEED     255
-  #define MIN_FAN_SPEED     0
-#endif
-
-#define MAX_XY_OFFSET 100
-
-#if HAS_ZOFFSET_ITEM
-  #define MAX_Z_OFFSET 9.99
-  #if HAS_BED_PROBE
-    #define MIN_Z_OFFSET -9.99
-  #else
-    #define MIN_Z_OFFSET -1
+  #if ENABLED(ADVANCED_PAUSE_FEATURE)
+    #include "../../../feature/pause.h"
   #endif
-#endif
 
-#if HAS_HOTEND
-  #define MAX_FLOW_RATE   200
-  #define MIN_FLOW_RATE   10
+  #if ENABLED(FILAMENT_RUNOUT_SENSOR)
+    #include "../../../feature/runout.h"
+  #endif
 
-  #define MAX_E_TEMP    (HEATER_0_MAXTEMP - HOTEND_OVERSHOOT)
-  #define MIN_E_TEMP    0
-#endif
+  #if ENABLED(HOST_ACTION_COMMANDS)
+    #include "../../../feature/host_actions.h"
+  #endif
 
-#if HAS_HEATED_BED
-  #define MAX_BED_TEMP  BED_MAXTEMP
-  #define MIN_BED_TEMP  0
-#endif
+  #if ANY(BABYSTEPPING, HAS_BED_PROBE, HAS_WORKSPACE_OFFSET)
+    #define HAS_ZOFFSET_ITEM 1
+  #endif
+
+  #ifndef strcasecmp_P
+    #define strcasecmp_P(a, b) strcasecmp((a), (b))
+  #endif
+
+  #if HAS_LEVELING
+    #include "../../../feature/bedlevel/bedlevel.h"
+  #endif
+
+  #if ENABLED(AUTO_BED_LEVELING_UBL)
+    #include "../../../libs/least_squares_fit.h"
+    #include "../../../libs/vector_3.h"
+  #endif
+
+  #if HAS_BED_PROBE
+    #include "../../../module/probe.h"
+  #endif
+
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../feature/powerloss.h"
+  #endif
+
+  #define MACHINE_SIZE STRINGIFY(X_BED_SIZE) \
+  "x" STRINGIFY(Y_BED_SIZE) "x" STRINGIFY(Z_MAX_POS)
+
+  #define DWIN_FONT_MENU font8x16
+  #define DWIN_FONT_STAT font10x20
+  #define DWIN_FONT_HEAD font10x20
+
+  #define MENU_CHAR_LIMIT 24
+  #define STATUS_Y        352
+
+  #define MAX_PRINT_SPEED 500
+  #define MIN_PRINT_SPEED 10
+
+  #if HAS_FAN
+    #define MAX_FAN_SPEED 255
+    #define MIN_FAN_SPEED 0
+  #endif
+
+  #define MAX_XY_OFFSET 100
+
+  #if HAS_ZOFFSET_ITEM
+    #define MAX_Z_OFFSET 9.99
+    #if HAS_BED_PROBE
+      #define MIN_Z_OFFSET -9.99
+    #else
+      #define MIN_Z_OFFSET -1
+    #endif
+  #endif
+
+  #if HAS_HOTEND
+    #define MAX_FLOW_RATE 200
+    #define MIN_FLOW_RATE 10
+
+    #define MAX_E_TEMP (HEATER_0_MAXTEMP - HOTEND_OVERSHOOT)
+    #define MIN_E_TEMP 0
+  #endif
+
+  #if HAS_HEATED_BED
+    #define MAX_BED_TEMP BED_MAXTEMP
+    #define MIN_BED_TEMP 0
+  #endif
 
 constexpr uint16_t TROWS = 6, MROWS = TROWS - 1,
                    TITLE_HEIGHT = 30,

@@ -9,10 +9,10 @@
 #include "draw_ui.h"
 #include <lv_conf.h>
 
-#include "../../../module/temperature.h"
-#include "../../../module/motion.h"
-#include "../../../sd/cardreader.h"
-#include "../../../inc/mvCNCConfig.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/motion.h"
+  #include "../../../sd/cardreader.h"
+  #include "../../../inc/mvCNCConfig.h"
 
 extern lv_group_t *g;
 static lv_obj_t *scr;

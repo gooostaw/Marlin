@@ -3,7 +3,7 @@
 */
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
+#include "../../module/pwm_temp_io.h"
 
 /**
  * M105: Read hot end and bed temperature

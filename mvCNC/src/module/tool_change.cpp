@@ -9,7 +9,7 @@
 #include "probe.h"
 #include "motion.h"
 #include "planner.h"
-#include "temperature.h"
+#include "pwm_temp_io.h"
 
 #include "../mvCNCCore.h"
 

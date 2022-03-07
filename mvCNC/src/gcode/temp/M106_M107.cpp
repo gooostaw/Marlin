@@ -8,23 +8,23 @@
 
 #include "../gcode.h"
 #include "../../module/motion.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
-#if ENABLED(LASER_SYNCHRONOUS_M106_M107)
-  #include "../../module/planner.h"
-#endif
+  #if ENABLED(LASER_SYNCHRONOUS_M106_M107)
+    #include "../../module/planner.h"
+  #endif
 
-#if HAS_PREHEAT
-  #include "../../lcd/mvcncui.h"
-#endif
+  #if HAS_PREHEAT
+    #include "../../lcd/mvcncui.h"
+  #endif
 
-#if ENABLED(SINGLENOZZLE)
-#define _ALT_P active_tool
-  #define _CNT_P EXTRUDERS
-#else
-#define _ALT_P _MIN(active_tool, FAN_COUNT - 1)
-  #define _CNT_P FAN_COUNT
-#endif
+  #if ENABLED(SINGLENOZZLE)
+    #define _ALT_P active_tool
+    #define _CNT_P EXTRUDERS
+  #else
+    #define _ALT_P _MIN(active_tool, FAN_COUNT - 1)
+    #define _CNT_P FAN_COUNT
+  #endif
 
 /**
  * M106: Set Fan Speed

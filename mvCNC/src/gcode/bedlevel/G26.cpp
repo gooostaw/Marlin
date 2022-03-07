@@ -92,44 +92,44 @@
 #include "../../module/stepper.h"
 #include "../../module/motion.h"
 #include "../../module/tool_change.h"
-#include "../../module/temperature.h"
-#include "../../lcd/mvcncui.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../lcd/mvcncui.h"
 
-#if ENABLED(EXTENSIBLE_UI)
-  #include "../../lcd/extui/ui_api.h"
-#endif
+  #if ENABLED(EXTENSIBLE_UI)
+    #include "../../lcd/extui/ui_api.h"
+  #endif
 
-#if ENABLED(UBL_HILBERT_CURVE)
-  #include "../../feature/bedlevel/hilbert_curve.h"
-#endif
+  #if ENABLED(UBL_HILBERT_CURVE)
+    #include "../../feature/bedlevel/hilbert_curve.h"
+  #endif
 
-#define EXTRUSION_MULTIPLIER 1.0
-#define PRIME_LENGTH 10.0
-#define OOZE_AMOUNT 0.3
+  #define EXTRUSION_MULTIPLIER 1.0
+  #define PRIME_LENGTH         10.0
+  #define OOZE_AMOUNT          0.3
 
-#define INTERSECTION_CIRCLE_RADIUS 5
-#define CROSSHAIRS_SIZE 3
+  #define INTERSECTION_CIRCLE_RADIUS 5
+  #define CROSSHAIRS_SIZE            3
 
-#ifndef G26_RETRACT_MULTIPLIER
-  #define G26_RETRACT_MULTIPLIER 1.0 // x 1mm
-#endif
+  #ifndef G26_RETRACT_MULTIPLIER
+    #define G26_RETRACT_MULTIPLIER 1.0  // x 1mm
+  #endif
 
-#ifndef G26_XY_FEEDRATE
-  #define G26_XY_FEEDRATE (PLANNER_XY_FEEDRATE() / 3.0)
-#endif
+  #ifndef G26_XY_FEEDRATE
+    #define G26_XY_FEEDRATE (PLANNER_XY_FEEDRATE() / 3.0)
+  #endif
 
-#ifndef G26_XY_FEEDRATE_TRAVEL
-  #define G26_XY_FEEDRATE_TRAVEL (PLANNER_XY_FEEDRATE() / 1.5)
-#endif
+  #ifndef G26_XY_FEEDRATE_TRAVEL
+    #define G26_XY_FEEDRATE_TRAVEL (PLANNER_XY_FEEDRATE() / 1.5)
+  #endif
 
-#if CROSSHAIRS_SIZE >= INTERSECTION_CIRCLE_RADIUS
-  #error "CROSSHAIRS_SIZE must be less than INTERSECTION_CIRCLE_RADIUS."
-#endif
+  #if CROSSHAIRS_SIZE >= INTERSECTION_CIRCLE_RADIUS
+    #error "CROSSHAIRS_SIZE must be less than INTERSECTION_CIRCLE_RADIUS."
+  #endif
 
-#define G26_OK false
-#define G26_ERR true
+  #define G26_OK  false
+  #define G26_ERR true
 
-#if ENABLED(ARC_SUPPORT)
+  #if ENABLED(ARC_SUPPORT)
   void plan_arc(const xyze_pos_t&, const ab_float_t&, const bool, const uint8_t);
 #endif
 

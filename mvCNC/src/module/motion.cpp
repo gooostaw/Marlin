@@ -10,7 +10,7 @@
 #include "endstops.h"
 #include "stepper.h"
 #include "planner.h"
-#include "temperature.h"
+#include "pwm_temp_io.h"
 
 #include "../gcode/gcode.h"
 

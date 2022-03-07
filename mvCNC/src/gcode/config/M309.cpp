@@ -7,7 +7,7 @@
 #if ENABLED(PIDTEMPCHAMBER)
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
 /**
  * M309 - Set and/or Report the current Chamber PID values

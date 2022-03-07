@@ -29,8 +29,8 @@
 #if HAS_TEMP_PROBE
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
-#include "../../lcd/mvcncui.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../lcd/mvcncui.h"
 
 /**
  * M192: Wait for probe temperature sensor to reach a target

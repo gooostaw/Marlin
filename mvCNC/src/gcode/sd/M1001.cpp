@@ -9,39 +9,39 @@
 #include "../gcode.h"
 #include "../../module/planner.h"
 #include "../../module/jobcounter.h"
-#include "../../module/temperature.h"
-#include "../../sd/cardreader.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../sd/cardreader.h"
 
-#ifdef SD_FINISHED_RELEASECOMMAND
-  #include "../queue.h"
-#endif
+  #ifdef SD_FINISHED_RELEASECOMMAND
+    #include "../queue.h"
+  #endif
 
-#if EITHER(LCD_SET_PROGRESS_MANUALLY, SD_REPRINT_LAST_SELECTED_FILE)
-  #include "../../lcd/mvcncui.h"
-#endif
+  #if EITHER(LCD_SET_PROGRESS_MANUALLY, SD_REPRINT_LAST_SELECTED_FILE)
+    #include "../../lcd/mvcncui.h"
+  #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../feature/powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../feature/powerloss.h"
+  #endif
 
-#if HAS_LEDS_OFF_FLAG
-  #include "../../mvCNCCore.h" // for wait_for_user_response()
-  #include "../../feature/leds/cnc_event_leds.h"
-#endif
+  #if HAS_LEDS_OFF_FLAG
+    #include "../../mvCNCCore.h"  // for wait_for_user_response()
+    #include "../../feature/leds/cnc_event_leds.h"
+  #endif
 
-#if ENABLED(EXTENSIBLE_UI)
-  #include "../../lcd/extui/ui_api.h"
-#elif ENABLED(DWIN_CREALITY_LCD_ENHANCED)
-  #include "../../lcd/e3v2/proui/dwin.h"
-#endif
+  #if ENABLED(EXTENSIBLE_UI)
+    #include "../../lcd/extui/ui_api.h"
+  #elif ENABLED(DWIN_CREALITY_LCD_ENHANCED)
+    #include "../../lcd/e3v2/proui/dwin.h"
+  #endif
 
-#if ENABLED(HOST_ACTION_COMMANDS)
-  #include "../../feature/host_actions.h"
-#endif
+  #if ENABLED(HOST_ACTION_COMMANDS)
+    #include "../../feature/host_actions.h"
+  #endif
 
-#ifndef PE_LEDS_COMPLETED_TIME
-  #define PE_LEDS_COMPLETED_TIME (30*60)
-#endif
+  #ifndef PE_LEDS_COMPLETED_TIME
+    #define PE_LEDS_COMPLETED_TIME (30 * 60)
+  #endif
 
 /**
  * M1001: Execute actions for SD print completion

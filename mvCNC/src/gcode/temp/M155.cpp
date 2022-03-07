@@ -7,7 +7,7 @@
 #if BOTH(AUTO_REPORT_TEMPERATURES, HAS_TEMP_SENSOR)
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
 /**
  * M155: Set temperature auto-report interval. M155 S<seconds>

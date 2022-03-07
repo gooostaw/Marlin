@@ -13,7 +13,7 @@
 #include "../HAL/shared/Delay.h"
 #include "../lcd/mvcncui.h"
 
-#include "temperature.h"
+#include "pwm_temp_io.h"
 #include "endstops.h"
 #include "planner.h"
 #include "jobcounter.h"

@@ -12,17 +12,17 @@
 #include "../../../../gcode/queue.h"
 #include "../../../../libs/duration_t.h"
 #include "../../../../module/settings.h"
-#include "../../../../module/temperature.h"
-#include "../../../../module/motion.h"
-#include "../../../../module/planner.h"
-#include "../../../../module/jobcounter.h"
-#include "../../../../sd/cardreader.h"
+  #include "../../../../module/pwm_temp_io.h"
+  #include "../../../../module/motion.h"
+  #include "../../../../module/planner.h"
+  #include "../../../../module/jobcounter.h"
+  #include "../../../../sd/cardreader.h"
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../../feature/powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../../feature/powerloss.h"
+  #endif
 
-#if ENABLED(SDSUPPORT)
+  #if ENABLED(SDSUPPORT)
 
   static ExtUI::FileList filelist;
 

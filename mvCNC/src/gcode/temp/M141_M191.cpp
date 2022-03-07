@@ -13,8 +13,8 @@
 #if HAS_HEATED_CHAMBER
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
-#include "../../lcd/mvcncui.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../lcd/mvcncui.h"
 
 /**
  * M141: Set chamber temperature

@@ -11,19 +11,19 @@
 #if HAS_MVCNCUI_MENU && HAS_TEMPERATURE
 
 #include "menu_item.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
-#if HAS_FAN || ENABLED(SINGLENOZZLE)
-  #include "../../module/motion.h"
-#endif
+  #if HAS_FAN || ENABLED(SINGLENOZZLE)
+    #include "../../module/motion.h"
+  #endif
 
-#if EITHER(HAS_COOLER, LASER_COOLANT_FLOW_METER)
-  #include "../../feature/cooler.h"
-#endif
+  #if EITHER(HAS_COOLER, LASER_COOLANT_FLOW_METER)
+    #include "../../feature/cooler.h"
+  #endif
 
-#if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
-  #include "../../module/tool_change.h"
-#endif
+  #if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
+    #include "../../module/tool_change.h"
+  #endif
 
 //
 // "Temperature" submenu items

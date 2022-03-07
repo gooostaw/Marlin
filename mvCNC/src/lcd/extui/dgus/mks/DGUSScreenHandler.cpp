@@ -12,24 +12,24 @@
 
 #include "../../../../mvCNCCore.h"
 #include "../../../../module/settings.h"
-#include "../../../../module/temperature.h"
-#include "../../../../module/motion.h"
-#include "../../../../module/planner.h"
-#include "../../../../module/jobcounter.h"
+  #include "../../../../module/pwm_temp_io.h"
+  #include "../../../../module/motion.h"
+  #include "../../../../module/planner.h"
+  #include "../../../../module/jobcounter.h"
 
-#include "../../../../gcode/gcode.h"
+  #include "../../../../gcode/gcode.h"
 
-#if HAS_STEALTHCHOP
-  #include "../../../../module/stepper/trinamic.h"
-  #include "../../../../module/stepper/indirection.h"
-#endif
-#include "../../../../module/probe.h"
+  #if HAS_STEALTHCHOP
+    #include "../../../../module/stepper/trinamic.h"
+    #include "../../../../module/stepper/indirection.h"
+  #endif
+  #include "../../../../module/probe.h"
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../../feature/powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../../feature/powerloss.h"
+  #endif
 
-#if ENABLED(SDSUPPORT)
+  #if ENABLED(SDSUPPORT)
   static ExtUI::FileList filelist;
 #endif
 

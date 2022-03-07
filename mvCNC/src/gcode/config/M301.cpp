@@ -7,7 +7,7 @@
 #if ENABLED(PIDTEMP)
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
 /**
  * M301: Set PID parameters P I D (and optionally C, L)

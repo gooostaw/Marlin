@@ -13,24 +13,24 @@
 #include "menu_item.h"
 #include "../../module/motion.h"
 #include "../../module/planner.h"
-#include "../../module/temperature.h"
-#include "../../mvCNCCore.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../mvCNCCore.h"
 
-#if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
-  #include "../../module/tool_change.h"
-#endif
-
-#if HAS_LEVELING
-  #include "../../feature/bedlevel/bedlevel.h"
-#endif
-
-#if ENABLED(BABYSTEPPING)
-
-  #include "../../feature/babystep.h"
-  #include "../lcdprint.h"
-  #if HAS_MVCNCUI_U8GLIB
-    #include "../dogm/mvcncui_DOGM.h"
+  #if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
+    #include "../../module/tool_change.h"
   #endif
+
+  #if HAS_LEVELING
+    #include "../../feature/bedlevel/bedlevel.h"
+  #endif
+
+  #if ENABLED(BABYSTEPPING)
+
+    #include "../../feature/babystep.h"
+    #include "../lcdprint.h"
+    #if HAS_MVCNCUI_U8GLIB
+      #include "../dogm/mvcncui_DOGM.h"
+    #endif
 
   void _lcd_babystep(const AxisEnum axis, PGM_P const msg) {
     if (ui.use_click()) return ui.goto_previous_screen_no_defer();

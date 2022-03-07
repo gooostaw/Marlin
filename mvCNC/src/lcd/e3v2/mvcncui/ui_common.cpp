@@ -36,16 +36,16 @@
 
 #include "../../../sd/cardreader.h"
 #include "../../../module/motion.h"
-#include "../../../module/temperature.h"
-#include "../../../module/jobcounter.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/jobcounter.h"
 
-#if ENABLED(SDSUPPORT)
-  #include "../../../libs/duration_t.h"
-#endif
+  #if ENABLED(SDSUPPORT)
+    #include "../../../libs/duration_t.h"
+  #endif
 
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  #include "../../../feature/bedlevel/bedlevel.h"
-#endif
+  #if ENABLED(AUTO_BED_LEVELING_UBL)
+    #include "../../../feature/bedlevel/bedlevel.h"
+  #endif
 
 // DWIN job specifies the font on each string operation
 // but we'll make the font modal for mvCNC

@@ -22,13 +22,13 @@
   #define _PHOTO_RETRACT_MM (PHOTO_RETRACT_MM + 0)
 
   #include "../../../module/planner.h"
-  #include "../../../module/temperature.h"
+    #include "../../../module/pwm_temp_io.h"
 
-  #if ENABLED(ADVANCED_PAUSE_FEATURE)
-    #include "../../../feature/pause.h"
-  #endif
+    #if ENABLED(ADVANCED_PAUSE_FEATURE)
+      #include "../../../feature/pause.h"
+    #endif
 
-  #ifdef PHOTO_RETRACT_MM
+    #ifdef PHOTO_RETRACT_MM
     inline void e_move_m240(const float length, const_feedRate_t fr_mm_s) {
       if (length && fanManager.hotEnoughToExtrude(active_tool))
         unscaled_e_move(length, fr_mm_s);

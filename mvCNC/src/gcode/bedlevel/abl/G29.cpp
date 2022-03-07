@@ -20,7 +20,7 @@
 
 #if HAS_PTC
   #include "../../../feature/probe_temp_comp.h"
-  #include "../../../module/temperature.h"
+    #include "../../../module/pwm_temp_io.h"
 #endif
 
 #if HAS_STATUS_MESSAGE

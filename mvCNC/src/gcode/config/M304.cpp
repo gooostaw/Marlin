@@ -7,7 +7,7 @@
 #if ENABLED(PIDTEMPBED)
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
 /**
  * M304 - Set and/or Report the current Bed PID values

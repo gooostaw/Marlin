@@ -4,7 +4,7 @@
 #pragma once
 
 /**
- * temperature.h - temperature controller
+ * pwm_temp_io.h - temperature controller
  */
 
 #include "thermistor/thermistors.h"

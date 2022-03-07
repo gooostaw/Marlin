@@ -7,12 +7,12 @@
 #if USE_BEEPER
 
 #include "buzzer.h"
-#include "../module/temperature.h"
-#include "../lcd/mvcncui.h"
+  #include "../module/pwm_temp_io.h"
+  #include "../lcd/mvcncui.h"
 
-#if ENABLED(EXTENSIBLE_UI)
-  #include "../lcd/extui/ui_api.h"
-#endif
+  #if ENABLED(EXTENSIBLE_UI)
+    #include "../lcd/extui/ui_api.h"
+  #endif
 
 Buzzer::state_t Buzzer::state;
 CircularQueue<tone_t, TONE_QUEUE_LENGTH> Buzzer::buffer;

@@ -15,13 +15,13 @@
 #include <lvgl.h>
 
 #include "../../../mvCNCCore.h"
-#include "../../../module/temperature.h"
-#include "../../../sd/cardreader.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../sd/cardreader.h"
 
-#if ENABLED(MKS_TEST)
+  #if ENABLED(MKS_TEST)
 
-  #include "mks_hardware.h"
-  #include "../../../module/endstops.h"
+    #include "mks_hardware.h"
+    #include "../../../module/endstops.h"
 
   bool pw_det_sta, pw_off_sta, mt_det_sta;
   #if PIN_EXISTS(MT_DET_2)

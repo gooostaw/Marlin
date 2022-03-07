@@ -34,20 +34,20 @@
 #include "../../mvcncui.h"
 
 #include "../../../sd/cardreader.h"
-#include "../../../module/temperature.h"
-#include "../../../module/stepper.h"
-#include "../../../module/motion.h"
-#include "../../../libs/duration_t.h"
-#include "../../../module/jobcounter.h"
-#include "../../../gcode/queue.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/stepper.h"
+  #include "../../../module/motion.h"
+  #include "../../../libs/duration_t.h"
+  #include "../../../module/jobcounter.h"
+  #include "../../../gcode/queue.h"
 
-#define DEBUG_OUT ENABLED(DEBUG_MALYAN_LCD)
-#include "../../../core/debug_out.h"
+  #define DEBUG_OUT ENABLED(DEBUG_MALYAN_LCD)
+  #include "../../../core/debug_out.h"
 
-// This is based on longest sys command + a filename, plus some buffer
-// in case we encounter some data we don't recognize
-// There is no evidence a line will ever be this long, but better safe than sorry
-#define MAX_CURLY_COMMAND (32 + LONG_FILENAME_LENGTH) * 2
+  // This is based on longest sys command + a filename, plus some buffer
+  // in case we encounter some data we don't recognize
+  // There is no evidence a line will ever be this long, but better safe than sorry
+  #define MAX_CURLY_COMMAND (32 + LONG_FILENAME_LENGTH) * 2
 
 // Track incoming command bytes from the LCD
 uint16_t inbound_count;

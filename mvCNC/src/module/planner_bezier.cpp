@@ -14,15 +14,15 @@
 
 #include "planner.h"
 #include "motion.h"
-#include "temperature.h"
+  #include "pwm_temp_io.h"
 
-#include "../mvCNCCore.h"
-#include "../gcode/queue.h"
+  #include "../mvCNCCore.h"
+  #include "../gcode/queue.h"
 
-// See the meaning in the documentation of cubic_b_spline().
-#define MIN_STEP 0.002f
-#define MAX_STEP 0.1f
-#define SIGMA 0.1f
+  // See the meaning in the documentation of cubic_b_spline().
+  #define MIN_STEP 0.002f
+  #define MAX_STEP 0.1f
+  #define SIGMA    0.1f
 
 // Compute the linear interpolation between two real numbers.
 static inline float interp(const_float_t a, const_float_t b, const_float_t t) { return (1 - t) * a + t * b; }

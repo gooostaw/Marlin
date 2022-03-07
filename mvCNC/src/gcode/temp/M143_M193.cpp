@@ -34,8 +34,8 @@
 extern Cooler cooler;
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
-#include "../../lcd/mvcncui.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../lcd/mvcncui.h"
 
 /**
  * M143: Set cooler temperature

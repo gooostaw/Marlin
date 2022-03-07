@@ -14,10 +14,10 @@
 #include "hotend_idle.h"
 #include "../gcode/gcode.h"
 
-#include "../module/temperature.h"
-#include "../module/motion.h"
-#include "../module/planner.h"
-#include "../lcd/mvcncui.h"
+  #include "../module/pwm_temp_io.h"
+  #include "../module/motion.h"
+  #include "../module/planner.h"
+  #include "../lcd/mvcncui.h"
 
 extern HotendIdleProtection hotend_idle;
 

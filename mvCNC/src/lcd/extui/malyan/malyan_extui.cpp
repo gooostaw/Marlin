@@ -15,7 +15,7 @@
 
 //#include "../../mvcncui.h"
 //#include "../../../sd/cardreader.h"
-//#include "../../../module/temperature.h"
+//#include "../../../module/pwm_temp_io.h"
 //#include "../../../module/stepper.h"
 //#include "../../../module/motion.h"
 //#include "../../../libs/duration_t.h"

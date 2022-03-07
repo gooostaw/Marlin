@@ -34,29 +34,29 @@
 #include "../mvcncui.h"
 
 #include "../../sd/cardreader.h"
-#include "../../module/temperature.h"
-#include "../../module/jobcounter.h"
-#include "../../mvCNCCore.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../module/jobcounter.h"
+  #include "../../mvCNCCore.h"
 
-#if ENABLED(SDSUPPORT)
-  #include "../../libs/duration_t.h"
-#endif
+  #if ENABLED(SDSUPPORT)
+    #include "../../libs/duration_t.h"
+  #endif
 
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  #include "../../feature/bedlevel/bedlevel.h"
-#endif
+  #if ENABLED(AUTO_BED_LEVELING_UBL)
+    #include "../../feature/bedlevel/bedlevel.h"
+  #endif
 
-/**
- * Include all needed font files
- * (See https://mvcncfw.org/docs/development/fonts.html)
- */
-#include "fontdata/fontdata_ISO10646_1.h"
-#if ENABLED(USE_SMALL_INFOFONT)
-  #include "fontdata/fontdata_6x9_mvcnc.h"
-  #define FONT_STATUSMENU_NAME u8g_font_6x9
-#else
-  #define FONT_STATUSMENU_NAME MENU_FONT_NAME
-#endif
+  /**
+   * Include all needed font files
+   * (See https://mvcncfw.org/docs/development/fonts.html)
+   */
+  #include "fontdata/fontdata_ISO10646_1.h"
+  #if ENABLED(USE_SMALL_INFOFONT)
+    #include "fontdata/fontdata_6x9.h"
+    #define FONT_STATUSMENU_NAME u8g_font_6x9
+  #else
+    #define FONT_STATUSMENU_NAME MENU_FONT_NAME
+  #endif
 
 U8G_CLASS u8g;
 
