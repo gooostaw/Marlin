@@ -306,12 +306,12 @@ void mvCNCUI::draw_status_screen() {
     const xyz_pos_t lpos = current_position.asLogical();
     const xyz_pos_t mpos = current_position.asNative();
     const bool is_inch   = parser.using_inch_units();
-    strcpy(zstring, is_inch ? ftostr42_52(LINEAR_UNIT(lpos.z)) : ftostr52sp(lpos.z));
     strcpy(xstring, is_inch ? ftostr53_63(LINEAR_UNIT(lpos.x)) : ftostr4sign(lpos.x));
     strcpy(ystring, is_inch ? ftostr53_63(LINEAR_UNIT(lpos.y)) : ftostr4sign(lpos.y));
-    strcpy(mzstring, is_inch ? ftostr42_52(LINEAR_UNIT(mpos.z)) : ftostr52sp(lpos.z));
+    strcpy(zstring, is_inch ? ftostr42_52(LINEAR_UNIT(lpos.z)) : ftostr52sp(lpos.z));
     strcpy(mxstring, is_inch ? ftostr53_63(LINEAR_UNIT(mpos.x)) : ftostr4sign(mpos.x));
     strcpy(mystring, is_inch ? ftostr53_63(LINEAR_UNIT(mpos.y)) : ftostr4sign(mpos.y));
+    strcpy(mzstring, is_inch ? ftostr42_52(LINEAR_UNIT(mpos.z)) : ftostr52sp(mpos.z));
 
   // Progress / elapsed / estimation updates and string formatting to avoid float math on each LCD draw
   #if HAS_PRINT_PROGRESS
@@ -367,111 +367,116 @@ void mvCNCUI::draw_status_screen() {
   // Status Menu Font
   set_font(FONT_STATUSMENU);
 
-  #if DO_DRAW_CUTTER
-    #if ANIM_CUTTER
-      #define CUTTER_BITMAP(S) ((S) ? status_cutter_on_bmp : status_cutter_bmp)
-    #else
-      #define CUTTER_BITMAP(S) status_cutter_bmp
-    #endif
-  const uint8_t cuttery = STATUS_CUTTER_Y(CUTTER_ALT()),
-                cutterh = STATUS_CUTTER_HEIGHT(CUTTER_ALT());
-  if (PAGE_CONTAINS(cuttery, cuttery + cutterh - 1))
-    u8g.drawBitmapP(STATUS_CUTTER_X, cuttery, STATUS_CUTTER_BYTEWIDTH, cutterh, CUTTER_BITMAP(CUTTER_ALT()));
-  #endif
+  // #if DO_DRAW_CUTTER
+  //   #if ANIM_CUTTER
+  //     #define CUTTER_BITMAP(S) ((S) ? status_cutter_on_bmp : status_cutter_bmp)
+  //   #else
+  //     #define CUTTER_BITMAP(S) status_cutter_bmp
+  //   #endif
+  // const uint8_t cuttery = STATUS_CUTTER_Y(CUTTER_ALT()),
+  //               cutterh = STATUS_CUTTER_HEIGHT(CUTTER_ALT());
+  // if (PAGE_CONTAINS(cuttery, cuttery + cutterh - 1))
+  //   u8g.drawBitmapP(STATUS_CUTTER_X, cuttery, STATUS_CUTTER_BYTEWIDTH, cutterh, CUTTER_BITMAP(CUTTER_ALT()));
+  // #endif
 
-  #if DO_DRAW_FAN
-    #if STATUS_FAN_FRAMES > 2
-  static bool old_blink;
-  static uint8_t fan_frame;
-  if (old_blink != blink) {
-    old_blink = blink;
-    if (!fanManager.fan_speed[0] || ++fan_frame >= STATUS_FAN_FRAMES) fan_frame = 0;
-  }
-    #endif
-  if (PAGE_CONTAINS(STATUS_FAN_Y, STATUS_FAN_Y + STATUS_FAN_HEIGHT - 1))
-    u8g.drawBitmapP(STATUS_FAN_X, STATUS_FAN_Y, STATUS_FAN_BYTEWIDTH, STATUS_FAN_HEIGHT,
-    #if STATUS_FAN_FRAMES > 2
-                    fan_frame == 1 ? status_fan1_bmp : fan_frame == 2 ? status_fan2_bmp
-                                                   :
-      #if STATUS_FAN_FRAMES > 3
-                                                   fan_frame == 3 ? status_fan3_bmp
-                                                                  :
-      #endif
-    #elif STATUS_FAN_FRAMES > 1
-                    blink && fanManager.fan_speed[0] ? status_fan1_bmp :
-    #endif
-                                                                  status_fan0_bmp);
-  #endif
+  // #if DO_DRAW_FAN
+  //   #if STATUS_FAN_FRAMES > 2
+  //     static bool old_blink;
+  // static uint8_t fan_frame;
+  // if (old_blink != blink) {
+  //   old_blink = blink;
+  //   if (!fanManager.fan_speed[0] || ++fan_frame >= STATUS_FAN_FRAMES) fan_frame = 0;
+  // }
+  //   #endif
+  // if (PAGE_CONTAINS(STATUS_FAN_Y, STATUS_FAN_Y + STATUS_FAN_HEIGHT - 1))
+  //   u8g.drawBitmapP(STATUS_FAN_X, STATUS_FAN_Y, STATUS_FAN_BYTEWIDTH, STATUS_FAN_HEIGHT,
+  //   #if STATUS_FAN_FRAMES > 2
+  //                   fan_frame == 1 ? status_fan1_bmp : fan_frame == 2 ? status_fan2_bmp
+  //                                                  :
+  //     #if STATUS_FAN_FRAMES > 3
+  //                                                  fan_frame == 3 ? status_fan3_bmp
+  //                                                                 :
+  //     #endif
+  //   #elif STATUS_FAN_FRAMES > 1
+  //                         blink && fanManager.fan_speed[0] ? status_fan1_bmp :
+  //   #endif
+  //                                                                 status_fan0_bmp);
+  // #endif
 
   //
   // Temperature Graphics and Info
   //
-  if (PAGE_UNDER(6 + 1 + 12 + 1 + 6 + 1)) {
+  // if (PAGE_UNDER(6 + 1 + 12 + 1 + 6 + 1)) {
   // Laser / Spindle
   #if DO_DRAW_CUTTER
-    if (cutter.isReady && PAGE_CONTAINS(STATUS_CUTTER_TEXT_Y - INFO_FONT_ASCENT, STATUS_CUTTER_TEXT_Y - 1)) {
+  lcd_put_u8str(108, 0, "Spindle");
+
+  if (cutter.isReady && PAGE_CONTAINS(STATUS_CUTTER_TEXT_Y - INFO_FONT_ASCENT, STATUS_CUTTER_TEXT_Y - 1)) {
     #if CUTTER_UNIT_IS(PERCENT)
-      lcd_put_u8str(STATUS_CUTTER_TEXT_X, STATUS_CUTTER_TEXT_Y, cutter_power2str(cutter.unitPower));
+    // lcd_put_u8str(STATUS_CUTTER_TEXT_X, STATUS_CUTTER_TEXT_Y, cutter_power2str(cutter.unitPower));
+    lcd_put_u8str(STATUS_CUTTER_TEXT_X, 9, cutter_power2str(cutter.unitPower));
     #elif CUTTER_UNIT_IS(RPM)
-      lcd_put_u8str(STATUS_CUTTER_TEXT_X - 2, STATUS_CUTTER_TEXT_Y, ftostr51rj(float(cutter.unitPower) / 1000));
-      lcd_put_wchar('k');
+    // lcd_put_u8str(STATUS_CUTTER_TEXT_X - 2, STATUS_CUTTER_TEXT_Y, ftostr51rj(float(cutter.unitPower) / 1000));
+    lcd_put_u8str(STATUS_CUTTER_TEXT_X - 2, 9, ftostr51rj(float(cutter.unitPower) / 1000));
+    lcd_put_wchar('k');
     #else
-      lcd_put_u8str(STATUS_CUTTER_TEXT_X, STATUS_CUTTER_TEXT_Y, cutter_power2str(cutter.unitPower));
+    lcd_put_u8str(STATUS_CUTTER_TEXT_X, STATUS_CUTTER_TEXT_Y, cutter_power2str(cutter.unitPower));
     #endif
-    }
+  }
   #endif
 
   // Laser Cooler
-  #if DO_DRAW_COOLER
-    const uint8_t coolery = STATUS_COOLER_Y(status_cooler_bmp1),
-                  coolerh = STATUS_COOLER_HEIGHT(status_cooler_bmp1);
-    if (PAGE_CONTAINS(coolery, coolery + coolerh - 1))
-      u8g.drawBitmapP(STATUS_COOLER_X, coolery, STATUS_COOLER_BYTEWIDTH, coolerh, blink && cooler.enabled ? status_cooler_bmp2 : status_cooler_bmp1);
-  #endif
+  // #if DO_DRAW_COOLER
+  //   const uint8_t coolery = STATUS_COOLER_Y(status_cooler_bmp1),
+  //                 coolerh = STATUS_COOLER_HEIGHT(status_cooler_bmp1);
+  //   if (PAGE_CONTAINS(coolery, coolery + coolerh - 1))
+  //     u8g.drawBitmapP(STATUS_COOLER_X, coolery, STATUS_COOLER_BYTEWIDTH, coolerh, blink && cooler.enabled ? status_cooler_bmp2 : status_cooler_bmp1);
+  // #endif
 
   // Laser Cooler Flow Meter
-  #if DO_DRAW_FLOWMETER
-    const uint8_t flowmetery = STATUS_FLOWMETER_Y(status_flowmeter_bmp1),
-                  flowmeterh = STATUS_FLOWMETER_HEIGHT(status_flowmeter_bmp1);
-    if (PAGE_CONTAINS(flowmetery, flowmetery + flowmeterh - 1))
-      u8g.drawBitmapP(STATUS_FLOWMETER_X, flowmetery, STATUS_FLOWMETER_BYTEWIDTH, flowmeterh, blink && cooler.flowpulses ? status_flowmeter_bmp2 : status_flowmeter_bmp1);
-  #endif
+  // #if DO_DRAW_FLOWMETER
+  //   const uint8_t flowmetery = STATUS_FLOWMETER_Y(status_flowmeter_bmp1),
+  //                 flowmeterh = STATUS_FLOWMETER_HEIGHT(status_flowmeter_bmp1);
+  //   if (PAGE_CONTAINS(flowmetery, flowmetery + flowmeterh - 1))
+  //     u8g.drawBitmapP(STATUS_FLOWMETER_X, flowmetery, STATUS_FLOWMETER_BYTEWIDTH, flowmeterh, blink && cooler.flowpulses ? status_flowmeter_bmp2 : status_flowmeter_bmp1);
+  // #endif
 
   // Laser Ammeter
-  #if DO_DRAW_AMMETER
-    const uint8_t ammetery = STATUS_AMMETER_Y(status_ammeter_bmp_mA),
-                  ammeterh = STATUS_AMMETER_HEIGHT(status_ammeter_bmp_mA);
-    if (PAGE_CONTAINS(ammetery, ammetery + ammeterh - 1))
-      u8g.drawBitmapP(STATUS_AMMETER_X, ammetery, STATUS_AMMETER_BYTEWIDTH, ammeterh, (ammeter.current < 0.1f) ? status_ammeter_bmp_mA : status_ammeter_bmp_A);
-  #endif
+  // #if DO_DRAW_AMMETER
+  //   const uint8_t ammetery = STATUS_AMMETER_Y(status_ammeter_bmp_mA),
+  //                 ammeterh = STATUS_AMMETER_HEIGHT(status_ammeter_bmp_mA);
+  //   if (PAGE_CONTAINS(ammetery, ammetery + ammeterh - 1))
+  //     u8g.drawBitmapP(STATUS_AMMETER_X, ammetery, STATUS_AMMETER_BYTEWIDTH, ammeterh, (ammeter.current < 0.1f) ? status_ammeter_bmp_mA : status_ammeter_bmp_A);
+  // #endif
 
-    // Cooler
-    TERN_(DO_DRAW_COOLER, _draw_cooler_status());
+  // Cooler
+  // TERN_(DO_DRAW_COOLER, _draw_cooler_status());
 
-    // Flowmeter
-    TERN_(DO_DRAW_FLOWMETER, _draw_flowmeter_status());
+  // Flowmeter
+  // TERN_(DO_DRAW_FLOWMETER, _draw_flowmeter_status());
 
-    // Ammeter
-    TERN_(DO_DRAW_AMMETER, _draw_ammeter_status());
+  // Ammeter
+  // TERN_(DO_DRAW_AMMETER, _draw_ammeter_status());
 
   // Fan, if a bitmap was provided
   #if DO_DRAW_FAN
-    if (PAGE_CONTAINS(STATUS_FAN_TEXT_Y - INFO_FONT_ASCENT, STATUS_FAN_TEXT_Y - 1)) {
-      char c       = '%';
-      uint16_t spd = fanManager.fan_speed[0];
-      if (spd) {
+  if (PAGE_CONTAINS(STATUS_FAN_TEXT_Y - INFO_FONT_ASCENT, STATUS_FAN_TEXT_Y - 1)) {
+    char c       = '%';
+    uint16_t spd = fanManager.fan_speed[0];
+    if (spd) {
     #if ENABLED(ADAPTIVE_FAN_SLOWING)
-        if (!blink && fanManager.fan_speed_scaler[0] < 128) {
-          spd = fanManager.scaledFanSpeed(0, spd);
-          c   = '*';
-        }
-    #endif
-        lcd_put_u8str(STATUS_FAN_TEXT_X, STATUS_FAN_TEXT_Y, i16tostr3rj(fanManager.pwmToPercent(spd)));
-        lcd_put_wchar(c);
+      if (!blink && fanManager.fan_speed_scaler[0] < 128) {
+        spd = fanManager.scaledFanSpeed(0, spd);
+        c   = '*';
       }
+    #endif
+      // lcd_put_u8str(STATUS_FAN_TEXT_X, STATUS_FAN_TEXT_Y, i16tostr3rj(fanManager.pwmToPercent(spd)));
+      lcd_put_u8str(84, 18, "Fan1");
+      lcd_put_u8str(108, 18, i16tostr3rj(fanManager.pwmToPercent(spd)));
+      lcd_put_wchar(c);
     }
-  #endif
   }
+  #endif
 
   #if ENABLED(SDSUPPORT)
   //
@@ -514,44 +519,59 @@ void mvCNCUI::draw_status_screen() {
     lcd_put_u8str(elapsed_x_pos, EXTRAS_BASELINE, elapsed_string);
   #endif  // HAS_PRINT_PROGRESS
 
-    //
-    // XYZ Coordinates
-    //
+  //
+  // XYZ Coordinates
+  //
 
-  #if EITHER(XYZ_NO_FRAME, XYZ_HOLLOW_FRAME)
-    #define XYZ_FRAME_TOP    29
-    #define XYZ_FRAME_HEIGHT INFO_FONT_ASCENT + 3
-  #else
-    #define XYZ_FRAME_TOP    30
-    #define XYZ_FRAME_HEIGHT INFO_FONT_ASCENT + 1
-  #endif
+  // #if EITHER(XYZ_NO_FRAME, XYZ_HOLLOW_FRAME)
+  //   #define XYZ_FRAME_TOP    29
+  //   #define XYZ_FRAME_HEIGHT INFO_FONT_ASCENT + 3
+  // #else
+  //   #define XYZ_FRAME_TOP    30
+  //   #define XYZ_FRAME_HEIGHT INFO_FONT_ASCENT + 1
+  // #endif
 
-  if (PAGE_CONTAINS(XYZ_FRAME_TOP, XYZ_FRAME_TOP + XYZ_FRAME_HEIGHT - 1)) {
-  #if DISABLED(XYZ_NO_FRAME)
-    #if ENABLED(XYZ_HOLLOW_FRAME)
-    u8g.drawFrame(0, XYZ_FRAME_TOP, LCD_PIXEL_WIDTH, XYZ_FRAME_HEIGHT);  // 8: 29-40  7: 29-39
-    #else
-    u8g.drawBox(0, XYZ_FRAME_TOP, LCD_PIXEL_WIDTH, XYZ_FRAME_HEIGHT);  // 8: 30-39  7: 30-37
-    #endif
-  #endif
+  // if (PAGE_CONTAINS(XYZ_FRAME_TOP, XYZ_FRAME_TOP + XYZ_FRAME_HEIGHT - 1)) {
+  // #if DISABLED(XYZ_NO_FRAME)
+  //   #if ENABLED(XYZ_HOLLOW_FRAME)
+  //   u8g.drawFrame(0, XYZ_FRAME_TOP, LCD_PIXEL_WIDTH, XYZ_FRAME_HEIGHT);  // 8: 29-40  7: 29-39
+  //   #else
+  //   u8g.drawBox(0, XYZ_FRAME_TOP, LCD_PIXEL_WIDTH, XYZ_FRAME_HEIGHT);  // 8: 30-39  7: 30-37
+  //   #endif
+  // #endif
 
-    if (PAGE_CONTAINS(XYZ_BASELINE - (INFO_FONT_ASCENT - 1), XYZ_BASELINE)) {
-  #if NONE(XYZ_NO_FRAME, XYZ_HOLLOW_FRAME)
-      u8g.setColorIndex(0);  // white on black
-  #endif
+  //   if (PAGE_CONTAINS(XYZ_BASELINE - (INFO_FONT_ASCENT - 1), XYZ_BASELINE)) {
+  // #if NONE(XYZ_NO_FRAME, XYZ_HOLLOW_FRAME)
+  //     u8g.setColorIndex(0);  // white on black
+  // #endif
+  lcd_put_u8str(0, 9, "  Mpos");
+  lcd_put_u8str(0, 18, X_LBL);
+  lcd_put_u8str(0, 27, Y_LBL);
+  lcd_put_u8str(0, 36, Z_LBL);
+  lcd_put_u8str(12, 18, mxstring);
+  lcd_put_u8str(12, 27, mystring);
+  lcd_put_u8str(12, 36, mzstring);
 
-      _draw_axis_value(X_AXIS, xstring, blink);
-      _draw_axis_value(Y_AXIS, ystring, blink);
-      _draw_axis_value(Z_AXIS, zstring, blink);
-      _draw_maxis_value(X_AXIS, mxstring, blink);
-      _draw_maxis_value(Y_AXIS, mystring, blink);
-      _draw_maxis_value(Z_AXIS, mzstring, blink);
+  lcd_put_u8str(60, 9, "  Wpos");
+  lcd_put_u8str(60, 18, X_LBL);
+  lcd_put_u8str(60, 27, Y_LBL);
+  lcd_put_u8str(60, 36, Z_LBL);
+  lcd_put_u8str(72, 18, xstring);
+  lcd_put_u8str(72, 27, ystring);
+  lcd_put_u8str(72, 36, zstring);
 
-  #if NONE(XYZ_NO_FRAME, XYZ_HOLLOW_FRAME)
-      u8g.setColorIndex(1);  // black on white
-  #endif
-    }
-  }
+  // _draw_axis_value(X_AXIS, xstring, blink);
+  // _draw_axis_value(Y_AXIS, ystring, blink);
+  // _draw_axis_value(Z_AXIS, zstring, blink);
+  // _draw_maxis_value(X_AXIS, mxstring, blink);
+  // _draw_maxis_value(Y_AXIS, mystring, blink);
+  // _draw_maxis_value(Z_AXIS, mzstring, blink);
+
+  // #if NONE(XYZ_NO_FRAME, XYZ_HOLLOW_FRAME)
+  //     u8g.setColorIndex(1);  // black on white
+  // #endif
+  // }
+  // }
 
   //
   // Feedrate
@@ -565,18 +585,6 @@ void mvCNCUI::draw_status_screen() {
     set_font(FONT_STATUSMENU);
     lcd_put_u8str(12, EXTRAS_2_BASELINE, i16tostr3rj(feedrate_percentage));
     lcd_put_wchar('%');
-
-  //
-  // Filament sensor display if SD is disabled
-  //
-  #if ENABLED(FILAMENT_LCD_DISPLAY) && DISABLED(SDSUPPORT)
-    lcd_put_u8str(56, EXTRAS_2_BASELINE, wstring);
-    lcd_put_u8str(102, EXTRAS_2_BASELINE, mstring);
-    lcd_put_wchar('%');
-    set_font(FONT_MENU);
-    lcd_put_wchar(47, EXTRAS_2_BASELINE, LCD_STR_FILAM_DIA[0]);  // lcd_put_u8str(F(LCD_STR_FILAM_DIA));
-    lcd_put_wchar(93, EXTRAS_2_BASELINE, LCD_STR_FILAM_MUL[0]);
-  #endif
   }
 
   //
@@ -584,20 +592,6 @@ void mvCNCUI::draw_status_screen() {
   //
   if (PAGE_CONTAINS(STATUS_BASELINE - INFO_FONT_ASCENT, STATUS_BASELINE + INFO_FONT_DESCENT)) {
     lcd_moveto(0, STATUS_BASELINE);
-
-  #if BOTH(FILAMENT_LCD_DISPLAY, SDSUPPORT)
-    // Alternate Status message and Filament display
-    if (ELAPSED(millis(), next_filament_display)) {
-      lcd_put_u8str(F(LCD_STR_FILAM_DIA));
-      lcd_put_wchar(':');
-      lcd_put_u8str(wstring);
-      lcd_put_u8str(F("  " LCD_STR_FILAM_MUL));
-      lcd_put_wchar(':');
-      lcd_put_u8str(mstring);
-      lcd_put_wchar('%');
-      return;
-    }
-  #endif
 
     draw_status_message(blink);
   }
