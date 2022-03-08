@@ -54,8 +54,11 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
   #if ENABLED(STATUS_MESSAGE_SCROLLING) && EITHER(HAS_WIRED_LCD, DWIN_CREALITY_LCD_ENHANCED)
     uint8_t mvCNCUI::status_scroll_offset; // = 0
   #endif
-  char mvCNCUI::status_message[MAX_MESSAGE_LENGTH + 1];
-  uint8_t mvCNCUI::alert_level; // = 0
+    char mvCNCUI::status_message[MAX_MESSAGE_LENGTH + 1];
+
+    char mvCNCUI::last_status_message[MAX_MESSAGE_LENGTH + 1];
+
+    uint8_t mvCNCUI::alert_level;  // = 0
 #endif
 
 #if ENABLED(LCD_SET_PROGRESS_MANUALLY)
@@ -1363,6 +1366,7 @@ void mvCNCUI::init() {
 
     // At this point, we have the proper cut point. Use it
     uint8_t maxLen = pend - cstr;
+    strncpy(last_status_message, status_message, maxLen);
     strncpy(status_message, cstr, maxLen);
     status_message[maxLen] = '\0';
 
@@ -1434,6 +1438,7 @@ void mvCNCUI::init() {
 
     // At this point, we have the proper cut point. Use it
     uint8_t maxLen = pend - pstr;
+    strncpy(last_status_message, status_message, maxLen);
     strncpy_P(status_message, pstr, maxLen);
     status_message[maxLen] = '\0';
 
