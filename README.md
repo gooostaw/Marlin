@@ -1,18 +1,43 @@
 # Modern Vintage CNC Firmware (mvCNC)
 ## Feature rich CNC/Laser firmware with support for multiple hardware platforms
 
-<img align="right" width=175 src="https://github.com/Domush/Webber-Ranch-CNC-Firmware/raw/Webber-Ranch-CNC/Logo.bmp" />
-
 mvCNC is based on the popular Marlin 3D printing firmware, but changes the focus specifically to CNC spindled and laser machines and their unique demands, such as Automatic Tool Changer support, dynamic stepper configuration, multiple coordinate systems, and Real-Time commands.
 
-Until the feature set is stabilized and officially documented, you can reference the documentation at the [Marlin Home Page](https://marlinfw.org/) for common gCode commands and CNC features. Just note, mvCNC will not have 3D printing support, so Marlin's extruder and heater support will not apply.
+## Features (in addition to base Marlin features) added so far:
+- Wii Nunchuck jogging support (Enable in config_adv. Can be enabled/disabled on the fly via `M258 W[0/1]`)
+- G10 coordinate support [LinuxCNC spec](https://duet3d.dozuki.com/Wiki/G10#Section_G10_Set_workplace_coordinate_offset_or_tool_offset)
+- Instant feed-rate adjustments `M220`
+- Priority command execution (config_adv to configure which commands you want prioritized)
+- i2c accessory scanning `M259` which reports any i2c devices attached to the board. Handy if you don't know the address of a device.
+- Work AND Machine coordinate reporting using `M114`
+- CNC/Laser specific LCD display layout
 
-The base branch is for production machines and will be the most stable of the branches.
+## Features in progress
+- Manual bit change support
+- ATC support with tool-specific settings
+
+If you have any requests I'm always looking for ideas on what CNC people wish Marlin supported. Open an issue with [FR] in the title.
+
+Until the gCode feature set is stabilized and officially documented, you can reference the documentation at the [Marlin Home Page](https://marlinfw.org/) for common gCode commands. Just note, mvCNC will **not** have 3D printing support, so Marlin's extruder and heater support _will not apply_.
+
+### The base branch is for production machines and will be the most stable of the branches. 
+- Other branches are in-development and should not be used unless specifically instructed to.
 
 ## Building mvCNC
 
-To build mvCNC you'll need [PlatformIO](https://docs.platformio.org/en/latest/ide.html#platformio-ide) and Microsoft's VS Code.
+To build mvCNC you'll need [PlatformIO](https://docs.platformio.org/en/latest/ide.html#platformio-ide) and Microsoft's VS Code. 
+- Checkout or download the ZIP source and extract
+- Open the project directory in vsCode.
+- PlatformIO should auto install (if you haven't already)
+- Adjust the Configuration.h and Configuration_adv.h files to your specific CNC/laser setup and preferences. **Read them carefully**
+- You can then build for your specific controller board by clicking the checkmark in the bottom status bar of vsCode.
+- Assuming your config checks out _(there is error-checking)_, copy the created **firmware.bin** file _(in the .pio directory)_ to your SD card and insert it into your controller.
+- Reset your controller and it should auto-update.
+- Profit!
 
+**Please do not ask support questions regarding specific hardware, as I cannot test for every hardware configuration** (I only have a few boards to test on).
+
+That said..
 ## Hardware Abstraction Layer (HAL)
 
 mvCNC contains a layer of abstraction so all the existing high-level code can be built for multiple 32-bit hardware platforms.
@@ -34,6 +59,8 @@ mvCNC contains a layer of abstraction so all the existing high-level code can be
   [Selena Compact](https://github.com/Ales2-k/Selena)|LPC1768 ARM-Cortex M3|100MHz|512k|32+16+16k|3.3-5V|no
   [Azteeg X5 GT](https://www.panucatt.com/azteeg_X5_GT_reprap_3d_printer_controller_p/ax5gt.htm)|LPC1769 ARM-Cortex M3|120MHz|512k|32+16+16k|3.3-5V|no
   [Smoothieboard](https://reprap.org/wiki/Smoothieboard)|LPC1769 ARM-Cortex M3|120MHz|512k|64k|3.3-5V|no
+  [BTT SKR 1.3]|LPC1768 ARM-Cortex M3|100MHz|512k|64k|3.3-5V|no
+  [BTT SKR 1.4/1.4-Pro]|LPC1769 ARM-Cortex M3|100MHz|512k|64k|3.3-5V|no
 
   #### SAMD51
 
