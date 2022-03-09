@@ -305,7 +305,7 @@ void mvCNCUI::draw_status_screen() {
     const xyz_pos_t lpos = current_position.asLogical();
     const xyz_pos_t mpos = current_position.asFloat();
 
-    const bool is_inch   = parser.using_inch_units();
+    const bool is_inch = parser.using_inch_units();
     strcpy(xstring, is_inch ? ftostr53_63(LINEAR_UNIT(lpos.x)) : ftostr4sign(lpos.x));
     strcpy(ystring, is_inch ? ftostr53_63(LINEAR_UNIT(lpos.y)) : ftostr4sign(lpos.y));
     strcpy(zstring, is_inch ? ftostr42_52(LINEAR_UNIT(lpos.z)) : ftostr52sp(lpos.z));
@@ -393,6 +393,7 @@ void mvCNCUI::draw_status_screen() {
   //     u8g.setColorIndex(0);  // white on black
   // #endif
   lcd_put_u8str(4, 7, "Mpos");
+  lcd_put_u8str(0, 35, "______________");
   lcd_put_u8str(0, 16, X_STR);
   lcd_put_u8str(mxstring);
   lcd_put_u8str(0, 24, Y_STR);
@@ -465,7 +466,7 @@ void mvCNCUI::draw_status_screen() {
   uint8_t status_row = 7;
   // Laser / Spindle
   #if DO_DRAW_CUTTER
-  lcd_put_u8str(76, status_row, "Sp:");
+  lcd_put_u8str(81, status_row, "Spn:");
   if (cutter.isReady) {
     #if CUTTER_UNIT_IS(PERCENT)
     // lcd_put_u8str(STATUS_CUTTER_TEXT_X, STATUS_CUTTER_TEXT_Y, cutter_power2str(cutter.unitPower));
@@ -498,8 +499,8 @@ void mvCNCUI::draw_status_screen() {
 
   // Stepper motor status
   if (status_row < ((progress_string[0] == '\0') ? 46 : 37)) {
-    lcd_put_u8str(76, status_row, "St:");
-    lcd_put_u8str((stepper.AXIS_IS_ENABLED(X_AXIS)) ? "En" : "Dis");
+    lcd_put_u8str(81, status_row, "Stp:");
+    lcd_put_u8str((stepper.AXIS_IS_ENABLED(X_AXIS) || stepper.AXIS_IS_ENABLED(Y_AXIS) || stepper.AXIS_IS_ENABLED(Z_AXIS)) ? "En" : "Dis");
     status_row += 8;
   }
 
@@ -510,7 +511,7 @@ void mvCNCUI::draw_status_screen() {
   //   if (PAGE_CONTAINS(coolery, coolery + coolerh - 1))
   //     u8g.drawBitmapP(STATUS_COOLER_X, coolery, STATUS_COOLER_BYTEWIDTH, coolerh, blink && cooler.enabled ? status_cooler_bmp2 : status_cooler_bmp1);
   if (status_row < ((progress_string[0] == '\0') ? 46 : 37) && cooler.enabled) {
-    lcd_put_u8str(76, status_row, "LC:");
+    lcd_put_u8str(81, status_row, "Col:");
     lcd_put_u8str((cooler.enabled) ? "On" : "Off");
     status_row += 8;
   }
@@ -523,7 +524,7 @@ void mvCNCUI::draw_status_screen() {
   //   if (PAGE_CONTAINS(flowmetery, flowmetery + flowmeterh - 1))
   //     u8g.drawBitmapP(STATUS_FLOWMETER_X, flowmetery, STATUS_FLOWMETER_BYTEWIDTH, flowmeterh, blink && cooler.flowpulses ? status_flowmeter_bmp2 : status_flowmeter_bmp1);
   if (status_row < ((progress_string[0] == '\0') ? 46 : 37) && cooler.flowpulses) {
-    lcd_put_u8str(76, status_row, "FM:");
+    lcd_put_u8str(81, status_row, "Flw:");
     lcd_put_u8str(cooler.flowpulses);
     status_row += 8;
   }
@@ -536,7 +537,7 @@ void mvCNCUI::draw_status_screen() {
   //   if (PAGE_CONTAINS(ammetery, ammetery + ammeterh - 1))
   //     u8g.drawBitmapP(STATUS_AMMETER_X, ammetery, STATUS_AMMETER_BYTEWIDTH, ammeterh, (ammeter.current < 0.1f) ? status_ammeter_bmp_mA : status_ammeter_bmp_A);
   if (status_row < ((progress_string[0] == '\0') ? 46 : 37) && ammeter.current > 0) {
-    lcd_put_u8str(76, status_row, (ammeter.current < 0.1f) ? "mA:" : "Ah");
+    lcd_put_u8str(81, status_row, (ammeter.current < 0.1f) ? " mA:" : "Amp:");
     lcd_put_u8str(ammeter.current);
     status_row += 8;
   }
@@ -550,6 +551,14 @@ void mvCNCUI::draw_status_screen() {
 
   // Ammeter
   // TERN_(DO_DRAW_AMMETER, _draw_ammeter_status());
+
+  #ifdef USE_CONTROLLER_FAN
+  if (status_row < ((progress_string[0] == '\0') ? 46 : 37) && controllerFan.state()) {
+    lcd_put_u8str(81, status_row, "sFn:");
+    lcd_put_u8str((controllerFan.state()) ? "On" : "Off");
+    status_row += 8;
+  }
+  #endif
 
   // Fan, if a bitmap was provided
   #if HAS_FAN
@@ -566,8 +575,8 @@ void mvCNCUI::draw_status_screen() {
           }
     #endif
           // lcd_put_u8str(STATUS_FAN_TEXT_X, STATUS_FAN_TEXT_Y, i16tostr3rj(fanManager.pwmToPercent(speed)));
-          lcd_put_u8str(76, status_row, "F");
-          lcd_put_wchar(i);
+          lcd_put_u8str(81, status_row, "Fn");
+          lcd_put_int(i);
           lcd_put_wchar(':');
           lcd_put_u8str(i16tostr3rj(fanManager.pwmToPercent(speed)));
           lcd_put_wchar(c);
@@ -575,14 +584,6 @@ void mvCNCUI::draw_status_screen() {
         }
       }
     }
-  }
-  #endif
-
-  #ifdef USE_CONTROLLER_FAN
-  if (status_row < ((progress_string[0] == '\0') ? 46 : 37) && controllerFan.state()) {
-    lcd_put_u8str(76, status_row, "Fc:");
-    lcd_put_u8str((controllerFan.state()) ? "On" : "Off");
-    status_row += 8;
   }
   #endif
 
@@ -603,29 +604,30 @@ void mvCNCUI::draw_status_screen() {
   // #endif  // SDSUPPORT
 
   #if HAS_PRINT_PROGRESS
-    //
-    // SD Percent Complete
-    //
+  if (JobTimer.duration()) {  // Don't bother dispaying a bunch of zeros
+
+      //
+      // SD Percent Complete
+      //
 
     #if ENABLED(SHOW_SD_PERCENT)
-  if (progress_string[0] != '\0') {
     lcd_put_u8str(55, 45, progress_string);  // Percent complete
     lcd_put_wchar('%');
-  }
     #endif
 
-    //
-    // Elapsed Time
-    //
+      //
+      // Elapsed Time
+      //
 
     #if ENABLED(SHOW_REMAINING_TIME)
-  if (blink && estimation_string[0] != '\0') {
-    lcd_put_wchar(estimation_x_pos, 45, 'R');
-    lcd_put_u8str(estimation_string);
-  } else if (elapsed_string[0] != '\0') {
+    if (blink && estimation_string[0] != '0') {
+      lcd_put_wchar(estimation_x_pos, 45, 'R');
+      lcd_put_u8str(estimation_string);
+    } else
     #endif
-    lcd_put_u8str(elapsed_x_pos, 45, elapsed_string);
+      lcd_put_u8str(elapsed_x_pos, 45, elapsed_string);
   }
+
   #endif  // HAS_PRINT_PROGRESS
 
   //
@@ -634,10 +636,10 @@ void mvCNCUI::draw_status_screen() {
   // #define EXTRAS_2_BASELINE (EXTRAS_BASELINE + 3)
 
   set_font(FONT_MENU);
-  lcd_put_wchar(0, 45, LCD_STR_FEEDRATE[0]);
+  lcd_put_wchar(0, 49, LCD_STR_FEEDRATE[0]);
 
   set_font(FONT_STATUSMENU);
-  lcd_put_u8str(10, 45, i16tostr3rj(feedrate_percentage));
+  lcd_put_u8str(10, 49, i16tostr3rj(feedrate_percentage));
   lcd_put_wchar('%');
 
   //
@@ -647,7 +649,7 @@ void mvCNCUI::draw_status_screen() {
     // Get the UTF8 character count of the string
     uint8_t lcd_width = LCD_WIDTH, pixel_width = LCD_PIXEL_WIDTH,
             slen = utf8_strlen(status_message);
-    lcd_moveto(0, 54);
+    lcd_moveto(0, 56);
     lcd_put_u8str_max(last_status_message, pixel_width);
 
     // Fill the rest with spaces
