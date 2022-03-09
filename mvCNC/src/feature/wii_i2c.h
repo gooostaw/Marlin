@@ -9,6 +9,7 @@
 
 #include "../inc/mvCNCConfigPre.h"
 #include "../core/types.h"
+#include "src/HAL/shared/Marduino.h"
 
 #define NUNCHUK_BUFFER_SIZE 6
 #ifndef WII_SLOW_DIVISER
@@ -37,8 +38,7 @@ class WiiNunchuck {
   static void prefix(FSTR_P const func);
   static void debug(FSTR_P const func, uint32_t number);
   static void debug(FSTR_P const func, float number);
-  static void debug(FSTR_P const func, char string[]);
-  static void debug(FSTR_P const func, FSTR_P const string);
+  static void debug(FSTR_P const func, const char string[]);
 #else
   static void debug(FSTR_P const, uint32_t) {}
   static void debug(FSTR_P const, float) {}
@@ -46,21 +46,21 @@ class WiiNunchuck {
 #endif
   static void debug(FSTR_P const func, uint8_t value) { debug(func, (uint32_t)value); }
   static void debug(FSTR_P const func, uint16_t value) { debug(func, (uint32_t)value); }
+  static void debug(FSTR_P const func, char string[]) { debug(func, (const char *)string); }
 
   void normalize(float &axis_jog, const int16_t joy_value, const int16_t (&wii_limits)[4]);
   void calculate(xyz_float_t &joy_value_normalized);
   void requestData();
   char decodeByte(const char);
 
-  unsigned char _buffer[NUNCHUK_BUFFER_SIZE];
-
  public:
-  uint8_t address = 82;
+  char _buffer[NUNCHUK_BUFFER_SIZE];
+  uint8_t address = 0x52;
   bool connected  = false;
   bool simulation = false;
   bool enabled = ENABLED(WII_NUNCHUCK_ENABLED);
 
-  void connect(uint8_t i2c_address = 82);
+  void connect(uint8_t i2c_address = 0x52);
   bool update();
   void injectJogMoves();
 
@@ -81,9 +81,8 @@ class WiiNunchuck {
   uint16_t zAcceleration() {
     return ((uint16_t)(_buffer[4] << 2) | ((_buffer[5] >> 6) & 0x03));
   }
-
-  bool zPressed() { return (_buffer[5] & 0x01); }
-  bool cPressed() { return ((_buffer[5] >> 1) & 0x01); }
+  bool zPressed() { return (~_buffer[5] >> 0) & 1; }
+  bool cPressed() { return (~_buffer[5] >> 1) & 1; }
 };
 
 extern WiiNunchuck wii;

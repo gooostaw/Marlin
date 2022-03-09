@@ -16,9 +16,12 @@
   #if HAS_CUTTER
     #include "spindle_laser.h"
   #endif
-  #include <Wire.h>
+  #include "src/feature/twibus.h"
+
+// #include <Wire.h>
 
 WiiNunchuck wii;
+// TWIBus i2c;
 
   #if ENABLED(EXTENSIBLE_UI)
     #include "src/lcd/extui/ui_api.h"
@@ -45,16 +48,18 @@ WiiNunchuck wii;
 // NUNCHUK DEVICE ID is normally 0x52 (82 dec)
 
 void WiiNunchuck::connect(uint8_t i2c_address /*= 82*/) {
-  address = I2C_ADDRESS(i2c_address);
+  // address = I2C_ADDRESS(i2c_address);
+  address    = i2c_address;
+  _buffer[0] = 0x00;
   // Do nothing if disabled (via M458 W0 or WII_NUNCHUCK_ENABLED is not set)
-  if (!enabled || connected) return;
+  if (!enabled) return;
   #if (PIN_EXISTS(WII_EN))  // Don't include the _PIN part
-  debug(F("connect"), F("Pin enable"));
+  debug(F("connect"), const char *"Pin enable"));
   OUT_WRITE(WII_EN_PIN, HIGH);
   #endif
 
   // Delay reconnection attempts to save CPU time and prevent job stuttering
-  const millis_t _reconnection_delay = 15000;  // delay in ms
+  const millis_t _reconnection_delay = 2000;  // delay in ms
 
   static millis_t next_run = 0;
   if (PENDING(millis(), next_run))
@@ -66,57 +71,87 @@ void WiiNunchuck::connect(uint8_t i2c_address /*= 82*/) {
   Wire.setSCL(pin_t(I2C_SCL_PIN));
   #endif
 
-  debug(F("connect"), F("Begin"));
-  Wire.begin();
+  // debug(F("connect"), "Begin");
+  i2c.address(address);
+  // Wire.begin();
 
-  debug(F("connect: Transmitting to"), address);
-  Wire.beginTransmission(address);
-  debug(F("connect"), F("Writing start bits"));
-  Wire.write(0x40);
-  Wire.write(0x00);
-  if (Wire.endTransmission() == 0) {
+  debug(F("connect: Connecting to"), address);
+  // debug(F("connect"), F("Writing start bits"));
+  i2c.addbyte(0xF0);
+  i2c.addbyte(0x55);
+  i2c.send();
+  safe_delay(30);
+  i2c.addbyte(0xFB);
+  i2c.addbyte(0x00);
+  i2c.send();
+  safe_delay(30);
+  i2c.addbyte(0xFA);
+  i2c.send();
+  safe_delay(100);
+  if (i2c.capture(_buffer, 6) > 0) {
+    debug(F("connect: Connected to"), _buffer);
     connected = true;
+  } else {
+    debug(F("connect"), "Connection failed");
+    connected = false;
   }
+  requestData();
+  // Wire.beginTransmission(address);
+  // Wire.write(0x40);
+  // Wire.write(0x00);
+  // if (Wire.endTransmission() == 0) {
+  // }
 }
 
 bool WiiNunchuck::update() {
-  if (!enabled || !connected) return false;
-
-  if (Wire.requestFrom(address, (uint8_t)NUNCHUK_BUFFER_SIZE) == 0) {
+  if (!enabled) return false;
+  if (!connected) {
+    connect(0x52);
+    return false;
+    // if (Wire.requestFrom(address, (uint8_t)NUNCHUK_BUFFER_SIZE) == 0) {
+  } else if (i2c.capture(_buffer, 6) > 0) {
+    debug(F("update: response"), _buffer);
+    return true;
+  } else {
     // Delay error messages to save CPU time and prevent console spam
-    const millis_t _error_delay = 5000;  // delay in ms
+    const millis_t _error_message_delay = 500;  // delay in ms
 
     static millis_t next_run = 0;
     if (PENDING(millis(), next_run))
       return false;
-    next_run = millis() + _error_delay;
-    SERIAL_ERROR_MSG("I2C Wii update failed");
-    return false;
+    next_run = millis() + _error_message_delay;
+    debug(F("update"), "Wii update failed");
+    // SERIAL_ERROR_MSG("I2C Wii update failed");
   }
-  int byte_counter = 0;
-
-  debug(F("update"), F("Starting loop"));
-  while (Wire.available() && byte_counter < NUNCHUK_BUFFER_SIZE)
-    _buffer[byte_counter++] = decodeByte(Wire.read());
-
-  debug(F("update response"), F(_buffer));
   requestData();
-  return byte_counter == NUNCHUK_BUFFER_SIZE;
+  return false;
+  // int byte_counter = 0;
+
+  // debug(F("update"), F("Starting loop"));
+  // while (Wire.available() && byte_counter < NUNCHUK_BUFFER_SIZE)
+  //   _buffer[byte_counter++] = decodeByte(Wire.read());
+
+  // return byte_counter == NUNCHUK_BUFFER_SIZE;
 }
 
 void WiiNunchuck::requestData() {
-  debug(F("requestData"), F("Sending reset"));
-  Wire.beginTransmission(address);
-  Wire.write(0x00);
-  if (Wire.endTransmission() == 0) {
-    connected = true;
-  } else {
-    connected = false;
-  }
+  debug(F("requestData"), "Sending reset");
+  i2c.addbyte(0x00);
+  i2c.send();
+  safe_delay(100);
+
+  // Wire.beginTransmission(address);
+  // Wire.write(0x00);
+  // if (Wire.endTransmission() == 0) {
+  // connected = true;
+  // } else {
+  //   connected = false;
+  // }
 }
 
 char WiiNunchuck::decodeByte(const char b) {
-  return (b ^ 0x17) + 0x17;
+  // return (b ^ 0x17) + 0x17;
+  return b;
 }
 
 void WiiNunchuck::normalize(float &axis_jog, const int16_t joy_value, const int16_t (&wii_limits)[4]) {
@@ -223,10 +258,10 @@ void WiiNunchuck::injectJogMoves() {
   // You could use a two-axis wiinunchuck and a one-axis keypad and they might work together
   xyz_float_t joy_value_normalized{0};
 
-  if (simulation) {
-    report();
-    return;
-  }
+  // if (simulation) {
+  //   report();
+  //   return;
+  // }
   // Use ADC values and defined limits. The active zone is normalized: -1..0 (dead) 0..1
   calculate(joy_value_normalized);
 
@@ -274,16 +309,10 @@ void WiiNunchuck::debug(FSTR_P const func, float number) {
     SERIAL_ECHOLN(number);
   }
 }
-void WiiNunchuck::debug(FSTR_P const func, char string[]) {
+void WiiNunchuck::debug(FSTR_P const func, const char string[]) {
   if (DEBUGGING(INFO)) {
     prefix(func);
     SERIAL_ECHOLN(string);
-  }
-}
-void WiiNunchuck::debug(FSTR_P const func, FSTR_P const string) {
-  if (DEBUGGING(INFO)) {
-    prefix(func);
-    SERIAL_ECHOLNF(string);
   }
 }
 

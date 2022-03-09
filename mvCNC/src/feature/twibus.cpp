@@ -12,7 +12,7 @@
 
   #include "../libs/hex_print.h"
 
-TWIBus i2c;
+TWIBus i2c = TWIBus();
 
 TWIBus::TWIBus() {
   #if I2C_SLAVE_ADDRESS == 0
