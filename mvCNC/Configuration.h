@@ -17,32 +17,6 @@
  *
  * Advanced settings can be found in Configuration_adv.h
  */
-#define CONFIGURATION_H_VERSION 00000100
-
-// @section info
-
-// Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "Edward Webber" // Who made the changes.
-
-/**
- * *** VENDORS PLEASE READ ***
- *
- * mvCNC allows you to add a custom boot image for Graphical LCDs.
- * With this option mvCNC will first show your custom screen followed
- * by the standard mvCNC logo with version number and web URL.
- *
- * We encourage you to take advantage of this new feature and we also
- * respectfully request that you retain the unmodified mvCNC boot screen.
- */
-
-// Show the mvCNC bootscreen on startup. ** ENABLE FOR PRODUCTION **
-#define SHOW_BOOTSCREEN
-
-// Show the bitmap in mvCNC/_Bootscreen.h on startup.
-#define SHOW_CUSTOM_BOOTSCREEN
-
-// Show the bitmap in mvCNC/_Statusscreen.h on the status screen.
-//#define CUSTOM_STATUS_SCREEN_IMAGE
 
 // @section machine
 
@@ -2947,3 +2921,7 @@
 
 // Disable servo with M282 to reduce power consumption, noise, and heat when not in use
 //#define SERVO_DETACH_GCODE
+
+//===========================
+// Don't change! This checks to ensure the config file matches the mvCNC build
+#define CONFIGURATION_H_VERSION 00000200

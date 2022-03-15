@@ -7,7 +7,7 @@
  * Release version. Leave the mvCNC version or apply a custom scheme.
  */
 #ifndef SHORT_BUILD_VERSION
-#define SHORT_BUILD_VERSION "mvCNC v0.1.0"
+  #define SHORT_BUILD_VERSION "mvCNC v0.2.0"
 #endif
 
 /**
@@ -24,7 +24,11 @@
  * version was tagged.
  */
 #ifndef STRING_DISTRIBUTION_DATE
-#define STRING_DISTRIBUTION_DATE "2022-03-01"
+  #define STRING_DISTRIBUTION_DATE "2022-03-14"
+#endif
+
+#ifndef STRING_CONFIG_H_AUTHOR
+  #define STRING_CONFIG_H_AUTHOR "Phillip Webber"
 #endif
 
 /**
@@ -34,7 +38,7 @@
  * to alert users to major changes.
  */
 
-#define MVCNC_HEX_VERSION 00000100
+#define MVCNC_HEX_VERSION 00000200
 #ifndef REQUIRED_CONFIGURATION_H_VERSION
 #define REQUIRED_CONFIGURATION_H_VERSION MVCNC_HEX_VERSION
 #endif
@@ -55,7 +59,7 @@
  * Define a generic cnc name to be output to the LCD after booting mvCNC.
  */
 #ifndef MACHINE_NAME
-#define MACHINE_NAME "Modern Vintage CNC"
+  #define MACHINE_NAME "mvCNC"
 #endif
 
 /**

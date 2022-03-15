@@ -12,7 +12,6 @@
  *
  * Basic settings can be found in Configuration.h
  */
-#define CONFIGURATION_ADV_H_VERSION 00000100
 
 //===========================================================================
 //============================= Thermal Settings ============================
@@ -4416,3 +4415,7 @@
 
 // Report uncleaned reset reason from register r2 instead of MCUSR. Supported by Optiboot on AVR.
 //#define OPTIBOOT_RESET_REASON
+
+//===========================
+// Don't change! This checks to ensure the config file matches the mvCNC build
+#define CONFIGURATION_ADV_H_VERSION 00000200
