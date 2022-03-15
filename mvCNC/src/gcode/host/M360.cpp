@@ -12,7 +12,7 @@
 #include "../../module/planner.h"
 
 #if HAS_EXTRUDERS
-  #include "../../module/temperature.h"
+    #include "../../module/pwm_temp_io.h"
 #endif
 
 static void config_prefix(PGM_P const name, PGM_P const pref=nullptr, const int8_t ind=-1) {

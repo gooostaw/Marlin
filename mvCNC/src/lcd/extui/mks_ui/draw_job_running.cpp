@@ -10,20 +10,20 @@
 #include <lv_conf.h>
 
 #include "../../../mvCNCCore.h" // for mvcnc_state
-#include "../../../module/temperature.h"
-#include "../../../module/motion.h"
-#include "../../../sd/cardreader.h"
-#include "../../../gcode/queue.h"
-#include "../../../gcode/gcode.h"
-#include "../../../inc/mvCNCConfig.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/motion.h"
+  #include "../../../sd/cardreader.h"
+  #include "../../../gcode/queue.h"
+  #include "../../../gcode/gcode.h"
+  #include "../../../inc/mvCNCConfig.h"
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../feature/powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../feature/powerloss.h"
+  #endif
 
-#if BOTH(LCD_SET_PROGRESS_MANUALLY, USE_M73_REMAINING_TIME)
-  #include "../../mvcncui.h"
-#endif
+  #if BOTH(LCD_SET_PROGRESS_MANUALLY, USE_M73_REMAINING_TIME)
+    #include "../../mvcncui.h"
+  #endif
 
 extern lv_group_t *g;
 static lv_obj_t *scr;

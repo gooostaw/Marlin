@@ -15,27 +15,27 @@
 
 #include "../../../sd/cardreader.h"
 #include "../../../gcode/queue.h"
-#include "../../../module/temperature.h"
-#include "../../../module/planner.h"
-#include "../../../gcode/gcode.h"
-#include "../../../inc/mvCNCConfig.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/planner.h"
+  #include "../../../gcode/gcode.h"
+  #include "../../../inc/mvCNCConfig.h"
 
-#if ENABLED(EEPROM_SETTINGS)
-  #include "../../../module/settings.h"
-#endif
+  #if ENABLED(EEPROM_SETTINGS)
+    #include "../../../module/settings.h"
+  #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../feature/powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../feature/powerloss.h"
+  #endif
 
-#if ENABLED(PARK_HEAD_ON_PAUSE)
-  #include "../../../feature/pause.h"
-#endif
+  #if ENABLED(PARK_HEAD_ON_PAUSE)
+    #include "../../../feature/pause.h"
+  #endif
 
-#if ENABLED(TOUCH_SCREEN_CALIBRATION)
-  #include "../../tft_io/touch_calibration.h"
-  #include "draw_touch_calibration.h"
-#endif
+  #if ENABLED(TOUCH_SCREEN_CALIBRATION)
+    #include "../../tft_io/touch_calibration.h"
+    #include "draw_touch_calibration.h"
+  #endif
 
 extern lv_group_t *g;
 static lv_obj_t *scr, *tempText1, *filament_bar;

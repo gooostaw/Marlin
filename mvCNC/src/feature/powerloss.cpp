@@ -33,15 +33,15 @@ uint32_t CNCJobRecovery::cmd_sdpos, // = 0
 #include "../module/motion.h"
 #include "../module/planner.h"
 #include "../module/jobcounter.h"
-#include "../module/temperature.h"
-#include "../core/serial.h"
+  #include "../module/pwm_temp_io.h"
+  #include "../core/serial.h"
 
-#if ENABLED(FWRETRACT)
-  #include "fwretract.h"
-#endif
+  #if ENABLED(FWRETRACT)
+    #include "fwretract.h"
+  #endif
 
-#define DEBUG_OUT ENABLED(DEBUG_POWER_LOSS_RECOVERY)
-#include "../core/debug_out.h"
+  #define DEBUG_OUT ENABLED(DEBUG_POWER_LOSS_RECOVERY)
+  #include "../core/debug_out.h"
 
 CNCJobRecovery recovery;
 

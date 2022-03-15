@@ -33,64 +33,64 @@
 #include "../../module/motion.h"
 #include "../../module/planner.h"
 #include "../../module/probe.h"
-#include "../../module/temperature.h"
-#include "../../module/jobcounter.h"
-#include "../../libs/duration_t.h"
-#include "../../HAL/shared/Delay.h"
-#include "../../mvCNCCore.h"
-#include "../../sd/cardreader.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../module/jobcounter.h"
+  #include "../../libs/duration_t.h"
+  #include "../../HAL/shared/Delay.h"
+  #include "../../mvCNCCore.h"
+  #include "../../sd/cardreader.h"
 
-#if ENABLED(JOBCOUNTER)
-  #include "../../core/utility.h"
-  #include "../../libs/numtostr.h"
-#endif
+  #if ENABLED(JOBCOUNTER)
+    #include "../../core/utility.h"
+    #include "../../libs/numtostr.h"
+  #endif
 
-#if HAS_MULTI_EXTRUDER
-  #include "../../module/tool_change.h"
-#endif
+  #if HAS_MULTI_EXTRUDER
+    #include "../../module/tool_change.h"
+  #endif
 
-#if ENABLED(EMERGENCY_PARSER)
-  #include "../../feature/e_parser.h"
-#endif
+  #if ENABLED(EMERGENCY_PARSER)
+    #include "../../feature/e_parser.h"
+  #endif
 
-#if HAS_TRINAMIC_CONFIG
-  #include "../../feature/tmc_util.h"
-  #include "../../module/stepper/indirection.h"
-#endif
+  #if HAS_TRINAMIC_CONFIG
+    #include "../../feature/tmc_util.h"
+    #include "../../module/stepper/indirection.h"
+  #endif
 
-#include "ui_api.h"
+  #include "ui_api.h"
 
-#if ENABLED(BACKLASH_GCODE)
-  #include "../../feature/backlash.h"
-#endif
+  #if ENABLED(BACKLASH_GCODE)
+    #include "../../feature/backlash.h"
+  #endif
 
-#if HAS_LEVELING
-  #include "../../feature/bedlevel/bedlevel.h"
-#endif
+  #if HAS_LEVELING
+    #include "../../feature/bedlevel/bedlevel.h"
+  #endif
 
-#if HAS_FILAMENT_SENSOR
-  #include "../../feature/runout.h"
-#endif
+  #if HAS_FILAMENT_SENSOR
+    #include "../../feature/runout.h"
+  #endif
 
-#if ENABLED(CASE_LIGHT_ENABLE)
-  #include "../../feature/caselight.h"
-#endif
+  #if ENABLED(CASE_LIGHT_ENABLE)
+    #include "../../feature/caselight.h"
+  #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../feature/powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../feature/powerloss.h"
+  #endif
 
-#if ENABLED(BABYSTEPPING)
-  #include "../../feature/babystep.h"
-#endif
+  #if ENABLED(BABYSTEPPING)
+    #include "../../feature/babystep.h"
+  #endif
 
-#if ENABLED(HOST_PROMPT_SUPPORT)
-  #include "../../feature/host_actions.h"
-#endif
+  #if ENABLED(HOST_PROMPT_SUPPORT)
+    #include "../../feature/host_actions.h"
+  #endif
 
-#if M600_PURGE_MORE_RESUMABLE
-  #include "../../feature/pause.h"
-#endif
+  #if M600_PURGE_MORE_RESUMABLE
+    #include "../../feature/pause.h"
+  #endif
 
 namespace ExtUI {
   static struct {

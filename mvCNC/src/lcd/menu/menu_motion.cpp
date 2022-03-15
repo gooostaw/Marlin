@@ -23,7 +23,7 @@
 #endif
 
 #if ENABLED(PREVENT_COLD_EXTRUSION)
-  #include "../../module/temperature.h"
+    #include "../../module/pwm_temp_io.h"
 #endif
 
 #if HAS_LEVELING

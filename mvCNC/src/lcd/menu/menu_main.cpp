@@ -11,62 +11,62 @@
 #if HAS_MVCNCUI_MENU
 
 #include "menu_item.h"
-#include "../../module/temperature.h"
-#include "../../gcode/queue.h"
-#include "../../module/jobcounter.h"
-#include "../../module/stepper.h"
-#include "../../sd/cardreader.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../gcode/queue.h"
+  #include "../../module/jobcounter.h"
+  #include "../../module/stepper.h"
+  #include "../../sd/cardreader.h"
 
-#if ENABLED(PSU_CONTROL)
-  #include "../../feature/power.h"
-#endif
+  #if ENABLED(PSU_CONTROL)
+    #include "../../feature/power.h"
+  #endif
 
-#if HAS_GAMES && DISABLED(LCD_INFO_MENU)
-  #include "game/game.h"
-#endif
+  #if HAS_GAMES && DISABLED(LCD_INFO_MENU)
+    #include "game/game.h"
+  #endif
 
-#if EITHER(SDSUPPORT, HOST_PROMPT_SUPPORT) || defined(ACTION_ON_CANCEL)
-  #define MACHINE_CAN_STOP 1
-#endif
-#if ANY(SDSUPPORT, HOST_PROMPT_SUPPORT, PARK_HEAD_ON_PAUSE) || defined(ACTION_ON_PAUSE)
-  #define MACHINE_CAN_PAUSE 1
-#endif
+  #if EITHER(SDSUPPORT, HOST_PROMPT_SUPPORT) || defined(ACTION_ON_CANCEL)
+    #define MACHINE_CAN_STOP 1
+  #endif
+  #if ANY(SDSUPPORT, HOST_PROMPT_SUPPORT, PARK_HEAD_ON_PAUSE) || defined(ACTION_ON_PAUSE)
+    #define MACHINE_CAN_PAUSE 1
+  #endif
 
-#if ENABLED(MMU2_MENUS)
-  #include "menu_mmu2.h"
-#endif
+  #if ENABLED(MMU2_MENUS)
+    #include "menu_mmu2.h"
+  #endif
 
-#if ENABLED(PASSWORD_FEATURE)
-  #include "../../feature/password/password.h"
-#endif
+  #if ENABLED(PASSWORD_FEATURE)
+    #include "../../feature/password/password.h"
+  #endif
 
-#if (ENABLED(HOST_START_MENU_ITEM) && defined(ACTION_ON_START)) || (ENABLED(HOST_SHUTDOWN_MENU_ITEM) && defined(SHUTDOWN_ACTION))
-  #include "../../feature/host_actions.h"
-#endif
+  #if (ENABLED(HOST_START_MENU_ITEM) && defined(ACTION_ON_START)) || (ENABLED(HOST_SHUTDOWN_MENU_ITEM) && defined(SHUTDOWN_ACTION))
+    #include "../../feature/host_actions.h"
+  #endif
 
-#if ENABLED(GCODE_REPEAT_MARKERS)
-  #include "../../feature/repeat.h"
-#endif
+  #if ENABLED(GCODE_REPEAT_MARKERS)
+    #include "../../feature/repeat.h"
+  #endif
 
 void menu_tune();
-void menu_cancelobject();
+// void menu_cancelobject();
 void menu_motion();
-void menu_temperature();
+// void menu_temperature();
 void menu_configuration();
 
 #if HAS_POWER_MONITOR
   void menu_power_monitor();
 #endif
 
-#if ENABLED(MIXING_EXTRUDER)
-  void menu_mixer();
-#endif
+  // #if ENABLED(MIXING_EXTRUDER)
+  // void menu_mixer();
+  // #endif
 
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
-  void menu_change_filament();
-#endif
+  #if ENABLED(ADVANCED_PAUSE_FEATURE)
+    // void menu_change_filament();
+  #endif
 
-#if ENABLED(LCD_INFO_MENU)
+  #if ENABLED(LCD_INFO_MENU)
   void menu_info();
 #endif
 
@@ -78,11 +78,11 @@ void menu_configuration();
   void menu_spindle_laser();
 #endif
 
-#if ENABLED(PREHEAT_SHORTCUT_MENU_ITEM)
-  void menu_preheat_only();
-#endif
+  // #if ENABLED(PREHEAT_SHORTCUT_MENU_ITEM)
+  //   void menu_preheat_only();
+  // #endif
 
-#if HAS_MULTI_LANGUAGE
+  #if HAS_MULTI_LANGUAGE
   void menu_language();
 #endif
 
@@ -275,9 +275,9 @@ void menu_main() {
 
     SUBMENU(MSG_TUNE, menu_tune);
 
-    #if ENABLED(CANCEL_OBJECTS) && DISABLED(SLIM_LCD_MENUS)
-      SUBMENU(MSG_CANCEL_OBJECT, []{ editable.int8 = -1; ui.goto_screen(menu_cancelobject); });
-    #endif
+    // #if ENABLED(CANCEL_OBJECTS) && DISABLED(SLIM_LCD_MENUS)
+    //   SUBMENU(MSG_CANCEL_OBJECT, []{ editable.int8 = -1; ui.goto_screen(menu_cancelobject); });
+    // #endif
   }
   else {
 
@@ -292,34 +292,34 @@ void menu_main() {
       ACTION_ITEM(MSG_HOST_START_PRINT, hostui.start);
     #endif
 
-    #if ENABLED(PREHEAT_SHORTCUT_MENU_ITEM)
-      SUBMENU(MSG_PREHEAT_CUSTOM, menu_preheat_only);
-    #endif
+      // #if ENABLED(PREHEAT_SHORTCUT_MENU_ITEM)
+      //   SUBMENU(MSG_PREHEAT_CUSTOM, menu_preheat_only);
+      // #endif
 
-    SUBMENU(MSG_MOTION, menu_motion);
+      SUBMENU(MSG_MOTION, menu_motion);
   }
 
   #if HAS_CUTTER
     SUBMENU(MSG_CUTTER(MENU), STICKY_SCREEN(menu_spindle_laser));
   #endif
 
-  #if HAS_TEMPERATURE
-    SUBMENU(MSG_TEMPERATURE, menu_temperature);
-  #endif
+    // #if HAS_TEMPERATURE
+    //   SUBMENU(MSG_TEMPERATURE, menu_temperature);
+    // #endif
 
   #if HAS_POWER_MONITOR
     SUBMENU(MSG_POWER_MONITOR, menu_power_monitor);
   #endif
 
-  #if ENABLED(MIXING_EXTRUDER)
-    SUBMENU(MSG_MIXER, menu_mixer);
-  #endif
+    // #if ENABLED(MIXING_EXTRUDER)
+    //   SUBMENU(MSG_MIXER, menu_mixer);
+    // #endif
 
-  #if ENABLED(MMU2_MENUS)
-    if (!busy) SUBMENU(MSG_MMU2_MENU, menu_mmu2);
-  #endif
+    // #if ENABLED(MMU2_MENUS)
+    //   if (!busy) SUBMENU(MSG_MMU2_MENU, menu_mmu2);
+    // #endif
 
-  SUBMENU(MSG_CONFIGURATION, menu_configuration);
+    SUBMENU(MSG_CONFIGURATION, menu_configuration);
 
   #if ENABLED(CUSTOM_MENU_MAIN)
     if (TERN1(CUSTOM_MENU_MAIN_ONLY_IDLE, !busy)) {

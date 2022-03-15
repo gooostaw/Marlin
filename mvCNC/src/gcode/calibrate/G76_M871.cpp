@@ -15,10 +15,10 @@
 #include "../../module/planner.h"
 #include "../../module/probe.h"
 #include "../../feature/bedlevel/bedlevel.h"
-#include "../../module/temperature.h"
-#include "../../module/probe.h"
-#include "../../feature/probe_temp_comp.h"
-#include "../../lcd/mvcncui.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../module/probe.h"
+  #include "../../feature/probe_temp_comp.h"
+  #include "../../lcd/mvcncui.h"
 
 /**
  * G76: calibrate probe and/or bed temperature offsets

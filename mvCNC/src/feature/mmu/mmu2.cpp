@@ -15,30 +15,30 @@ MMU2 mmu2;
 #include "../../lcd/mvcncui.h"
 #include "../../libs/buzzer.h"
 #include "../../libs/nozzle.h"
-#include "../../module/temperature.h"
-#include "../../module/planner.h"
-#include "../../module/stepper.h"
-#include "../../mvCNCCore.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../module/planner.h"
+  #include "../../module/stepper.h"
+  #include "../../mvCNCCore.h"
 
-#if ENABLED(HOST_PROMPT_SUPPORT)
-  #include "../../feature/host_actions.h"
-#endif
+  #if ENABLED(HOST_PROMPT_SUPPORT)
+    #include "../../feature/host_actions.h"
+  #endif
 
-#if ENABLED(EXTENSIBLE_UI)
-  #include "../../lcd/extui/ui_api.h"
-#endif
+  #if ENABLED(EXTENSIBLE_UI)
+    #include "../../lcd/extui/ui_api.h"
+  #endif
 
-#define DEBUG_OUT ENABLED(MMU2_DEBUG)
-#include "../../core/debug_out.h"
+  #define DEBUG_OUT ENABLED(MMU2_DEBUG)
+  #include "../../core/debug_out.h"
 
-#define MMU_TODELAY 100
-#define MMU_TIMEOUT 10
-#define MMU_CMD_TIMEOUT 45000UL // 45s timeout for mmu commands (except P0)
-#define MMU_P0_TIMEOUT 3000UL   // Timeout for P0 command: 3seconds
+  #define MMU_TODELAY     100
+  #define MMU_TIMEOUT     10
+  #define MMU_CMD_TIMEOUT 45000UL  // 45s timeout for mmu commands (except P0)
+  #define MMU_P0_TIMEOUT  3000UL   // Timeout for P0 command: 3seconds
 
-#define MMU2_COMMAND(S) tx_str(F(S "\n"))
+  #define MMU2_COMMAND(S) tx_str(F(S "\n"))
 
-#if ENABLED(MMU_EXTRUDER_SENSOR)
+  #if ENABLED(MMU_EXTRUDER_SENSOR)
   uint8_t mmu_idl_sens = 0;
   static bool mmu_loading_flag = false;
 #endif

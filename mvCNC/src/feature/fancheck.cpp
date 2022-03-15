@@ -29,9 +29,9 @@
 #if HAS_FANCHECK
 
 #include "fancheck.h"
-#include "../module/temperature.h"
+  #include "../module/pwm_temp_io.h"
 
-#if HAS_AUTO_FAN && EXTRUDER_AUTO_FAN_SPEED != 255 && DISABLED(FOURWIRES_FANS)
+  #if HAS_AUTO_FAN && EXTRUDER_AUTO_FAN_SPEED != 255 && DISABLED(FOURWIRES_FANS)
   bool FanCheck::measuring = false;
 #endif
 bool FanCheck::tacho_state[TACHO_COUNT];
@@ -128,7 +128,7 @@ void FanCheck::compute_speed(uint16_t elapsedTime) {
         edge_counter[f] = 0;
 
         // Check fan speed
-        constexpr int8_t max_extruder_fan_errors = TERN(HAS_PWMFANCHECK, 10000, 5000) / Temperature::fan_update_interval_ms;
+        constexpr int8_t max_extruder_fan_errors = TERN(HAS_PWMFANCHECK, 10000, 5000) / Thermals::fan_update_interval_ms;
 
         if (rps[f] >= 20 || TERN0(HAS_AUTO_FAN, fanManager.autofan_speed[f] == 0))
           errors_count[f] = 0;

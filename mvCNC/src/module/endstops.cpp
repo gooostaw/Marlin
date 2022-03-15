@@ -10,7 +10,7 @@
 #include "stepper.h"
 
 #include "../sd/cardreader.h"
-#include "temperature.h"
+#include "pwm_temp_io.h"
 #include "../lcd/mvcncui.h"
 
 #if ENABLED(ENDSTOP_INTERRUPTS_FEATURE)

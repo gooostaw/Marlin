@@ -36,6 +36,7 @@ void GcodeSuite::M258() {
     #endif
     } else if (parser.value_byte() == 1) {  // Enable
       wii.enabled = true;
+      wii.simulation = false;
     #if (PIN_EXISTS(WII_EN))  // Don't include the _PIN part
       OUT_WRITE(WII_EN_PIN, HIGH);
     #endif
@@ -46,6 +47,8 @@ void GcodeSuite::M258() {
     #endif
     }
     SERIAL_ECHO_TERNARY(wii.enabled, "Wii Nunchuck ", "enabled", "disabled", "");
+    if (wii.enabled)
+      SERIAL_ECHO_TERNARY(wii.simulation, ", Simulation mode: ", "enabled", "disabled", "");
     SERIAL_EOL();
   }
 #endif

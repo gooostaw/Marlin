@@ -12,14 +12,14 @@
 #include "../DGUSDisplay.h"
 #include "../DGUSScreenHandler.h"
 
-#include "../../../../module/temperature.h"
-#include "../../../../module/motion.h"
-#include "../../../../module/planner.h"
+  #include "../../../../module/pwm_temp_io.h"
+  #include "../../../../module/motion.h"
+  #include "../../../../module/planner.h"
 
-#include "../../ui_api.h"
-#include "../../../mvcncui.h"
+  #include "../../ui_api.h"
+  #include "../../../mvcncui.h"
 
-#if ENABLED(DGUS_UI_MOVE_DIS_OPTION)
+  #if ENABLED(DGUS_UI_MOVE_DIS_OPTION)
   uint16_t distanceToMove = 10;
 #endif
 

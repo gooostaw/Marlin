@@ -31,16 +31,16 @@
 
 #include "../ui_api.h"
 #include "../../../core/language.h"
-#include "../../../module/temperature.h"
-#include "../../../module/jobcounter.h"
-#include "../../../module/stepper.h"
-#include "../../../gcode/queue.h"
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #include "../../../feature/pause.h"
-#endif
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../feature/powerloss.h"
-#endif
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/jobcounter.h"
+  #include "../../../module/stepper.h"
+  #include "../../../gcode/queue.h"
+  #if ENABLED(ADVANCED_PAUSE_FEATURE)
+    #include "../../../feature/pause.h"
+  #endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../feature/powerloss.h"
+  #endif
 
 void DGUSRxHandler::ScreenChange(DGUS_VP &vp, void *data_ptr) {
   const DGUS_Screen screen = (DGUS_Screen)((uint8_t*)data_ptr)[1];

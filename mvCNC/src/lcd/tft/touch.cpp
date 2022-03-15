@@ -11,14 +11,14 @@
 #include "../mvcncui.h"  // for ui methods
 #include "../menu/menu_item.h" // for touch_screen_calibration
 
-#include "../../module/temperature.h"
-#include "../../module/planner.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../module/planner.h"
 
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  #include "../../feature/bedlevel/bedlevel.h"
-#endif
+  #if ENABLED(AUTO_BED_LEVELING_UBL)
+    #include "../../feature/bedlevel/bedlevel.h"
+  #endif
 
-#include "tft.h"
+  #include "tft.h"
 
 bool Touch::enabled = true;
 int16_t Touch::x, Touch::y;

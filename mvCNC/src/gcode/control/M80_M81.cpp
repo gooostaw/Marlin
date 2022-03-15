@@ -4,7 +4,7 @@
 
 #include "../gcode.h"
 
-#include "../../module/temperature.h"
+#include "../../module/pwm_temp_io.h"
 #include "../../module/planner.h"       // for planner.finish_and_disable
 #include "../../module/jobcounter.h"  // for JobTimer.stop
 #include "../../lcd/mvcncui.h"         // for LCD_MESSAGE_F

@@ -13,12 +13,12 @@
 #endif
 
 #include "../module/settings.h"
-#include "../module/temperature.h"
-#include "../libs/hex_print.h"
-#include "../HAL/shared/eeprom_if.h"
-#include "../HAL/shared/Delay.h"
-#include "../sd/cardreader.h"
-#include "../mvCNCCore.h" // for kill
+  #include "../module/pwm_temp_io.h"
+  #include "../libs/hex_print.h"
+  #include "../HAL/shared/eeprom_if.h"
+  #include "../HAL/shared/Delay.h"
+  #include "../sd/cardreader.h"
+  #include "../mvCNCCore.h"  // for kill
 
 extern void dump_delay_accuracy_check();
 

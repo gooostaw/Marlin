@@ -26,13 +26,13 @@
 
 #include "easythreed_ui.h"
 #include "pause.h"
-#include "../module/temperature.h"
-#include "../module/jobcounter.h"
-#include "../sd/cardreader.h"
-#include "../gcode/queue.h"
-#include "../module/motion.h"
-#include "../module/planner.h"
-#include "../mvCNCCore.h"
+  #include "../module/pwm_temp_io.h"
+  #include "../module/jobcounter.h"
+  #include "../sd/cardreader.h"
+  #include "../gcode/queue.h"
+  #include "../module/motion.h"
+  #include "../module/planner.h"
+  #include "../mvCNCCore.h"
 
 EasythreedUI easythreed_ui;
 

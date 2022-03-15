@@ -11,12 +11,12 @@
 #if BOTH(HAS_MVCNCUI_MENU, ADVANCED_PAUSE_FEATURE)
 
 #include "menu_item.h"
-#include "../../module/temperature.h"
-#include "../../feature/pause.h"
-#include "../../gcode/queue.h"
-#if HAS_FILAMENT_SENSOR
-  #include "../../feature/runout.h"
-#endif
+  #include "../../module/pwm_temp_io.h"
+  #include "../../feature/pause.h"
+  #include "../../gcode/queue.h"
+  #if HAS_FILAMENT_SENSOR
+    #include "../../feature/runout.h"
+  #endif
 
 //
 // Change Filament > Change/Unload/Load Filament

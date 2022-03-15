@@ -14,28 +14,28 @@
 #include "../../mvcncui.h"
 
 #include "../../../mvCNCCore.h"
-#include "../../../module/temperature.h"
-#include "../../../gcode/queue.h"
-#include "../../../gcode/gcode.h"
-#include "../../../sd/cardreader.h"
-#include "../../../module/planner.h"
-#include "../../../module/servo.h"
-#include "../../../module/probe.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../gcode/queue.h"
+  #include "../../../gcode/gcode.h"
+  #include "../../../sd/cardreader.h"
+  #include "../../../module/planner.h"
+  #include "../../../module/servo.h"
+  #include "../../../module/probe.h"
 
-#if DISABLED(EMERGENCY_PARSER)
-  #include "../../../module/motion.h"
-#endif
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../feature/powerloss.h"
-#endif
-#if ENABLED(PARK_HEAD_ON_PAUSE)
-  #include "../../../feature/pause.h"
-#endif
+  #if DISABLED(EMERGENCY_PARSER)
+    #include "../../../module/motion.h"
+  #endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../feature/powerloss.h"
+  #endif
+  #if ENABLED(PARK_HEAD_ON_PAUSE)
+    #include "../../../feature/pause.h"
+  #endif
 
-#define WIFI_SET()        WRITE(WIFI_RESET_PIN, HIGH);
-#define WIFI_RESET()      WRITE(WIFI_RESET_PIN, LOW);
-#define WIFI_IO1_SET()    WRITE(WIFI_IO1_PIN, HIGH);
-#define WIFI_IO1_RESET()  WRITE(WIFI_IO1_PIN, LOW);
+  #define WIFI_SET()       WRITE(WIFI_RESET_PIN, HIGH);
+  #define WIFI_RESET()     WRITE(WIFI_RESET_PIN, LOW);
+  #define WIFI_IO1_SET()   WRITE(WIFI_IO1_PIN, HIGH);
+  #define WIFI_IO1_RESET() WRITE(WIFI_IO1_PIN, LOW);
 
 extern uint8_t Explore_Disk(char *path, uint8_t recu_level);
 

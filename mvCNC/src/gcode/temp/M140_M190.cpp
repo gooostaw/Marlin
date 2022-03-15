@@ -13,8 +13,8 @@
 #if HAS_HEATED_BED
 
 #include "../gcode.h"
-#include "../../module/temperature.h"
-#include "../../lcd/mvcncui.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../lcd/mvcncui.h"
 
 /**
  * M140 - Set Bed Temperature target and return immediately

@@ -17,13 +17,13 @@ unified_bed_leveling ubl;
 #include "../../../module/planner.h"
 #include "../../../module/motion.h"
 #include "../../../module/probe.h"
-#include "../../../module/temperature.h"
+  #include "../../../module/pwm_temp_io.h"
 
-#if ENABLED(EXTENSIBLE_UI)
-  #include "../../../lcd/extui/ui_api.h"
-#endif
+  #if ENABLED(EXTENSIBLE_UI)
+    #include "../../../lcd/extui/ui_api.h"
+  #endif
 
-#include "math.h"
+  #include "math.h"
 
 void unified_bed_leveling::echo_name() { SERIAL_ECHOPGM("Unified Bed Leveling"); }
 

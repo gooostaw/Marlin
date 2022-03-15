@@ -37,70 +37,71 @@
 #include "../../../core/macros.h"
 #include "../../../gcode/queue.h"
 
-#include "../../../module/temperature.h"
-#include "../../../module/jobcounter.h"
-#include "../../../module/motion.h"
-#include "../../../module/planner.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/jobcounter.h"
+  #include "../../../module/motion.h"
+  #include "../../../module/planner.h"
 
-#if ENABLED(EEPROM_SETTINGS)
-  #include "../../../module/settings.h"
-#endif
+  #if ENABLED(EEPROM_SETTINGS)
+    #include "../../../module/settings.h"
+  #endif
 
-#if ENABLED(HOST_ACTION_COMMANDS)
-  #include "../../../feature/host_actions.h"
-#endif
+  #if ENABLED(HOST_ACTION_COMMANDS)
+    #include "../../../feature/host_actions.h"
+  #endif
 
-#if HAS_ONESTEP_LEVELING
-  #include "../../../feature/bedlevel/bedlevel.h"
-#endif
+  #if HAS_ONESTEP_LEVELING
+    #include "../../../feature/bedlevel/bedlevel.h"
+  #endif
 
-#if HAS_BED_PROBE
-  #include "../../../module/probe.h"
-#endif
+  #if HAS_BED_PROBE
+    #include "../../../module/probe.h"
+  #endif
 
-#if EITHER(BABYSTEP_ZPROBE_OFFSET, JUST_BABYSTEP)
-  #include "../../../feature/babystep.h"
-#endif
+  #if EITHER(BABYSTEP_ZPROBE_OFFSET, JUST_BABYSTEP)
+    #include "../../../feature/babystep.h"
+  #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../feature/powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../feature/powerloss.h"
+  #endif
 
-#include <WString.h>
-#include <stdio.h>
-#include <string.h>
+  #include <WString.h>
+  #include <stdio.h>
+  #include <string.h>
 
-#ifndef MACHINE_SIZE
-  #define MACHINE_SIZE STRINGIFY(X_BED_SIZE) "x" STRINGIFY(Y_BED_SIZE) "x" STRINGIFY(Z_MAX_POS)
-#endif
+  #ifndef MACHINE_SIZE
+    #define MACHINE_SIZE STRINGIFY(X_BED_SIZE) \
+    "x" STRINGIFY(Y_BED_SIZE) "x" STRINGIFY(Z_MAX_POS)
+  #endif
 
-#define PAUSE_HEAT
+  #define PAUSE_HEAT
 
-#define MENU_CHAR_LIMIT  24
-#define STATUS_Y        354
+  #define MENU_CHAR_LIMIT 24
+  #define STATUS_Y        354
 
-// Print speed limit
-#define MIN_PRINT_SPEED  10
-#define MAX_PRINT_SPEED 999
+  // Print speed limit
+  #define MIN_PRINT_SPEED 10
+  #define MAX_PRINT_SPEED 999
 
-// Feedspeed limit (max feedspeed = DEFAULT_MAX_FEEDRATE * 2)
-#define MIN_MAXFEEDSPEED      1
-#define MIN_MAXACCELERATION   1
-#define MIN_MAXJERK           0.1
-#define MIN_STEP              1
+  // Feedspeed limit (max feedspeed = DEFAULT_MAX_FEEDRATE * 2)
+  #define MIN_MAXFEEDSPEED    1
+  #define MIN_MAXACCELERATION 1
+  #define MIN_MAXJERK         0.1
+  #define MIN_STEP            1
 
-#define FEEDRATE_E      (60)
+  #define FEEDRATE_E (60)
 
-// Minimum unit (0.1) : multiple (10)
-#define UNITFDIGITS 1
-#define MINUNITMULT pow(10, UNITFDIGITS)
+  // Minimum unit (0.1) : multiple (10)
+  #define UNITFDIGITS 1
+  #define MINUNITMULT pow(10, UNITFDIGITS)
 
-#define ENCODER_WAIT_MS                  20
-#define DWIN_VAR_UPDATE_INTERVAL         1024
-#define DWIN_SCROLL_UPDATE_INTERVAL      SEC_TO_MS(2)
-#define DWIN_REMAIN_TIME_UPDATE_INTERVAL SEC_TO_MS(20)
+  #define ENCODER_WAIT_MS                  20
+  #define DWIN_VAR_UPDATE_INTERVAL         1024
+  #define DWIN_SCROLL_UPDATE_INTERVAL      SEC_TO_MS(2)
+  #define DWIN_REMAIN_TIME_UPDATE_INTERVAL SEC_TO_MS(20)
 
-#define TROWS 6                         // Total rows
+  #define TROWS 6                              // Total rows
 constexpr uint16_t MROWS = TROWS - 1,   // Last Row Index
                    TITLE_HEIGHT = 30,   // Title bar height
                    MLINE = 53,          // Menu line height

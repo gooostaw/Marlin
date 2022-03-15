@@ -9,8 +9,8 @@
 #include "draw_ui.h"
 #include <lv_conf.h>
 
-#include "../../../module/temperature.h"
-#include "../../../inc/mvCNCConfig.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../inc/mvCNCConfig.h"
 
 static lv_obj_t *scr;
 extern lv_group_t*  g;

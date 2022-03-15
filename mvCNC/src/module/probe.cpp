@@ -14,59 +14,59 @@
 
 #include "../libs/buzzer.h"
 #include "motion.h"
-#include "temperature.h"
-#include "endstops.h"
+  #include "pwm_temp_io.h"
+  #include "endstops.h"
 
-#include "../gcode/gcode.h"
-#include "../lcd/mvcncui.h"
+  #include "../gcode/gcode.h"
+  #include "../lcd/mvcncui.h"
 
-#include "../mvCNCCore.h" // for stop(), disable_e_steppers(), wait_for_user_response()
+  #include "../mvCNCCore.h"  // for stop(), disable_e_steppers(), wait_for_user_response()
 
-#if HAS_LEVELING
-  #include "../feature/bedlevel/bedlevel.h"
-#endif
-
-#if ENABLED(DELTA)
-  #include "delta.h"
-#endif
-
-#if ANY(HAS_QUIET_PROBING, USE_SENSORLESS)
-  #include "stepper/indirection.h"
-  #if BOTH(HAS_QUIET_PROBING, PROBING_ESTEPPERS_OFF)
-    #include "stepper.h"
+  #if HAS_LEVELING
+    #include "../feature/bedlevel/bedlevel.h"
   #endif
-  #if USE_SENSORLESS
-    #include "../feature/tmc_util.h"
-    #if ENABLED(IMPROVE_HOMING_RELIABILITY)
-      #include "planner.h"
+
+  #if ENABLED(DELTA)
+    #include "delta.h"
+  #endif
+
+  #if ANY(HAS_QUIET_PROBING, USE_SENSORLESS)
+    #include "stepper/indirection.h"
+    #if BOTH(HAS_QUIET_PROBING, PROBING_ESTEPPERS_OFF)
+      #include "stepper.h"
+    #endif
+    #if USE_SENSORLESS
+      #include "../feature/tmc_util.h"
+      #if ENABLED(IMPROVE_HOMING_RELIABILITY)
+        #include "planner.h"
+      #endif
     #endif
   #endif
-#endif
 
-#if ENABLED(MEASURE_BACKLASH_WHEN_PROBING)
-  #include "../feature/backlash.h"
-#endif
+  #if ENABLED(MEASURE_BACKLASH_WHEN_PROBING)
+    #include "../feature/backlash.h"
+  #endif
 
-#if ENABLED(BLTOUCH)
-  #include "../feature/bltouch.h"
-#endif
+  #if ENABLED(BLTOUCH)
+    #include "../feature/bltouch.h"
+  #endif
 
-#if ENABLED(HOST_PROMPT_SUPPORT)
-  #include "../feature/host_actions.h" // for PROMPT_USER_CONTINUE
-#endif
+  #if ENABLED(HOST_PROMPT_SUPPORT)
+    #include "../feature/host_actions.h"  // for PROMPT_USER_CONTINUE
+  #endif
 
-#if HAS_Z_SERVO_PROBE
-  #include "servo.h"
-#endif
+  #if HAS_Z_SERVO_PROBE
+    #include "servo.h"
+  #endif
 
-#if ENABLED(EXTENSIBLE_UI)
-  #include "../lcd/extui/ui_api.h"
-#elif ENABLED(DWIN_CREALITY_LCD_ENHANCED)
-  #include "../lcd/e3v2/proui/dwin.h"
-#endif
+  #if ENABLED(EXTENSIBLE_UI)
+    #include "../lcd/extui/ui_api.h"
+  #elif ENABLED(DWIN_CREALITY_LCD_ENHANCED)
+    #include "../lcd/e3v2/proui/dwin.h"
+  #endif
 
-#define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
-#include "../core/debug_out.h"
+  #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
+  #include "../core/debug_out.h"
 
 Probe probe;
 

@@ -9,21 +9,21 @@
 #include "../../gcode.h"
 #include "../../../mvCNCCore.h"
 #include "../../../module/motion.h"
-#include "../../../module/temperature.h"
-#include "../../../feature/pause.h"
-#include "../../../lcd/mvcncui.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../feature/pause.h"
+  #include "../../../lcd/mvcncui.h"
 
-#if HAS_MULTI_EXTRUDER
-  #include "../../../module/tool_change.h"
-#endif
+  #if HAS_MULTI_EXTRUDER
+    #include "../../../module/tool_change.h"
+  #endif
 
-#if HAS_PRUSA_MMU2
-  #include "../../../feature/mmu/mmu2.h"
-#endif
+  #if HAS_PRUSA_MMU2
+    #include "../../../feature/mmu/mmu2.h"
+  #endif
 
-#if ENABLED(MIXING_EXTRUDER)
-  #include "../../../feature/mixing.h"
-#endif
+  #if ENABLED(MIXING_EXTRUDER)
+    #include "../../../feature/mixing.h"
+  #endif
 
 /**
  * M701: Load filament

@@ -13,19 +13,19 @@
 #include "../../libs/numtostr.h"
 
 #include "../../sd/cardreader.h"
-#include "../../module/temperature.h"
-#include "../../module/jobcounter.h"
-#include "../../module/planner.h"
-#include "../../module/motion.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../module/jobcounter.h"
+  #include "../../module/planner.h"
+  #include "../../module/motion.h"
 
-#if DISABLED(LCD_PROGRESS_BAR) && BOTH(FILAMENT_LCD_DISPLAY, SDSUPPORT)
-  #include "../../feature/filwidth.h"
-  #include "../../gcode/parser.h"
-#endif
+  #if DISABLED(LCD_PROGRESS_BAR) && BOTH(FILAMENT_LCD_DISPLAY, SDSUPPORT)
+    #include "../../feature/filwidth.h"
+    #include "../../gcode/parser.h"
+  #endif
 
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  #include "../../feature/bedlevel/bedlevel.h"
-#endif
+  #if ENABLED(AUTO_BED_LEVELING_UBL)
+    #include "../../feature/bedlevel/bedlevel.h"
+  #endif
 
 void mvCNCUI::tft_idle() {
   #if ENABLED(TOUCH_SCREEN)

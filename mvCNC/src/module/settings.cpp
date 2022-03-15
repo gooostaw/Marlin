@@ -30,7 +30,7 @@
 #include "endstops.h"
 #include "planner.h"
 #include "stepper.h"
-#include "temperature.h"
+#include "pwm_temp_io.h"
 
 #include "../lcd/mvcncui.h"
 #include "../libs/vector_3.h"   // for matrix_3x3

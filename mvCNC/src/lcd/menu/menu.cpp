@@ -20,9 +20,9 @@
   #include "../../module/probe.h"
 #endif
 
-#if HAS_LEVELING
-  #include "../../feature/bedlevel/bedlevel.h"
-#endif
+// #if HAS_LEVELING
+//   #include "../../feature/bedlevel/bedlevel.h"
+// #endif
 
 ////////////////////////////////////////////
 ///////////// Global Variables /////////////

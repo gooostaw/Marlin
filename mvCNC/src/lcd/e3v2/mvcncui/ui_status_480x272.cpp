@@ -35,31 +35,31 @@
 
 #include "../../../sd/cardreader.h"
 #include "../../../module/motion.h"
-#include "../../../module/temperature.h"
-#include "../../../module/jobcounter.h"
-#include "../../../module/planner.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/jobcounter.h"
+  #include "../../../module/planner.h"
 
-#if ENABLED(SDSUPPORT)
-  #include "../../../libs/duration_t.h"
-#endif
+  #if ENABLED(SDSUPPORT)
+    #include "../../../libs/duration_t.h"
+  #endif
 
-#if ENABLED(LCD_SHOW_E_TOTAL)
-#include "../../../mvCNCCore.h" // for jobIsActive
-#endif
+  #if ENABLED(LCD_SHOW_E_TOTAL)
+    #include "../../../mvCNCCore.h"  // for jobIsActive
+  #endif
 
-#if ENABLED(DWIN_mvCNCUI_PORTRAIT)
-  #define STATUS_HEATERS_X    15
-  #define STATUS_HEATERS_Y    56
-#else
-  #define STATUS_HEATERS_X   154
-  #define STATUS_HEATERS_Y    10
-#endif
-#define STATUS_HEATERS_XSPACE 64
-#define STATUS_FAN_WIDTH      48
-#define STATUS_FAN_HEIGHT     48
-#define STATUS_FAN_Y          STATUS_HEATERS_Y + 22
-#define STATUS_CHR_WIDTH      14
-#define STATUS_CHR_HEIGHT     28
+  #if ENABLED(DWIN_mvCNCUI_PORTRAIT)
+    #define STATUS_HEATERS_X 15
+    #define STATUS_HEATERS_Y 56
+  #else
+    #define STATUS_HEATERS_X 154
+    #define STATUS_HEATERS_Y 10
+  #endif
+  #define STATUS_HEATERS_XSPACE 64
+  #define STATUS_FAN_WIDTH      48
+  #define STATUS_FAN_HEIGHT     48
+  #define STATUS_FAN_Y          STATUS_HEATERS_Y + 22
+  #define STATUS_CHR_WIDTH      14
+  #define STATUS_CHR_HEIGHT     28
 
 //
 // Before homing, blink '123' <-> '???'.

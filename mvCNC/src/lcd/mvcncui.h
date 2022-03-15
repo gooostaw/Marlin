@@ -316,6 +316,9 @@ public:
     #endif
 
     static char status_message[];
+
+    static char last_status_message[];
+
     static uint8_t alert_level; // Higher levels block lower levels
 
     #if ENABLED(STATUS_MESSAGE_SCROLLING)
@@ -342,8 +345,8 @@ public:
   #if EITHER(HAS_DISPLAY, DWIN_CREALITY_LCD_ENHANCED)
     static void kill_screen(FSTR_P const lcd_error, FSTR_P const lcd_component);
     #if DISABLED(LIGHTWEIGHT_UI)
-      static void draw_status_message(const bool blink);
-    #endif
+    static void draw_status_message(const bool blink);
+  #endif
   #else
     static void kill_screen(FSTR_P const, FSTR_P const) {}
   #endif

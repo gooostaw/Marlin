@@ -1316,7 +1316,7 @@
   #if ENABLED(SHOW_BOOTSCREEN)
     #define BOOTSCREEN_TIMEOUT 4000      // (ms) Total Duration to display the boot screen(s)
     #if EITHER(HAS_MVCNCUI_U8GLIB, TFT_COLOR_UI)
-      #define BOOT_MVCNC_LOGO_SMALL     // Show a smaller mvCNC logo on the Boot Screen (saving lots of flash)
+      // #define BOOT_MVCNC_LOGO_SMALL     // Show a smaller mvCNC logo on the Boot Screen (saving lots of flash)
     #endif
   #endif
 
@@ -1363,7 +1363,7 @@
 // LCD CNC Progress options
 #if EITHER(SDSUPPORT, LCD_SET_PROGRESS_MANUALLY)
   #if CAN_SHOW_REMAINING_TIME
-    //#define SHOW_REMAINING_TIME         // Display estimated time to completion
+    #define SHOW_REMAINING_TIME         // Display estimated time to completion
     #if ENABLED(SHOW_REMAINING_TIME)
       //#define USE_M73_REMAINING_TIME    // Use remaining time from M73 command instead of estimation
       //#define ROTATE_PROGRESS_DISPLAY   // Display (P)rogress, (E)lapsed, and (R)emaining time
@@ -1410,7 +1410,7 @@
   #define SD_PROCEDURE_DEPTH 1              // Increase if you need more nested M32 calls
 
   #define SD_FINISHED_STEPPERRELEASE true   // Disable steppers when SD CNC is finished
-  #define SD_FINISHED_RELEASECOMMAND "M84"  // Use "M84XYE" to keep Z enabled so your bed stays in place
+  #define SD_FINISHED_RELEASECOMMAND ""  // Use "M84XYE" to keep Z enabled so your bed stays in place
 
   // Reverse SD sort to show "more recent" files first, according to the card's FAT.
   // Since the FAT gets out of order with usage, SDCARD_SORT_ALPHA is recommended.
@@ -1425,7 +1425,7 @@
 
   //#define MEDIA_MENU_AT_TOP               // Force the media menu to be listed on the top of the main menu
 
-  #define EVENT_GCODE_SD_ABORT "G27" // G-code to run on SD Abort CNC (e.g., "G28XY" or "G27")
+  #define EVENT_GCODE_SD_ABORT "M5\nG0 Z70" // G-code to run on SD Abort CNC (e.g., "G28XY" or "G27")
 
   #if ENABLED(PRINTER_EVENT_LEDS)
     #define PE_LEDS_COMPLETED_TIME  (30*60) // (seconds) Time to keep the LED "done" color before restoring normal illumination
@@ -1516,7 +1516,7 @@
    * This feature is enabled with 'M540 S1' or from the LCD menu.
    * Endstops must be activated for this option to work.
    */
-  //#define SD_ABORT_ON_ENDSTOP_HIT
+  #define SD_ABORT_ON_ENDSTOP_HIT
 
   //#define SD_REPRINT_LAST_SELECTED_FILE // On print completion open the LCD Menu and select the same file
 
@@ -1587,7 +1587,7 @@
   //#define CONFIGURATION_EMBEDDING
 
   // Add an optimized binary file transfer mode, initiated with 'M28 B1'
-  //#define BINARY_FILE_TRANSFER
+  #define BINARY_FILE_TRANSFER
 
   #if ENABLED(BINARY_FILE_TRANSFER)
     // Include extra facilities (e.g., 'M20 F') supporting firmware upload via BINARY_FILE_TRANSFER
@@ -1636,7 +1636,7 @@
  * NOTE: This method is less reliable as it can only catch hangups while
  * interrupts are enabled.
  */
-#define USE_WATCHDOG
+// #define USE_WATCHDOG
 #if ENABLED(USE_WATCHDOG)
 //#define WATCHDOG_RESET_MANUAL
 #endif
@@ -1853,7 +1853,7 @@
 //
 // G60/G61 Position Save and Return
 //
-#define SAVED_POSITIONS 1  // Each saved position slot costs 12 bytes
+#define SAVED_POSITIONS 5  // Each saved position slot costs 12 bytes
 
 //
 // G2/G3 Arc Support
@@ -1863,7 +1863,7 @@
   #define MIN_ARC_SEGMENT_MM  0.1  // (mm) Minimum length of each arc segment
   #define MAX_ARC_SEGMENT_MM  1.0  // (mm) Maximum length of each arc segment
   #define MIN_CIRCLE_SEGMENTS 72   // Minimum number of segments in a complete circle
-  //#define ARC_SEGMENTS_PER_SEC 50   // Use the feedrate to choose the segment length
+  #define ARC_SEGMENTS_PER_SEC 50   // Use the feedrate to choose the segment length
   #define N_ARC_CORRECTION 25  // Number of interpolated segments between corrections
   #define ARC_P_CIRCLES        // Enable the 'P' parameter to specify complete circles
 //#define SF_ARC_FIX                // Enable only if using SkeinForge with "Arc Point" fillet procedure
@@ -1900,7 +1900,7 @@
 #endif
 
 // Moves (or segments) with fewer steps than this will be joined with the next move
-#define MIN_STEPS_PER_SEGMENT 6
+#define MIN_STEPS_PER_SEGMENT 3
 
 /**
  * Minimum delay before and after setting the stepper DIR (in ns)
@@ -2029,7 +2029,7 @@
  *
  * - During Hold all Emergency Parser commands are available, as usual.
  */
-// #define REALTIME_COMMANDS
+#define REALTIME_COMMANDS
 
 /**
  * Send machine status updates to host (Useful for CNC/Laser)
@@ -3517,7 +3517,7 @@
 /**
  * Auto-report position with M154 S<seconds>
  */
-// #define AUTO_REPORT_POSITION
+#define AUTO_REPORT_POSITION
 
 #define REPORT_FAN_CHANGE  // Report the new fan speed when changed by M106 (and others)
 
@@ -3557,9 +3557,9 @@
 #define GCODE_MOTION_MODES  // Remember the motion mode (G0 G1 G2 G3 G5 G38.X) and apply for X Y Z E F, etc.
 
 // Enable and set a (default) feedrate for all G0 moves
-#define G0_FEEDRATE (100 * 60)  // (mm/min)
+#define G0_FEEDRATE (30000)  // (mm/min)
 #ifdef G0_FEEDRATE
-  #define VARIABLE_G0_FEEDRATE  // The G0 feedrate is set by F in G0 motion mode
+// #define VARIABLE_G0_FEEDRATE  // The G0 feedrate is set by F in G0 motion mode
 #endif
 
 /**
@@ -3747,7 +3747,7 @@
 
 #define EXPERIMENTAL_I2CBUS
 #if ENABLED(EXPERIMENTAL_I2CBUS)
-  #define I2C_SLAVE_ADDRESS 0  // Set a value from 8 to 127 to act as a slave
+  // #define I2C_SLAVE_ADDRESS 0  // Set a value from 8 to 127 to act as a slave
 #endif
 
 /**
@@ -3787,9 +3787,10 @@
 #if ENABLED(WII_NUNCHUCK)
 // #define WII_NUNCHUCK_ENABLED // Enable nunchuck by default (Use M258 W[0/1] to disable/enable)
 // #define WII_EN_PIN     P0_10 // Pin sent HIGH when enabled via `M258 W1`
+  #define FAST_I2C // Most nunchucks use fast mode. Disable if yours doesn't respond.
 
 // Pressing the C button enables full speed movements up to max_feed_rate for each respective axis
-  #define WII_SLOW_DIVISER 3  // Divide all speeds by value for slow (C unpressed) movements
+  #define WII_SLOW_DIVISER 4  // Divide all speeds by value for slow (C unpressed) movements
 
   //#define INVERT_WII_X  // Enable to reverse X axis jogging
   //#define INVERT_WII_Y  // Enable to reverse Y axis jogging
@@ -3935,7 +3936,7 @@
 
   // A smaller font may be used on the Info Screen. Costs 2434 bytes of PROGMEM.
   // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
-  //#define USE_SMALL_INFOFONT
+  #define USE_SMALL_INFOFONT
 
   /**
    * ST7920-based LCDs can emulate a 16 x 4 character display using

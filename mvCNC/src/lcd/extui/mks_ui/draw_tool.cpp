@@ -10,8 +10,8 @@
 #include <lv_conf.h>
 
 #include "../../../gcode/queue.h"
-#include "../../../module/temperature.h"
-#include "../../../inc/mvCNCConfig.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../inc/mvCNCConfig.h"
 
 extern lv_group_t *g;
 static lv_obj_t *scr;

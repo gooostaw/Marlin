@@ -18,27 +18,27 @@
 #include "../../libs/numtostr.h"
 
 #include "../../sd/cardreader.h"
-#include "../../module/temperature.h"
-#include "../../module/jobcounter.h"
-#include "../../module/planner.h"
-#include "../../module/motion.h"
+  #include "../../module/pwm_temp_io.h"
+  #include "../../module/jobcounter.h"
+  #include "../../module/planner.h"
+  #include "../../module/motion.h"
 
-#if DISABLED(LCD_PROGRESS_BAR) && BOTH(FILAMENT_LCD_DISPLAY, SDSUPPORT)
-  #include "../../feature/filwidth.h"
-  #include "../../gcode/parser.h"
-#endif
+  #if DISABLED(LCD_PROGRESS_BAR) && BOTH(FILAMENT_LCD_DISPLAY, SDSUPPORT)
+    #include "../../feature/filwidth.h"
+    #include "../../gcode/parser.h"
+  #endif
 
-#if EITHER(HAS_COOLER, LASER_COOLANT_FLOW_METER)
-  #include "../../feature/cooler.h"
-#endif
+  #if EITHER(HAS_COOLER, LASER_COOLANT_FLOW_METER)
+    #include "../../feature/cooler.h"
+  #endif
 
-#if ENABLED(I2C_AMMETER)
-  #include "../../feature/ammeter.h"
-#endif
+  #if ENABLED(I2C_AMMETER)
+    #include "../../feature/ammeter.h"
+  #endif
 
-#if ENABLED(AUTO_BED_LEVELING_UBL)
-  #include "../../feature/bedlevel/bedlevel.h"
-#endif
+  #if ENABLED(AUTO_BED_LEVELING_UBL)
+    #include "../../feature/bedlevel/bedlevel.h"
+  #endif
 
 //
 // Create LCD instance and chipset-specific information

@@ -13,29 +13,29 @@
 #include "power.h"
 #include "../module/planner.h"
 #include "../module/stepper.h"
-#include "../module/temperature.h"
-#include "../mvCNCCore.h"
+  #include "../module/pwm_temp_io.h"
+  #include "../mvCNCCore.h"
 
-#if ENABLED(PS_OFF_SOUND)
-  #include "../libs/buzzer.h"
-#endif
+  #if ENABLED(PS_OFF_SOUND)
+    #include "../libs/buzzer.h"
+  #endif
 
-#if defined(PSU_POWERUP_GCODE) || defined(PSU_POWEROFF_GCODE)
-  #include "../gcode/gcode.h"
-#endif
+  #if defined(PSU_POWERUP_GCODE) || defined(PSU_POWEROFF_GCODE)
+    #include "../gcode/gcode.h"
+  #endif
 
 Power powerManager;
 bool Power::psu_on;
 
-#if ENABLED(AUTO_POWER_CONTROL)
-  #include "../module/temperature.h"
+  #if ENABLED(AUTO_POWER_CONTROL)
+    #include "../module/pwm_temp_io.h"
 
-  #if BOTH(USE_CONTROLLER_FAN, AUTO_POWER_CONTROLLERFAN)
-    #include "controllerfan.h"
+    #if BOTH(USE_CONTROLLER_FAN, AUTO_POWER_CONTROLLERFAN)
+      #include "controllerfan.h"
+    #endif
+
+millis_t Power::lastPowerOn;
   #endif
-
-  millis_t Power::lastPowerOn;
-#endif
 
 /**
  * Initialize pins & state for the power manager.

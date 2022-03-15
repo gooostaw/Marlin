@@ -16,9 +16,12 @@
   #if HAS_CUTTER
     #include "spindle_laser.h"
   #endif
-  #include <Wire.h>
+  #include "src/feature/twibus.h"
+
+// #include <Wire.h>
 
 WiiNunchuck wii;
+// TWIBus i2c = TWIBus();
 
   #if ENABLED(EXTENSIBLE_UI)
     #include "src/lcd/extui/ui_api.h"
@@ -45,94 +48,110 @@ WiiNunchuck wii;
 // NUNCHUK DEVICE ID is normally 0x52 (82 dec)
 
 void WiiNunchuck::connect(uint8_t i2c_address /*= 82*/) {
-  address = I2C_ADDRESS(i2c_address);
+  address    = i2c_address;
+  _buffer[0] = 0;
   // Do nothing if disabled (via M458 W0 or WII_NUNCHUCK_ENABLED is not set)
-  if (!enabled || connected) return;
+  if (!enabled) return;
+
   #if (PIN_EXISTS(WII_EN))  // Don't include the _PIN part
-  debug(F("connect"), F("Pin enable"));
+  debug(F("connect"), "Pin enable"));
   OUT_WRITE(WII_EN_PIN, HIGH);
   #endif
-
-  // Delay reconnection attempts to save CPU time and prevent job stuttering
-  const millis_t _reconnection_delay = 15000;  // delay in ms
-
-  static millis_t next_run = 0;
-  if (PENDING(millis(), next_run))
-    return;
-  next_run = millis() + _reconnection_delay;
 
   #if PINS_EXIST(I2C_SCL, I2C_SDA) && DISABLED(SOFT_I2C_EEPROM)
   Wire.setSDA(pin_t(I2C_SDA_PIN));
   Wire.setSCL(pin_t(I2C_SCL_PIN));
   #endif
 
-  debug(F("connect"), F("Begin"));
-  Wire.begin();
+  i2c.address(address);
 
-  debug(F("connect: Transmitting to"), address);
-  Wire.beginTransmission(address);
-  debug(F("connect"), F("Writing start bits"));
-  Wire.write(0x40);
-  Wire.write(0x00);
-  if (Wire.endTransmission() == 0) {
+  debug(F("connect: Connecting to"), address);
+  // debug(F("connect"), F("Writing start bits"));
+  // Tell nunchuck to report status *without* encryption
+  i2c.addbyte(0xF0);
+  i2c.addbyte(0x55);
+  i2c.send();
+  // safe_delay(1);
+  i2c.addbyte(0xFB);
+  i2c.addbyte(0x00);
+  i2c.send();
+  // safe_delay(1);
+  i2c.addbyte(0xFA);
+  i2c.send();
+  // safe_delay(1);
+  i2c.request(6);
+  // safe_delay(1);
+  if (i2c.capture(_buffer, 6) == 6) {
     connected = true;
+    debug(F("connect"), "Connection success");
+    // safe_delay(1);
+    requestData();
+  } else {
+    connected = false;
+    debug(F("connect"), "Connection failed");
   }
 }
 
 bool WiiNunchuck::update() {
-  if (!enabled || !connected) return false;
-
-  if (Wire.requestFrom(address, (uint8_t)NUNCHUK_BUFFER_SIZE) == 0) {
-    // Delay error messages to save CPU time and prevent console spam
-    const millis_t _error_delay = 5000;  // delay in ms
-
-    static millis_t next_run = 0;
-    if (PENDING(millis(), next_run))
-      return false;
-    next_run = millis() + _error_delay;
-    SERIAL_ERROR_MSG("I2C Wii update failed");
-    return false;
+  updateReady = false;
+  if (!enabled) return updateReady;
+  if (!connected) {
+    connect();
+  } else {
+    i2c.request(6);
+    // safe_delay(1);
+    if (i2c.capture(_buffer, 6) == 6) {
+      updateReady = true;
+      debug(F("update: response"), _buffer);
+      // safe_delay(1);
+      requestData();
+    } else {
+      // Delay error messages to prevent console spam
+      static millis_t _next_update_error = millis();
+      if (!PENDING(millis(), _next_update_error)) {
+        debug(F("update"), "Wii update failed");
+      }
+      _next_update_error += 500;  // delay in ms
+      connected = false;
+    }
   }
-  int byte_counter = 0;
-
-  debug(F("update"), F("Starting loop"));
-  while (Wire.available() && byte_counter < NUNCHUK_BUFFER_SIZE)
-    _buffer[byte_counter++] = decodeByte(Wire.read());
-
-  debug(F("update response"), F(_buffer));
-  requestData();
-  return byte_counter == NUNCHUK_BUFFER_SIZE;
+  return updateReady;
 }
 
 void WiiNunchuck::requestData() {
-  debug(F("requestData"), F("Sending reset"));
-  Wire.beginTransmission(address);
-  Wire.write(0x00);
-  if (Wire.endTransmission() == 0) {
-    connected = true;
-  } else {
-    connected = false;
-  }
+  debug(F("requestData"), "Sending reset");
+  i2c.flush();
+  i2c.addbyte(0x00);
+  i2c.send();
 }
 
 char WiiNunchuck::decodeByte(const char b) {
-  return (b ^ 0x17) + 0x17;
+  // return (b ^ 0x17) + 0x17;
+  return b;
 }
 
-void WiiNunchuck::normalize(float &axis_jog, const int16_t joy_value, const int16_t (&wii_limits)[4]) {
-  debug(F("normalizing"), (float)joy_value);
-  if (WITHIN(joy_value, wii_limits[0], wii_limits[3])) {
-    // Within limits? Ignore if within deadzone
-    if (joy_value > wii_limits[2])
-      // If C button is not pressed, reduce the speed of the movement
-      axis_jog = (joy_value - wii_limits[2]) / float(wii_limits[3] - wii_limits[2]) / (!cPressed()) ? WII_SLOW_DIVISER : 1;  // positive value
-    else if (joy_value < wii_limits[1])
-      // If C button is not pressed, reduce the speed of the movement
-      axis_jog = (joy_value - wii_limits[1]) / float(wii_limits[1] - wii_limits[0]) / (!cPressed()) ? WII_SLOW_DIVISER : 1;  // negative value
+void WiiNunchuck::normalize(float &axis_jog, const uint16_t joy_value, const int16_t (&wii_limits)[4]) {
+  debug(F("normalize: Joy value"), joy_value);
+  if (WITHIN(joy_value, wii_limits[0], wii_limits[3])) {  // Ignore unexpected results
+    // Ignore if within deadzone
+    if (joy_value > wii_limits[2]) {
+      // returns positive value (0..1)
+      axis_jog = ((joy_value - wii_limits[2]) / float(wii_limits[3] - wii_limits[2]));
+      // If C button is pressed, double speed
+      axis_jog /= (cPressed()) ? (WII_SLOW_DIVISER / 2) : WII_SLOW_DIVISER;
+    } else if (joy_value < wii_limits[1]) {
+      // returns negative value (-1..0)
+      axis_jog = ((joy_value - wii_limits[1]) / float(wii_limits[1] - wii_limits[0]));
+      // If C button is pressed, double speed
+      axis_jog /= (cPressed()) ? (WII_SLOW_DIVISER / 2) : WII_SLOW_DIVISER;
+    }
 
     // Map normal to jog value via quadratic relationship
-    axis_jog = SIGN(axis_jog) * sq(axis_jog);
-    debug(F("normalized to"), axis_jog);
+    // axis_jog = SIGN(axis_jog) * sq(axis_jog);
+    debug(F("normalize: Jog value"), axis_jog);
+    if (simulation && axis_jog != 0) {
+      SERIAL_ECHOLNPGM("Jog value: ", axis_jog);
+    }
   }
 };
 
@@ -141,38 +160,41 @@ void WiiNunchuck::calculate(xyz_float_t &joy_value_normalized) {
   static constexpr int16_t wii_x_limits[4] = WII_X_LIMITS;
   static constexpr int16_t wii_y_limits[4] = WII_Y_LIMITS;
 
+  debug(F("calculate: zPressed"), (zPressed()) ? "Yes" : "No");
   if (zPressed()) {  // Move Z axis if Z button pressed
-    debug(F("calculate zPressed"), (uint8_t)zPressed());
-
     if (joyX() < wii_x_limits[1] || joyX() > wii_x_limits[2]) {
-      // joyX moves the Z axis at half adjusted speed.
-      float _half_joy_speed = joyX() + (128 - joyX()) / 2;
-      normalize(joy_value_normalized.z, WII_Z(_half_joy_speed), wii_x_limits);
-      if (simulation) {
-        SERIAL_ECHOLNPGM("xBased Z ", _half_joy_speed, " normalized to ", joy_value_normalized.z);
+      normalize(joy_value_normalized.z, WII_Z(joyX()), wii_x_limits);
+      // joyX moves the Z axis at 1/4 speed.
+      joy_value_normalized.z /= 4;
+      if (simulation && joy_value_normalized.z != 0) {
+        SERIAL_ECHOLNPGM("xBased Z ", WII_Z(joyX()), " normalized to ", joy_value_normalized.z);
       }
-    } else {
-      // joyY moves the Z axis at normal adjusted speed.
+    } else if (joyY() < wii_y_limits[1] || joyY() > wii_y_limits[2]) {
       normalize(joy_value_normalized.z, WII_Z(joyY()), wii_y_limits);
-      if (simulation) {
-        SERIAL_ECHOLNPGM("yBased Z ", joyY(), " normalized to ", joy_value_normalized.z);
+      // joyY moves the Z axis at 1/2 speed.
+      joy_value_normalized.z /= 2;
+      if (simulation && joy_value_normalized.z != 0) {
+        SERIAL_ECHOLNPGM("yBased Z ", WII_Z(joyY()), " normalized to ", joy_value_normalized.z);
       }
     }
 
-  } else {  // Move X/Y axis
-    normalize(joy_value_normalized.x, WII_X(joyX()), wii_x_limits);
-    if (simulation) {
-      SERIAL_ECHOLNPGM("xValue ", joyX(), " normalized to ", joy_value_normalized.x);
-    }
-    normalize(joy_value_normalized.y, WII_Y(joyY()), wii_y_limits);
-    if (simulation) {
-      SERIAL_ECHOLNPGM("yValue ", joyY(), " normalized to ", joy_value_normalized.y);
+  } else {  // Move X/Y axis if not in dead zone
+    if (joyX() < wii_x_limits[1] || joyX() > wii_x_limits[2]) {
+      normalize(joy_value_normalized.x, WII_X(joyX()), wii_x_limits);
+      if (simulation && joy_value_normalized.x != 0) {
+        SERIAL_ECHOLNPGM("xValue ", joyX(), " normalized to ", joy_value_normalized.x);
+      }
+    } else if (joyY() < wii_y_limits[1] || joyY() > wii_y_limits[2]) {
+      normalize(joy_value_normalized.y, WII_Y(joyY()), wii_y_limits);
+      if (simulation && joy_value_normalized.y != 0) {
+        SERIAL_ECHOLNPGM("yValue ", joyY(), " normalized to ", joy_value_normalized.y);
+      }
     }
   }
 }
 
 void WiiNunchuck::injectJogMoves() {
-  // Do nothing if disabled (via M458 W0 or WII_NUNCHUCK_ENABLED is not set)
+  // Do nothing if disabled (via M258 W0 or WII_NUNCHUCK_ENABLED is not set)
   if (!enabled)
     return;
 
@@ -180,16 +202,13 @@ void WiiNunchuck::injectJogMoves() {
   static bool injecting_now;  // = false;
   if (injecting_now) return;
 
-  if (jobIsOngoing() || TERN0(HAS_CUTTER, cutter.enabled())) {
-    // Delay error messages to save CPU time and prevent console spam
-    const millis_t _error_delay = 5000;  // delay in ms
-
-    static millis_t next_run = 0;
-    if (PENDING(millis(), next_run))
+  if (simulation) {
+    // Delay updates reduce console spam
+    static millis_t _next_jog_update = millis();
+    if (PENDING(millis(), _next_jog_update)) {
       return;
-    next_run = millis() + _error_delay;
-    SERIAL_ERROR_MSG("Cannot jog while job in progress");
-    return;
+    }
+    _next_jog_update += 1000;  // delay in ms
   }
 
   #if ENABLED(NO_MOTION_BEFORE_HOMING)
@@ -197,36 +216,34 @@ void WiiNunchuck::injectJogMoves() {
     return;
   #endif
 
-  // Attempt a connection if not currently connected
-  if (!update()) {
-    connect();
-    return;
-  }
-
-  static constexpr int QUEUE_DEPTH         = 5;                         // Insert up to this many movements
-  static constexpr float target_lag        = 0.25f,                     // Aim for 1/4 second lag
-      seg_time                             = target_lag / QUEUE_DEPTH;  // 0.05 seconds, short segments inserted every 1/20th of a second
-  static constexpr millis_t timer_limit_ms = millis_t(seg_time * 500);  // 25 ms minimum delay between insertions
+  const uint8_t _max_queue      = 5;                           // Insert up to this many movements
+  const float _target_lag       = 0.25f;                       // Aim for 1/4 second lag
+  const float _seg_time         = (_target_lag / _max_queue);  // 0.05 seconds, short segments inserted every 1/20th of a second
+  const millis_t timer_limit_ms = millis_t(_seg_time * 500);   // 25 ms minimum delay between insertions
 
   // The planner can merge/collapse small moves, so the movement queue is unreliable to control the lag
-  static millis_t next_run = 0;
-  if (PENDING(millis(), next_run))
+  static millis_t _next_move = millis();
+  if (PENDING(millis(), _next_move)) {
     return;
-  next_run = millis() + timer_limit_ms;
+  }
+  _next_move += timer_limit_ms;  // delay in ms
 
   // Only inject a command if the planner has fewer than 5 moves and there are no unparsed commands
-  if (planner.movesplanned() >= QUEUE_DEPTH || queue.has_commands_queued())
+  if (planner.movesplanned() > _max_queue || queue.has_commands_queued())
     return;
 
-  // Normalized jog values are 0 for no movement and -1 or +1 for as max feedrate (nonlinear relationship)
-  // Jog are initialized to zero and handling input can update values but doesn't have to
-  // You could use a two-axis wiinunchuck and a one-axis keypad and they might work together
-  xyz_float_t joy_value_normalized{0};
+  if (!update()) {
+    return;
+  }
 
   if (simulation) {
     report();
-    return;
   }
+
+  // Normalized jog values are 0 for no movement and -1 or +1 for as max feedrate (linear relationship)
+  // Jog are initialized to zero and handling input can update values but doesn't have to
+  // You could use a two-axis wiinunchuck and a one-axis keypad and they might work together
+  xyz_float_t joy_value_normalized{0};
   // Use ADC values and defined limits. The active zone is normalized: -1..0 (dead) 0..1
   calculate(joy_value_normalized);
 
@@ -240,23 +257,45 @@ void WiiNunchuck::injectJogMoves() {
   float quadratic_speed = 0;
   LOOP_LINEAR_AXES(i)
   if (joy_value_normalized[i]) {
-    jog_feed_rate[i] =
-        seg_time * joy_value_normalized[i] * TERN(EXTENSIBLE_UI, manual_feedrate_mm_s, planner.settings.max_feedrate_mm_s)[i];
+    jog_feed_rate[i] = _seg_time * joy_value_normalized[i] * TERN(EXTENSIBLE_UI, manual_feedrate_mm_s, planner.settings.max_feedrate_mm_s)[i];
     quadratic_speed += sq(jog_feed_rate[i]);
   }
 
   if (!UNEAR_ZERO(quadratic_speed)) {
-    current_position += jog_feed_rate;
-    apply_motion_limits(current_position);
+    if (jobIsOngoing() || TERN0(HAS_CUTTER, cutter.enabled())) {
+      // Limit error messages to prevent console spam
+      static millis_t _next_in_progress = millis();
+      if (PENDING(millis(), _next_in_progress))
+        return;
+      _next_in_progress += 10000;  // delay in ms
+      SERIAL_ERROR_MSG("Cannot jog while job in progress");
+      return;
+    }
     const float jog_distance = sqrt(quadratic_speed);
-    debug(F("injectJogMoves distance"), jog_distance);
-    injecting_now = true;
-    planner.buffer_line(current_position, jog_distance / seg_time, active_tool, jog_distance);
-    injecting_now = false;
+    if (simulation) {
+      LOOP_LINEAR_AXES(i)
+      SERIAL_ECHOLNPGM("Jogging ", i, ": ", jog_feed_rate[i]);
+    } else {
+      injecting_now = true;
+      LOOP_LINEAR_AXES(i)
+      debug(F("injectJogMoves: Jogging " + i), jog_feed_rate[i]);
+      current_position += jog_feed_rate;
+      apply_motion_limits(current_position);
+      planner.buffer_line(current_position, jog_distance / _seg_time, active_tool, jog_distance);
+      injecting_now = false;
+    }
+  } else {
+    // Correct for memory leaks in cheap 3rd party nunchucks
+    static uint8_t _idle_count = 0;
+    if (_idle_count > 50) {
+      connected = false;
+    } else {
+      ++_idle_count;
+    }
   }
 }
 
-#if ENABLED(WII_NUNCHUCK_DEBUG)
+  #if ENABLED(WII_NUNCHUCK_DEBUG)
 
 // static
 void WiiNunchuck::prefix(FSTR_P const func) {
@@ -274,35 +313,24 @@ void WiiNunchuck::debug(FSTR_P const func, float number) {
     SERIAL_ECHOLN(number);
   }
 }
-void WiiNunchuck::debug(FSTR_P const func, char string[]) {
+void WiiNunchuck::debug(FSTR_P const func, const char string[]) {
   if (DEBUGGING(INFO)) {
     prefix(func);
     SERIAL_ECHOLN(string);
   }
 }
-void WiiNunchuck::debug(FSTR_P const func, FSTR_P const string) {
-  if (DEBUGGING(INFO)) {
-    prefix(func);
-    SERIAL_ECHOLNF(string);
-  }
-}
 
 void WiiNunchuck::report() {
-  const millis_t _report_delay = 100;  // delay in ms
-
-  static millis_t next_run = 0;
-  if (PENDING(millis(), next_run))
-    return;
-  next_run = millis() + _report_delay;
-
-  const char cPrint = (cPressed()) ? 'C' : 'c';
-  const char zPrint = (zPressed()) ? 'Z' : 'z';
-
   SERIAL_ECHO("Wii Nunchuck");
-  SERIAL_ECHOPGM_P(SP_X_STR, WII_X(joyX()));
-  SERIAL_ECHOPGM_P(SP_Y_STR, WII_Y(joyY()));
-  SERIAL_ECHOPGM(" Button C: ", cPrint);
-  SERIAL_ECHOLNPGM(" Button Z: ", zPrint);
+  SERIAL_ECHO(" X: ");
+  SERIAL_ECHO(WII_X(joyX()));
+  SERIAL_ECHO(" Y: ");
+  SERIAL_ECHO(WII_Y(joyY()));
+  // SERIAL_ECHOPGM_P(SP_X_STR, WII_X(joyX()));
+  // SERIAL_ECHOPGM_P(SP_Y_STR, WII_Y(joyY()));
+  SERIAL_ECHO_TERNARY(cPressed(), " Button C: ", "Yes", "No", "");
+  SERIAL_ECHO_TERNARY(zPressed(), " Button Z: ", "Yes", "No", "");
+  SERIAL_EOL();
 }
   #endif  // WII_NUNCHUCK_DEBUG
 

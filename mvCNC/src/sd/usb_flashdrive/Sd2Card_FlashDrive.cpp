@@ -24,24 +24,24 @@
 
 #include "../../mvCNCCore.h"
 #include "../../core/serial.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
-#if DISABLED(USE_OTG_USB_HOST) && !PINS_EXIST(USB_CS, USB_INTR)
-  #error "USB_FLASH_DRIVE_SUPPORT requires USB_CS_PIN and USB_INTR_PIN to be defined."
-#endif
+  #if DISABLED(USE_OTG_USB_HOST) && !PINS_EXIST(USB_CS, USB_INTR)
+    #error "USB_FLASH_DRIVE_SUPPORT requires USB_CS_PIN and USB_INTR_PIN to be defined."
+  #endif
 
-#if ENABLED(USE_UHS3_USB)
-  #define NO_AUTO_SPEED
-  #define UHS_MAX3421E_SPD 8000000 >> SD_SPI_SPEED
-  #define UHS_DEVICE_WINDOWS_USB_SPEC_VIOLATION_DESCRIPTOR_DEVICE 1
-  #define UHS_HOST_MAX_INTERFACE_DRIVERS 2
-  #define MASS_MAX_SUPPORTED_LUN 1
-  #define USB_HOST_SERIAL MYSERIAL1
+  #if ENABLED(USE_UHS3_USB)
+    #define NO_AUTO_SPEED
+    #define UHS_MAX3421E_SPD                                        8000000 >> SD_SPI_SPEED
+    #define UHS_DEVICE_WINDOWS_USB_SPEC_VIOLATION_DESCRIPTOR_DEVICE 1
+    #define UHS_HOST_MAX_INTERFACE_DRIVERS                          2
+    #define MASS_MAX_SUPPORTED_LUN                                  1
+    #define USB_HOST_SERIAL                                         MYSERIAL1
 
-  // Workaround for certain issues with UHS3
-  #define SKIP_PAGE3F // Required for IOGEAR media adapter
-  #define USB_NO_TEST_UNIT_READY // Required for removable media adapter
-  #define USB_HOST_MANUAL_POLL // Optimization to shut off IRQ automatically
+    // Workaround for certain issues with UHS3
+    #define SKIP_PAGE3F             // Required for IOGEAR media adapter
+    #define USB_NO_TEST_UNIT_READY  // Required for removable media adapter
+    #define USB_HOST_MANUAL_POLL    // Optimization to shut off IRQ automatically
 
   // Workarounds for keeping mvCNC's watchdog timer from barking...
   void mvcnc_yield() {

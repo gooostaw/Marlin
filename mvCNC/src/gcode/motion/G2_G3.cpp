@@ -9,29 +9,31 @@
 #include "../gcode.h"
 #include "../../module/motion.h"
 #include "../../module/planner.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
-#if ENABLED(DELTA)
-  #include "../../module/delta.h"
-#elif ENABLED(SCARA)
-  #include "../../module/scara.h"
-#endif
+  #if ENABLED(DELTA)
+    #include "../../module/delta.h"
+  #elif ENABLED(SCARA)
+    #include "../../module/scara.h"
+  #endif
 
-#if N_ARC_CORRECTION < 1
-  #undef N_ARC_CORRECTION
-  #define N_ARC_CORRECTION 1
-#endif
-#ifndef MIN_CIRCLE_SEGMENTS
-  #define MIN_CIRCLE_SEGMENTS 72  // 5° per segment
-#endif
-#if !defined(MAX_ARC_SEGMENT_MM) && defined(MIN_ARC_SEGMENT_MM)
-  #define MAX_ARC_SEGMENT_MM MIN_ARC_SEGMENT_MM
-#elif !defined(MIN_ARC_SEGMENT_MM) && defined(MAX_ARC_SEGMENT_MM)
-  #define MIN_ARC_SEGMENT_MM MAX_ARC_SEGMENT_MM
-#endif
+  #if N_ARC_CORRECTION < 1
+    #undef N_ARC_CORRECTION
+    #define N_ARC_CORRECTION 1
+  #endif
+  #ifndef MIN_CIRCLE_SEGMENTS
+    #define MIN_CIRCLE_SEGMENTS 72  // 5° per segment
+  #endif
+  #if !defined(MAX_ARC_SEGMENT_MM) && defined(MIN_ARC_SEGMENT_MM)
+    #define MAX_ARC_SEGMENT_MM MIN_ARC_SEGMENT_MM
+  #elif !defined(MIN_ARC_SEGMENT_MM) && defined(MAX_ARC_SEGMENT_MM)
+    #define MIN_ARC_SEGMENT_MM MAX_ARC_SEGMENT_MM
+  #endif
 
-#define ARC_LIJK_CODE(L,I,J,K)    CODE_N(SUB2(LINEAR_AXES),L,I,J,K)
-#define ARC_LIJKE_CODE(L,I,J,K,E) ARC_LIJK_CODE(L,I,J,K); CODE_ITEM_E(E)
+  #define ARC_LIJK_CODE(L, I, J, K) CODE_N(SUB2(LINEAR_AXES), L, I, J, K)
+  #define ARC_LIJKE_CODE(L, I, J, K, E) \
+    ARC_LIJK_CODE(L, I, J, K);          \
+    CODE_ITEM_E(E)
 
 /**
  * Plan an arc in 2 dimensions, with linear motion in the other axes.

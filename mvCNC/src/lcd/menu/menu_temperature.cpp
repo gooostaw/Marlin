@@ -11,25 +11,25 @@
 #if HAS_MVCNCUI_MENU && HAS_TEMPERATURE
 
 #include "menu_item.h"
-#include "../../module/temperature.h"
+  #include "../../module/pwm_temp_io.h"
 
-#if HAS_FAN || ENABLED(SINGLENOZZLE)
-  #include "../../module/motion.h"
-#endif
+  #if HAS_FAN || ENABLED(SINGLENOZZLE)
+    #include "../../module/motion.h"
+  #endif
 
-#if EITHER(HAS_COOLER, LASER_COOLANT_FLOW_METER)
-  #include "../../feature/cooler.h"
-#endif
+  #if EITHER(HAS_COOLER, LASER_COOLANT_FLOW_METER)
+    #include "../../feature/cooler.h"
+  #endif
 
-#if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
-  #include "../../module/tool_change.h"
-#endif
+  #if ENABLED(SINGLENOZZLE_STANDBY_TEMP)
+    #include "../../module/tool_change.h"
+  #endif
 
 //
 // "Temperature" submenu items
 //
 
-void Temperature::lcd_preheat(const uint8_t e, const int8_t indh, const int8_t indb) {
+void Thermals::lcd_preheat(const uint8_t e, const int8_t indh, const int8_t indb) {
   UNUSED(e); UNUSED(indh); UNUSED(indb);
   #if HAS_HOTEND
     if (indh >= 0 && ui.material_preset[indh].hotend_temp > 0)
@@ -51,9 +51,9 @@ void Temperature::lcd_preheat(const uint8_t e, const int8_t indh, const int8_t i
   ui.return_to_status();
 }
 
-#if HAS_PREHEAT
+  #if HAS_PREHEAT
 
-  #if HAS_TEMP_HOTEND
+    #if HAS_TEMP_HOTEND
 inline void _preheat_end(const uint8_t m, const uint8_t e) { fanManager.lcd_preheat(e, m, -1); }
     void do_preheat_end_m() { _preheat_end(editable.int8, 0); }
   #endif
@@ -76,7 +76,7 @@ inline void _preheat_end(const uint8_t m, const uint8_t e) { fanManager.lcd_preh
 
   #elif HAS_MULTI_HOTEND
 
-    // No heated bed, so just indexed "Preheat ABC" items
+      // No heated bed, so just indexed "Preheat ABC" items
     #define PREHEAT_ITEMS(M,E) ACTION_ITEM_N_S(E, ui.get_preheat_label(M), MSG_PREHEAT_M_H, []{ _preheat_end(M, MenuItemBase::itemIndex); })
 
   #endif

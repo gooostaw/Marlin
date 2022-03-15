@@ -10,7 +10,7 @@
 #include "../../lcd/mvcncui.h"
 
 #if HAS_HOTEND
-  #include "../../module/temperature.h"
+    #include "../../module/pwm_temp_io.h"
 #endif
 
 /**

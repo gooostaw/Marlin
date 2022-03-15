@@ -45,118 +45,119 @@
 #include "../../../core/serial.h"
 #include "../../../core/macros.h"
 
-#include "../../../module/temperature.h"
-#include "../../../module/jobcounter.h"
-#include "../../../module/motion.h"
-#include "../../../module/planner.h"
+  #include "../../../module/pwm_temp_io.h"
+  #include "../../../module/jobcounter.h"
+  #include "../../../module/motion.h"
+  #include "../../../module/planner.h"
 
-#include "../../../gcode/gcode.h"
-#include "../../../gcode/queue.h"
+  #include "../../../gcode/gcode.h"
+  #include "../../../gcode/queue.h"
 
-#if HAS_FILAMENT_SENSOR
-  #include "../../../feature/runout.h"
-#endif
+  #if HAS_FILAMENT_SENSOR
+    #include "../../../feature/runout.h"
+  #endif
 
-#if ENABLED(EEPROM_SETTINGS)
-  #include "../../../module/settings.h"
-#endif
+  #if ENABLED(EEPROM_SETTINGS)
+    #include "../../../module/settings.h"
+  #endif
 
-#if ENABLED(HOST_ACTION_COMMANDS)
-  #include "../../../feature/host_actions.h"
-#endif
+  #if ENABLED(HOST_ACTION_COMMANDS)
+    #include "../../../feature/host_actions.h"
+  #endif
 
-#if HAS_MESH || HAS_ONESTEP_LEVELING
-  #include "../../../feature/bedlevel/bedlevel.h"
-#endif
+  #if HAS_MESH || HAS_ONESTEP_LEVELING
+    #include "../../../feature/bedlevel/bedlevel.h"
+  #endif
 
-#if HAS_BED_PROBE
-  #include "../../../module/probe.h"
-#endif
+  #if HAS_BED_PROBE
+    #include "../../../module/probe.h"
+  #endif
 
-#ifdef BLTOUCH_HS_MODE
-  #include "../../../feature/bltouch.h"
-#endif
+  #ifdef BLTOUCH_HS_MODE
+    #include "../../../feature/bltouch.h"
+  #endif
 
-#if EITHER(BABYSTEP_ZPROBE_OFFSET, JUST_BABYSTEP)
-  #include "../../../feature/babystep.h"
-#endif
+  #if EITHER(BABYSTEP_ZPROBE_OFFSET, JUST_BABYSTEP)
+    #include "../../../feature/babystep.h"
+  #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
-  #include "../../../feature/powerloss.h"
-#endif
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    #include "../../../feature/powerloss.h"
+  #endif
 
-#if HAS_GCODE_PREVIEW
-  #include "gcode_preview.h"
-#endif
+  #if HAS_GCODE_PREVIEW
+    #include "gcode_preview.h"
+  #endif
 
-#if HAS_ESDIAG
-  #include "endstop_diag.h"
-#endif
+  #if HAS_ESDIAG
+    #include "endstop_diag.h"
+  #endif
 
-#if HAS_MESH
-  #include "meshviewer.h"
-#endif
+  #if HAS_MESH
+    #include "meshviewer.h"
+  #endif
 
-#if ENABLED(JOBCOUNTER)
-  #include "printstats.h"
-#endif
+  #if ENABLED(JOBCOUNTER)
+    #include "printstats.h"
+  #endif
 
-#if ENABLED(CASE_LIGHT_MENU)
-  #include "../../../feature/caselight.h"
-#endif
+  #if ENABLED(CASE_LIGHT_MENU)
+    #include "../../../feature/caselight.h"
+  #endif
 
-#if ENABLED(LED_CONTROL_MENU)
-  #include "../../../feature/leds/leds.h"
-#endif
+  #if ENABLED(LED_CONTROL_MENU)
+    #include "../../../feature/leds/leds.h"
+  #endif
 
-#include <WString.h>
-#include <stdio.h>
-#include <string.h>
+  #include <WString.h>
+  #include <stdio.h>
+  #include <string.h>
 
-#ifndef MACHINE_SIZE
-  #define MACHINE_SIZE STRINGIFY(X_BED_SIZE) "x" STRINGIFY(Y_BED_SIZE) "x" STRINGIFY(Z_MAX_POS)
-#endif
+  #ifndef MACHINE_SIZE
+    #define MACHINE_SIZE STRINGIFY(X_BED_SIZE) \
+    "x" STRINGIFY(Y_BED_SIZE) "x" STRINGIFY(Z_MAX_POS)
+  #endif
 
-#include "lockscreen.h"
+  #include "lockscreen.h"
 
-#define PAUSE_HEAT
+  #define PAUSE_HEAT
 
-#define MENU_CHAR_LIMIT  24
+  #define MENU_CHAR_LIMIT 24
 
-// Print speed limit
-#define MIN_PRINT_SPEED  10
-#define MAX_PRINT_SPEED 999
+  // Print speed limit
+  #define MIN_PRINT_SPEED 10
+  #define MAX_PRINT_SPEED 999
 
-// CNC flow limit
-#define MIN_PRINT_FLOW   10
-#define MAX_PRINT_FLOW   299
+  // CNC flow limit
+  #define MIN_PRINT_FLOW 10
+  #define MAX_PRINT_FLOW 299
 
-// Load and Unload limits
-#define MAX_LOAD_UNLOAD  500
+  // Load and Unload limits
+  #define MAX_LOAD_UNLOAD 500
 
-// Feedspeed limit (max feedspeed = DEFAULT_MAX_FEEDRATE * 2)
-#define MIN_MAXFEEDSPEED      1
-#define MIN_MAXACCELERATION   1
-#define MIN_MAXJERK           0.1
-#define MIN_STEP              1
-#define MAX_STEP              999.9
+  // Feedspeed limit (max feedspeed = DEFAULT_MAX_FEEDRATE * 2)
+  #define MIN_MAXFEEDSPEED    1
+  #define MIN_MAXACCELERATION 1
+  #define MIN_MAXJERK         0.1
+  #define MIN_STEP            1
+  #define MAX_STEP            999.9
 
-// Extruder's temperature limits
-#define MIN_ETEMP  HEATER_0_MINTEMP
-#define MAX_ETEMP  (HEATER_0_MAXTEMP - HOTEND_OVERSHOOT)
+  // Extruder's temperature limits
+  #define MIN_ETEMP HEATER_0_MINTEMP
+  #define MAX_ETEMP (HEATER_0_MAXTEMP - HOTEND_OVERSHOOT)
 
-#define FEEDRATE_E      (60)
+  #define FEEDRATE_E (60)
 
-// Minimum unit (0.1) : multiple (10)
-#define UNITFDIGITS 1
-#define MINUNITMULT POW(10, UNITFDIGITS)
+  // Minimum unit (0.1) : multiple (10)
+  #define UNITFDIGITS 1
+  #define MINUNITMULT POW(10, UNITFDIGITS)
 
-#define ENCODER_WAIT_MS                  20
-#define DWIN_VAR_UPDATE_INTERVAL         1024
-#define DWIN_SCROLL_UPDATE_INTERVAL      SEC_TO_MS(2)
-#define DWIN_REMAIN_TIME_UPDATE_INTERVAL SEC_TO_MS(20)
+  #define ENCODER_WAIT_MS                  20
+  #define DWIN_VAR_UPDATE_INTERVAL         1024
+  #define DWIN_SCROLL_UPDATE_INTERVAL      SEC_TO_MS(2)
+  #define DWIN_REMAIN_TIME_UPDATE_INTERVAL SEC_TO_MS(20)
 
-#define BABY_Z_VAR TERN(HAS_BED_PROBE, probe.offset.z, dwin_zoffset)
+  #define BABY_Z_VAR TERN(HAS_BED_PROBE, probe.offset.z, dwin_zoffset)
 
 // Structs
 HMI_value_t HMI_value;
