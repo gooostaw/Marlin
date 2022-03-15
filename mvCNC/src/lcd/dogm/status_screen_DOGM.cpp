@@ -393,7 +393,7 @@ void mvCNCUI::draw_status_screen() {
   //     u8g.setColorIndex(0);  // white on black
   // #endif
   lcd_put_u8str(4, 7, "Mpos");
-  lcd_put_u8str(0, 35, "______________");
+  lcd_put_u8str(0, 33, "______________");
   lcd_put_u8str(0, 16, X_STR);
   lcd_put_u8str(mxstring);
   lcd_put_u8str(0, 24, Y_STR);
@@ -500,7 +500,7 @@ void mvCNCUI::draw_status_screen() {
   // Stepper motor status
   if (status_row < ((progress_string[0] == '\0') ? 46 : 37)) {
     lcd_put_u8str(81, status_row, "Stp:");
-    lcd_put_u8str((stepper.AXIS_IS_ENABLED(X_AXIS) || stepper.AXIS_IS_ENABLED(Y_AXIS) || stepper.AXIS_IS_ENABLED(Z_AXIS)) ? "En" : "Dis");
+    lcd_put_u8str((stepper.AXIS_IS_ENABLED(X_AXIS) || stepper.AXIS_IS_ENABLED(Y_AXIS) || stepper.AXIS_IS_ENABLED(Z_AXIS)) ? "On" : "Off");
     status_row += 8;
   }
 
@@ -587,6 +587,18 @@ void mvCNCUI::draw_status_screen() {
   }
   #endif
 
+  //
+  // Feedrate
+  //
+  // #define EXTRAS_2_BASELINE (EXTRAS_BASELINE + 3)
+
+  set_font(FONT_MENU);
+  lcd_put_wchar(0, 45, LCD_STR_FEEDRATE[0]);
+
+  set_font(FONT_STATUSMENU);
+  lcd_put_u8str(10, 45, i16tostr3rj(feedrate_percentage));
+  lcd_put_wchar('%');
+
   // #if ENABLED(SDSUPPORT)
   // //
   // // SD Card Symbol
@@ -631,25 +643,13 @@ void mvCNCUI::draw_status_screen() {
   #endif  // HAS_PRINT_PROGRESS
 
   //
-  // Feedrate
-  //
-  // #define EXTRAS_2_BASELINE (EXTRAS_BASELINE + 3)
-
-  set_font(FONT_MENU);
-  lcd_put_wchar(0, 49, LCD_STR_FEEDRATE[0]);
-
-  set_font(FONT_STATUSMENU);
-  lcd_put_u8str(10, 49, i16tostr3rj(feedrate_percentage));
-  lcd_put_wchar('%');
-
-  //
   // Status line
   //
   {  // limit var scope
     // Get the UTF8 character count of the string
     uint8_t lcd_width = LCD_WIDTH, pixel_width = LCD_PIXEL_WIDTH,
             slen = utf8_strlen(status_message);
-    lcd_moveto(0, 56);
+    lcd_moveto(0, 53);
     lcd_put_u8str_max(last_status_message, pixel_width);
 
     // Fill the rest with spaces
@@ -658,7 +658,7 @@ void mvCNCUI::draw_status_screen() {
   //
   // Status line
   //
-  lcd_moveto(0, 64);
+  lcd_moveto(0, 61);
   draw_status_message(blink);
 }
 

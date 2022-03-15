@@ -3557,9 +3557,9 @@
 #define GCODE_MOTION_MODES  // Remember the motion mode (G0 G1 G2 G3 G5 G38.X) and apply for X Y Z E F, etc.
 
 // Enable and set a (default) feedrate for all G0 moves
-#define G0_FEEDRATE (100 * 60)  // (mm/min)
+#define G0_FEEDRATE (30000)  // (mm/min)
 #ifdef G0_FEEDRATE
-  #define VARIABLE_G0_FEEDRATE  // The G0 feedrate is set by F in G0 motion mode
+// #define VARIABLE_G0_FEEDRATE  // The G0 feedrate is set by F in G0 motion mode
 #endif
 
 /**
@@ -3787,9 +3787,10 @@
 #if ENABLED(WII_NUNCHUCK)
 // #define WII_NUNCHUCK_ENABLED // Enable nunchuck by default (Use M258 W[0/1] to disable/enable)
 // #define WII_EN_PIN     P0_10 // Pin sent HIGH when enabled via `M258 W1`
+  #define FAST_I2C // Most nunchucks use fast mode. Disable if yours doesn't respond.
 
 // Pressing the C button enables full speed movements up to max_feed_rate for each respective axis
-  #define WII_SLOW_DIVISER 3  // Divide all speeds by value for slow (C unpressed) movements
+  #define WII_SLOW_DIVISER 4  // Divide all speeds by value for slow (C unpressed) movements
 
   //#define INVERT_WII_X  // Enable to reverse X axis jogging
   //#define INVERT_WII_Y  // Enable to reverse Y axis jogging
