@@ -458,6 +458,8 @@
 #define BOARD_MKS_TINYBEE             6008  // MKS TinyBee based on ESP32 (with I2S stepper stream)
 #define BOARD_ENWI_ESPNP              6009  // enwi ESPNP based on ESP32 (with I2S stepper stream)
 
+#define BOARD_CHEAP_CNC               6051  // Cheap CNC (ESP32)
+
 //
 // SAMD51 ARM Cortex M4
 //
