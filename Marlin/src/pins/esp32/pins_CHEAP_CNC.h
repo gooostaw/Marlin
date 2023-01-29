@@ -34,9 +34,9 @@
 //
 // #define I2S_STEPPER_STREAM
 #if ENABLED(I2S_STEPPER_STREAM)
-#define I2S_WS 25
-#define I2S_BCK 26
-#define I2S_DATA 27
+    #define I2S_WS 25
+    #define I2S_BCK 26
+    #define I2S_DATA 27
 #endif
 
 //
@@ -84,3 +84,41 @@
 
 // SPI
 // #define SDSS                                   5
+
+#if HAS_TMC_UART
+  //
+  // TMC2209 stepper drivers
+  //
+
+  //
+  // Hardware serial 1
+  //
+  #define X_HARDWARE_SERIAL              Serial1
+//   #define Y_HARDWARE_SERIAL              Serial1
+//   #define Z_HARDWARE_SERIAL              Serial1
+//   #define E0_HARDWARE_SERIAL             Serial1
+
+  #define TMC_BAUD_RATE 115200
+
+    // Default TMC slave addresses
+  #ifndef X_SLAVE_ADDRESS
+    #define X_SLAVE_ADDRESS  0
+  #endif
+//   #ifndef Y_SLAVE_ADDRESS
+//     #define Y_SLAVE_ADDRESS  2
+//   #endif
+//   #ifndef Z_SLAVE_ADDRESS
+//     #define Z_SLAVE_ADDRESS  1
+//   #endif
+//   #ifndef E0_SLAVE_ADDRESS
+//     #define E0_SLAVE_ADDRESS 3
+//   #endif
+
+#endif
+
+#ifndef HARDWARE_SERIAL1_RX
+  #define HARDWARE_SERIAL1_RX                 16
+#endif
+#ifndef HARDWARE_SERIAL1_TX
+  #define HARDWARE_SERIAL1_TX                 17
+#endif
