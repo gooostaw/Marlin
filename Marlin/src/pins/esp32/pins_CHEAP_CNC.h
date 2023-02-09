@@ -39,6 +39,10 @@
     #define I2S_DATA 27
 #endif
 
+// Spindle
+
+#define SPINDLE_LASER_ENA_PIN 23
+
 //
 // Limit Switches
 //
@@ -98,7 +102,7 @@
 //   #define Z_HARDWARE_SERIAL              Serial1
 //   #define E0_HARDWARE_SERIAL             Serial1
 
-  #define TMC_BAUD_RATE 115200
+  #define TMC_BAUD_RATE 250000
 
     // Default TMC slave addresses
   #ifndef X_SLAVE_ADDRESS
