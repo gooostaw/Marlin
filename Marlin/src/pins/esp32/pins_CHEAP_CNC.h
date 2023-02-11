@@ -48,6 +48,7 @@
 //
 #define X_MIN_PIN 18
 #define Y_MIN_PIN NULL
+#define Y2_MIN_PIN NULL
 #define Z_MIN_PIN NULL
 
 //
@@ -62,6 +63,10 @@
 #define Y_DIR_PIN NULL
 #define Y_ENABLE_PIN NULL
 // #define Y_CS_PIN                            13
+
+#define Y2_STEP_PIN NULL
+#define Y2_DIR_PIN NULL
+#define Y2_ENABLE_PIN NULL
 
 #define Z_STEP_PIN NULL
 #define Z_DIR_PIN NULL
@@ -98,8 +103,9 @@
   // Hardware serial 1
   //
   #define X_HARDWARE_SERIAL              Serial1
-//   #define Y_HARDWARE_SERIAL              Serial1
-//   #define Z_HARDWARE_SERIAL              Serial1
+  #define Y_HARDWARE_SERIAL              Serial1
+  #define Y2_HARDWARE_SERIAL             Serial1
+  #define Z_HARDWARE_SERIAL              Serial1
 //   #define E0_HARDWARE_SERIAL             Serial1
 
   #define TMC_BAUD_RATE 250000
@@ -108,12 +114,15 @@
   #ifndef X_SLAVE_ADDRESS
     #define X_SLAVE_ADDRESS  0
   #endif
-//   #ifndef Y_SLAVE_ADDRESS
-//     #define Y_SLAVE_ADDRESS  2
-//   #endif
-//   #ifndef Z_SLAVE_ADDRESS
-//     #define Z_SLAVE_ADDRESS  1
-//   #endif
+  #ifndef Y_SLAVE_ADDRESS
+    #define Y_SLAVE_ADDRESS  1
+  #endif
+  #ifndef Y2_SLAVE_ADDRESS
+    #define Y2_SLAVE_ADDRESS  3
+  #endif
+  #ifndef Z_SLAVE_ADDRESS
+    #define Z_SLAVE_ADDRESS  2
+  #endif
 //   #ifndef E0_SLAVE_ADDRESS
 //     #define E0_SLAVE_ADDRESS 3
 //   #endif
