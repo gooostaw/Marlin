@@ -48,9 +48,12 @@
 //
 #define X_MIN_PIN 4
 #define X_MAX_PIN 4
-#define Y_MIN_PIN NULL
-#define Y2_MIN_PIN NULL
-#define Z_MIN_PIN NULL
+#define Y_MIN_PIN 19
+#define Y_MAX_PIN 19
+#define Y2_MIN_PIN 14
+#define Y2_MAX_PIN 14
+#define Z_MIN_PIN 25
+#define Z_MAX_PIN 25
 
 //
 // Steppers
@@ -60,17 +63,17 @@
 #define X_ENABLE_PIN NULL
 // #define X_CS_PIN                             0
 
-#define Y_STEP_PIN NULL
-#define Y_DIR_PIN NULL
+#define Y_STEP_PIN 5
+#define Y_DIR_PIN 18
 #define Y_ENABLE_PIN NULL
 // #define Y_CS_PIN                            13
 
-#define Y2_STEP_PIN NULL
-#define Y2_DIR_PIN NULL
+#define Y2_STEP_PIN 13
+#define Y2_DIR_PIN 12
 #define Y2_ENABLE_PIN NULL
 
-#define Z_STEP_PIN NULL
-#define Z_DIR_PIN NULL
+#define Z_STEP_PIN 27
+#define Z_DIR_PIN 26
 #define Z_ENABLE_PIN NULL
 // #define Z_CS_PIN                             5  // SS_PIN
 
@@ -119,10 +122,10 @@
     #define Y_SLAVE_ADDRESS  1
   #endif
   #ifndef Y2_SLAVE_ADDRESS
-    #define Y2_SLAVE_ADDRESS  3
+    #define Y2_SLAVE_ADDRESS  2
   #endif
   #ifndef Z_SLAVE_ADDRESS
-    #define Z_SLAVE_ADDRESS  2
+    #define Z_SLAVE_ADDRESS  3
   #endif
 //   #ifndef E0_SLAVE_ADDRESS
 //     #define E0_SLAVE_ADDRESS 3

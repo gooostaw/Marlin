@@ -3204,7 +3204,7 @@
    * M122 S0/1 will enable continuous reporting.
    */
   //TODO:
-  //#define TMC_DEBUG
+  #define TMC_DEBUG
 
   /**
    * You can set your own advanced settings by filling in predefined functions.
