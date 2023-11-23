@@ -56,6 +56,11 @@
 #define Z_MAX_PIN 25
 
 //
+// Probe
+//
+#define Z_MIN_PROBE_PIN 22
+
+//
 // Steppers
 //
 #define X_STEP_PIN 15
