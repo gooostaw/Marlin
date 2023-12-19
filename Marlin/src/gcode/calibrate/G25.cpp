@@ -31,6 +31,8 @@ void GcodeSuite::G25()
 {
     set_axis_is_at_home(X_AXIS);
     set_axis_is_at_home(Y_AXIS);
+    
+    sync_plan_position();
 
     report_current_position();
 }
