@@ -185,19 +185,19 @@
   #define Z_CS_PIN                         P1_08
 #endif
 
-#define E0_STEP_PIN                        P2_13
-#define E0_DIR_PIN                         P0_11
-#define E0_ENABLE_PIN                      P2_12
-#ifndef E0_CS_PIN
-  #define E0_CS_PIN                        P1_04
-#endif
+// #define E0_STEP_PIN                        P2_13
+// #define E0_DIR_PIN                         P0_11
+// #define E0_ENABLE_PIN                      P2_12
+// #ifndef E0_CS_PIN
+//   #define E0_CS_PIN                        P1_04
+// #endif
 
-#define E1_STEP_PIN                        P1_15
-#define E1_DIR_PIN                         P1_14
-#define E1_ENABLE_PIN                      P1_16
-#ifndef E1_CS_PIN
-  #define E1_CS_PIN                        P1_01
-#endif
+// #define E1_STEP_PIN                        P1_15
+// #define E1_DIR_PIN                         P1_14
+// #define E1_ENABLE_PIN                      P1_16
+// #ifndef E1_CS_PIN
+//   #define E1_CS_PIN                        P1_01
+// #endif
 
 #define TEMP_1_PIN                      P0_23_A0  // A0 (T0) - (67) - TEMP_1_PIN
 #define TEMP_BED_PIN                    P0_25_A2  // A2 (T2) - (69) - TEMP_BED_PIN
@@ -609,6 +609,8 @@
  *   P0_27  (57) (Open collector)
  *   P0_28  (58) (Open collector)
  */
+
+#define SPINDLE_LASER_ENA_PIN    P2_03
 
 //
 // Include common SKR pins

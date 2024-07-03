@@ -65,13 +65,13 @@
   #define TEMP_BED_PIN                  P0_23_A0  // A0 (T0) - (67) - TEMP_BED_PIN
 #endif
 
-#if HOTENDS == 1 && !REDUNDANT_TEMP_MATCH(SOURCE, E1)
-  #if TEMP_SENSOR_PROBE
-    #define TEMP_PROBE_PIN            TEMP_1_PIN
-  #elif TEMP_SENSOR_CHAMBER
-    #define TEMP_CHAMBER_PIN          TEMP_1_PIN
-  #endif
-#endif
+// #if HOTENDS == 1 && !REDUNDANT_TEMP_MATCH(SOURCE, E1)
+//   #if TEMP_SENSOR_PROBE
+//     #define TEMP_PROBE_PIN            TEMP_1_PIN
+//   #elif TEMP_SENSOR_CHAMBER
+//     #define TEMP_CHAMBER_PIN          TEMP_1_PIN
+//   #endif
+// #endif
 
 // CS, MISO, MOSI, and SCK for MAX Thermocouple SPI
 #if HAS_MAX_TC
@@ -89,24 +89,24 @@
 //
 // Heaters / Fans
 //
-#ifndef HEATER_0_PIN
-  #define HEATER_0_PIN                     P2_07
-#endif
-#if HOTENDS == 1 && DISABLED(HEATERS_PARALLEL)
-  #ifndef FAN1_PIN
-    #define FAN1_PIN                       P2_04
-  #endif
-#else
-  #ifndef HEATER_1_PIN
-    #define HEATER_1_PIN                   P2_04
-  #endif
-#endif
-#ifndef FAN0_PIN
-  #define FAN0_PIN                         P2_03
-#endif
-#ifndef HEATER_BED_PIN
-  #define HEATER_BED_PIN                   P2_05
-#endif
+// #ifndef HEATER_0_PIN
+//   #define HEATER_0_PIN                     P2_07
+// #endif
+// #if HOTENDS == 1 && DISABLED(HEATERS_PARALLEL)
+//   #ifndef FAN1_PIN
+//     #define FAN1_PIN                       P2_04
+//   #endif
+// #else
+//   #ifndef HEATER_1_PIN
+//     #define HEATER_1_PIN                   P2_04
+//   #endif
+// #endif
+// #ifndef FAN0_PIN
+//   #define FAN0_PIN                         P2_03
+// #endif
+// #ifndef HEATER_BED_PIN
+//   #define HEATER_BED_PIN                   P2_05
+// #endif
 
 //
 // LCD / Controller
