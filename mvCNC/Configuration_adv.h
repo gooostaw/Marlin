@@ -318,7 +318,7 @@
  * The fan turns on automatically whenever any driver is enabled and turns
  * off (or reduces to idle speed) shortly after drivers are turned off.
  */
-#define USE_CONTROLLER_FAN
+//#define USE_CONTROLLER_FAN
 #if ENABLED(USE_CONTROLLER_FAN)
   #define CONTROLLER_FAN_PIN PE5  // Set a custom pin for the controller fan
   //#define CONTROLLER_FAN_USE_Z_ONLY       // With this option only the Z axis is considered
@@ -340,7 +340,7 @@
 // When first starting the main fan, run it at full speed for the
 // given number of milliseconds.  This gets the fan spinning reliably
 // before setting a PWM value. (Does not work with software PWM for fan on Sanguinololu)
-#define FAN_KICKSTART_TIME 220
+//#define FAN_KICKSTART_TIME 220
 
 // Some coolers may require a non-zero "off" state.
 //#define FAN_OFF_PWM  1
@@ -357,8 +357,8 @@
  *
  * Define one or both of these to override the default 0-255 range.
  */
-#define FAN_MIN_PWM 128
-#define FAN_MAX_PWM 255
+//#define FAN_MIN_PWM 128
+//#define FAN_MAX_PWM 255
 
 /**
  * Fan Fast PWM
@@ -450,7 +450,7 @@
 /**
  * M355 Case Light on-off / brightness
  */
-#define CASE_LIGHT_ENABLE
+// #define CASE_LIGHT_ENABLE
 #if ENABLED(CASE_LIGHT_ENABLE)
   #define CASE_LIGHT_PIN                PD12   // Override the default pin if needed
   #define INVERT_CASE_LIGHT             false  // Set true if Case Light is ON when pin is LOW
@@ -475,7 +475,7 @@
 
 // If you want endstops to stay on (by default) even when not homing
 // enable this option. Override at any time with M120, M121.
-#define ENDSTOPS_ALWAYS_ON_DEFAULT
+//#define ENDSTOPS_ALWAYS_ON_DEFAULT
 
 // @section extras
 
@@ -513,7 +513,7 @@
   #endif
 #endif
 
-#define Y_DUAL_STEPPER_DRIVERS
+// #define Y_DUAL_STEPPER_DRIVERS
 #if ENABLED(Y_DUAL_STEPPER_DRIVERS)
   #define INVERT_Y2_VS_Y_DIR  // Enable if Y2 direction signal is opposite to Y
   #define Y_DUAL_ENDSTOPS
@@ -564,16 +564,16 @@
 //#define SENSORLESS_BACKOFF_MM  { 2, 2, 0 }  // (mm) Backoff from endstops before sensorless homing
 
 #define HOMING_BUMP_MM \
-  { 5, 5, 2 }  // (mm) Backoff from endstops after first bump
+  { 3, 3, 3 }  // (mm) Backoff from endstops after first bump
 #define HOMING_BUMP_DIVISOR \
-  { 2, 2, 2 }  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
+  { 4, 4, 4 }  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
 
-#define HOMING_BACKOFF_POST_MM \
-  { 0, 0, 10 }  // (mm) Backoff from endstops after homing
+// #define HOMING_BACKOFF_POST_MM \
+  { 2, 2, 2 }  // (mm) Backoff from endstops after homing
 
 #define QUICK_HOME  // If G28 contains XY do a diagonal move first
 //#define HOME_Y_BEFORE_X                     // If G28 contains XY home Y before X
-//#define HOME_Z_FIRST                        // Home Z first. Requires a Z-MIN endstop (not a probe).
+#define HOME_Z_FIRST                        // Home Z first. Requires a Z-MIN endstop (not a probe).
 //#define CODEPENDENT_XY_HOMING               // If X/Y can't home without homing Y/X first
 
 // @section extras
@@ -641,8 +641,7 @@
 
 // @section motion
 
-#define AXIS_RELATIVE_MODES \
-  { false, false, false }
+#define AXIS_RELATIVE_MODES { false, false, false }
 
 // Add a Duplicate option for well-separated conjoined nozzles
 //#define MULTI_NOZZLE_DUPLICATION
@@ -671,15 +670,15 @@
 #define DISABLE_INACTIVE_E            true
 
 // Default Minimum Feedrates for cutting and travel moves
-#define DEFAULT_MINIMUMFEEDRATE   1.0   // (mm/s) Minimum feedrate. Set with M205 S.
-#define DEFAULT_MINTRAVELFEEDRATE 10.0  // (mm/s) Minimum travel feedrate. Set with M205 T.
+#define DEFAULT_MINIMUMFEEDRATE   0.0   // (mm/s) Minimum feedrate. Set with M205 S.
+#define DEFAULT_MINTRAVELFEEDRATE 0.0  // (mm/s) Minimum travel feedrate. Set with M205 T.
 
 // Minimum time that a segment needs to take as the buffer gets emptied
-#define DEFAULT_MINSEGMENTTIME 200  // (µs) Set with M205 B.
+#define DEFAULT_MINSEGMENTTIME 20000  // (µs) Set with M205 B.
 
 // Slow down the machine if the lookahead buffer is (by default) half full.
 // Increase the slowdown divisor for larger buffer sizes.
-// #define SLOWDOWN
+#define SLOWDOWN
 #if ENABLED(SLOWDOWN)
   #define SLOWDOWN_DIVISOR 2
 #endif
@@ -1035,7 +1034,7 @@
   // Enable this option and set to HIGH if your SD cards are incorrectly detected.
   //#define SD_DETECT_STATE HIGH
 
-  #define SD_IGNORE_AT_STARTUP            // Don't mount the SD card when starting up
+  //#define SD_IGNORE_AT_STARTUP            // Don't mount the SD card when starting up
   //#define SDCARD_READONLY                 // Read-only SD card (to save over 2K of flash)
 
   //#define GCODE_REPEAT_MARKERS            // Enable G-code M808 to set repeat markers and do looping
@@ -1058,7 +1057,7 @@
 
   //#define MEDIA_MENU_AT_TOP               // Force the media menu to be listed on the top of the main menu
 
-  #define EVENT_GCODE_SD_ABORT "M5\nG0 Z70" // G-code to run on SD Abort CNC (e.g., "G28XY" or "G27")
+  #define EVENT_GCODE_SD_ABORT "M5" // G-code to run on SD Abort CNC (e.g., "G28XY" or "G27")
 
   #if ENABLED(CNC_EVENT_LEDS)
     #define PE_LEDS_COMPLETED_TIME  (30*60) // (seconds) Time to keep the LED "done" color before restoring normal illumination
@@ -1283,7 +1282,7 @@
  *
  * Warning: Does not respect endstops!
  */
-#define BABYSTEPPING
+//#define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
   //#define INTEGRATED_BABYSTEPPING         // EXPERIMENTAL integration of babystepping into the Stepper ISR
   #define BABYSTEP_WITHOUT_HOMING
@@ -1526,7 +1525,7 @@
  * and optionally G38.4 and G38.5 (probe away from target).
  * Set MULTIPLE_PROBING for G38 to probe more than once.
  */
-#define G38_PROBE_TARGET
+//#define G38_PROBE_TARGET
 #if ENABLED(G38_PROBE_TARGET)
   //#define G38_PROBE_AWAY        // Include G38.4 and G38.5 to probe away from target
   #define G38_MINIMUM_MOVE 0.0275  // (mm) Minimum distance that will produce a move.
@@ -1737,7 +1736,7 @@
 
 // Printrun may have trouble receiving long strings all at once.
 // This option inserts short delays between lines of serial output.
-// #define SERIAL_OVERRUN_PROTECTION
+#define SERIAL_OVERRUN_PROTECTION
 
 // For serial echo, the number of digits after the decimal point
 #define SERIAL_FLOAT_PRECISION 4
@@ -2087,7 +2086,7 @@
   #if AXIS_IS_TMC(X)
     #define X_CURRENT      800        // (mA) RMS current. Multiply by 1.414 for peak current.
     #define X_CURRENT_HOME X_CURRENT  // (mA) RMS current for sensorless homing
-    #define X_MICROSTEPS   16         // 0..256
+    #define X_MICROSTEPS   256         // 0..256
     #define X_RSENSE       0.11
     #define X_CHAIN_POS    -1  // -1..0: Not chained. 1: MCU MOSI connected. 2: Next in chain, ...
   //#define X_INTERPOLATE  true      // Enable to override 'INTERPOLATE' for the X axis
@@ -2107,7 +2106,7 @@
   #if AXIS_IS_TMC(Y)
     #define Y_CURRENT      800
     #define Y_CURRENT_HOME Y_CURRENT
-    #define Y_MICROSTEPS   16
+    #define Y_MICROSTEPS   256
     #define Y_RSENSE       0.11
     #define Y_CHAIN_POS    -1
   //#define Y_INTERPOLATE  true
@@ -2127,7 +2126,7 @@
   #if AXIS_IS_TMC(Z)
     #define Z_CURRENT      800
     #define Z_CURRENT_HOME Z_CURRENT
-    #define Z_MICROSTEPS   16
+    #define Z_MICROSTEPS   256
     #define Z_RSENSE       0.11
     #define Z_CHAIN_POS    -1
   //#define Z_INTERPOLATE  true
@@ -2345,12 +2344,12 @@
    * Use Trinamic's ultra quiet stepping mode.
    * When disabled, mvCNC will use spreadCycle stepping mode.
    */
-  #define STEALTHCHOP_XY
-  #define STEALTHCHOP_Z
-  #define STEALTHCHOP_I
-  #define STEALTHCHOP_J
-  #define STEALTHCHOP_K
-  #define STEALTHCHOP_E
+  // #define STEALTHCHOP_XY
+  // #define STEALTHCHOP_Z
+  // #define STEALTHCHOP_I
+  // #define STEALTHCHOP_J
+  // #define STEALTHCHOP_K
+  // #define STEALTHCHOP_E
 
   /**
    * Optimize spreadCycle chopper parameters by using predefined parameter sets
@@ -2496,6 +2495,7 @@
    * Beta feature!
    * Create a 50/50 square wave step pulse optimal for stepper drivers.
    */
+  //TODO:
   #define SQUARE_WAVE_STEPPING
 
   /**
@@ -2802,9 +2802,9 @@
 #define SPINDLE_FEATURE
 //#define LASER_FEATURE
 #if EITHER(SPINDLE_FEATURE, LASER_FEATURE)
-  #define SPINDLE_LASER_ACTIVE_STATE LOW  // Set to "HIGH" if SPINDLE_LASER_ENA_PIN is active HIGH
+  #define SPINDLE_LASER_ACTIVE_STATE    HIGH    // Set to "HIGH" if SPINDLE_LASER_ENA_PIN is active HIGH
 
-  #define SPINDLE_LASER_USE_PWM  // Enable if your controller supports setting the speed/power
+  // #define SPINDLE_LASER_USE_PWM  // Enable if your controller supports setting the speed/power
   #if ENABLED(SPINDLE_LASER_USE_PWM)
     #define SPINDLE_LASER_PWM_INVERT false  // Set to "true" if the speed/power goes up when you want it to go slower
   // #define SPINDLE_LASER_FREQUENCY     2500   // (Hz) Spindle/laser frequency (only on supported HALs: AVR and LPC)
@@ -3190,7 +3190,7 @@
 #define GCODE_MOTION_MODES  // Remember the motion mode (G0 G1 G2 G3 G5 G38.X) and apply for X Y Z E F, etc.
 
 // Enable and set a (default) feedrate for all G0 moves
-#define G0_FEEDRATE (30000)  // (mm/min)
+#define G0_FEEDRATE 40*60 // (mm/min)
 #ifdef G0_FEEDRATE
 // #define VARIABLE_G0_FEEDRATE  // The G0 feedrate is set by F in G0 motion mode
 #endif
@@ -3200,7 +3200,7 @@
  *
  * Execute certain G-code commands immediately after power-on.
  */
-#define STARTUP_COMMANDS "M106"
+//#define STARTUP_COMMANDS "M106"
 
 /**
  * G-code Macros
@@ -3250,7 +3250,7 @@
 #endif
 
 // Custom Menu: Configuration Menu
-#define CUSTOM_MENU_CONFIG
+//#define CUSTOM_MENU_CONFIG
 #if ENABLED(CUSTOM_MENU_CONFIG)
   //#define CUSTOM_MENU_CONFIG_TITLE "Custom Commands"
   #define CUSTOM_MENU_CONFIG_SCRIPT_DONE "M117 Wireless Script Done"
@@ -3324,7 +3324,7 @@
  * Host Prompt Support enables mvCNC to use the host for user prompts so
  * filament runout and other processes can be managed from the host side.
  */
-#define HOST_ACTION_COMMANDS
+//#define HOST_ACTION_COMMANDS
 #if ENABLED(HOST_ACTION_COMMANDS)
   #define HOST_PAUSE_M76
   #define HOST_PROMPT_SUPPORT
@@ -3378,7 +3378,7 @@
  * echo:i2c-reply: from:99 bytes:5 data:hello
  */
 
-#define EXPERIMENTAL_I2CBUS
+//#define EXPERIMENTAL_I2CBUS
 #if ENABLED(EXPERIMENTAL_I2CBUS)
   // #define I2C_SLAVE_ADDRESS 0  // Set a value from 8 to 127 to act as a slave
 #endif
@@ -3416,7 +3416,7 @@
  * Press button Z to move Z axis
  *   - While Z is pressed, joyX moves Z slowly, joyY moves Z faster.
  */
-#define WII_NUNCHUCK
+//#define WII_NUNCHUCK
 #if ENABLED(WII_NUNCHUCK)
 // #define WII_NUNCHUCK_ENABLED // Enable nunchuck by default (Use M258 W[0/1] to disable/enable)
 // #define WII_EN_PIN     P0_10 // Pin sent HIGH when enabled via `M258 W1`
@@ -3918,7 +3918,7 @@
 //
 // M43 - display pin status, toggle pins, watch pins, watch endstops & toggle LED, test servo probe
 //
-#define PINS_DEBUGGING
+//#define PINS_DEBUGGING
 
 // Enable mvCNC dev mode which adds some special commands
 //#define MVCNC_DEV_MODE
