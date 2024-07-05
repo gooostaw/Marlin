@@ -392,6 +392,8 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 21: NOOP; break;                                     // No error on unknown G21
       #endif
 
+      case 25: G25(); break;                                        // G8: Fake homing
+
       #if ENABLED(G26_MESH_VALIDATION)
         case 26: G26(); break;                                    // G26: Mesh Validation Pattern generation
       #endif

@@ -532,6 +532,8 @@ private:
     static void G27();
   #endif
 
+  static void G25();
+
   static void G28();
 
   #if HAS_LEVELING
