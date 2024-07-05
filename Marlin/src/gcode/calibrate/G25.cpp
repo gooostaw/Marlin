@@ -29,8 +29,27 @@
  */
 void GcodeSuite::G25()
 {
-    set_axis_is_at_home(X_AXIS);
-    set_axis_is_at_home(Y_AXIS);
+    if (!parser.seen_test('X') && !parser.seen_test('Y') && !parser.seen_test('Z')) {
+        set_axis_is_at_home(X_AXIS);
+        set_axis_is_at_home(Y_AXIS);
+        set_axis_is_at_home(Z_AXIS);
+        SERIAL_ECHO("Fake home XYZ\n");
+    } else {
+        if (parser.seen_test('X')) {
+            set_axis_is_at_home(X_AXIS);
+            SERIAL_ECHO("Fake home X\n");
+        }
+
+        if (parser.seen_test('Y')) {
+            set_axis_is_at_home(Y_AXIS);
+            SERIAL_ECHO("Fake home Y\n");
+        }
+
+        if (parser.seen_test('Z')) {
+            set_axis_is_at_home(Z_AXIS);
+            SERIAL_ECHO("Fake home Z\n");
+        }
+    }
 
     report_current_position();
 }
