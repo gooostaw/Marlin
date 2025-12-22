@@ -824,7 +824,7 @@
 //TODO:
 #if HAS_DUAL_Y_STEPPERS
   //#define INVERT_Y2_VS_Y_DIR        // Y2 direction signal is the opposite of Y
-  #define Y_DUAL_ENDSTOPS           // Y2 has its own endstop
+  // #define Y_DUAL_ENDSTOPS           // Y2 has its own endstop
   #if ENABLED(Y_DUAL_ENDSTOPS)
     #define Y2_USE_ENDSTOP    _YMAX_  // Y2 endstop board plug. Don't forget to enable USE_*_PLUG.
     #define Y2_ENDSTOP_ADJUSTMENT  0  // Y2 offset relative to Y endstop
@@ -3156,7 +3156,7 @@
    * Comment *_STALL_SENSITIVITY to disable sensorless homing for that axis.
    * @section tmc/stallguard
    */
-  #define SENSORLESS_HOMING // StallGuard capable drivers only
+  // #define SENSORLESS_HOMING // StallGuard capable drivers only
 
   //TODO:
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
